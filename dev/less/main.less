@@ -8,4 +8,270 @@ html,body {
 	height: 100%;
 	padding: 0;
 	.normal-font();
+	button {
+		-webkit-appearance: none;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
+		outline: none;
+		&:active {
+			opacity: 0.6;
+		}
+	}
+	.page {
+		width: 100%;
+		height: 100%;
+		overflow-y: scroll;
+		-webkit-overflow-scrolling: touch;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+		align-items: center;
+		transition: all 300ms 0s ease-in-out;
+		.enter-layer {
+			.title-icon {
+				.view-base("enter-title.png");
+			}
+			.enter-btn {
+				.view-base("enter-btn.png");
+				&:active {
+					opacity: 1;
+					.view-base("enter-btn-down.png");
+				}
+			}
+		}
+		.back-layer {
+			.title-icon {
+				.view-base("back-title.png");
+			}
+			.ok-btn {
+				.view-base("ok-btn.png");
+				&:active {
+					opacity: 1;
+					.view-base("ok-btn-off.png");
+				}
+			}
+		}
+		.exit-layer {
+			.title-icon {
+				.view-base("end-course.png");
+			}
+			.exit-btn {
+				.view-base("end-course-btn.png");
+				&:active {
+					opacity: 1;
+					.view-base("end-course-btn-down.png");
+				}
+			}
+		}
+		&.next {
+			transform: translateX(-100%);
+		}
+		&.calendar-page {
+			background: url(../assets/calendar-bg.jpg) no-repeat center center;
+			background-size: 100% 100%;
+			.courses {
+				font-size: 0.30rem;
+				color: #333;
+				width: 15.03rem;
+				border: 12rem/100 solid #f9d438;
+				border-radius: 8rem/100;
+				margin: 0 auto 0.6rem;
+				background: #fff;
+				.title {
+					height: 0.88rem;
+					border-bottom: 1px solid #cccccc;
+					padding-left: 0.3rem;
+					.label {
+						display: flex;
+						align-items: center;
+						width: 1.32rem;
+						color: #b87947;
+						font-size: 0.32rem;
+						height: 0.86rem;
+						border-bottom: 2px solid #b87947;
+					}
+				}
+				.row {
+					padding: 0.3rem;
+					display: flex;
+					align-items: center;
+					border-bottom: 1px solid #cccccc;
+					.cover {
+						width: 2.52rem;
+						height: 1.7rem;
+						margin-right: 0.23rem;
+						img {
+							width: 100%;
+						}
+					}
+					.info {
+						flex: 1;
+						.name {
+							font-size: 0.36rem;
+							color: #363636;
+							line-height: 0.38rem;
+							font-weight: bold;
+							margin-bottom: 0.34rem;
+						}
+						.index {
+							margin-bottom: 0.34rem;
+						}
+						.index,.date {
+							font-size: 0.28rem;
+							color: #363636;
+							line-height: 0.3rem;
+						}
+					}
+					.start-btn {
+						.view-base("start-course.png");
+						&[disabled] {
+							.view-base("start-course-off.png");
+						}
+					}
+				}
+			}
+		}
+		&.course-page {
+			position: absolute;
+			left: 100%;
+			top: 0;
+			background: #81d8f5;
+			flex-direction: row;
+			.course-content {
+				flex: 1;
+				background: #fff;
+				height: 100%;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 0.5rem;
+				overflow: hidden;
+				img {
+					height: 100%;
+				}
+			}
+			.sidebar {
+				width: 4.78rem;
+				height: 100%;
+				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;
+				.sidebar-i {
+					padding: 0.7rem 0.4rem;
+				}
+				.master-head {
+					height: 3.85rem;
+					border: 4px solid #fff;
+					border-radius: 0.4rem;
+					overflow: hidden;
+					background: #fff;
+					img {
+						height: 100%;
+					}
+				}
+				.line {
+					.view-base("video-line.png");
+					margin: 0.28rem 0 0.35rem -0.32rem;
+				}
+				.buttons {
+					background: #fff;
+					border-radius: 0.4rem;
+					overflow: hidden;
+					.row {
+						display: flex;
+						.cell {
+							&.prev-page {
+								background: url(../assets/prev-page.png) no-repeat center center;
+								background-size: 0.78rem auto;
+							}
+							&.next-page {
+								background: url(../assets/next-page.png) no-repeat center center;
+								background-size: 0.78rem auto;
+							}
+							&.clear {
+								background: url(../assets/clear.png) no-repeat center center;
+								background-size: 0.71rem auto;
+							}
+							&.handsup {
+								background: url(../assets/handsup.png) no-repeat center center;
+								background-size: 0.72rem auto;
+								&.disabled {
+									background: url(../assets/handsup-off.png) no-repeat center center;
+									background-size: 0.72rem auto;
+								}
+							}
+							&.gift {
+								background: url(../assets/gift.png) no-repeat center center;
+								background-size: 0.73rem auto;
+								&.disabled {
+									background: url(../assets/gift-off.png) no-repeat center center;
+									background-size: 0.73rem auto;
+								}
+							}
+							&.course-close {
+								background: url(../assets/stop-course.png) no-repeat center center;
+								background-size: 0.74rem auto;
+							}
+							&.prev-step {
+								background: url(../assets/prev-step.png) no-repeat center center;
+								background-size: 0.78rem auto;
+							}
+							&.next-step {
+								background: url(../assets/next-step.png) no-repeat center center;
+								background-size: 0.78rem auto;
+							}
+							flex: 1;
+							height: 1.2rem;
+							border-right: 1px solid #e8e8e8;
+							border-bottom: 1px solid #e8e8e8;
+							&:last-child {
+								border-right: 0;
+							}
+						}
+					}
+					.switch {
+						height: 0.6rem;
+						background: url(../assets/switch.png) no-repeat center center;
+						background-size: 0.39rem auto;
+						transition: all 200ms 0s ease-in-out;
+						transform: rotate(180deg);
+					}
+					.last {
+						display: none;
+					}
+					&.open {
+						.last {
+							display: flex;
+						}
+						.switch {
+							transform: rotate(0);
+						}
+					}
+				}
+				.students {
+					margin-top: 0.3rem;
+					display: flex;
+					flex-wrap: wrap;
+					justify-content: space-between;
+					.cell {
+						border-radius: 0.2rem;
+						width: 1.86rem;
+						height: 2.5rem;
+						margin-bottom: 0.2rem;
+						background: #fff url(../assets/waiting.png) no-repeat center center;
+						background-size: 1.04rem auto;
+					}
+				}
+			}
+			.back-btn {
+				position: absolute;
+				.view-base('back-btn.png');
+				left: 0.58rem;
+				top: 0.3rem;
+				z-index: 100;
+			}
+		}
+	}
 }

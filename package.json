@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package-win": "gulp; electron-packager ./ wechathelper --asar=true --platform=win32 --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/win-icon.ico --ignore=\"dev\"",
-    "package-mac": "gulp; electron-packager ./ wechathelper --platform=darwin --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/mac-icon.icns --ignore=\"dev\"",
+    "package-win": "gulp; electron-packager ./ youbao --asar=true --platform=win32 --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/win-icon.ico --ignore=\"dev\"",
+    "package-mac": "gulp;echo 'module.exports = {DEBUG : false}' > env.js; electron-packager ./ youbao --platform=darwin --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/mac-icon.icns --ignore=\"dev\"; echo 'module.exports = {DEBUG : true}' > env.js;",
     "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
   },
   "dependencies": {

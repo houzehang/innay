@@ -2,14 +2,146 @@ body .mask {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 101;
   display: flex;
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 200ms 0s linear;
 }
-body .mask .modal {
-  width: 500px;
-  margin: 0 auto;
+body .mask .dialog {
+  position: relative;
+  width: 9.6rem;
+  height: 5.4rem;
+  background: #fff;
+  border: 0.12rem solid #f9d438;
+  border-radius: 0.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transform: scale(0);
+  transition: all 300ms 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-
-/*# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImNvbW1vbi5sZXNzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBLElBQ0M7RUFDQyxlQUFBO0VBQ0EsV0FBQTtFQUNBLFlBQUE7RUFDQSw4QkFBQTtFQUNBLGFBQUE7RUFDQSxzQkFBQTtFQUNBLHVCQUFBOztBQVJGLElBQ0MsTUFRQztFQUNDLFlBQUE7RUFDQSxjQUFBIiwic291cmNlc0NvbnRlbnQiOlsiLy8g5YWs5YWx5qC35byPXG5ib2R5IHtcblx0Lm1hc2sge1xuXHRcdHBvc2l0aW9uOiBmaXhlZDtcblx0XHR3aWR0aDogMTAwJTtcblx0XHRoZWlnaHQ6IDEwMCU7XG5cdFx0YmFja2dyb3VuZDogcmdiYSgwLCAwLCAwLCAwLjgpO1xuXHRcdGRpc3BsYXk6IGZsZXg7XG5cdFx0ZmxleC1kaXJlY3Rpb246IGNvbHVtbjtcblx0XHRqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjtcblx0XHQubW9kYWwge1xuXHRcdFx0d2lkdGg6IDUwMHB4O1xuXHRcdFx0bWFyZ2luOiAwIGF1dG87XG5cdFx0fVxuXHR9XG59Il0sImZpbGUiOiJjb21tb24uY3NzIn0= */
+body .mask .dialog .close-btn {
+  position: absolute;
+  width: 0.8rem;
+  height: 0.81rem;
+  background: url("../assets/close-btn.png") no-repeat center center;
+  background-size: 100% 100%;
+  right: -0.3rem;
+  top: -0.3rem;
+}
+body .mask .dialog .content {
+  height: 1.62rem;
+  margin: 0.3rem auto;
+  font-size: 0.4rem;
+  color: #333333;
+  text-align: center;
+  line-height: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .mask .dialog .btns {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+body .mask .dialog .cancel-btn {
+  width: 3.21rem;
+  height: 1.14rem;
+  background: url("../assets/cancel-btn.png") no-repeat center center;
+  background-size: 100% 100%;
+}
+body .mask .dialog .cancel-btn:active {
+  opacity: 1;
+  width: 3.22rem;
+  height: 1.14rem;
+  background: url("../assets/cancel-btn-down.png") no-repeat center center;
+  background-size: 100% 100%;
+}
+body .mask.show {
+  opacity: 1;
+}
+body .mask.show .dialog {
+  transform: scale(1);
+}
+body .calendar-box {
+  font-size: 0.30rem;
+  color: #333;
+  width: 15.03rem;
+  border: 0.12rem solid #f9d438;
+  border-radius: 0.08rem;
+  margin: 0 auto 0.6rem;
+  background: #fff;
+}
+body .cal-bd {
+  border-bottom: 0.01rem solid #dbdbdb;
+}
+body .highlight {
+  color: #ff2a2a;
+}
+body .calendar-head {
+  height: 0.92rem;
+  display: flex;
+  align-items: center;
+}
+body .calendar-head span {
+  flex: 1;
+  text-align: center;
+}
+body .calendar-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.03rem;
+  color: #000;
+}
+body .calendar-control .control-l,
+body .calendar-control .control-r {
+  width: 1.16rem;
+  height: 0.66rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .calendar-control .control-l img,
+body .calendar-control .control-r img {
+  width: 0.15rem;
+  height: 0.26rem;
+}
+body .calendar-control .control-r img {
+  transform: scaleX(-1);
+}
+body .calendar-control .control-c {
+  text-align: center;
+  margin: 0 0.3rem;
+}
+body .calendar-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 0.86rem;
+}
+body .calendar-col {
+  width: 0.56rem;
+  height: 0.56rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+body .calendar-col.disabled {
+  color: #fff;
+  background: #cacaca;
+}
+body .calendar-col.selected {
+  color: #fff;
+  background: #ff2a2a;
+}
+body .calendar-col.highlighted {
+  color: #fff;
+  background: #f9d438;
+}

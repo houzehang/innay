@@ -5,6 +5,7 @@
         <title>大语文</title>
         <link rel="stylesheet" href="./css/anim.css"/>
         <link rel="stylesheet" href="./css/main.css"/>
+        <script src="./scripts/flexible.js"></script>
         <script> 
           window.$require = require; 
           delete window.require;
@@ -12,39 +13,140 @@
         </script> 
     </head>
     <body>
-        <div class="wrapper">
-		<script type="text/x-jsrender" id="user-login-tmpl">
-		<div class="user-login">
-			<div class="row">
-				<div class="col-lg-12 col-sm-12 col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">用户登录</h3>
+		<div class="page calendar-page">
+			<script type="text/x-jsrender" id="calendar-tmpl">
+				<div id="calendar-box" class='calendar-box' bindtouchstart="onCalendarTouch" bindtouchmove="onCalendarTouch" bindtouchend="onCalendarTouch">
+					<div class='calendar-control cal-bd'>
+						<div class='control-l' bindtap='onPrevMonth'>
+							<img src='./assets/calendar-arrow.png'/>
 						</div>
-						<div class="panel-body">
-							<div class="form-group row">
-								<label for="input-username" class="col-lg-2 control-label">用户名</label>
-								<div class="col-lg-10">
-									<input type="text" class="form-control" id="input-username">
-								</div>
-							</div>
-							<div class="form-group row">
-								<label for="input-password" class="col-lg-2 control-label">密码</label>
-								<div class="col-lg-10">
-									<input type="password" class="form-control" id="input-password"/>
-								</div>
-							</div>
-								<div class="form-group row">
-								<div class="col-lg-10 col-lg-offset-2">
-									<button type="button" class="btn btn-primary submit-btn">提交</button>
-								</div>
-							</div>
+						<div class='control-c'>{{:calendar_data.cursor.month}}月 {{:calendar_data.cursor.year}}年</div>
+						<div class='control-r' bindtap='onNextMonth'>
+							<img src='./assets/calendar-arrow.png'/>
 						</div>
 					</div>
+					<div class='calendar-head cal-bd'>
+						<span class='highlight'>日</span>
+						<span>一</span>
+						<span>二</span>
+						<span>三</span>
+						<span>四</span>
+						<span>五</span>
+						<span class='highlight'>六</span>
+					</div>
+					{{for calendar_data.rows}}
+					<div class='calendar-row cal-bd'>
+						{{for #data}}
+						{{if disabled}}
+						<div class='calendar-col disabled'>{{:day}}</div>
+						{{else choosed}}
+						<div class='calendar-col selected'>{{:day}}</div>
+						{{else highlighted}}
+						<div class='calendar-col highlighted' bindtap='onPickDate' data-index="{{item.index}}" wx:elif="{{item.highlighted}}">{{:day}}</div>
+						{{else !day}}
+						<div class='calendar-col'></div>
+						{{else}}
+						<div class='calendar-col' bindtap='onPickDate' data-index="{{:index}}">{{:day}}</div>
+						{{/if}}
+						{{/for}}
+					</div>
+					{{/for}}
+				</div>
+			</script>
+			<div class="courses">
+				<div class="title">
+					<div class="label">今日课程</div>
+				</div>
+				<div class="row">
+					<div class="cover">
+						<img src="./assets/test.jpg" alt="">
+					</div>
+					<div class="info">
+						<div class="name">儿童国学经典课程</div>
+						<div class="index">第6课时</div>
+						<div class="date">上课时间：2018-5-3 19:00</div>
+					</div>
+					<button class="start-btn"></button>
+				</div>
+				<div class="row">
+					<div class="cover">
+						<img src="./assets/test1.jpg" alt="">
+					</div>
+					<div class="info">
+						<div class="name">儿童国学经典唐诗三百首</div>
+						<div class="index">第2课时</div>
+						<div class="date">上课时间：2018-4-6  19:00</div>
+					</div>
+					<button disabled class="start-btn"></button>
+				</div>
+			</div>
+			<div style="display: none;" class="mask enter-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">上课时间：2018-5-3 14：00<br/>确认现在开始上课吗？</div>
+					<button class="enter-btn"></button>
 				</div>
 			</div>
 		</div>
-		</script>
+		<div class="page course-page">
+			<button class="back-btn"></button>
+			<div class="course-content">
+				<img src="./assets/content.jpg" alt="">
+			</div>
+			<div class="sidebar">
+				<div class="sidebar-i">
+					<div class="master-head">
+						<img src="./assets/test.jpg" alt="">
+					</div>
+					<div class="line"></div>
+					<div class="buttons">
+						<div class="row">
+							<button class="cell prev-page"></button>
+							<button class="cell next-page"></button>
+							<button class="cell clear"></button>
+						</div>
+						<div class="row">
+							<button class="cell handsup"></button>
+							<button class="cell gift"></button>
+							<button class="cell course-close"></button>
+						</div>
+						<div class="row last">
+							<button class="cell prev-step"></button>
+							<button class="cell next-step"></button>
+							<div class="cell"></div>
+						</div>
+						<div class="switch"></div>
+					</div>
+					<div class="students">
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+						<div class="cell"></div>
+					</div>
+				</div>
+			</div>
+			<div style="display: none;" class="mask back-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">返回后将会暂时离开房间，再次进入<br/>可继续讲课。</div>
+					<button class="ok-btn"></button>
+				</div>
+			</div>
+			<div style="display: none;" class="mask exit-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">确认结束本次课程吗？</div>
+					<div class="btns">
+						<button class="exit-btn"></button>
+						<button class="cancel-btn"></button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
     </body>
     <script type="text/javascript">
         window.$ = window.jQuery = $require('jquery');
