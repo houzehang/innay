@@ -1,4 +1,29 @@
+body .loading-mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65) url(../assets/loading.svg) no-repeat center center;
+  background-size: 2rem auto;
+  z-index: 102;
+  left: 0;
+  top: 0;
+  color: #fff;
+  font-size: 0.3rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .loading-mask .loading-text {
+  margin-top: 2rem;
+  -webkit-animation: blink 2s 0s linear infinite;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation: blink 2s 0s linear infinite;
+  -ms-animation: blink 2s 0s linear infinite;
+}
 body .mask {
+  left: 0;
+  top: 0;
   position: fixed;
   width: 100%;
   height: 100%;

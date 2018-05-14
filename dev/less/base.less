@@ -271,3 +271,9 @@
     overflow:hidden;
     -webkit-text-overflow:ellipsis; 
 }
+
+.placeholder(@rules) {
+    &::-webkit-input-placeholder {
+        @rules();
+    }
+}

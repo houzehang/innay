@@ -460,7 +460,32 @@ template {
   display: none;
 }
 
+body .loading-mask {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65) url(../assets/loading.svg) no-repeat center center;
+  background-size: 2rem auto;
+  z-index: 102;
+  left: 0;
+  top: 0;
+  color: #fff;
+  font-size: 0.3rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body .loading-mask .loading-text {
+  margin-top: 2rem;
+  -webkit-animation: blink 2s 0s linear infinite;
+  -webkit-animation-fill-mode: forwards;
+  -moz-animation: blink 2s 0s linear infinite;
+  -ms-animation: blink 2s 0s linear infinite;
+}
 body .mask {
+  left: 0;
+  top: 0;
   position: fixed;
   width: 100%;
   height: 100%;
@@ -610,7 +635,7 @@ body .calendar-col.highlighted {
 html,
 body {
   width: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
   height: 100%;
   padding: 0;
   font-family: "Helvetica Neue", "Hiragino Sans GB", "Segoe UI", "Microsoft Yahei", "微软雅黑", Tahoma, Arial, STHeiti, sans-serif;
@@ -639,7 +664,10 @@ body .page {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-  transition: all 300ms 0s ease-in-out;
+}
+html .page .enter-layer .dialog .content,
+body .page .enter-layer .dialog .content {
+  display: block;
 }
 html .page .enter-layer .title-icon,
 body .page .enter-layer .title-icon {
@@ -711,10 +739,99 @@ html .page.next,
 body .page.next {
   transform: translateX(-100%);
 }
+html .page.login-page,
+body .page.login-page {
+  background: url(../assets/login-bg.jpg) no-repeat center center;
+  background-size: 100% 100%;
+}
+html .page.login-page .login-box,
+body .page.login-page .login-box {
+  background: #fff;
+  border: 0.1rem solid #f9d438;
+  border-radius: 0.6rem;
+  width: 8.94rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+html .page.login-page .login-box .icon,
+body .page.login-page .login-box .icon {
+  width: 7.04rem;
+  height: 2.67rem;
+  background: url("../assets/login-box.png") no-repeat center center;
+  background-size: 100% 100%;
+  position: absolute;
+  top: -2.67rem;
+  left: 50%;
+  margin-left: -3.52rem;
+}
+html .page.login-page .login-box .title,
+body .page.login-page .login-box .title {
+  width: 1.33rem;
+  height: 0.69rem;
+  background: url("../assets/login-text.png") no-repeat center center;
+  background-size: 100% 100%;
+  margin: 0.46rem auto 0.5rem;
+}
+html .page.login-page .login-box .input-control,
+body .page.login-page .login-box .input-control {
+  margin-bottom: 0.54rem;
+}
+html .page.login-page .login-box .input-control .input-box,
+body .page.login-page .login-box .input-control .input-box {
+  border: 1px solid #8b460e;
+  height: 1.1rem;
+  display: flex;
+  align-items: center;
+  width: 6.96rem;
+  border-radius: 0.2rem;
+}
+html .page.login-page .login-box .input-control .input-box input,
+body .page.login-page .login-box .input-control .input-box input {
+  border: 0;
+  outline: none;
+  margin: 0 0.37rem;
+  height: 0.4rem;
+  flex: 1;
+  font-size: 0.34rem;
+  color: #8b460e;
+}
+html .page.login-page .login-box .input-control .input-box input::-webkit-input-placeholder,
+body .page.login-page .login-box .input-control .input-box input::-webkit-input-placeholder {
+  color: #8b460e;
+}
+html .page.login-page .login-box .login-btn,
+body .page.login-page .login-box .login-btn {
+  margin-bottom: 0.5rem;
+  width: 3.99rem;
+  height: 1.27rem;
+  background: url("../assets/login-btn.png") no-repeat center center;
+  background-size: 100% 100%;
+}
+html .page.login-page .login-box .login-btn:active,
+body .page.login-page .login-box .login-btn:active {
+  opacity: 1;
+  width: 3.99rem;
+  height: 1.27rem;
+  background: url("../assets/login-btn-d.png") no-repeat center center;
+  background-size: 100% 100%;
+}
+html .page.login-page .login-box .login-btn[disabled],
+body .page.login-page .login-box .login-btn[disabled] {
+  opacity: 0.6;
+}
 html .page.calendar-page,
 body .page.calendar-page {
+  transition: all 300ms 0s ease-in-out;
   background: url(../assets/calendar-bg.jpg) no-repeat center center;
   background-size: 100% 100%;
+  justify-content: flex-start;
+}
+html .page.calendar-page .calendar-box,
+body .page.calendar-page .calendar-box {
+  margin-top: 1.1rem;
 }
 html .page.calendar-page .courses,
 body .page.calendar-page .courses {
@@ -742,6 +859,14 @@ body .page.calendar-page .courses .title .label {
   height: 0.86rem;
   border-bottom: 2px solid #b87947;
 }
+html .page.calendar-page .courses .nothing,
+body .page.calendar-page .courses .nothing {
+  width: 5.8rem;
+  height: 0.94rem;
+  background: url("../assets/no-course.png") no-repeat center center;
+  background-size: 100% 100%;
+  margin: 1.88rem auto;
+}
 html .page.calendar-page .courses .row,
 body .page.calendar-page .courses .row {
   padding: 0.3rem;
@@ -754,6 +879,11 @@ body .page.calendar-page .courses .row .cover {
   width: 2.52rem;
   height: 1.7rem;
   margin-right: 0.23rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }
 html .page.calendar-page .courses .row .cover img,
 body .page.calendar-page .courses .row .cover img {
@@ -799,6 +929,7 @@ body .page.calendar-page .courses .row .start-btn[disabled] {
 }
 html .page.course-page,
 body .page.course-page {
+  transition: all 300ms 0s ease-in-out;
   position: absolute;
   left: 100%;
   top: 0;
@@ -839,9 +970,9 @@ body .page.course-page .sidebar .master-head {
   overflow: hidden;
   background: #fff;
 }
-html .page.course-page .sidebar .master-head img,
-body .page.course-page .sidebar .master-head img {
-  height: 100%;
+html .page.course-page .sidebar .master-head div,
+body .page.course-page .sidebar .master-head div {
+  border-radius: 0.4rem;
 }
 html .page.course-page .sidebar .line,
 body .page.course-page .sidebar .line {

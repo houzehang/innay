@@ -13,7 +13,24 @@
         </script> 
     </head>
     <body>
-		<div class="page calendar-page">
+		<div class="page login-page" style="display: none;">
+			<div class="login-box">
+				<div class="icon"></div>
+				<div class="title"></div>
+				<div class="input-control">
+					<div class="input-box">
+						<input type="number" name="mobile" value="111111" placeholder="请输入手机号"/>
+					</div>
+				</div>
+				<div class="input-control">
+					<div class="input-box">
+						<input type="password" name="password" value="111111" placeholder="请输入密码"/>
+					</div>
+				</div>
+				<button class="login-btn"></button>
+			</div>
+		</div>
+		<div class="page calendar-page" style="display: none;">
 			<script type="text/x-jsrender" id="calendar-tmpl">
 				<div id="calendar-box" class='calendar-box' bindtouchstart="onCalendarTouch" bindtouchmove="onCalendarTouch" bindtouchend="onCalendarTouch">
 					<div class='calendar-control cal-bd'>
@@ -42,7 +59,7 @@
 						{{else choosed}}
 						<div class='calendar-col selected'>{{:day}}</div>
 						{{else highlighted}}
-						<div class='calendar-col highlighted' bindtap='onPickDate' data-index="{{item.index}}" wx:elif="{{item.highlighted}}">{{:day}}</div>
+						<div class='calendar-col highlighted' bindtap='onPickDate' data-index="{{:index}}">{{:day}}</div>
 						{{else !day}}
 						<div class='calendar-col'></div>
 						{{else}}
@@ -53,52 +70,47 @@
 					{{/for}}
 				</div>
 			</script>
+			<script type="text/x-jsrender" id="courses-tmpl">
 			<div class="courses">
 				<div class="title">
 					<div class="label">今日课程</div>
 				</div>
-				<div class="row">
-					<div class="cover">
-						<img src="./assets/test.jpg" alt="">
+				{{if courses.length == 0}}
+					<div class="nothing"></div>
+				{{else}}
+					{{for courses}}
+					<div class="row">
+						<div class="cover">
+							<img src="{{:avatar}}" alt="">
+						</div>
+						<div class="info">
+							<div class="name">{{:name}}</div>
+							<div class="index">{{:lesson_name}}</div>
+							<div class="date">上课时间：{{:start_time}}</div>
+						</div>
+						<button class="start-btn" data-index="{{:#getIndex()}}"></button>
 					</div>
-					<div class="info">
-						<div class="name">儿童国学经典课程</div>
-						<div class="index">第6课时</div>
-						<div class="date">上课时间：2018-5-3 19:00</div>
-					</div>
-					<button class="start-btn"></button>
-				</div>
-				<div class="row">
-					<div class="cover">
-						<img src="./assets/test1.jpg" alt="">
-					</div>
-					<div class="info">
-						<div class="name">儿童国学经典唐诗三百首</div>
-						<div class="index">第2课时</div>
-						<div class="date">上课时间：2018-4-6  19:00</div>
-					</div>
-					<button disabled class="start-btn"></button>
-				</div>
+					{{/for}}
+				{{/if}}
 			</div>
+			</script>
 			<div style="display: none;" class="mask enter-layer">
 				<div class="dialog">
 					<button class="close-btn"></button>
 					<div class="title-icon"></div>
-					<div class="content">上课时间：2018-5-3 14：00<br/>确认现在开始上课吗？</div>
+					<div class="content">上课时间：<span class="enter-time"></span><br/>确认现在开始上课吗？</div>
 					<button class="enter-btn"></button>
 				</div>
 			</div>
 		</div>
-		<div class="page course-page">
+		<div class="page course-page" style="display: none;">
 			<button class="back-btn"></button>
 			<div class="course-content">
 				<img src="./assets/content.jpg" alt="">
 			</div>
 			<div class="sidebar">
 				<div class="sidebar-i">
-					<div class="master-head">
-						<img src="./assets/test.jpg" alt="">
-					</div>
+					<div class="master-head" id="master-video"></div>
 					<div class="line"></div>
 					<div class="buttons">
 						<div class="row">
@@ -118,7 +130,7 @@
 						</div>
 						<div class="switch"></div>
 					</div>
-					<div class="students">
+					<div class="students" id="students">
 						<div class="cell"></div>
 						<div class="cell"></div>
 						<div class="cell"></div>

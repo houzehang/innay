@@ -206,8 +206,9 @@ class Calendar {
   }
 
   strToDate(str) {
-	let parsed = str.split(/[-: ]/)
-	return new Date(parsed[0], parsed[1] - 1, parsed[2], parsed[3], parsed[4], parsed[5])
+    let parsed = str.split(/[-: ]/)
+    parsed = parsed.concat([0,0,0,0,0,0])
+    return new Date(parsed[0], parsed[1] - 1, parsed[2], parsed[3], parsed[4], parsed[5])
   }
 
   setChoosed(obj) {

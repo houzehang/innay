@@ -4,27 +4,34 @@
  * 数据变更后通过SigSlot类通知Viewer进行重绘
  * 类似于简单的Vue功能实现
  */
-let Storage 	= require("./Storage.js");
 let Const   	= require("../const.js");
+const Eventer  	= require("./eventer")
+const context 	= require("./context")
 
-class SigSlot {
+class DataManager extends Eventer {
 	constructor() {
-		this.$eventer 	= $("<div/>");
+		super()
 	}
 
-	on(...params) {
-		this.$eventer.on(...params);
+	set userinfo(userinfo) {
+		context.storage.store("USER_INFO", userinfo)
+		this.$userInfo = userinfo
 	}
 
-	trigger(...params) {
-		this.$eventer.trigger(...params);
+	get userinfo() {
+		if (!this.$userInfo) {
+			this.$userInfo = context.storage.get("USER_INFO")
+		}
+		return this.$userInfo
+	}
+
+	set courses(courses) {
+		this.$courses = courses
+	}
+
+	get courses() {
+		return this.$courses
 	}
 }
 
-class DataManager {
-	constructor(session) {
-		this.$sigslot   = session.$sigslot;
-	}
-}
-
-module.exports = {DataManager,SigSlot};
+module.exports = DataManager;
