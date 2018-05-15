@@ -106,6 +106,20 @@ class Network extends Eventer {
 			channel_id
 		}, "post")
 	}
+
+	/**
+	 * 获取礼物列表
+	 */
+	getGiftsList() {
+		return this.__request("/api/gifts", {})
+	}
+
+	/**
+	 * 发礼物
+	 */
+	sendGift(data) {
+		return this.__request("/api/give_gift", data, "post")
+	}
 }
 
 module.exports = new Network

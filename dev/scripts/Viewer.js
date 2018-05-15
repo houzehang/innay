@@ -24,6 +24,45 @@ class Viewer {
 
 	}
 
+	__show_gift_layer() {
+		$(".gift-layer").show()
+		setTimeout(()=>{
+			$(".gift-layer").addClass("show")
+		},100)
+	}
+
+	__hide_gift_layer() {
+		$(".gift-layer").removeClass("show")
+		setTimeout(()=>{
+			$(".gift-layer").hide()
+		},300)
+	}
+
+	__send_gift() {
+		if (this.$gift_data) {
+			console.log("send gift",this.$gift_data)
+			net.sendGift({
+				channel_id : context.course.channel_id,
+				to_id: this.$gift_data.to,
+				gift_id: this.$gift_data.gift.id
+			}).then((res)=>{
+				let total = res.total, toUser = context.dmg.getUser(this.$gift_data.to)
+				signal.send({
+					type: "gift",
+					from: context.dmg.userinfo.id,
+					to: "all",
+					message: {
+						uid: this.$gift_data.to,
+						gift: this.$gift_data.gift,
+						total,
+						from_username: context.dmg.userinfo.child_name,
+						to_username: toUser.child_name
+					}
+				})
+			})
+		}
+	}
+
 	/**
 	 * 绑定来自DataManager的数据更新事件，并进行试图渲染
 	 */
@@ -52,7 +91,6 @@ class Viewer {
 				context.loading.hide()
 			}).done()
 		})
-
 		$("body").on("click", ".start-btn",(event)=>{
 			let index = $(event.currentTarget).attr("data-index")
 			let data = context.dmg.courses[index]
@@ -129,39 +167,106 @@ class Viewer {
 				context.session.send_message(Const.OPEN_RACE)
 			}
 		})
-		room.on("NEW_STREAM", (stream)=>{
-			let id = stream.getId()
-			let dom = $(`#students_${id}`)
-			if (dom.length === 0) {
-				let user = context.dmg.getUser(id) || {
-					child_name: "-"
+		$("body").on("click",".sound",(event)=>{
+			event.stopPropagation()
+			let target = $(event.currentTarget)
+			let id = target.attr("data-id")
+			if (target.hasClass("mute")) {
+				context.session.send_message(Const.OPEN_MIC, {
+					uid: id - 0
+				})
+			} else {
+				context.session.send_message(Const.CLOSE_MIC, {
+					uid: id - 0
+				})
+			}
+		})
+		$("body").on("click",".gift",(event)=>{
+			if (!$(event.currentTarget).hasClass("disabled")) {
+				context.session.send_message(Const.CLOSE_GIFT)
+			} else {
+				context.session.send_message(Const.OPEN_GIFT)
+			}
+		})
+		$("body").on("click",".master-head",(event)=>{
+			if (context.dmg.isMaster()) return
+			if (context.dmg.giftopen) {
+				this.$gift_data = {
+					to: context.dmg.userinfo.id
 				}
-				let gift = 0
-				for(let i=0,len=context.room.gifts.length;i<len;i++) {
-					let item = context.room.gifts[i]
-					if (item.id == id) {
-						gift = item.total
-						break
+				this.__show_gift_layer()
+			} else {
+				alert("现在还不能送礼物哦~")
+			}
+		})
+		$("body").on("click",".students .cell",(event)=>{
+			let id = $(event.currentTarget).attr("data-id")
+			if (!id || id == context.dmg.userinfo.id) {
+				return
+			}
+			if (context.dmg.isMaster() || context.dmg.giftopen) {
+				this.$gift_data = {
+					to: id
+				}
+				this.__show_gift_layer()
+			} else {
+				alert("现在还不能送礼物哦~")
+			}
+		})
+		$("body").on("click",".gift-layer .gift-item",(event)=>{
+			let index = $(event.currentTarget).attr("data-index")
+			if (!index || !this.$gift_data) {
+				this.__hide_gift_layer()
+				return
+			}
+			this.$gift_data.gift = context.dmg.gifts[index]
+			this.__hide_gift_layer()
+			this.__send_gift()
+		})
+		room.on("NEW_STREAM", (stream)=>{
+			// 判断是不是主班老师
+			let id = stream.getId()
+			let isMaster = context.dmg.isChairMaster(id)
+			let isSubMaster = context.dmg.isSubMaster(id)
+			if (isSubMaster) {
+				return
+			}
+			if (isMaster) {
+				stream.play('master-video');
+			} else {
+				let dom = $(`#students_${id}`)
+				if (dom.length === 0) {
+					let user = context.dmg.getUser(id) || {
+						child_name: "-"
+					}
+					let gift = 0
+					for(let i=0,len=context.room.gifts.length;i<len;i++) {
+						let item = context.room.gifts[i]
+						if (item.id == id) {
+							gift = item.total
+							break
+						}
+					}
+					let muted = context.dmg.isMuted(id), racing = context.dmg.racing
+					let idle = $("#students .idle"),
+						cell = $(`<div id="students_${id}" class="cell" data-id="${id}">
+							<div class="name">${user.child_name}</div>
+							<div class="hand" ${racing?'':'style="display:none"'}></div>
+							<div class="video" id="students_${id}_video"></div>
+							<div class="bar">
+								<div class="sound ${muted?'mute':''}" data-id="${id}"></div>
+								<div class="ph"></div>
+								<div class="gift">${gift}</div>
+							</div>
+						</div>`)
+					if (idle.length == 0) {
+						$('#students').append(cell)
+					} else {
+						$(idle[0]).replaceWith(cell)
 					}
 				}
-				let idle = $("#students .idle"),
-					cell = $(`<div id="students_${id}" class="cell">
-						<div class="name">${user.child_name}</div>
-						<div class="hand" style="display:none"></div>
-						<div class="video" id="students_${id}_video"></div>
-						<div class="bar">
-							<div class="sound mute"></div>
-							<div class="ph"></div>
-							<div class="gift">${gift}</div>
-						</div>
-					</div>`)
-				if (idle.length == 0) {
-					$('#students').append(cell)
-				} else {
-					$(idle[0]).replaceWith(cell)
-				}
+				stream.play('students_' + stream.getId() + "_video");
 			}
-			stream.play('students_' + stream.getId() + "_video");
 		})
 		room.on("REMOVE_STREAM", (stream)=>{
 			$('#students_' + stream.getId()).remove();
@@ -204,14 +309,14 @@ class Viewer {
 					break
 					case "starttest":
 					break
+					case Const.OPEN_MIC:
+					case Const.CLOSE_MIC:
 					case Const.OPEN_RACE:
 					case Const.CLOSE_RACE:
+					case Const.OPEN_GIFT:
+					case Const.CLOSE_GIFT:
 					this.__on_signal_message(message)
 					break
-					case "opengift":
-					case "closegift":
-					case "closemic":
-					case "openmic":
 					break
 				}
 			} else if (message.to == "all") {
@@ -228,20 +333,51 @@ class Viewer {
 			case Const.OPEN_RACE:
 			$("#students .hand").text("").show()
 			$(".cell.handsup").removeClass("disabled")
+			context.dmg.racing = true
 			break
 			case Const.CLOSE_RACE:
 			$("#students .hand").text("").hide()
 			$(".cell.handsup").addClass("disabled")
+			context.dmg.racing = false
+			break
+			case Const.OPEN_MIC:
+			if (data.uid) {
+				$("#students_"+data.uid+" .sound").removeClass("mute")
+			}
+			context.dmg.setUnMuted(data.uid)
+			room.stream_audio(data.uid)
+			break
+			case Const.CLOSE_MIC:
+			if (data.uid) {
+				$("#students_"+data.uid+" .sound").addClass("mute")
+			}
+			context.dmg.setMuted(data.uid)
+			room.stream_audio(data.uid)
+			break
+			case Const.OPEN_GIFT:
+			$(".cell.gift").removeClass("disabled")
+			context.dmg.giftopen = true
+			break
+			case Const.CLOSE_GIFT:
+			$(".cell.gift").addClass("disabled")
+			context.dmg.giftopen = false
 			break
 			case "racerank":
 			if (data.uid) {
 				$("#students_"+data.uid+" .hand").text(data.rank).show()
 			}
 			break
-			case "gift":
 			case "starttest":
 			case "stoptest":
 			break
+			case "gift":
+			let total = data.total
+			context.room.gifts.forEach((gift)=>{
+				if (gift.id == data.uid) {
+					gift.total = total
+				}
+			})
+			$("#students_"+data.uid+" .gift").text(total)
 			default:
 			context.session.send_message(null, null, message)
 		}
@@ -268,18 +404,27 @@ class Viewer {
 		}).done()
 		this.__get_courses()
 		$(".calendar-page,.course-page").show()
-		console.log("call signal init...")
 		signal.init()
 	}
 
 	course() {
 		if (context.course) {
 			$(".page").addClass("next")
+			// 获取礼物列表
+			net.getGiftsList().then((data)=>{
+				context.dmg.gifts = data.gifts
+				context.render("gifts-tmpl", data)
+			})
 			net.getRoomInfo(context.course.channel_id).then((result)=>{
 				context.room = result
 				room.start()
 				signal.join()
 				context.session.init("#course-content")
+				if (!context.dmg.isMaster()) {
+					$(".sidebar .buttons").hide()
+				} else {
+					$(".sidebar .buttons").show()
+				}
 				// 发送init-room
 				let masters = []
 				context.course.teachers.forEach((teacher)=>{
@@ -302,6 +447,7 @@ class Viewer {
 		$(".page").removeClass("next")
 		room.leave()
 		signal.leave()
+		context.dmg.destroy()
 	}
 
 	__get_courses() {

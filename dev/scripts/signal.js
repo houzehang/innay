@@ -21,6 +21,11 @@ class Signalize extends Eventer {
 				this.$session = this.$signal.login(context.dmg.userinfo.id+"", net.sigtoken)
 				this.$session.onLoginSuccess = ()=>{
 					this.$inited = true
+					this.$session.invoke("io.agora.signal.user_set_attr", {
+						name: "data", value: JSON.stringify(context.dmg.userinfo)
+					}, (event, res)=>{
+						console.log("set user info success", context.dmg.userinfo, res)
+					})
 					resolve()
 					console.log("session logined...")
 				}
@@ -58,15 +63,12 @@ class Signalize extends Eventer {
 			channel.onChannelJoined = ()=>{
 				// 上报自己的用户信息
 				this.$channel = channel
-				this.$channel.channelSetAttr("data", JSON.stringify(context.dmg.userinfo), ()=>{
-					console.log("set user info success", context.dmg.userinfo)
-					this.trigger("CHANNEL_JOINED", channel)
-					// 发送消息队列中的消息
-					this.$queue.forEach((message)=>{
-						this.send(message)
-					})
-					this.$queue = []
+				this.trigger("CHANNEL_JOINED", channel)
+				// 发送消息队列中的消息
+				this.$queue.forEach((message)=>{
+					this.send(message)
 				})
+				this.$queue = []
 			}
 			channel.onChannelJoinFailed = ()=>{
 				console.log("channel join failed, retry after 2s")
@@ -79,10 +81,12 @@ class Signalize extends Eventer {
 				this.$session.invoke("io.agora.signal.user_get_attr", {
 					account, name: "data"
 				}, (event, res)=>{
-					let userinfo = JSON.parse(res.value)
-					console.log("new user joined...",userinfo)
-					context.dmg.addUser(userinfo)
-					this.trigger("CHANNEL_NEW_USER", userinfo)
+					if (res.value) {
+						console.log("new user joined...",res)
+						let userinfo = JSON.parse(res.value)
+						context.dmg.addUser(userinfo)
+						this.trigger("CHANNEL_NEW_USER", userinfo)
+					}
 				})
 			}
 			channel.onChannelUserJoined = (account, uid)=>{

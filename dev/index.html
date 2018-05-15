@@ -151,6 +151,24 @@
 					
 				</div>
 			</div>
+			<div class="mask gift-layer" style="display: none">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<script type="text/x-jsrender" id="gifts-tmpl">
+					<div class="gifts">
+						{{for gifts}}
+						<div class="gift-item" data-index="{{:#getIndex()}}">
+							<div class="gift-icon">
+								<img src="{{:icon}}"/>
+							</div>
+							<div class="gift-name">{{:name}}</div>
+						</div>
+						{{/for}}
+					</div>
+					</script>
+				</div>
+			</div>
 		</div>
     </body>
     <script type="text/javascript">

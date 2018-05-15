@@ -20,6 +20,7 @@ class Room extends Eventer {
 		} else {
 			this.$streams_list[index] = stream
 		}
+		this.stream_audio(id)
 	}
 
 	__remove_stream(stream) {
@@ -66,6 +67,18 @@ class Room extends Eventer {
 				this.$client = client
 			}
 		})
+	}
+
+	stream_audio(id) {
+		let stream = this.__get_stream(id)
+		if (!stream) return
+		let isMaster = context.course.teacher_id == id
+		let unmuted  = !context.dmg.isMuted(id)
+		if (!unmuted && !isMaster) {
+			stream.disableAudio()
+		} else {
+			stream.enableAudio()
+		}
 	}
 
 	__start_stream() {
@@ -131,8 +144,8 @@ class Room extends Eventer {
         });
 
         stream.init(()=>{
-			stream.play('master-video');
-
+			this.stream_audio(stream.getId())
+			this.trigger("NEW_STREAM", stream)
 			this.$client.publish(stream, function (err) {
 				alert("无法连接您的视频流，请确定您的网络是否良好。")
 			});

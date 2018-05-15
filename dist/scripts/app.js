@@ -53,7 +53,20 @@ const Serialize = require("./serialize")
 class DataManager extends Eventer {
 	constructor() {
 		super()
-		this.$user_list = new Serialize
+		this.$userInfo = null
+		this.$gifts    = []
+		this.__reset()
+	}
+
+	__reset() {
+		this.$user_list 	= new Serialize
+		this.$user_unmuted	= {}
+		this.$racing		= false
+		this.$giftopen 		= true
+	}
+
+	destroy() {
+		this.__reset()
 	}
 
 	set userinfo(userinfo) {
@@ -66,6 +79,32 @@ class DataManager extends Eventer {
 			this.$userInfo = context.storage.get("USER_INFO")
 		}
 		return this.$userInfo
+	}
+
+	isMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		for(let i=0,len=context.course.teachers.length;i<len;i++) {
+			let item = context.course.teachers[i]
+			if (item.id == id) {
+				return true
+			}
+		}
+	}
+
+	isChairMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		return context.course.teacher_id == id
+	}
+
+	isSubMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		return this.isMaster(id) && !this.isChairMaster(id)
 	}
 
 	set courses(courses) {
@@ -93,6 +132,45 @@ class DataManager extends Eventer {
 
 	get users() {
 		return this.$user_list.data()
+	}
+
+	setUnMuted(id) {
+		this.$user_unmuted[id] = true
+	}
+
+	setMuted(id) {
+		this.$user_unmuted[id] = false
+	}
+
+	isMuted(id) {
+		return !this.$user_unmuted[id]
+	}
+
+	set racing(race) {
+		this.$racing = race
+	}
+	
+	get racing() {
+		return this.$racing
+	}
+
+	set giftopen(giftopen) {
+		this.$giftopen = giftopen
+	}
+	
+	get giftopen() {
+		if (this.isMaster()) {
+			return true
+		}
+		return this.$giftopen
+	}
+
+	set gifts(gifts) {
+		this.$gifts = gifts
+	}
+	
+	get gifts() {
+		return this.$gifts
 	}
 }
 
@@ -159,6 +237,45 @@ class Viewer {
 
 	}
 
+	__show_gift_layer() {
+		$(".gift-layer").show()
+		setTimeout(()=>{
+			$(".gift-layer").addClass("show")
+		},100)
+	}
+
+	__hide_gift_layer() {
+		$(".gift-layer").removeClass("show")
+		setTimeout(()=>{
+			$(".gift-layer").hide()
+		},300)
+	}
+
+	__send_gift() {
+		if (this.$gift_data) {
+			console.log("send gift",this.$gift_data)
+			net.sendGift({
+				channel_id : context.course.channel_id,
+				to_id: this.$gift_data.to,
+				gift_id: this.$gift_data.gift.id
+			}).then((res)=>{
+				let total = res.total, toUser = context.dmg.getUser(this.$gift_data.to)
+				signal.send({
+					type: "gift",
+					from: context.dmg.userinfo.id,
+					to: "all",
+					message: {
+						uid: this.$gift_data.to,
+						gift: this.$gift_data.gift,
+						total,
+						from_username: context.dmg.userinfo.child_name,
+						to_username: toUser.child_name
+					}
+				})
+			})
+		}
+	}
+
 	/**
 	 * 绑定来自DataManager的数据更新事件，并进行试图渲染
 	 */
@@ -187,7 +304,6 @@ class Viewer {
 				context.loading.hide()
 			}).done()
 		})
-
 		$("body").on("click", ".start-btn",(event)=>{
 			let index = $(event.currentTarget).attr("data-index")
 			let data = context.dmg.courses[index]
@@ -264,39 +380,106 @@ class Viewer {
 				context.session.send_message(Const.OPEN_RACE)
 			}
 		})
-		room.on("NEW_STREAM", (stream)=>{
-			let id = stream.getId()
-			let dom = $(`#students_${id}`)
-			if (dom.length === 0) {
-				let user = context.dmg.getUser(id) || {
-					child_name: "-"
+		$("body").on("click",".sound",(event)=>{
+			event.stopPropagation()
+			let target = $(event.currentTarget)
+			let id = target.attr("data-id")
+			if (target.hasClass("mute")) {
+				context.session.send_message(Const.OPEN_MIC, {
+					uid: id - 0
+				})
+			} else {
+				context.session.send_message(Const.CLOSE_MIC, {
+					uid: id - 0
+				})
+			}
+		})
+		$("body").on("click",".gift",(event)=>{
+			if (!$(event.currentTarget).hasClass("disabled")) {
+				context.session.send_message(Const.CLOSE_GIFT)
+			} else {
+				context.session.send_message(Const.OPEN_GIFT)
+			}
+		})
+		$("body").on("click",".master-head",(event)=>{
+			if (context.dmg.isMaster()) return
+			if (context.dmg.giftopen) {
+				this.$gift_data = {
+					to: context.dmg.userinfo.id
 				}
-				let gift = 0
-				for(let i=0,len=context.room.gifts.length;i<len;i++) {
-					let item = context.room.gifts[i]
-					if (item.id == id) {
-						gift = item.total
-						break
+				this.__show_gift_layer()
+			} else {
+				alert("现在还不能送礼物哦~")
+			}
+		})
+		$("body").on("click",".students .cell",(event)=>{
+			let id = $(event.currentTarget).attr("data-id")
+			if (!id || id == context.dmg.userinfo.id) {
+				return
+			}
+			if (context.dmg.isMaster() || context.dmg.giftopen) {
+				this.$gift_data = {
+					to: id
+				}
+				this.__show_gift_layer()
+			} else {
+				alert("现在还不能送礼物哦~")
+			}
+		})
+		$("body").on("click",".gift-layer .gift-item",(event)=>{
+			let index = $(event.currentTarget).attr("data-index")
+			if (!index || !this.$gift_data) {
+				this.__hide_gift_layer()
+				return
+			}
+			this.$gift_data.gift = context.dmg.gifts[index]
+			this.__hide_gift_layer()
+			this.__send_gift()
+		})
+		room.on("NEW_STREAM", (stream)=>{
+			// 判断是不是主班老师
+			let id = stream.getId()
+			let isMaster = context.dmg.isChairMaster(id)
+			let isSubMaster = context.dmg.isSubMaster(id)
+			if (isSubMaster) {
+				return
+			}
+			if (isMaster) {
+				stream.play('master-video');
+			} else {
+				let dom = $(`#students_${id}`)
+				if (dom.length === 0) {
+					let user = context.dmg.getUser(id) || {
+						child_name: "-"
+					}
+					let gift = 0
+					for(let i=0,len=context.room.gifts.length;i<len;i++) {
+						let item = context.room.gifts[i]
+						if (item.id == id) {
+							gift = item.total
+							break
+						}
+					}
+					let muted = context.dmg.isMuted(id), racing = context.dmg.racing
+					let idle = $("#students .idle"),
+						cell = $(`<div id="students_${id}" class="cell" data-id="${id}">
+							<div class="name">${user.child_name}</div>
+							<div class="hand" ${racing?'':'style="display:none"'}></div>
+							<div class="video" id="students_${id}_video"></div>
+							<div class="bar">
+								<div class="sound ${muted?'mute':''}" data-id="${id}"></div>
+								<div class="ph"></div>
+								<div class="gift">${gift}</div>
+							</div>
+						</div>`)
+					if (idle.length == 0) {
+						$('#students').append(cell)
+					} else {
+						$(idle[0]).replaceWith(cell)
 					}
 				}
-				let idle = $("#students .idle"),
-					cell = $(`<div id="students_${id}" class="cell">
-						<div class="name">${user.child_name}</div>
-						<div class="hand" style="display:none"></div>
-						<div class="video" id="students_${id}_video"></div>
-						<div class="bar">
-							<div class="sound mute"></div>
-							<div class="ph"></div>
-							<div class="gift">${gift}</div>
-						</div>
-					</div>`)
-				if (idle.length == 0) {
-					$('#students').append(cell)
-				} else {
-					$(idle[0]).replaceWith(cell)
-				}
+				stream.play('students_' + stream.getId() + "_video");
 			}
-			stream.play('students_' + stream.getId() + "_video");
 		})
 		room.on("REMOVE_STREAM", (stream)=>{
 			$('#students_' + stream.getId()).remove();
@@ -339,14 +522,14 @@ class Viewer {
 					break
 					case "starttest":
 					break
+					case Const.OPEN_MIC:
+					case Const.CLOSE_MIC:
 					case Const.OPEN_RACE:
 					case Const.CLOSE_RACE:
+					case Const.OPEN_GIFT:
+					case Const.CLOSE_GIFT:
 					this.__on_signal_message(message)
 					break
-					case "opengift":
-					case "closegift":
-					case "closemic":
-					case "openmic":
 					break
 				}
 			} else if (message.to == "all") {
@@ -363,20 +546,51 @@ class Viewer {
 			case Const.OPEN_RACE:
 			$("#students .hand").text("").show()
 			$(".cell.handsup").removeClass("disabled")
+			context.dmg.racing = true
 			break
 			case Const.CLOSE_RACE:
 			$("#students .hand").text("").hide()
 			$(".cell.handsup").addClass("disabled")
+			context.dmg.racing = false
+			break
+			case Const.OPEN_MIC:
+			if (data.uid) {
+				$("#students_"+data.uid+" .sound").removeClass("mute")
+			}
+			context.dmg.setUnMuted(data.uid)
+			room.stream_audio(data.uid)
+			break
+			case Const.CLOSE_MIC:
+			if (data.uid) {
+				$("#students_"+data.uid+" .sound").addClass("mute")
+			}
+			context.dmg.setMuted(data.uid)
+			room.stream_audio(data.uid)
+			break
+			case Const.OPEN_GIFT:
+			$(".cell.gift").removeClass("disabled")
+			context.dmg.giftopen = true
+			break
+			case Const.CLOSE_GIFT:
+			$(".cell.gift").addClass("disabled")
+			context.dmg.giftopen = false
 			break
 			case "racerank":
 			if (data.uid) {
 				$("#students_"+data.uid+" .hand").text(data.rank).show()
 			}
 			break
-			case "gift":
 			case "starttest":
 			case "stoptest":
 			break
+			case "gift":
+			let total = data.total
+			context.room.gifts.forEach((gift)=>{
+				if (gift.id == data.uid) {
+					gift.total = total
+				}
+			})
+			$("#students_"+data.uid+" .gift").text(total)
 			default:
 			context.session.send_message(null, null, message)
 		}
@@ -403,18 +617,27 @@ class Viewer {
 		}).done()
 		this.__get_courses()
 		$(".calendar-page,.course-page").show()
-		console.log("call signal init...")
 		signal.init()
 	}
 
 	course() {
 		if (context.course) {
 			$(".page").addClass("next")
+			// 获取礼物列表
+			net.getGiftsList().then((data)=>{
+				context.dmg.gifts = data.gifts
+				context.render("gifts-tmpl", data)
+			})
 			net.getRoomInfo(context.course.channel_id).then((result)=>{
 				context.room = result
 				room.start()
 				signal.join()
 				context.session.init("#course-content")
+				if (!context.dmg.isMaster()) {
+					$(".sidebar .buttons").hide()
+				} else {
+					$(".sidebar .buttons").show()
+				}
 				// 发送init-room
 				let masters = []
 				context.course.teachers.forEach((teacher)=>{
@@ -437,6 +660,7 @@ class Viewer {
 		$(".page").removeClass("next")
 		room.leave()
 		signal.leave()
+		context.dmg.destroy()
 	}
 
 	__get_courses() {
@@ -3355,6 +3579,20 @@ class Network extends Eventer {
 			channel_id
 		}, "post")
 	}
+
+	/**
+	 * 获取礼物列表
+	 */
+	getGiftsList() {
+		return this.__request("/api/gifts", {})
+	}
+
+	/**
+	 * 发礼物
+	 */
+	sendGift(data) {
+		return this.__request("/api/give_gift", data, "post")
+	}
 }
 
 module.exports = new Network
@@ -3381,6 +3619,7 @@ class Room extends Eventer {
 		} else {
 			this.$streams_list[index] = stream
 		}
+		this.stream_audio(id)
 	}
 
 	__remove_stream(stream) {
@@ -3427,6 +3666,18 @@ class Room extends Eventer {
 				this.$client = client
 			}
 		})
+	}
+
+	stream_audio(id) {
+		let stream = this.__get_stream(id)
+		if (!stream) return
+		let isMaster = context.course.teacher_id == id
+		let unmuted  = !context.dmg.isMuted(id)
+		if (!unmuted && !isMaster) {
+			stream.disableAudio()
+		} else {
+			stream.enableAudio()
+		}
 	}
 
 	__start_stream() {
@@ -3492,8 +3743,8 @@ class Room extends Eventer {
         });
 
         stream.init(()=>{
-			stream.play('master-video');
-
+			this.stream_audio(stream.getId())
+			this.trigger("NEW_STREAM", stream)
 			this.$client.publish(stream, function (err) {
 				alert("无法连接您的视频流，请确定您的网络是否良好。")
 			});
@@ -3779,6 +4030,11 @@ class Signalize extends Eventer {
 				this.$session = this.$signal.login(context.dmg.userinfo.id+"", net.sigtoken)
 				this.$session.onLoginSuccess = ()=>{
 					this.$inited = true
+					this.$session.invoke("io.agora.signal.user_set_attr", {
+						name: "data", value: JSON.stringify(context.dmg.userinfo)
+					}, (event, res)=>{
+						console.log("set user info success", context.dmg.userinfo, res)
+					})
 					resolve()
 					console.log("session logined...")
 				}
@@ -3816,15 +4072,12 @@ class Signalize extends Eventer {
 			channel.onChannelJoined = ()=>{
 				// 上报自己的用户信息
 				this.$channel = channel
-				this.$channel.channelSetAttr("data", JSON.stringify(context.dmg.userinfo), ()=>{
-					console.log("set user info success", context.dmg.userinfo)
-					this.trigger("CHANNEL_JOINED", channel)
-					// 发送消息队列中的消息
-					this.$queue.forEach((message)=>{
-						this.send(message)
-					})
-					this.$queue = []
+				this.trigger("CHANNEL_JOINED", channel)
+				// 发送消息队列中的消息
+				this.$queue.forEach((message)=>{
+					this.send(message)
 				})
+				this.$queue = []
 			}
 			channel.onChannelJoinFailed = ()=>{
 				console.log("channel join failed, retry after 2s")
@@ -3837,10 +4090,12 @@ class Signalize extends Eventer {
 				this.$session.invoke("io.agora.signal.user_get_attr", {
 					account, name: "data"
 				}, (event, res)=>{
-					let userinfo = JSON.parse(res.value)
-					console.log("new user joined...",userinfo)
-					context.dmg.addUser(userinfo)
-					this.trigger("CHANNEL_NEW_USER", userinfo)
+					if (res.value) {
+						console.log("new user joined...",res)
+						let userinfo = JSON.parse(res.value)
+						context.dmg.addUser(userinfo)
+						this.trigger("CHANNEL_NEW_USER", userinfo)
+					}
 				})
 			}
 			channel.onChannelUserJoined = (account, uid)=>{

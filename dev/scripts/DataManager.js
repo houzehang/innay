@@ -12,7 +12,20 @@ const Serialize = require("./serialize")
 class DataManager extends Eventer {
 	constructor() {
 		super()
-		this.$user_list = new Serialize
+		this.$userInfo = null
+		this.$gifts    = []
+		this.__reset()
+	}
+
+	__reset() {
+		this.$user_list 	= new Serialize
+		this.$user_unmuted	= {}
+		this.$racing		= false
+		this.$giftopen 		= true
+	}
+
+	destroy() {
+		this.__reset()
 	}
 
 	set userinfo(userinfo) {
@@ -25,6 +38,32 @@ class DataManager extends Eventer {
 			this.$userInfo = context.storage.get("USER_INFO")
 		}
 		return this.$userInfo
+	}
+
+	isMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		for(let i=0,len=context.course.teachers.length;i<len;i++) {
+			let item = context.course.teachers[i]
+			if (item.id == id) {
+				return true
+			}
+		}
+	}
+
+	isChairMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		return context.course.teacher_id == id
+	}
+
+	isSubMaster(id) {
+		if (!id) {
+			id = this.$userInfo.id
+		}
+		return this.isMaster(id) && !this.isChairMaster(id)
 	}
 
 	set courses(courses) {
@@ -52,6 +91,45 @@ class DataManager extends Eventer {
 
 	get users() {
 		return this.$user_list.data()
+	}
+
+	setUnMuted(id) {
+		this.$user_unmuted[id] = true
+	}
+
+	setMuted(id) {
+		this.$user_unmuted[id] = false
+	}
+
+	isMuted(id) {
+		return !this.$user_unmuted[id]
+	}
+
+	set racing(race) {
+		this.$racing = race
+	}
+	
+	get racing() {
+		return this.$racing
+	}
+
+	set giftopen(giftopen) {
+		this.$giftopen = giftopen
+	}
+	
+	get giftopen() {
+		if (this.isMaster()) {
+			return true
+		}
+		return this.$giftopen
+	}
+
+	set gifts(gifts) {
+		this.$gifts = gifts
+	}
+	
+	get gifts() {
+		return this.$gifts
 	}
 }
 

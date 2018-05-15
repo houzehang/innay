@@ -70,6 +70,43 @@ html,body {
 				}
 			}
 		}
+		.gift-layer {
+			.title-icon {
+				.view-base("gift-title.png");
+				position: absolute;
+				top: -1.36rem/2;
+				left: 50%;
+				margin-left: -1.93rem;
+			}
+			.dialog {
+				width: 12.41rem;
+				height: 5.2rem;
+				.gifts {
+					margin-top: 0.3rem;
+					width: 100%;
+					display: flex;
+					justify-content: space-around;
+					.gift-item {
+						width: 1.88rem;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						font-size: 0.4rem;
+						color: #8b460e;
+						.gift-icon {
+							height: 2.14rem;
+							img {
+								width: 100%;
+							}
+						}
+						.gift-name {
+							margin-top: 0.2rem;
+						}
+					}
+				}
+			}
+		}
 		&.next {
 			transform: translateX(-100%);
 		}
@@ -384,11 +421,9 @@ html,body {
 							align-items: center;
 							.sound {
 								margin-left: 0.17rem;
+								.view-base("unmuted-icon.png");
 								&.mute {
 									.view-base("muted-icon.png");
-								}
-								&.unmute {
-									.view-base("unmuted-icon.png");
 								}
 							}
 							.ph {
