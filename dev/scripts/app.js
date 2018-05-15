@@ -8,11 +8,11 @@ const context   = require("./context")
 const DMG 		= require("./DataManager")
 class App {
 	constructor() {
+		this.$dmg		= new DMG
+		context.dmg 	= this.$dmg
 		this.$viewer   	= new Viewer
 		this.$loading 	= new Loading
 		context.loading = this.$loading
-		this.$dmg		= new DMG
-		context.dmg 	= this.$dmg
 		this.__bind()
 	}
 

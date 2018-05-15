@@ -7,10 +7,12 @@
 let Const   	= require("../const.js");
 const Eventer  	= require("./eventer")
 const context 	= require("./context")
+const Serialize = require("./serialize")
 
 class DataManager extends Eventer {
 	constructor() {
 		super()
+		this.$user_list = new Serialize
 	}
 
 	set userinfo(userinfo) {
@@ -31,6 +33,18 @@ class DataManager extends Eventer {
 
 	get courses() {
 		return this.$courses
+	}
+
+	addUser(user) {
+		this.$user_list.merge([user])
+	}
+
+	removeUser(id) {
+		this.$user_list.remove(id)
+	}
+
+	get users() {
+		return this.$user_list.data()
 	}
 }
 

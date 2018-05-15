@@ -4,6 +4,7 @@ const DMG 		= require("./DataManager").DataManager
 const context 	= require("./context")
 let Calendar	= require("./calendar")
 const room 		= require("./room")
+const signal	= require('./signal')
 /**
  * 对应mvc结构中的View，所有界面相关的处理均在本类中实现
  */
@@ -87,7 +88,11 @@ class Viewer {
 			},100)
 		})
 		$("body").on("click",".ok-btn",()=>{
-			$(".page").removeClass("next")
+			$(".back-layer").removeClass("show")
+			setTimeout(()=>{
+				$(".back-layer").hide()
+			},300)
+			this.leaveCourse()
 		})
 		$("body").on("click",".course-close",()=>{
 			$(".exit-layer").show()
@@ -96,15 +101,40 @@ class Viewer {
 			},100)
 		})
 		$("body").on("click",".exit-btn",()=>{
-			$(".page").removeClass("next")
 			$(".exit-layer").removeClass("show")
 			setTimeout(()=>{
 				$(".exit-layer").hide()
 			},300)
+			this.leaveCourse()
 		})
 		$("body").on("click",".gift,.handsup",(event)=>{
 			let target = $(event.currentTarget)
 			target.toggleClass("disabled")
+		})
+		room.on("NEW_STREAM", (stream)=>{
+			let id = stream.getId()
+			let dom = $(`#students_${id}`)
+			if (dom.length === 0) {
+				let idle = $("#students .idle"),
+					cell = $(`<div id="students_${id}" class="cell"></div>`)
+				if (idle.length == 0) {
+					$('#students').append(cell)
+				} else {
+					$(idle[0]).replaceWith(cell)
+				}
+			}
+			stream.play('students_' + stream.getId());
+		})
+		room.on("REMOVE_STREAM", (stream)=>{
+			$('#students_' + stream.getId()).remove();
+			let cells = $("#students .cell")
+			if (cells.length < Const.CELL_COUNT) {
+				$('#students').append(`<div class="cell idle"></div>`)
+			}
+		})
+		room.on("LEAVE_ROOM", ()=>{
+			$("#master-video").html("")
+			$("#students").html("")
 		})
 	}
 
@@ -115,6 +145,11 @@ class Viewer {
 
 	content() {
 		$(".page").hide()
+		let cells = []
+		for(let i=0;i<Const.CELL_COUNT;i++) {
+			cells.push(`<div class="cell idle"></div>`)
+		}
+		$("#students").html(cells.join(''))
 		let choosed = this.data.calendar_data.choosed_txt
 		net.lessons(`${choosed.year}-${choosed.month}`).then((res)=>{
 			let dates = res.dates
@@ -122,6 +157,8 @@ class Viewer {
 		}).done()
 		this.__get_courses()
 		$(".calendar-page,.course-page").show()
+		console.log("call signal init...")
+		signal.init()
 	}
 
 	course() {
@@ -130,8 +167,16 @@ class Viewer {
 			net.getRoomInfo(context.course.channel_id).then((result)=>{
 				context.room = result
 				room.start()
+				signal.join()
+				signal.send({"hello":"world"})
 			})
 		}
+	}
+
+	leaveCourse() {
+		$(".page").removeClass("next")
+		room.leave()
+		signal.leave()
 	}
 
 	__get_courses() {

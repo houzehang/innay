@@ -2,9 +2,39 @@ let AgoraRTC 	= require("./AgoraRTCSDK-2.2.0")
 const context 	= require("./context")
 const Const 	= require("../const")
 const Q 		= require("q")
-class Room {
+const Eventer   = require('./eventer')
+class Room extends Eventer {
 	constructor() {
+		super()
 		this.__init()
+		this.$streams_list 	= []
+		this.$streams_hash 	= {}
+	}
+
+	__add_stream(stream) {
+		let id = stream.getId()
+		let index = this.$streams_hash[id]
+		if (index == undefined) {
+			this.$streams_list.push(stream)
+			this.$streams_hash[id] = this.$streams_list.length-1
+		} else {
+			this.$streams_list[index] = stream
+		}
+	}
+
+	__remove_stream(stream) {
+		let id = stream.getId()
+		let index = this.$streams_hash[id]
+		this.$streams_list.splice(index,1)
+		this.$streams_hash = {}
+		this.$streams_list.forEach((item,index)=>{
+			this.$streams_hash[item.getId()] = index
+		})
+	}
+
+	__get_stream(id) {
+		let index = this.$streams_hash[id]
+		return this.$streams_list[index]
 	}
 
 	__init() {
@@ -64,18 +94,15 @@ class Room {
 		this.$client.on('stream-subscribed', (evt)=>{
 			var stream = evt.stream;
 			console.log("Subscribe remote stream successfully: " + stream.getId());
-			let id = stream.getId()
-			let dom = $(`students_${id}`)
-			if (dom.length === 0) {
-				$('#students').append(`<div id="students_${id}" class="cell"></div>`)
-			}
-			stream.play('students_' + stream.getId());
+			this.trigger("NEW_STREAM", stream)
+			this.__add_stream(stream)
 		});
 	
 		this.$client.on('stream-removed', (evt)=>{
 			var stream = evt.stream;
 			stream.stop();
-			$('#students_' + stream.getId()).remove();
+			this.trigger("REMOVE_STREAM", stream)
+			this.__remove_stream(stream)
 			console.log("Remote stream is removed " + stream.getId());
 		});
 	
@@ -83,7 +110,8 @@ class Room {
 			var stream = evt.stream;
 			if (stream) {
 				stream.stop();
-				$('#students_' + stream.getId()).remove();
+				this.trigger("REMOVE_STREAM", stream)
+				this.__remove_stream(stream)
 				console.log(evt.uid + " leaved from this channel");
 			}
 		});
@@ -113,7 +141,8 @@ class Room {
 			});
         }, function (err) {
 			alert("无法访问您的摄像头或麦克风")
-        });
+		});
+		this.$local_stream = stream
 	}
 
 	start() {
@@ -124,6 +153,27 @@ class Room {
 				console.log("join error",error)
 			});
 		},()=>{}).done()
+	}
+
+	leave() {
+		this.$client.leave(()=>{
+			this.trigger("LEAVE_ROOM", this.$client)
+			console.log("client leaves channel");
+		}, (err)=>{
+			console.log("client leave failed ", err);
+		});
+		this.$client.unpublish(this.$local_stream, (err)=>{
+			console.log("unpublish stream failed ", err)
+		})
+		this.$local_stream.stop()
+		this.$local_stream.close()
+		this.$streams_list.forEach((stream)=>{
+			this.$client.unpublish(stream, (err)=>{
+				console.log("unpublish stream failed ", err)
+			})
+			stream.stop()
+			stream.close()
+		})
 	}
 }
 
