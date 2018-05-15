@@ -27,7 +27,7 @@ class Signalize extends Eventer {
 				this.$session.onLoginFailed = (ecode)=>{
 					if (ecode == Const.LOGIN_E_NET) {
 						setTimeout(()=>{
-							this.__init().then(resolve, reject).done()
+							this.init().then(resolve, reject).done()
 						},2000)
 					}
 					console.log("session login failed...",ecode)
@@ -35,7 +35,7 @@ class Signalize extends Eventer {
 				this.$session.onLogout = (ecode)=>{
 					if (ecode == Const.LOGOUT_E_NET) {
 						setTimeout(()=>{
-							this.__init().then(resolve, reject).done()
+							this.init().then(resolve, reject).done()
 						},2000)
 					}
 					console.log("session logout",ecode)
@@ -43,7 +43,7 @@ class Signalize extends Eventer {
 				this.$session.onError = (ecode)=>{
 					if (ecode == Const.GENERAL_E_NOT_LOGIN) {
 						setTimeout(()=>{
-							this.__init().then(resolve, reject).done()
+							this.init().then(resolve, reject).done()
 						},2000)
 					}
 					console.log("session error",ecode)
@@ -74,7 +74,7 @@ class Signalize extends Eventer {
 					this.join()
 				}, 2000)
 			}
-			channel.onChannelUserJoined = (account, uid)=>{
+			let new_user_joined = (account)=>{
 				// 获取用户信息
 				this.$session.invoke("io.agora.signal.user_get_attr", {
 					account, name: "data"
@@ -85,6 +85,14 @@ class Signalize extends Eventer {
 					this.trigger("CHANNEL_NEW_USER", userinfo)
 				})
 			}
+			channel.onChannelUserJoined = (account, uid)=>{
+				new_user_joined(account)
+			}
+			channel.onChannelUserList = function(users){
+				users.forEach((account)=>{
+					new_user_joined(account[0])
+				})
+			};
 			channel.onChannelUserLeaved = (account) => {
 				context.dmg.removeUser(account)
 				this.trigger("CHANNEL_USER_LEAVE", account)
@@ -92,11 +100,7 @@ class Signalize extends Eventer {
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
 				console.log("receive new message", msg)
 				let message = JSON.parse(msg)
-				let data    = {
-					from: account,
-					message
-				}
-				this.trigger("NEW_MESSAGE", data)
+				this.trigger("NEW_MESSAGE", message)
 			};
 		},()=>{})
 	}

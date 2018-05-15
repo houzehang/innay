@@ -33,6 +33,14 @@ class Context {
 		this.$room = room
 	}
 
+	get session() {
+		return this.$session
+	}
+
+	set session(session) {
+		this.$session = session
+	}
+
 	get storage() {
 		if (!this.$storage) {
 			this.$storage = new Storage("DYM")

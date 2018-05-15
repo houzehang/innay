@@ -228,7 +228,8 @@ html,body {
 				align-items: center;
 				font-size: 0.5rem;
 				overflow: hidden;
-				img {
+				.webview {
+					width: 100%;
 					height: 100%;
 				}
 			}
@@ -335,12 +336,73 @@ html,body {
 					flex-wrap: wrap;
 					justify-content: space-between;
 					.cell {
-						border-radius: 0.2rem;
+						position: relative;
+						border-top-left-radius: 0.2rem;
+						border-top-right-radius: 0.2rem;
+						border-bottom-left-radius: 0.05rem;
+						border-bottom-right-radius: 0.05rem;
 						width: 1.86rem;
 						height: 2.5rem;
 						margin-bottom: 0.2rem;
 						background: #fff url(../assets/waiting.png) no-repeat center center;
 						background-size: 1.04rem auto;
+						.name {
+							font-size: 0.22rem;
+							color: #8b460e;
+							height: 0.4rem;
+							line-height: 0.4rem;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							padding-left: 0.04rem;
+						}
+						.hand {
+							top: 0.06rem;
+							position: absolute;
+							right: 0.1rem;
+							background: url(../assets/hands-up.png) no-repeat left center;
+							background-size: 0.2rem auto;
+							font-size: 0.28rem;
+							line-height: 0.3rem;
+							color: #8b460e;
+							padding-left: 0.25rem;
+							height: 0.3rem;
+						}
+						.video {
+							width: 1.78rem;
+							height: 2.06rem;
+							margin: 0 auto;
+						}
+						.bar {
+							position: absolute;
+							bottom: 0.04rem;
+							height: 0.35rem;
+							background: rgba(0, 0, 0, 0.67);
+							left: 0.04rem;
+							width: 1.78rem;
+							display: flex;
+							align-items: center;
+							.sound {
+								margin-left: 0.17rem;
+								&.mute {
+									.view-base("muted-icon.png");
+								}
+								&.unmute {
+									.view-base("unmuted-icon.png");
+								}
+							}
+							.ph {
+								flex: 1;
+							}
+							.gift {
+								font-size: 0.24rem;
+								color: #ffca59;
+								padding-left: 0.3rem;
+								background: url(../assets/gift-icon.png) no-repeat center left;
+								background-size: 0.23rem auto;
+								margin-right: 0.17rem;
+							}
+						}
 					}
 				}
 			}

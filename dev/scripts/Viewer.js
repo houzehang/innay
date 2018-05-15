@@ -107,23 +107,61 @@ class Viewer {
 			},300)
 			this.leaveCourse()
 		})
-		$("body").on("click",".gift,.handsup",(event)=>{
-			let target = $(event.currentTarget)
-			target.toggleClass("disabled")
+		$("body").on("click",".prev-page",()=>{
+			context.session.send_message("appprevpage")
+		})
+		$("body").on("click",".next-page",()=>{
+			context.session.send_message("appnextpage")
+		})
+		$("body").on("click",".clear",()=>{
+			context.session.send_message("appclearall")
+		})
+		$("body").on("click",".prev-step",()=>{
+			context.session.send_message("appprevstep")
+		})
+		$("body").on("click",".next-step",()=>{
+			context.session.send_message("appnextstep")
+		})
+		$("body").on("click",".handsup",(event)=>{
+			if (!$(event.currentTarget).hasClass("disabled")) {
+				context.session.send_message(Const.CLOSE_RACE)
+			} else {
+				context.session.send_message(Const.OPEN_RACE)
+			}
 		})
 		room.on("NEW_STREAM", (stream)=>{
 			let id = stream.getId()
 			let dom = $(`#students_${id}`)
 			if (dom.length === 0) {
+				let user = context.dmg.getUser(id) || {
+					child_name: "-"
+				}
+				let gift = 0
+				for(let i=0,len=context.room.gifts.length;i<len;i++) {
+					let item = context.room.gifts[i]
+					if (item.id == id) {
+						gift = item.total
+						break
+					}
+				}
 				let idle = $("#students .idle"),
-					cell = $(`<div id="students_${id}" class="cell"></div>`)
+					cell = $(`<div id="students_${id}" class="cell">
+						<div class="name">${user.child_name}</div>
+						<div class="hand" style="display:none"></div>
+						<div class="video" id="students_${id}_video"></div>
+						<div class="bar">
+							<div class="sound mute"></div>
+							<div class="ph"></div>
+							<div class="gift">${gift}</div>
+						</div>
+					</div>`)
 				if (idle.length == 0) {
 					$('#students').append(cell)
 				} else {
 					$(idle[0]).replaceWith(cell)
 				}
 			}
-			stream.play('students_' + stream.getId());
+			stream.play('students_' + stream.getId() + "_video");
 		})
 		room.on("REMOVE_STREAM", (stream)=>{
 			$('#students_' + stream.getId()).remove();
@@ -133,9 +171,80 @@ class Viewer {
 			}
 		})
 		room.on("LEAVE_ROOM", ()=>{
-			$("#master-video").html("")
-			$("#students").html("")
+			context.session.destroy()
 		})
+		signal.on("CHANNEL_NEW_USER", (user)=>{
+			context.session.send_message(Const.MEMBER_ADD, {
+			}, {
+				userinfos  : [user]
+			})
+			console.log("channel new user...",user)
+			// 渲染用户列表
+			let dom = $("#students_"+user.id)
+			if (dom.length > 0) {
+				$(".name",dom).text(user.child_name)
+			}
+		})
+		signal.on("CHANNEL_USER_LEAVE", (id)=>{
+			context.session.send_message(Const.MEMBER_LEAVE, {
+			}, {
+				userinfos  : [id]
+			})
+		})
+		signal.on("NEW_MESSAGE", (message)=>{
+			console.log("receive new signal message",message)
+			this.__on_signal_message(message)
+		})
+		context.session.on("NEW_MESSAGE", (message)=>{
+			console.log("receive new session message",message)
+			if (message.to == "app") {
+				let data = message.message
+				switch(message.type) {
+					case Const.JS_READY :
+					break
+					case "starttest":
+					break
+					case Const.OPEN_RACE:
+					case Const.CLOSE_RACE:
+					this.__on_signal_message(message)
+					break
+					case "opengift":
+					case "closegift":
+					case "closemic":
+					case "openmic":
+					break
+				}
+			} else if (message.to == "all") {
+				signal.send(message)
+			}
+		})
+	}
+
+	__on_signal_message(message) {
+		let data = message.message
+		switch(message.type) {
+			case "closeroom":
+			break
+			case Const.OPEN_RACE:
+			$("#students .hand").text("").show()
+			$(".cell.handsup").removeClass("disabled")
+			break
+			case Const.CLOSE_RACE:
+			$("#students .hand").text("").hide()
+			$(".cell.handsup").addClass("disabled")
+			break
+			case "racerank":
+			if (data.uid) {
+				$("#students_"+data.uid+" .hand").text(data.rank).show()
+			}
+			break
+			case "gift":
+			case "starttest":
+			case "stoptest":
+			break
+			default:
+			context.session.send_message(null, null, message)
+		}
 	}
 
 	login() {
@@ -145,6 +254,8 @@ class Viewer {
 
 	content() {
 		$(".page").hide()
+		$("#master-video").html("")
+		$("#students").html("")
 		let cells = []
 		for(let i=0;i<Const.CELL_COUNT;i++) {
 			cells.push(`<div class="cell idle"></div>`)
@@ -168,7 +279,21 @@ class Viewer {
 				context.room = result
 				room.start()
 				signal.join()
-				signal.send({"hello":"world"})
+				context.session.init("#course-content")
+				// 发送init-room
+				let masters = []
+				context.course.teachers.forEach((teacher)=>{
+					masters.push(teacher.id)
+				})
+				let userinfos = [ context.dmg.userinfo ]
+				userinfos.concat(context.dmg.users)
+				context.session.send_message(Const.INIT_ROOM, {
+					channel_id: context.course.channel_id,
+					token: net.token
+				}, {
+					master_ids : masters,
+					userinfos  : userinfos
+				})
 			})
 		}
 	}

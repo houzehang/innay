@@ -44,6 +44,17 @@ gulp.task('scripts', function() {
          .pipe(gulp.dest('./dist/scripts'))
 });
 
+
+gulp.task('inject', function() {
+  return gulp.src('./dev/scripts/inject.js')
+         .pipe(plumber(function (error) {
+              gutil.log(error.message);
+              this.emit('end');
+          }))
+         .pipe(browserify())
+         .pipe(babel({presets: ['babili']}))
+         .pipe(gulp.dest('./dist/scripts'))
+});
 //-------- debug ---------
 gulp.task('debug-minify', function() {
   return gulp.src('./dev/*.html')
@@ -74,10 +85,21 @@ gulp.task('debug-scripts', function() {
          .pipe(gulp.dest('./dist/scripts'))
 });
 
+gulp.task('debug-inject', function() {
+  return gulp.src('./dev/scripts/inject.js')
+         .pipe(plumber(function (error) {
+              gutil.log(error.message);
+              this.emit('end');
+          }))
+         .pipe(browserify())
+         .pipe(gulp.dest('./dist/scripts'))
+});
+
 gulp.task('watch', function () {
    gulp.watch('./dev/scripts/*.js', ['debug-scripts']);
+   gulp.watch('./dev/scripts/*.js', ['debug-inject']);
    gulp.watch('./dev/less/*.less',  ['debug-less']);
    gulp.watch('./dev/*.html',       ['debug-minify']);
 });
 
-gulp.task('default', ['scripts', 'less', 'html']);
+gulp.task('default', ['scripts', 'less', 'html', 'inject']);

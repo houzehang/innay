@@ -156,17 +156,17 @@ class Room extends Eventer {
 	}
 
 	leave() {
+		this.$local_stream.stop()
+		this.$local_stream.close()
+		this.$client.unpublish(this.$local_stream, (err)=>{
+			console.log("unpublish stream failed ", err)
+		})
 		this.$client.leave(()=>{
 			this.trigger("LEAVE_ROOM", this.$client)
 			console.log("client leaves channel");
 		}, (err)=>{
 			console.log("client leave failed ", err);
 		});
-		this.$client.unpublish(this.$local_stream, (err)=>{
-			console.log("unpublish stream failed ", err)
-		})
-		this.$local_stream.stop()
-		this.$local_stream.close()
 		this.$streams_list.forEach((stream)=>{
 			this.$client.unpublish(stream, (err)=>{
 				console.log("unpublish stream failed ", err)

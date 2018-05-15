@@ -35,6 +35,13 @@ class DataManager extends Eventer {
 		return this.$courses
 	}
 
+	getUser(id) {
+		if (id == this.$userInfo) {
+			return this.$userInfo
+		}
+		return this.$user_list.get(id)
+	}
+
 	addUser(user) {
 		this.$user_list.merge([user])
 	}
