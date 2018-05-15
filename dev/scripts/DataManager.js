@@ -42,7 +42,7 @@ class DataManager extends Eventer {
 
 	isMaster(id) {
 		if (!id) {
-			id = this.$userInfo.id
+			id = this.userinfo.id
 		}
 		for(let i=0,len=context.course.teachers.length;i<len;i++) {
 			let item = context.course.teachers[i]

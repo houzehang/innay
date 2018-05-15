@@ -83,7 +83,7 @@ class DataManager extends Eventer {
 
 	isMaster(id) {
 		if (!id) {
-			id = this.$userInfo.id
+			id = this.userinfo.id
 		}
 		for(let i=0,len=context.course.teachers.length;i<len;i++) {
 			let item = context.course.teachers[i]
@@ -603,25 +603,32 @@ class Viewer {
 
 	content() {
 		$(".page").hide()
-		$("#master-video").html("")
-		$("#students").html("")
-		let cells = []
-		for(let i=0;i<Const.CELL_COUNT;i++) {
-			cells.push(`<div class="cell idle"></div>`)
+		if (context.dmg.userinfo.dentity == 2) {
+			let choosed = this.data.calendar_data.choosed_txt
+			net.lessons(`${choosed.year}-${choosed.month}`).then((res)=>{
+				let dates = res.dates
+				this.$calendar.setHighlighted(dates)
+			}).done()
+			this.__get_courses()
+			$(".calendar-page,.course-page").show()
+		} else {
+			$(".student-page,.course-page").show()
+			net.lessonsByDate().then((res)=>{
+				console.log(res)
+			})
 		}
-		$("#students").html(cells.join(''))
-		let choosed = this.data.calendar_data.choosed_txt
-		net.lessons(`${choosed.year}-${choosed.month}`).then((res)=>{
-			let dates = res.dates
-			this.$calendar.setHighlighted(dates)
-		}).done()
-		this.__get_courses()
-		$(".calendar-page,.course-page").show()
 		signal.init()
 	}
 
 	course() {
 		if (context.course) {
+			$("#master-video").html("")
+			$("#students").html("")
+			let cells = []
+			for(let i=0;i<Const.CELL_COUNT;i++) {
+				cells.push(`<div class="cell idle"></div>`)
+			}
+			$("#students").html(cells.join(''))
 			$(".page").addClass("next")
 			// 获取礼物列表
 			net.getGiftsList().then((data)=>{
