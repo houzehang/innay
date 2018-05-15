@@ -76,7 +76,9 @@ class Room extends Eventer {
 		let unmuted  = !context.dmg.isMuted(id)
 		if (!unmuted && !isMaster) {
 			stream.disableAudio()
+			console.log("disable audio",id)
 		} else {
+			console.log("enable audio",id)
 			stream.enableAudio()
 		}
 	}
@@ -144,6 +146,7 @@ class Room extends Eventer {
         });
 
         stream.init(()=>{
+			this.__add_stream(stream)
 			this.stream_audio(stream.getId())
 			this.trigger("NEW_STREAM", stream)
 			this.$client.publish(stream, function (err) {
@@ -169,17 +172,6 @@ class Room extends Eventer {
 	}
 
 	leave() {
-		this.$local_stream.stop()
-		this.$local_stream.close()
-		this.$client.unpublish(this.$local_stream, (err)=>{
-			console.log("unpublish stream failed ", err)
-		})
-		this.$client.leave(()=>{
-			this.trigger("LEAVE_ROOM", this.$client)
-			console.log("client leaves channel");
-		}, (err)=>{
-			console.log("client leave failed ", err);
-		});
 		this.$streams_list.forEach((stream)=>{
 			this.$client.unpublish(stream, (err)=>{
 				console.log("unpublish stream failed ", err)
@@ -187,6 +179,12 @@ class Room extends Eventer {
 			stream.stop()
 			stream.close()
 		})
+		this.$client.leave(()=>{
+			this.trigger("LEAVE_ROOM", this.$client)
+			console.log("client leaves channel");
+		}, (err)=>{
+			console.log("client leave failed ", err);
+		});
 	}
 }
 
