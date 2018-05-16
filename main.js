@@ -16,8 +16,8 @@ if (setupEvents.handleSquirrelEvent()) {
 
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain} = require('electron');
+let mainWindow
 app.on('ready', ()=>{
-    let mainWindow
     function createWindow() {
         // 创建主窗口，配置详见Electron官方文档
         let $main = new BrowserWindow({width: 1024, height: 768, 
@@ -69,3 +69,7 @@ app.on('ready', ()=>{
         }
     })
 });
+ipcMain.on("ASK_FOR_REFRESH", function(event, data) {
+    console.log("ipcmain...refresh...")
+    mainWindow.reload()
+})

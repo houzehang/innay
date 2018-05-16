@@ -1,5 +1,5 @@
-const Storage 	= require("./Storage")
-
+const Storage 		= require("./Storage")
+const {ipcRenderer} = $require("electron");
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -79,6 +79,11 @@ class Context {
 		} else {
 			target.after(html);
 		}
+	}
+
+	send_to_main(params) {
+		console.log("send_to_main",ipcRenderer,params)
+		ipcRenderer.send(...params);
 	}
 }
 

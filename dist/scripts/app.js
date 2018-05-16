@@ -304,7 +304,7 @@ class Viewer {
 				context.loading.hide()
 			}).done()
 		})
-		$("body").on("click", ".start-btn",(event)=>{
+		$("body").on("click", ".calendar-page .start-btn",(event)=>{
 			let index = $(event.currentTarget).attr("data-index")
 			let data = context.dmg.courses[index]
 			$(".enter-layer .enter-time").text(data.start_time)
@@ -435,6 +435,15 @@ class Viewer {
 			this.$gift_data.gift = context.dmg.gifts[index]
 			this.__hide_gift_layer()
 			this.__send_gift()
+		})
+		$("body").on("click",".student-page .start-btn",(event)=>{
+			let target = $(event.currentTarget)
+			if (target.hasClass("disabled")) {
+				alert("教室还没开门，等会再进试试")
+			} else {
+				context.course = context.dmg.courses[0]
+				this.course()
+			}
 		})
 		room.on("NEW_STREAM", (stream)=>{
 			// 判断是不是主班老师
@@ -601,6 +610,11 @@ class Viewer {
 		$(".login-page").show()
 	}
 
+	strToDate(str) {
+		let parsed = str.split(/[-: ]/)
+		return new Date(parsed[0], parsed[1] - 1, parsed[2], parsed[3], parsed[4], parsed[5])
+	}
+
 	content() {
 		$(".page").hide()
 		if (context.dmg.userinfo.dentity == 2) {
@@ -614,7 +628,27 @@ class Viewer {
 		} else {
 			$(".student-page,.course-page").show()
 			net.lessonsByDate().then((res)=>{
-				console.log(res)
+				// 计算剩余时间
+				let room = res.rooms[0]
+				if (room) {
+					let date = this.strToDate(room.start_time)
+					let left = date.getTime() - new Date().getTime()
+					room.left = left
+					if (left <= 5 * 60 * 1000) {
+						room.can_enter = true
+					}
+					if (left > 0) {
+						let days  	= left / 1000 / 60 / 60 / 24 >> 0
+						left       -= days * 1000 * 60 * 60 * 24
+						let hours 	= left / 1000 / 60 / 60 >> 0
+						let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
+						room.days   = days
+						room.hours  = hours
+						room.minutes= minutes
+					}
+				}
+				context.render("student-tmpl", { room })
+				context.dmg.courses = res.rooms
 			})
 		}
 		signal.init()
@@ -668,6 +702,9 @@ class Viewer {
 		room.leave()
 		signal.leave()
 		context.dmg.destroy()
+		setTimeout(()=>{
+			context.send_to_main("ASK_FOR_REFRESH", {})
+		},500)
 	}
 
 	__get_courses() {
@@ -972,8 +1009,8 @@ class Calendar {
 
 module.exports = Calendar
 },{}],8:[function(require,module,exports){
-const Storage 	= require("./Storage")
-
+const Storage 		= require("./Storage")
+const {ipcRenderer} = $require("electron");
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -1053,6 +1090,11 @@ class Context {
 		} else {
 			target.after(html);
 		}
+	}
+
+	send_to_main(params) {
+		console.log("send_to_main",ipcRenderer,params)
+		ipcRenderer.send(...params);
 	}
 }
 

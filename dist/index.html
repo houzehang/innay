@@ -31,17 +31,32 @@
 			</div>
 		</div>
 		<div class="page student-page" style="display: none;">
-			<div class="time">距离下次上课还有<span>3</span>天<span>12</span>小时<span>30</span>分钟</div>
+			<div class="student-icon"></div>
+			<script type="text/x-jsrender" id="student-tmpl">
+			{{if room}}
+			{{if room.left > 0}}
+			<div class="time">距离下次上课还有{{if room.days>0}}<span>{{:room.days}}</span>天{{/if}}{{if room.hours>0}}<span>{{:room.hours}}</span>小时{{/if}}{{if room.minutes>0}}<span>{{:room.minutes}}</span>分钟{{/if}}</div>
+			{{else}}
+			<div class="time">老师开始讲课啦，赶快进入教室哦！</div>
+			{{/if}}
 			<div class="lesson-box">
 				<div class="cover">
-					<img src="" alt="">
+					<img src="{{:room.avatar}}" alt="">
 				</div>
 				<div class="info">
-					<div class="title"></div>
-					<div class="teacher"></div>
+					<div class="title">{{:room.name}}</div>
+					<div class="teacher">老师：{{:room.teacher_name}}</div>
 				</div>
-				<button class="start-btn"></button>
+				<button class="start-btn {{if !room.can_enter}}disabled{{/if}}"></button>
 			</div>
+			{{else}}
+			<div class="time">接下来没有课程啦～</div>
+			<div class="lesson-box">
+				去“大语文”小程序<br/>
+				和其他小朋友一起读诗
+			</div>
+			{{/if}}
+			</script>
 		</div>
 		<div class="page calendar-page" style="display: none;">
 			<script type="text/x-jsrender" id="calendar-tmpl">

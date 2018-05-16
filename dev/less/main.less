@@ -252,10 +252,15 @@ html,body {
 		&.student-page {
 			transition: all 300ms 0s ease-in-out;
 			background: url(../assets/student-bg.jpg) no-repeat center center;
-			background-size: 100% 100%;
+			background-size: cover;
 			justify-content: center;
+			.student-icon {
+				.view-base('student-icon.png');
+				margin: 0 auto;
+			}
 			.time {
-				padding-top: 4.02rem;
+				margin-top: 0.88rem;
+				margin-bottom: 0.9rem;
 				font-size: 0.66rem;
 				color: #fff;
 				font-weight: bold;
@@ -264,6 +269,46 @@ html,body {
 				span {
 					font-size: 1.12rem;
 					color: #ffe15a;
+				}
+			}
+			.lesson-box {
+				border: 0.1rem solid #ffca59;
+				border-radius: 0.8rem;
+				background: #fff;
+				width: 11.82rem;
+				height: 2.6rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-around;
+				.cover {
+					width: 1.3rem;
+					height: 1.3rem;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					overflow: hidden;
+					img {
+						width: 100%;
+					}
+					margin-left: 0.4rem;
+					margin-right: 0.4rem;
+				}
+				.info {
+					flex: 1;
+					.title {
+						font-size: 0.4rem;
+						color: #333333;
+					}
+					.teacher {
+						font-size: 0.34rem;
+						color: #333333;
+						margin-top: 0.38rem;
+						line-height: 0.36rem;
+					}
+				}
+				.start-btn {
+					margin: 0 0.4rem;
+					.view-base("start-btn.png");
 				}
 			}
 		}
