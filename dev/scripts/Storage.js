@@ -29,6 +29,10 @@ class Storage {
 		this.$data[key] = data;
 		localStorage.setItem(this.$namespace, JSON.stringify(this.$data));
 	}
+
+	clear() {
+		localStorage.removeItem(this.$namespace)
+	}
 }
 
 module.exports = Storage;

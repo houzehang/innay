@@ -36,10 +36,10 @@ class Session extends Eventer {
 
 	__bind() {
 		if (this.$webview) {
-			$(this.$webview).off('dom-ready');
-			$(this.$webview).on('dom-ready', () => {
-				this.$webview.openDevTools();
-			});
+			// $(this.$webview).off('dom-ready');
+			// $(this.$webview).on('dom-ready', () => {
+			// 	this.$webview.openDevTools();
+			// });
 			$(this.$webview).off('page-title-updated');
 			$(this.$webview).on('page-title-updated', (event)=>{
 				event = event.originalEvent;

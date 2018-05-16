@@ -31,6 +31,7 @@
 			</div>
 		</div>
 		<div class="page student-page" style="display: none;">
+			<button class="logout-btn">退出</button>
 			<div class="student-icon"></div>
 			<script type="text/x-jsrender" id="student-tmpl">
 			{{if room}}
@@ -59,6 +60,7 @@
 			</script>
 		</div>
 		<div class="page calendar-page" style="display: none;">
+			<button class="logout-btn">退出</button>
 			<script type="text/x-jsrender" id="calendar-tmpl">
 				<div id="calendar-box" class='calendar-box' bindtouchstart="onCalendarTouch" bindtouchmove="onCalendarTouch" bindtouchend="onCalendarTouch">
 					<div class='calendar-control cal-bd'>

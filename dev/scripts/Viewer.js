@@ -192,10 +192,13 @@ class Viewer {
 		$("body").on("click",".master-head",(event)=>{
 			if (context.dmg.isMaster()) return
 			if (context.dmg.giftopen) {
-				this.$gift_data = {
-					to: context.dmg.userinfo.id
+				let id = $("#master-video").attr("data-id")
+				if (id) {
+					this.$gift_data = {
+						to: id
+					}
+					this.__show_gift_layer()
 				}
-				this.__show_gift_layer()
 			} else {
 				alert("现在还不能送礼物哦~")
 			}
@@ -233,6 +236,10 @@ class Viewer {
 				this.course()
 			}
 		})
+		$("body").on("click",".logout-btn",(event)=>{
+			context.storage.clear()
+			remote.getCurrentWindow().reload()
+		})
 		room.on("NEW_STREAM", (stream)=>{
 			// 判断是不是主班老师
 			let id = stream.getId()
@@ -242,6 +249,7 @@ class Viewer {
 				return
 			}
 			if (isMaster) {
+				$("#master-video").attr("data-id", id)
 				stream.play('master-video');
 			} else {
 				let dom = $(`#students_${id}`)
@@ -344,11 +352,13 @@ class Viewer {
 			$("#students .hand").text("").show()
 			$(".cell.handsup").removeClass("disabled")
 			context.dmg.racing = true
+			context.session.send_message(null, null, message)
 			break
 			case Const.CLOSE_RACE:
 			$("#students .hand").text("").hide()
 			$(".cell.handsup").addClass("disabled")
 			context.dmg.racing = false
+			context.session.send_message(null, null, message)
 			break
 			case Const.OPEN_MIC:
 			if (data.uid) {
