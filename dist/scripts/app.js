@@ -218,6 +218,7 @@ const context 	= require("./context")
 let Calendar	= require("./calendar")
 const room 		= require("./room")
 const signal	= require('./signal')
+const {remote}  = $require("electron");
 /**
  * 对应mvc结构中的View，所有界面相关的处理均在本类中实现
  */
@@ -703,7 +704,7 @@ class Viewer {
 		signal.leave()
 		context.dmg.destroy()
 		setTimeout(()=>{
-			context.send_to_main("ASK_FOR_REFRESH", {})
+			remote.getCurrentWindow().reload()
 		},500)
 	}
 
