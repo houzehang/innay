@@ -144,7 +144,16 @@ class Viewer {
 			setTimeout(()=>{
 				$(".exit-layer").hide()
 			},300)
-			this.leaveCourse()
+			// 发送关闭房间请求
+			net.closeRoom(context.course.channel_id).then((res)=>{
+				if (res.status) {
+					signal.send({
+						type: "closeroom",
+						from: context.dmg.userinfo.id,
+						to: "all"
+					})
+				}
+			})
 		})
 		$("body").on("click",".prev-page",()=>{
 			context.session.send_message("appprevpage")
@@ -347,6 +356,12 @@ class Viewer {
 		let data = message.message
 		switch(message.type) {
 			case "closeroom":
+			if (context.dmg.isMaster()) {
+				this.leaveCourse()
+ 			} else {
+				alert("本次课程已结束，小朋友请到“大语文”小程序完成课后作业")
+				this.leaveCourse()
+			}
 			break
 			case Const.OPEN_RACE:
 			$("#students .hand").text("").show()

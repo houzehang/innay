@@ -118,7 +118,7 @@
 							<div class="index">{{:lesson_name}}</div>
 							<div class="date">上课时间：{{:start_time}}</div>
 						</div>
-						<button class="start-btn" data-index="{{:#getIndex()}}"></button>
+						<button class="start-btn" {{if state==2}}disabled{{/if}} data-index="{{:#getIndex()}}"></button>
 					</div>
 					{{/for}}
 				{{/if}}
@@ -140,7 +140,7 @@
 				<div class="sidebar-i">
 					<div class="master-head" id="master-video"></div>
 					<div class="line"></div>
-					<div class="buttons">
+					<div class="buttons" style="display: none">
 						<div class="row">
 							<button class="cell prev-page"></button>
 							<button class="cell next-page"></button>

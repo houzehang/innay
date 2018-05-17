@@ -120,6 +120,13 @@ class Network extends Eventer {
 	sendGift(data) {
 		return this.__request("/api/give_gift", data, "post")
 	}
+
+	/**
+	 * 关闭房间
+	 */
+	closeRoom(channel_id) {
+		return this.__request("/room/close_the_room", {channel_id}, "post")
+	}
 }
 
 module.exports = new Network
