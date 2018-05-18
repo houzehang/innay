@@ -30,9 +30,8 @@ class Login extends React.Component {
 		}).then((res)=>{
 			net.token 		= res.token
 			net.sigtoken 	= res.signaling_token
-			context.dmg.userinfo = res.user
-			this.content()
 			this.props.hideLoading()
+			this.props.loginSuccess(res.user)
 		},()=>{
 			this.props.hideLoading()
 		}).done()

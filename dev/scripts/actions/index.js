@@ -16,11 +16,11 @@ export const hide = ()=>({
 	type: types.HIDE_DIALOG
 })
 
-export const showLoading = (message)=>{
+export const showLoading = (message) => dispatch => {
 	loading.show(message)
 }
 
-export const hideLoading = (message)=>{
+export const hideLoading = (message) => dispatch => {
 	loading.hide()
 }
 
@@ -31,7 +31,10 @@ export const restoreUserInfo = () => dispatch => {
 	}
 }
 
-export const loginSuccess = (account)=>({
-	type: types.LOGIN_SUCCESS,
-	account
-})
+export const loginSuccess = (account) => dispatch => {
+	storage.store("USER_INFO", account)
+	dispatch({
+		type: types.LOGIN_SUCCESS,
+		account
+	})
+}

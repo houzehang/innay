@@ -16,6 +16,8 @@ class Entry extends React.Component {
 		const { account, dialog } = this.props
 		if (!account) {
 			history.push("#/pages/login")
+		} else {
+			history.push("#")
 		}
 		let DialogComp = ()=>{
 			if (!dialog.hide) {
