@@ -1,4 +1,3 @@
-require('./AgoraSig-1.3.0')
 const Const   = require('../const')
 const context = require('./context')
 const net 	  = require('./network')

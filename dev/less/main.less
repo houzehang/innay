@@ -1,6 +1,5 @@
-// 主样式，使用外部库 bootstrap 及 normalize
 @import url(base.less);
-@import (inline) url(normalize.css/normalize.css);
+@import url(~normalize.css/normalize.css);
 @import url(./common.less);
 html,body {
 	width: 100%;
@@ -8,6 +7,10 @@ html,body {
 	height: 100%;
 	padding: 0;
 	.normal-font();
+	.full-h {
+		height: 100%;
+		width: 100%;
+	}
 	button {
 		-webkit-appearance: none;
 		border: 0;
@@ -120,7 +123,7 @@ html,body {
 			padding: 0.2rem;
 		}
 		&.login-page {
-			background: url(../assets/login-bg.jpg) no-repeat center center;
+			background: url(../../dist/assets/login-bg.jpg) no-repeat center center;
 			background-size: 100% 100%;
 			.login-box {
 				background: #fff;
@@ -181,7 +184,7 @@ html,body {
 		}
 		&.calendar-page {
 			transition: all 300ms 0s ease-in-out;
-			background: url(../assets/calendar-bg.jpg) no-repeat center center;
+			background: url(../../dist/assets/calendar-bg.jpg) no-repeat center center;
 			background-size: 100% 100%;
 			justify-content: flex-start;
 			.calendar-box {
@@ -260,7 +263,7 @@ html,body {
 		}
 		&.student-page {
 			transition: all 300ms 0s ease-in-out;
-			background: url(../assets/student-bg.jpg) no-repeat center center;
+			background: url(../../dist/assets/student-bg.jpg) no-repeat center center;
 			background-size: cover;
 			justify-content: center;
 			.student-icon {
@@ -377,43 +380,43 @@ html,body {
 						display: flex;
 						.cell {
 							&.prev-page {
-								background: url(../assets/prev-page.png) no-repeat center center;
+								background: url(../../dist/assets/prev-page.png) no-repeat center center;
 								background-size: 0.78rem auto;
 							}
 							&.next-page {
-								background: url(../assets/next-page.png) no-repeat center center;
+								background: url(../../dist/assets/next-page.png) no-repeat center center;
 								background-size: 0.78rem auto;
 							}
 							&.clear {
-								background: url(../assets/clear.png) no-repeat center center;
+								background: url(../../dist/assets/clear.png) no-repeat center center;
 								background-size: 0.71rem auto;
 							}
 							&.handsup {
-								background: url(../assets/handsup.png) no-repeat center center;
+								background: url(../../dist/assets/handsup.png) no-repeat center center;
 								background-size: 0.72rem auto;
 								&.disabled {
-									background: url(../assets/handsup-off.png) no-repeat center center;
+									background: url(../../dist/assets/handsup-off.png) no-repeat center center;
 									background-size: 0.72rem auto;
 								}
 							}
 							&.gift {
-								background: url(../assets/gift.png) no-repeat center center;
+								background: url(../../dist/assets/gift.png) no-repeat center center;
 								background-size: 0.73rem auto;
 								&.disabled {
-									background: url(../assets/gift-off.png) no-repeat center center;
+									background: url(../../dist/assets/gift-off.png) no-repeat center center;
 									background-size: 0.73rem auto;
 								}
 							}
 							&.course-close {
-								background: url(../assets/stop-course.png) no-repeat center center;
+								background: url(../../dist/assets/stop-course.png) no-repeat center center;
 								background-size: 0.74rem auto;
 							}
 							&.prev-step {
-								background: url(../assets/prev-step.png) no-repeat center center;
+								background: url(../../dist/assets/prev-step.png) no-repeat center center;
 								background-size: 0.78rem auto;
 							}
 							&.next-step {
-								background: url(../assets/next-step.png) no-repeat center center;
+								background: url(../../dist/assets/next-step.png) no-repeat center center;
 								background-size: 0.78rem auto;
 							}
 							flex: 1;
@@ -427,7 +430,7 @@ html,body {
 					}
 					.switch {
 						height: 0.6rem;
-						background: url(../assets/switch.png) no-repeat center center;
+						background: url(../../dist/assets/switch.png) no-repeat center center;
 						background-size: 0.39rem auto;
 						transition: all 200ms 0s ease-in-out;
 						transform: rotate(180deg);
@@ -458,7 +461,7 @@ html,body {
 						width: 1.86rem;
 						height: 2.5rem;
 						margin-bottom: 0.2rem;
-						background: #fff url(../assets/waiting.png) no-repeat center center;
+						background: #fff url(../../dist/assets/waiting.png) no-repeat center center;
 						background-size: 1.04rem auto;
 						.name {
 							font-size: 0.22rem;
@@ -474,7 +477,7 @@ html,body {
 							top: 0.06rem;
 							position: absolute;
 							right: 0.1rem;
-							background: url(../assets/hands-up.png) no-repeat left center;
+							background: url(../../dist/assets/hands-up.png) no-repeat left center;
 							background-size: 0.2rem auto;
 							font-size: 0.28rem;
 							line-height: 0.3rem;
@@ -510,7 +513,7 @@ html,body {
 								font-size: 0.24rem;
 								color: #ffca59;
 								padding-left: 0.3rem;
-								background: url(../assets/gift-icon.png) no-repeat center left;
+								background: url(../../dist/assets/gift-icon.png) no-repeat center left;
 								background-size: 0.23rem auto;
 								margin-right: 0.17rem;
 							}

@@ -1,4 +1,3 @@
-let AgoraRTC 	= require("./AgoraRTCSDK-2.2.0")
 const context 	= require("./context")
 const Const 	= require("../const")
 const Q 		= require("q")

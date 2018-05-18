@@ -1,4 +1,4 @@
-const Storage 		= require("./Storage")
+const storage 		= require("./Storage")
 const {ipcRenderer} = $require("electron");
 class Context {
 	get dmg() {
@@ -43,7 +43,7 @@ class Context {
 
 	get storage() {
 		if (!this.$storage) {
-			this.$storage = new Storage("DYM")
+			this.$storage = storage
 		}
 		return this.$storage
 	}
