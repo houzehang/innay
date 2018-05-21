@@ -4,7 +4,7 @@ const context 	= require('./context')
 class Network extends Eventer {
 	constructor() {
 		super()
-		this.$base_url = "http://kecheng.runsnailrun.com"
+		this.$base_url = "https://kecheng.runsnailrun.com"
 		this.__restore_token()
 	}
 

@@ -1,5 +1,7 @@
 const Eventer = require("./eventer")
 const context = require("./context")
+const ENV 	  = require("../../env")
+console.log("ENV",ENV)
 
 class Session extends Eventer {
 	constructor() {
@@ -30,7 +32,7 @@ class Session extends Eventer {
 	 */
 	__createWebview() {
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="http://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./scripts/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./scripts/inject.js"></webview>`);
 		this.$webview = webview[0];
 	}
 
