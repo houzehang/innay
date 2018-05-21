@@ -1,17 +1,21 @@
 const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-var HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
-    vendor: [ 'react', 'react-dom', 'common', 'axios', 'lodash' ],
-    app : './app/index.js'
+    vendor: [ 'react', 'react-dom' ],
+    app : './dev/scripts/app.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-    filename: '[name].js',
+    publicPath: './',
+    filename: '[name].[hash].js',
   },
   module: {
     rules: [
@@ -46,19 +50,37 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: ['node_modules', path.resolve(__dirname, 'app')],
-    extensions: ['.js', '.jsx'],
+    modules: ['node_modules', path.resolve(__dirname, 'dev')],
+    extensions: ['.js', '.jsx', '.less', '.css'],
   },
   plugins: [
+    new webpack.EnvironmentPlugin({
+      NODE_ENV: 'production',
+    }),
+    new CleanWebpackPlugin(['dist'], {
+      root: __dirname
+    }),
     new ExtractTextPlugin("styles.css"),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: "vendor",
-      minChunks: Infinity
+    new CopyWebpackPlugin([
+      { from: 'libs/*', to: '' }
+    ]),
+    new UglifyJSPlugin({
+      sourceMap: true
     }),
     new HtmlWebpackPlugin({
       title: "大语文",
       template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html"
+    }),
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        './libs/flexible.js',
+        './libs/AgoraRTCSDK-2.2.0.js',
+        './libs/AgoraSig-1.3.0.js',
+        './libs/jquery-3.3.1.min.js',
+      ],
+      publicPath: false,
+      append: false
     })
   ],
 };

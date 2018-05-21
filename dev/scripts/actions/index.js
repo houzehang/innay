@@ -38,3 +38,30 @@ export const loginSuccess = (account) => dispatch => {
 		account
 	})
 }
+
+export const onRoomList = (rooms) => ({
+	type: types.ROOM_LIST,
+	rooms
+})
+
+export const onCalendarData = (data) => ({
+	type: types.CALENDAR_DATA,
+	data
+})
+
+export const onCourseData = (data) => ({
+	type: types.COURSE_DATA,
+	data
+})
+
+export const onRoomInfo = (data) => ({
+	type: types.ROOM_INFO,
+	data
+})
+
+export const onLogout = () => dispatch => {
+	storage.clear()
+	dispatch({
+		type: types.LOGOUT
+	})
+}

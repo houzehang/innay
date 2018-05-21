@@ -13,7 +13,6 @@ module.exports = {
     publicPath: 'http://localhost:3030/',
     filename: '[name].js',
   },
-  mode: "development",
   module: {
     rules: [
       { test: /\.html$/i, loader: 'html-loader' },
@@ -61,7 +60,7 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: "大语文",
-      template: path.resolve(__dirname, "dev", "index1.html"),
+      template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html",
       alwaysWriteToDisk: true
     }),

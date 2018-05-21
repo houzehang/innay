@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <link rel="stylesheet" href="./css/anim.css"/>
+        <link rel="stylesheet" href="./css/main.css"/>
+        <script src="./scripts/flexible.js"></script>
+        <script> 
+          window.$require = require; 
+          delete window.require;
+          delete window.exports; delete window.module;
+        </script> 
+    </head>
+    <body>
+		<div class="page login-page" style="display: none;">
+			<div class="login-box">
+				<div class="icon"></div>
+				<div class="title"></div>
+				<div class="input-control">
+					<div class="input-box">
+						<input type="number" name="mobile" value="111111" placeholder="请输入手机号"/>
+					</div>
+				</div>
+				<div class="input-control">
+					<div class="input-box">
+						<input type="password" name="password" value="111111" placeholder="请输入密码"/>
+					</div>
+				</div>
+				<button class="login-btn"></button>
+			</div>
+		</div>
+		<div class="page student-page" style="display: none;">
+			<button class="logout-btn">退出</button>
+			<div class="student-icon"></div>
+			<script type="text/x-jsrender" id="student-tmpl">
+			{{if room}}
+			{{if room.left > 0}}
+			<div class="time">距离下次上课还有{{if room.days>0}}<span>{{:room.days}}</span>天{{/if}}{{if room.hours>0}}<span>{{:room.hours}}</span>小时{{/if}}{{if room.minutes>0}}<span>{{:room.minutes}}</span>分钟{{/if}}</div>
+			{{else}}
+			<div class="time">老师开始讲课啦，赶快进入教室哦！</div>
+			{{/if}}
+			<div class="lesson-box">
+				<div class="cover">
+					<img src="{{:room.avatar}}" alt="">
+				</div>
+				<div class="info">
+					<div class="title">{{:room.name}}</div>
+					<div class="teacher">老师：{{:room.teacher_name}}</div>
+				</div>
+				<button class="start-btn {{if !room.can_enter}}disabled{{/if}}"></button>
+			</div>
+			{{else}}
+			<div class="time">接下来没有课程啦～</div>
+			<div class="lesson-box">
+				去“大语文”小程序<br/>
+				和其他小朋友一起读诗
+			</div>
+			{{/if}}
+			</script>
+		</div>
+		<div class="page calendar-page" style="display: none;">
+			<button class="logout-btn">退出</button>
+			<script type="text/x-jsrender" id="calendar-tmpl">
+				<div id="calendar-box" class='calendar-box' bindtouchstart="onCalendarTouch" bindtouchmove="onCalendarTouch" bindtouchend="onCalendarTouch">
+					<div class='calendar-control cal-bd'>
+						<div class='control-l' bindtap='onPrevMonth'>
+							<img src='./assets/calendar-arrow.png'/>
+						</div>
+						<div class='control-c'>{{:calendar_data.cursor.month}}月 {{:calendar_data.cursor.year}}年</div>
+						<div class='control-r' bindtap='onNextMonth'>
+							<img src='./assets/calendar-arrow.png'/>
+						</div>
+					</div>
+					<div class='calendar-head cal-bd'>
+						<span class='highlight'>日</span>
+						<span>一</span>
+						<span>二</span>
+						<span>三</span>
+						<span>四</span>
+						<span>五</span>
+						<span class='highlight'>六</span>
+					</div>
+					{{for calendar_data.rows}}
+					<div class='calendar-row cal-bd'>
+						{{for #data}}
+						{{if disabled}}
+						<div class='calendar-col disabled'>{{:day}}</div>
+						{{else choosed}}
+						<div class='calendar-col selected'>{{:day}}</div>
+						{{else highlighted}}
+						<div class='calendar-col highlighted' bindtap='onPickDate' data-index="{{:index}}">{{:day}}</div>
+						{{else !day}}
+						<div class='calendar-col'></div>
+						{{else}}
+						<div class='calendar-col' bindtap='onPickDate' data-index="{{:index}}">{{:day}}</div>
+						{{/if}}
+						{{/for}}
+					</div>
+					{{/for}}
+				</div>
+			</script>
+			<script type="text/x-jsrender" id="courses-tmpl">
+			<div class="courses">
+				<div class="title">
+					<div class="label">今日课程</div>
+				</div>
+				{{if courses.length == 0}}
+					<div class="nothing"></div>
+				{{else}}
+					{{for courses}}
+					<div class="row">
+						<div class="cover">
+							<img src="{{:avatar}}" alt="">
+						</div>
+						<div class="info">
+							<div class="name">{{:name}}</div>
+							<div class="index">{{:lesson_name}}</div>
+							<div class="date">上课时间：{{:start_time}}</div>
+						</div>
+						<button class="start-btn" {{if state==2}}disabled{{/if}} data-index="{{:#getIndex()}}"></button>
+					</div>
+					{{/for}}
+				{{/if}}
+			</div>
+			</script>
+			<div style="display: none;" class="mask enter-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">上课时间：<span class="enter-time"></span><br/>确认现在开始上课吗？</div>
+					<button class="enter-btn"></button>
+				</div>
+			</div>
+		</div>
+		<div class="page course-page" style="display: none;">
+			<button class="back-btn"></button>
+			<div class="course-content" id="course-content"></div>
+			<div class="sidebar">
+				<div class="sidebar-i">
+					<div class="master-head" id="master-video"></div>
+					<div class="line"></div>
+					<div class="buttons" style="display: none">
+						<div class="row">
+							<button class="cell prev-page"></button>
+							<button class="cell next-page"></button>
+							<button class="cell clear"></button>
+						</div>
+						<div class="row">
+							<button class="cell handsup disabled"></button>
+							<button class="cell gift"></button>
+							<button class="cell course-close"></button>
+						</div>
+						<div class="row last">
+							<button class="cell prev-step"></button>
+							<button class="cell next-step"></button>
+							<div class="cell"></div>
+						</div>
+						<div class="switch"></div>
+					</div>
+					<div class="students" id="students"></div>
+				</div>
+			</div>
+			<div style="display: none;" class="mask back-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">返回后将会暂时离开房间，再次进入<br/>可继续讲课。</div>
+					<button class="ok-btn"></button>
+				</div>
+			</div>
+			<div style="display: none;" class="mask exit-layer">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<div class="content">确认结束本次课程吗？</div>
+					<div class="btns">
+						<button class="exit-btn"></button>
+						<button class="cancel-btn"></button>
+					</div>
+					
+				</div>
+			</div>
+			<div class="mask gift-layer" style="display: none">
+				<div class="dialog">
+					<button class="close-btn"></button>
+					<div class="title-icon"></div>
+					<script type="text/x-jsrender" id="gifts-tmpl">
+					<div class="gifts">
+						{{for gifts}}
+						<div class="gift-item" data-index="{{:#getIndex()}}">
+							<div class="gift-icon">
+								<img src="{{:icon}}"/>
+							</div>
+							<div class="gift-name">{{:name}}</div>
+						</div>
+						{{/for}}
+					</div>
+					</script>
+				</div>
+			</div>
+		</div>
+    </body>
+    <script type="text/javascript">
+        window.$ = window.jQuery = $require('jquery');
+        // You can also require other files to run in this process
+        // $require('./scripts/app.js')
+	</script>
+</html>

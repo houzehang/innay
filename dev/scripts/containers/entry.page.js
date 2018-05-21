@@ -7,18 +7,18 @@ import {
 import createHistory from "history/createBrowserHistory"
 import { connect } from 'react-redux'
 import Login from './login.page'
+import Main from './main.page'
 import Dialog from './dialog'
 import { alert, confirm } from '../actions'
 const history = createHistory()
 
 class Entry extends React.Component {
+	componentDidMount() {
+
+	}
+	
 	render() {
-		const { account, dialog } = this.props
-		if (!account) {
-			history.push("#/pages/login")
-		} else {
-			history.push("#")
-		}
+		const { dialog, account } = this.props
 		let DialogComp = ()=>{
 			if (!dialog.hide) {
 				if (dialog.alert) {
@@ -49,11 +49,14 @@ class Entry extends React.Component {
 		}
 		return <Router>
 			<div className="full-h">
-				<Route path="/pages/login" component={Login}></Route>
 				<Route exact path="/" render={
-					()=> <div>
-						<div>home</div><Link to='/pages/login'>login</Link>
-					</div>
+					()=>{
+						if (!account) {
+							return <Login/>
+						} else {
+							return <Main/>
+						}
+					}
 				}></Route>
 				<DialogComp/>
 			</div>

@@ -20,7 +20,7 @@ let mainWindow
 app.on('ready', ()=>{
     function createWindow() {
         // 创建主窗口，配置详见Electron官方文档
-        let $main = new BrowserWindow({width: 1024, height: 768, 
+        let $main = new BrowserWindow({width: 1300, height: 768, 
             resizable: DEBUG,
             center: true,
             frame: true,
