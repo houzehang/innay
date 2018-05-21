@@ -19,7 +19,7 @@ class Entry extends React.Component {
 	
 	render() {
 		const { dialog, account } = this.props
-		let DialogComp = ()=>{
+		let DialogComponent = ()=>{
 			if (!dialog.hide) {
 				if (dialog.alert) {
 					const configure = dialog.alert
@@ -58,7 +58,7 @@ class Entry extends React.Component {
 						}
 					}
 				}></Route>
-				<DialogComp/>
+				<DialogComponent/>
 			</div>
 		</Router>
 	}
