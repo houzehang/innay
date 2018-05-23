@@ -1,10 +1,10 @@
 const Eventer = require("./eventer")
-const context = require("./context")
 const DEBUG   = require("../../env").DEBUG
 
 class Session extends Eventer {
-	constructor() {
+	constructor(inst) {
 		super()
+		this.$inst 		= inst
 		this.$uuid 	 	= 0
 		this.$_parts 	= []
 		this.$jsready 	= false
@@ -31,7 +31,7 @@ class Session extends Eventer {
 	 */
 	__createWebview() {
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./scripts/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
 		this.$webview = webview[0];
 	}
 
@@ -77,7 +77,7 @@ class Session extends Eventer {
 		if (this.$jsready) {
 			let message = {
 				message: data,
-				from: context.dmg.userinfo.id,
+				from: this.$inst.props.account.id,
 				to: "app",
 				type
 			}

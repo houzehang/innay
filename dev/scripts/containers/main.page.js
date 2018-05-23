@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
+import Course from './course.page'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
-	onLogout
+	onLogout, onStartCourse, onEndCourse
 } from '../actions'
 
 class Main extends React.Component {
@@ -112,7 +113,7 @@ class Main extends React.Component {
 			this.__on_change_month(data)
 		}} higlighted={this.state.higlighted} ref={this.$calendarRef}/>
 		return (
-			<div className="page calendar-page">
+			<div className={this.props.started?"page calendar-page next":"page calendar-page"}>
 				<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
 				{calendar}
 				{
@@ -173,7 +174,7 @@ class Main extends React.Component {
 	}
 
 	onEnterRoom() {
-
+		this.props.onStartCourse()
 	}
 
 	onLogout() {
@@ -181,12 +182,19 @@ class Main extends React.Component {
 	}
 
 	render() {
-		let { account } = this.props  
+		let { account } = this.props 
+		let content
 		if (account.dentity == types.DENTITY.STUDENT) {
-			return this.__student_page()
+			content = this.__student_page()
 		} else {
-			return this.__master_page()
+			content = this.__master_page()
 		}
+		return (
+			<div className="full-h">
+				{content}
+				{this.props.started?<Course/>:""}
+			</div>
+		)
 	}
 }
 
@@ -194,8 +202,10 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		account : state.login.account,
 		rooms 	: state.main.rooms,
-		room 	: state.main.room,
-		calendar: state.main.calendar
+		room 	: state.room.info,
+		gifts 	: state.room.gifts,
+		calendar: state.main.calendar,
+		started : state.main.courseStarted
 	}
 }
 
@@ -203,7 +213,9 @@ const mapDispatchToProps = dispatch => ({
 	onRoomList     : (rooms) => dispatch(onRoomList(rooms)),
 	onRoomInfo	   : (data) => dispatch(onRoomInfo(data)),
 	onCalendarData : (data) => dispatch(onCalendarData(data)),
-	onLogout       : () => dispatch(onLogout())
+	onLogout       : () => dispatch(onLogout()),
+	onStartCourse  : () => dispatch(onStartCourse()),
+	onEndCourse    : () => dispatch(onEndCourse()),
 })
   
 export default connect(

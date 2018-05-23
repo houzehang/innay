@@ -1,11 +1,11 @@
 const Const   = require('../const')
-const context = require('./context')
 const net 	  = require('./network')
 const Q 	  = require('q')
 const Eventer = require('./eventer')
 class Signalize extends Eventer {
-	constructor() {
+	constructor(inst) {
 		super()
+		this.$inst 		= inst
 		this.$signal 	= Signal(Const.AGORA_APPID)
 		this.$inited    = false
 		this.$queue 	= []
@@ -17,14 +17,9 @@ class Signalize extends Eventer {
 				resolve();
 			} else {
 				// 傻逼的sdk，accout参数必须为字符串
-				this.$session = this.$signal.login(context.dmg.userinfo.id+"", net.sigtoken)
+				this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
 				this.$session.onLoginSuccess = ()=>{
 					this.$inited = true
-					this.$session.invoke("io.agora.signal.user_set_attr", {
-						name: "data", value: JSON.stringify(context.dmg.userinfo)
-					}, (event, res)=>{
-						console.log("set user info success", context.dmg.userinfo, res)
-					})
 					resolve()
 					console.log("session logined...")
 				}
@@ -61,7 +56,7 @@ class Signalize extends Eventer {
 
 	join() {
 		this.init().then(()=>{
-			let channel = this.$session.channelJoin(context.course.channel_id)
+			let channel = this.$session.channelJoin(this.$inst.props.room.channel_id)
 			channel.onChannelJoined = ()=>{
 				// 上报自己的用户信息
 				this.$channel = channel
@@ -80,16 +75,19 @@ class Signalize extends Eventer {
 			}
 			let new_user_joined = (account)=>{
 				// 获取用户信息
-				this.$session.invoke("io.agora.signal.user_get_attr", {
-					account, name: "data"
-				}, (event, res)=>{
-					if (res.value) {
-						console.log("new user joined...",res)
-						let userinfo = JSON.parse(res.value)
-						context.dmg.addUser(userinfo)
-						this.trigger("CHANNEL_NEW_USER", userinfo)
+				let userinfo 
+				if (account == this.$inst.props.account.id) {
+					userinfo = this.$inst.props.account
+				} else {
+					for(let i=0,len=this.$inst.props.students.length;i<len;i++) {
+						let item = this.$inst.props.students[i]
+						if (item.id == account) {
+							userinfo = item
+							break
+						}
 					}
-				})
+				}
+				this.trigger("CHANNEL_NEW_USER", userinfo)
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
 				new_user_joined(account)
@@ -100,7 +98,6 @@ class Signalize extends Eventer {
 				})
 			};
 			channel.onChannelUserLeaved = (account) => {
-				context.dmg.removeUser(account)
 				this.trigger("CHANNEL_USER_LEAVE", account)
 			}
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
@@ -130,4 +127,4 @@ class Signalize extends Eventer {
 	}
 }
 
-module.exports = new Signalize
+module.exports = Signalize

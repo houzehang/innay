@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE } from '../constants/ActionTypes'
 
 const main = (state = {}, action) => {
 	switch (action.type) {
@@ -18,6 +18,18 @@ const main = (state = {}, action) => {
 		return {
 			...state,
 			calendar: action.data
+		}
+		break
+		case START_COURSE:
+		return {
+			...state,
+			courseStarted: true
+		}
+		break
+		case END_COURSE:
+		return {
+			...state,
+			courseStarted: false
 		}
 		break
 		default:

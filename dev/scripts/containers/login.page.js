@@ -5,6 +5,7 @@ import {
 	showLoading, hideLoading,
 	alert
 } from '../actions'
+const net = require("../network")
 
 class Login extends React.Component {
 	constructor(props) {
@@ -42,29 +43,33 @@ class Login extends React.Component {
 	}
 
 	render() {
-		return <div className="page login-page">
-			<div className="login-box">
-				<div className="icon"></div>
-				<div className="title"></div>
-				<div className="input-control">
-					<div className="input-box">
-						<input type="number" onChange={(event)=>{
-							this.handleChange("mobile", event)
-						}} name="mobile" value={this.state.mobile} placeholder="请输入手机号"/>
+		return (
+			<div className="full-h">
+				<div className="page login-page">
+					<div className="login-box">
+						<div className="icon"></div>
+						<div className="title"></div>
+						<div className="input-control">
+							<div className="input-box">
+								<input type="number" onChange={(event)=>{
+									this.handleChange("mobile", event)
+								}} name="mobile" value={this.state.mobile} placeholder="请输入手机号"/>
+							</div>
+						</div>
+						<div className="input-control">
+							<div className="input-box">
+								<input type="password" onChange={(event)=>{
+									this.handleChange("password", event)
+								}}  name="password" value={this.state.password} placeholder="请输入密码"/>
+							</div>
+						</div>
+						<button className="login-btn" onClick={()=>{
+							this.onLogin()
+						}}></button>
 					</div>
 				</div>
-				<div className="input-control">
-					<div className="input-box">
-						<input type="password" onChange={(event)=>{
-							this.handleChange("password", event)
-						}}  name="password" value={this.state.password} placeholder="请输入密码"/>
-					</div>
-				</div>
-				<button className="login-btn" onClick={()=>{
-					this.onLogin()
-				}}></button>
 			</div>
-		</div>
+		)
 	}
 }
 

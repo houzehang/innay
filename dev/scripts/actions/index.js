@@ -65,3 +65,71 @@ export const onLogout = () => dispatch => {
 		type: types.LOGOUT
 	})
 }
+
+export const onStartCourse = ()=>({
+	type: types.START_COURSE
+})
+
+export const onEndCourse = ()=>({
+	type: types.END_COURSE
+})
+
+export const onRoomGifts = (data) => ({
+	type: types.ROOM_GIFT,
+	data
+})
+
+export const onRoomMoreInfo = (data) => ({
+	type: types.ROOM_MORE_INFO,
+	data
+})
+
+export const onGiftList = (data) => ({
+	type: types.GIFT_LIST,
+	data
+})
+
+export const onNewGift = (data) => ({
+	type: types.NEW_GIFT,
+	data
+})
+
+export const onUserMuted = (id, mute=true) => ({
+	type: types.USER_MUTED,
+	id, mute
+})
+
+export const onNewStream = (stream) => ({
+	type: types.NEW_STREAM,
+	stream
+})
+
+export const onStreamLeave = (stream) => ({
+	type: types.STREAM_LEAVE,
+	stream
+})
+
+export const onNewChannelUser = (id) => ({
+	type: types.CHANNEL_NEW_USER,
+	id
+})
+
+export const onChannelUserLeave = (id) => ({
+	type: types.CHANNEL_USER_LEAVE,
+	id
+})
+
+export const onHandsupSwitch = (status) => ({
+	type: types.HANDSUP_SWITCH,
+	status
+})
+
+export const onGiftSwitch = (status) => ({
+	type: types.GIFT_SWITCH,
+	status
+})
+
+export const onHandsupRank = (id, rank) => ({
+	type: types.HANDSUP_RANK,
+	id, rank
+})

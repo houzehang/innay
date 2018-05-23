@@ -1,10 +1,10 @@
-const context 	= require("./context")
 const Const 	= require("../const")
 const Q 		= require("q")
 const Eventer   = require('./eventer')
 class Room extends Eventer {
-	constructor() {
+	constructor(inst) {
 		super()
+		this.inst = inst
 		this.__init()
 		this.$streams_list 	= []
 		this.$streams_hash 	= {}
@@ -51,8 +51,8 @@ class Room extends Eventer {
 							video = item.deviceId
 						}
 					})
-					context.video_device_id = video
-					context.audio_device_id = audio
+					this.$video_device_id = video
+					this.$audio_device_id = audio
 				})
 				var client = AgoraRTC.createClient({mode: 'interop'});
 				client.init(Const.AGORA_APPID, ()=>{
@@ -68,12 +68,25 @@ class Room extends Eventer {
 		})
 	}
 
+	__isMuted(id) {
+		let muted = false
+		if (!this.inst.props.students) {
+			return true
+		}
+		for(let i=0,len=this.inst.props.students.length;i<len;i++) {
+			let item = this.inst.props.students[i]
+			if (item.id == id) {
+				return !item.unmuted
+			}
+		}
+	}
+
 	stream_audio(id) {
 		let stream = this.__get_stream(id)
 		if (!stream) return
-		let isMaster = context.course.teacher_id == id
-		let unmuted  = !context.dmg.isMuted(id)
-		if (!unmuted && !isMaster) {
+		let isMaster = this.inst.props.room.teacher_id == id
+		let muted  = !this.__isMuted(id)
+		if (muted && !isMaster) {
 			stream.disableAudio()
 			console.log("disable audio",id)
 		} else {
@@ -130,13 +143,17 @@ class Room extends Eventer {
 			}
 		});
         let stream = AgoraRTC.createStream({
-			streamID	: context.dmg.userinfo.id, 
+			streamID	: this.inst.props.account.id, 
 			audio 		: true, 
-			cameraId	: context.video_device_id, 
-			microphoneId: context.audio_device_id, 
+			cameraId	: this.$video_device_id, 
+			microphoneId: this.$audio_device_id, 
 			video		: true, screen: false
 		});
-		stream.setVideoProfile(Const.VIDEO_QUALITY);
+		if (this.inst.props.account.id == this.inst.props.teacher.id) {
+			stream.setVideoProfile(Const.VIDEO_T_QUALITY)
+		} else {
+			stream.setVideoProfile(Const.VIDEO_S_QUALITY);
+		}
 
         stream.on("accessAllowed", function() {
         });
@@ -162,7 +179,7 @@ class Room extends Eventer {
 
 	start() {
 		this.__init().then(()=>{
-			this.$client.join(context.room.channel_token, context.course.channel_id, context.dmg.userinfo.id, (uid)=>{
+			this.$client.join(this.inst.props.room.channel_token, this.inst.props.room.channel_id, this.inst.props.account.id, (uid)=>{
 				this.__start_stream()
 			}, (error)=>{
 				console.log("join error",error)
@@ -187,4 +204,4 @@ class Room extends Eventer {
 	}
 }
 
-module.exports = new Room
+module.exports = Room

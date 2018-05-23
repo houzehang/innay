@@ -1,7 +1,8 @@
 module.exports = {
 	AGORA_APPID 	 	: "d75fe75ab0404a90b2ed7e5bab216f80",
 	AGORA_CHANNEL_KEY	: "7c9b6ed9bba54dc59471cfa09e9f23ea",
-	VIDEO_QUALITY 		: "480P_4",
+	VIDEO_T_QUALITY 	: "360P_3",
+	VIDEO_S_QUALITY 	: "180P_3",
 	CELL_COUNT 			: 4,
 	LOGIN_E_NET			: 201,
 	LOGOUT_E_NET		: 102,
