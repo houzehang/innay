@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package-win": "gulp;echo 'module.exports = {DEBUG : false}' > env.js; electron-packager ./ muwen --asar=true --platform=win32 --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/win-icon.ico --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
-    "package-mac": "gulp;echo 'module.exports = {DEBUG : false}' > env.js; electron-packager ./ muwen --asar=true --platform=darwin --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/mac-icon.icns --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-win": "echo 'module.exports = {DEBUG : false}' > env.js; gulp;electron-packager ./ muwen --asar=true --platform=win32 --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/win-icon.ico --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-mac": "echo 'module.exports = {DEBUG : false}' > env.js;gulp; electron-packager ./ muwen --asar=true --platform=darwin --arch=x64 --electron-version=1.8.6 --overwrite --icon=./dist/mac-icon.icns --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
     "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
   },
   "dependencies": {
