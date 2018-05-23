@@ -1,5 +1,6 @@
 const Eventer = require("./eventer")
 const context = require("./context")
+const DEBUG   = require("../../env").DEBUG
 
 class Session extends Eventer {
 	constructor() {
@@ -30,16 +31,18 @@ class Session extends Eventer {
 	 */
 	__createWebview() {
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="http://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./scripts/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./scripts/inject.js"></webview>`);
 		this.$webview = webview[0];
 	}
 
 	__bind() {
 		if (this.$webview) {
-			// $(this.$webview).off('dom-ready');
-			// $(this.$webview).on('dom-ready', () => {
-			// 	this.$webview.openDevTools();
-			// });
+			if (DEBUG) {
+				$(this.$webview).off('dom-ready');
+				$(this.$webview).on('dom-ready', () => {
+					this.$webview.openDevTools();
+				});
+			}
 			$(this.$webview).off('page-title-updated');
 			$(this.$webview).on('page-title-updated', (event)=>{
 				event = event.originalEvent;

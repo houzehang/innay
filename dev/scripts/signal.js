@@ -31,6 +31,7 @@ class Signalize extends Eventer {
 				this.$session.onLoginFailed = (ecode)=>{
 					if (ecode == Const.LOGIN_E_NET) {
 						setTimeout(()=>{
+							this.$inited = false
 							this.init().then(resolve, reject).done()
 						},2000)
 					}
@@ -39,6 +40,7 @@ class Signalize extends Eventer {
 				this.$session.onLogout = (ecode)=>{
 					if (ecode == Const.LOGOUT_E_NET) {
 						setTimeout(()=>{
+							this.$inited = false
 							this.init().then(resolve, reject).done()
 						},2000)
 					}
@@ -47,6 +49,7 @@ class Signalize extends Eventer {
 				this.$session.onError = (ecode)=>{
 					if (ecode == Const.GENERAL_E_NOT_LOGIN) {
 						setTimeout(()=>{
+							this.$inited = false
 							this.init().then(resolve, reject).done()
 						},2000)
 					}
