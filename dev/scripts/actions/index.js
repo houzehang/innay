@@ -70,10 +70,6 @@ export const onStartCourse = ()=>({
 	type: types.START_COURSE
 })
 
-export const onEndCourse = ()=>({
-	type: types.END_COURSE
-})
-
 export const onRoomGifts = (data) => ({
 	type: types.ROOM_GIFT,
 	data
@@ -137,4 +133,24 @@ export const onHandsupRank = (id, rank) => ({
 export const onDancing = (id, status) => ({
 	type: types.DANCING,
 	id, status
+})
+
+export const onBeginCourse = ()=>({
+	type: types.COURSE_BEGIN
+})
+
+export const onEndCourse = ()=>({
+	type: types.COURSE_END
+})
+
+export const onPauseCourse = ()=>({
+	type: types.COURSE_PAUSE
+})
+
+export const onResumeCourse = ()=>({
+	type: types.COURSE_RESUME
+})
+
+export const onCourseTick = ()=>({
+	type: types.COURSE_TICK
 })

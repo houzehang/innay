@@ -10,7 +10,7 @@ class StudentHead extends React.Component {
 			</div>
 		)) : ""
 		return this.props.user ? (
-					<div className="student">
+					<div className="student" key={this.props.user.id+""}>
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={{
 							backgroundImage : `url(${this.props.user.avatarurl})`
 						}}>
@@ -38,7 +38,7 @@ class StudentHead extends React.Component {
 										<button className="gift-btn" onClick={()=>{
 											this.props.onClickGift(this.props.user)
 										}}></button>
-										<button className={this.props.user.dancing?"speak-btn on":"speak-btn"} onClick={()=>{
+										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
 											this.props.onClickView(this.props.user)
 										}}></button>
 									</div>

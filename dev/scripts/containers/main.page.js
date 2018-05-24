@@ -113,7 +113,7 @@ class Main extends React.Component {
 			this.__on_change_month(data)
 		}} higlighted={this.state.higlighted} ref={this.$calendarRef}/>
 		return (
-			<div className={this.props.started?"page calendar-page next":"page calendar-page"}>
+			<div className="page calendar-page">
 				<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
 				{calendar}
 				{
@@ -134,7 +134,7 @@ class Main extends React.Component {
 										<div className="index">{room.lesson_name}</div>
 										<div className="date">上课时间：{room.start_time}</div>
 									</div>
-									<button className={room.state==2?"start-btn disabled":"start-btn"} onClick={()=>{
+									<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
 										this.onStartRoom(room)
 									}}></button>
 								</div>
@@ -191,8 +191,7 @@ class Main extends React.Component {
 		}
 		return (
 			<div className="full-h">
-				{content}
-				{this.props.started?<Course/>:""}
+				{this.props.started?<Course/>:content}
 			</div>
 		)
 	}
@@ -214,8 +213,7 @@ const mapDispatchToProps = dispatch => ({
 	onRoomInfo	   : (data) => dispatch(onRoomInfo(data)),
 	onCalendarData : (data) => dispatch(onCalendarData(data)),
 	onLogout       : () => dispatch(onLogout()),
-	onStartCourse  : () => dispatch(onStartCourse()),
-	onEndCourse    : () => dispatch(onEndCourse()),
+	onStartCourse  : () => dispatch(onStartCourse())
 })
   
 export default connect(

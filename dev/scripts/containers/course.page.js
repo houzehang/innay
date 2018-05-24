@@ -5,13 +5,19 @@ import {
 	onEndCourse, onGiftList, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onGiftSwitch, onNewGift,
-	onHandsupRank, onUserMuted, onDancing
+	onHandsupRank, onUserMuted, onDancing,
+	onBeginCourse,
+	onPauseCourse,
+	onResumeCourse,
+	onCourseTick,
+	confirm
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../room")
 const Signalize	= require('../signal')
 const Session   = require('../session')
 const Const   	= require('../../const')
+const {remote}  = $require("electron");
 
 class Course extends React.Component {
 	constructor(props) {
@@ -60,7 +66,7 @@ class Course extends React.Component {
 		}
 	}
 
-	componentDidUnMount() {
+	componentWillUnmount() {
 		clearInterval(this.$tick_timer)
 		clearTimeout(this.$back_timer)
 		clearTimeout(this.$put_timer)
@@ -83,6 +89,7 @@ class Course extends React.Component {
 		})
 		this.$room.on("LEAVE_ROOM", ()=>{
 			this.$session.destroy()
+			this.props.onEndCourse()
 		})
 		this.$signal.on("CHANNEL_NEW_USER", (user)=>{
 			this.$session.send_message(Const.MEMBER_ADD, {
@@ -149,10 +156,15 @@ class Course extends React.Component {
 		this.$session.init("#course-content")
 		net.getServerTime().then((res)=>{
 			this.setState({ time: res.time*1000 })
-			this.$tick_timer = setInterval(()=>{
-				this.setState({ time: this.state.time-1000 })
-			},1000)
 		})
+		this.__tick()
+	}
+
+	__tick() {
+		this.$tick_timer = setInterval(()=>{
+			this.setState({ time: this.state.time+1000 })
+			this.props.onCourseTick()
+		},1000)
 	}
 
 	__on_signal_message(message) {
@@ -202,13 +214,26 @@ class Course extends React.Component {
 	}
 
 	leaveCourse() {
-		// $(".page").removeClass("next")
-		// room.leave()
-		// signal.leave()
-		// context.dmg.destroy()
-		// setTimeout(()=>{
-		// 	remote.getCurrentWindow().reload()
-		// },500)
+		this.$room.leave()
+		this.$signal.leave()
+	}
+
+	preLeaveCourse() {
+		this.props.confirm({
+			content : "确定要结束本次课程吗？",
+			sure: ()=>{
+				// 发送关闭房间请求
+				net.closeRoom(this.props.room.channel_id).then((res)=>{
+					if (res.status) {
+						this.$signal.send({
+							type: "closeroom",
+							from: this.props.account.id,
+							to: "all"
+						})
+					}
+				})
+			}
+		})
 	}
 
 	__show_gift_layer() {
@@ -332,6 +357,21 @@ class Course extends React.Component {
 		return [<p key="0">{hour}:{minutes}</p>,<p key="1">{year}/{month}/{day}</p>]
 	}
 
+	__counter_time_to_str() {
+		let duration = this.props.status.duration
+		let hour 	 = duration / 60 / 60 >> 0
+		duration 	-= hour * 60 * 60
+		let minutes  = duration / 60 >> 0
+		duration 	-= minutes * 60
+		let seconds  = duration
+		let format   = (num)=>num>9?num:("0"+num)
+		return [
+			<div key="0" className="couter-g">{format(hour)}</div>,
+			<div key="1" className="couter-g">{format(minutes)}</div>,
+			<div key="2" className="couter-g last">{format(seconds)}</div>
+		]
+	}
+
 	render() {
 		let dancing
 		setTimeout(()=>{
@@ -361,7 +401,11 @@ class Course extends React.Component {
 		let students = (this.props.students||[]).concat()
 		students.sort((prev,next)=>{
 			if (next.stream) {
-				return prev.stream ? -1 : 1
+				if (prev.stream) {
+					return prev.stream_time - next.stream_time > 0 ? 1 : -1
+				} else {
+					return 1
+				}
 			}
 			return 0
 		})
@@ -403,15 +447,26 @@ class Course extends React.Component {
 			}}/>
 		))
 		return (
-			<div className={"page course-page "+(this.props.started?"next":"")}>
+			<div className="page course-page">
 				<div className="inner">
 					<div className="controls">
-						<button className="course-start"></button>
-						<button className="course-pause"></button>
-						<button className="course-end"></button>
+						<button className="course-start" disabled={this.props.status.started?"true":""} onClick={()=>{
+							this.props.onBeginCourse()
+						}}></button>
+						<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
+							if (this.props.status.paused) {
+								this.props.onResumeCourse()
+							} else {
+								this.props.onPauseCourse()
+							}
+						}}></button>
+						<button className="course-end" onClick={()=>{
+							this.preLeaveCourse()
+						}}></button>
 					</div>
 					<div className="content">
 						<div className="course-content" id="course-content"></div>
+						{this.props.status.paused && this.props.status.started ? <div className="pausing"><img src={require("../../assets/course-pausing.png")}/></div> : ""}
 						<div className="operations">
 							<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 								if (this.props.switches.handsup) {
@@ -465,9 +520,7 @@ class Course extends React.Component {
 						</div>
 						<div className="counter">
 							倒计时：
-							<div className="couter-g">01</div>
-							<div className="couter-g">09</div>
-							<div className="couter-g last">35</div>
+							{this.__counter_time_to_str()}
 							<div className="split"></div>
 							<div className="time">{this.__time_to_str()}</div>
 						</div>
@@ -507,7 +560,6 @@ class Course extends React.Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-	console.log("course page...",state.room.teacher)
 	return {
 		account : state.login.account,
 		room 	: state.room.info,
@@ -516,13 +568,13 @@ const mapStateToProps = (state, ownProps) => {
 		teacher : state.room.teacher,
 		giftlist: state.room.giftlist,
 		started : state.main.courseStarted,
-		switches: state.room.switches
+		switches: state.room.switches,
+		status  : state.room.status
 	}
 }
 
 const mapDispatchToProps = dispatch => ({
 	onGiftList		: (data) => dispatch(onGiftList(data)),
-	onEndCourse 	: () => dispatch(onEndCourse()),
 	onRoomMoreInfo	: (data) => dispatch(onRoomMoreInfo(data)),
 	onNewStream		: (data) => dispatch(onNewStream(data)),
 	onStreamLeave	: (data) => dispatch(onStreamLeave(data)),
@@ -531,7 +583,13 @@ const mapDispatchToProps = dispatch => ({
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
-	onDancing 		: (id, status) => dispatch(onDancing(id, status))
+	onDancing 		: (id, status) => dispatch(onDancing(id, status)),
+	onEndCourse 	: () => dispatch(onEndCourse()),
+	onBeginCourse 	: () => dispatch(onBeginCourse()),
+	onPauseCourse 	: () => dispatch(onPauseCourse()),
+	onResumeCourse 	: () => dispatch(onResumeCourse()),
+	onCourseTick 	: () => dispatch(onCourseTick()),
+	confirm 		: (data) => dispatch(confirm(data)),
 })
   
 export default connect(

@@ -82,7 +82,11 @@ class Signalize extends Eventer {
 					for(let i=0,len=this.$inst.props.students.length;i<len;i++) {
 						let item = this.$inst.props.students[i]
 						if (item.id == account) {
-							userinfo = item
+							userinfo = {
+								child_name: item.child_name,
+								id: item.id,
+								avatarurl: item.avatarurl
+							}
 							break
 						}
 					}
@@ -115,6 +119,7 @@ class Signalize extends Eventer {
 			this.trigger("CHANNEL_LEAVED", this.$channel)
 			this.$channel = null
 		})
+		this.$session.logout()
 	}
 
 	send(message) {

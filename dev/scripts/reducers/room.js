@@ -1,7 +1,8 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK } from '../constants/ActionTypes'
+const storage = require('../Storage')
 
 const room = (state = {}, action) => {
-	let streamId, teacher, switches, students, dancing
+	let streamId, teacher, switches, students, dancing, status
 	switch (action.type) {
 		case ROOM_INFO:
 		let data = action.data
@@ -10,6 +11,12 @@ const room = (state = {}, action) => {
 			avatarurl: data.teacher_avatar,
 			id: data.teacher_id
 		}
+		let storedData = storage.get("STATUS_"+data.channel_id)
+		if (storedData) {
+			status = storedData
+		} else {
+			status = { duration: action.data.duration, id: data.channel_id }
+		}
 		return {
 			...state,
 			info: action.data,
@@ -17,6 +24,7 @@ const room = (state = {}, action) => {
 				gift: true
 			},
 			dancing: [],
+			status,
 			teacher
 		}
 		break
@@ -100,6 +108,7 @@ const room = (state = {}, action) => {
 				let item = students[i]
 				if (item.id == action.stream.getId()) {
 					item.stream = action.stream
+					item.stream_time = new Date().getTime()
 					item.stream_inited = false
 				}
 			}
@@ -124,7 +133,9 @@ const room = (state = {}, action) => {
 			for(let i=0,len=students.length;i<len;i++) {
 				let item = students[i]
 				if (item.id == streamId) {
-					item.stream = null
+					item.stream        = null
+					item.stream_time   = null
+					item.dancing 	   = false
 					item.stream_inited = false
 				}
 			}
@@ -182,6 +193,56 @@ const room = (state = {}, action) => {
 		return {
 			...state,
 			students
+		}
+		break
+		case COURSE_BEGIN:
+		status = {...state.status}
+		status.started = true
+		storage.store("STATUS_"+status.id, status)
+		return {
+			...state,
+			status
+		}
+		break
+		case COURSE_PAUSE:
+		status = {...state.status}
+		status.paused = true
+		storage.store("STATUS_"+status.id, status)
+		return {
+			...state,
+			status
+		}
+		break
+		case COURSE_RESUME:
+		status = {...state.status}
+		status.paused = false
+		storage.store("STATUS_"+status.id, status)
+		return {
+			...state,
+			status
+		}
+		break
+		case COURSE_END:
+		status = {...state.status}
+		status.started = false
+		status.paused  = false
+		storage.store("STATUS_"+status.id, status)
+		return {
+			...state,
+			status
+		}
+		break
+		case COURSE_TICK:
+		status = {...state.status}
+		if (status.started && !status.paused && status.duration > 0) {
+			status.duration--
+			storage.store("STATUS_"+status.id, status)
+			return {
+				...state,
+				status
+			}
+		} else {
+			return state
 		}
 		break
 		default:
