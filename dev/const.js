@@ -30,4 +30,6 @@ module.exports = {
 	CLOSE_MIC   : "closemic",
 	OPEN_GIFT   : "opengift",
 	CLOSE_GIFT  : "closegift",
+	COURSE_PAUSE  : "coursepause",
+	COURSE_RESUME : "courseresume",
 };

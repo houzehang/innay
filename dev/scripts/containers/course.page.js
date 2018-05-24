@@ -171,12 +171,7 @@ class Course extends React.Component {
 		let data = message.message
 		switch(message.type) {
 			case "closeroom":
-			if (this.isMaster()) {
-				this.leaveCourse()
- 			} else {
-				alert("本次课程已结束，小朋友请到“大语文”小程序完成课后作业")
-				this.leaveCourse()
-			}
+			this.leaveCourse()
 			break
 			case Const.OPEN_RACE:
 			this.props.onHandsupSwitch(true)
@@ -460,8 +455,11 @@ class Course extends React.Component {
 						<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
 							if (this.props.status.paused) {
 								this.props.onResumeCourse()
+								console.log("send message coursepause")
+								this.$session.send_message(Const.COURSE_RESUME)
 							} else {
 								this.props.onPauseCourse()
+								this.$session.send_message(Const.COURSE_PAUSE)
 							}
 						}}></button>
 						<button className="course-end" onClick={()=>{
@@ -470,7 +468,6 @@ class Course extends React.Component {
 					</div>
 					<div className="content">
 						<div className="course-content" id="course-content"></div>
-						{this.props.status.paused && this.props.status.started ? <div className="pausing"><img src={require("../../assets/course-pausing.png")}/></div> : ""}
 						<div className="operations">
 							<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 								if (this.props.switches.handsup) {

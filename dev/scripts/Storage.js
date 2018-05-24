@@ -25,7 +25,6 @@ class Storage {
 	}
 
 	store(key, data) {
-		console.log("store...",key,this.$data)
 		this.$data[key] = data;
 		localStorage.setItem(this.$namespace, JSON.stringify(this.$data));
 	}
