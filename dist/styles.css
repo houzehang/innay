@@ -1379,7 +1379,7 @@ body .page.calendar-page .courses .title .label {
 }
 html .page.calendar-page .courses .nothing,
 body .page.calendar-page .courses .nothing {
-  height: 2.56rem;
+  height: 1.24rem;
   display: flex;
   justify-content: center;
   align-items: center;
