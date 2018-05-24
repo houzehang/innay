@@ -5,7 +5,7 @@ import {
 	onEndCourse, onGiftList, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onGiftSwitch, onNewGift,
-	onHandsupRank, onUserMuted
+	onHandsupRank, onUserMuted, onDancing
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../room")
@@ -19,6 +19,7 @@ class Course extends React.Component {
 		this.$session 	= new Session(this)
 		this.$room 		= new Room(this)
 		this.$signal	= new Signalize(this)
+		this.state 		= { time: new Date().getTime()/1000 }
 	}
 
 	isMaster(id) {
@@ -49,10 +50,7 @@ class Course extends React.Component {
 
 	getUser(id) {
 		if (id == this.props.teacher.id) {
-			return {
-				child_name: this.props.teacher.name,
-				id
-			}
+			return this.props.teacher
 		}
 		for(let i=0,len=this.props.students.length;i<len;i++) {
 			let item = this.props.students[i]
@@ -60,6 +58,12 @@ class Course extends React.Component {
 				return item
 			}
 		}
+	}
+
+	componentDidUnMount() {
+		clearInterval(this.$tick_timer)
+		clearTimeout(this.$back_timer)
+		clearTimeout(this.$put_timer)
 	}
 
 	componentDidMount() {
@@ -143,6 +147,12 @@ class Course extends React.Component {
 			})
 		})
 		this.$session.init("#course-content")
+		net.getServerTime().then((res)=>{
+			this.setState({ time: res.time*1000 })
+			this.$tick_timer = setInterval(()=>{
+				this.setState({ time: this.state.time-1000 })
+			},1000)
+		})
 	}
 
 	__on_signal_message(message) {
@@ -165,7 +175,7 @@ class Course extends React.Component {
 			this.$session.send_message(null, null, message)
 			break
 			case Const.OPEN_MIC:
-			this.props.onUserMuted(data.uid, false)
+			this.props.onUserMuted(data.uid, false, message.to=="app")
 			this.$room.stream_audio(data.uid)
 			break
 			case Const.CLOSE_MIC:
@@ -219,11 +229,12 @@ class Course extends React.Component {
 		if (this.$gift_data) {
 			console.log("send gift",this.$gift_data)
 			net.sendGift({
-				channel_id : context.course.channel_id,
+				channel_id : this.props.room.channel_id,
 				to_id: this.$gift_data.to,
 				gift_id: this.$gift_data.gift.id
 			}).then((res)=>{
-				let total = res.total, toUser = this.getUser(this.$gift_data.to)
+				let total = res.total, toUser = this.getUser(this.$gift_data.to),
+					single = res.single
 				this.$signal.send({
 					type: "gift",
 					from: this.props.account.id,
@@ -231,7 +242,7 @@ class Course extends React.Component {
 					message: {
 						uid: this.$gift_data.to,
 						gift: this.$gift_data.gift,
-						total,
+						total, single,
 						from_username: this.props.account.child_name,
 						to_username: toUser.child_name
 					}
@@ -240,7 +251,89 @@ class Course extends React.Component {
 		}
 	}
 
+	__put_to_dancing(student) {
+		console.log("put to dancing",student)
+		if (this.$last_dancing) {
+			if (this.$last_dancing.id == student.id) {
+				return
+			}
+			this.__back_from_dancing(this.$last_dancing)
+		}
+		let id = student.id
+		let dom = $(`#video${id}`)
+		clearTimeout(this.$put_timer)
+		console.log("__put to dance",dom,student)
+		if (dom.length > 0) {
+			let target = $("#dancing-head")
+			let size = [ target.width(), target.height() ]
+			let scale = dom.width() / dom.height()
+			dom.css({
+				left  : size[0] - size[1] * scale >> 1,
+				top   : 0, 
+				width : size[1] * scale,
+				height: size[1]
+			})
+			$(`#player_${id}`).addClass("fixed").css({
+				"left"     : target.offset().left,
+				"top"      : target.offset().top,
+				"width"    : size[0],
+				"height"   : size[1]
+			}).append(`<div class="name">${student.child_name}</div>`)
+			this.$last_dancing = student
+		} else {
+			this.$put_timer = setTimeout(()=>{
+				this.__put_to_dancing(student)
+			},1000)
+		}
+	}
+
+	__back_from_dancing(student) {
+		if (!this.$last_dancing || this.$last_dancing.id != student.id) {
+			return
+		}
+		let id = student.id
+		let dom = $(`#video${id}`)
+		clearTimeout(this.$back_timer)
+		console.log("back from dancing",student)
+		if (dom.length > 0) {
+			let target = $(`#student_${id}`)
+			if (target.length > 0) {
+				let size = [ target.width(), target.height() ]
+				let scale = dom.width() / dom.height()
+				dom.css({
+					left  : size[0] - size[1] * scale >> 1,
+					top   : 0, 
+					width : size[1] * scale,
+					height: size[1]
+				})
+				$(`#player_${id}`).removeClass("fixed").css({
+					"left"     : 0,
+					"top"      : 0,
+					"width"    : "100%",
+					"height"   : "100%"
+				})
+				$(`#player_${id} .name`).remove()
+			}
+		} else {
+			this.$back_timer = setTimeout(()=>{
+				this.__back_from_dancing(student)
+			},1000)
+		}
+	}
+
+	__time_to_str() {
+		let time = this.state.time
+		let date = new Date(time)
+		let year = date.getFullYear(),
+			month = date.getMonth() + 1,
+			day = date.getDate(),
+			hour = date.getHours(),
+			minutes = date.getMinutes()
+		return [<p key="0">{hour}:{minutes}</p>,<p key="1">{year}/{month}/{day}</p>]
+	}
+
 	render() {
+		let dancing
 		setTimeout(()=>{
 			let teacher = this.props.teacher
 			if (teacher.stream && !teacher.stream_inited) {
@@ -250,10 +343,19 @@ class Course extends React.Component {
 			if (this.props.students) {
 				this.props.students.forEach((student)=>{
 					if(student.stream && !student.stream_inited) {
+						console.log("play stream",student.id)
 						student.stream.play('student_'+student.id)
 						student.stream_inited = true
 					}
 				})
+			}
+			if (dancing) {
+				this.__put_to_dancing(dancing)
+			} else {
+				if (this.$last_dancing) {
+					this.__back_from_dancing(this.$last_dancing)
+				}
+				this.$last_dancing = null
 			}
 		},0)
 		let students = (this.props.students||[]).concat()
@@ -263,6 +365,13 @@ class Course extends React.Component {
 			}
 			return 0
 		})
+		for(let i=0,len=students.length;i<len;i++) {
+			let item = students[i]
+			if (item.dancing) {
+				dancing = item
+				break
+			}
+		}
 		students = students.map((student)=>(
 			<StudentHead key={student.id} handsup={{
 				opened: this.props.switches.handsup,
@@ -289,6 +398,8 @@ class Course extends React.Component {
 				} else {
 					alert("现在还不能送礼物哦~")
 				}
+			}} onClickView={(user)=>{
+				this.props.onDancing(user.id, !user.dancing)
 			}}/>
 		))
 		return (
@@ -340,12 +451,12 @@ class Course extends React.Component {
 									<div className="avatar-head" id="master-head">
 									{this.props.teacher.stream?"":<img src={this.props.teacher.avatarurl}/>}
 									</div>
-									<div className="avatar-info">老师：{this.props.teacher.name}</div>
+									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
 								</div>
-								<div className="avatar nothing">
+								<div className={dancing?"avatar":"avatar nothing"}>
 									<div className="ph-text">未指定学生发言</div>
-									<div className="avatar-head" id="master-head"></div>
-									<div className="avatar-info">学生：伊珊珊</div>
+									<div className="avatar-head" id="dancing-head"></div>
+									<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
 								</div>
 							</div>
 							<div className="student-area">
@@ -358,31 +469,34 @@ class Course extends React.Component {
 							<div className="couter-g">09</div>
 							<div className="couter-g last">35</div>
 							<div className="split"></div>
-							<div className="time">
-								<p>11:33</p>
-								<p>2018/5/17</p>
-							</div>
+							<div className="time">{this.__time_to_str()}</div>
 						</div>
 					</div>
 				</div>
 				{this.props.giftlist?(
-				<div className="mask gift-layer" style={{display:"none"}}>
+				<div className="mask gift-layer dialog-layer" style={{display:"none"}}>
 					<div className="dialog">
-						<button className="close-btn"></button>
-						<div className="title-icon"></div>
-						<div className="gifts">
-							{this.props.giftlist.map((gift)=>{
-								<div className="gift-item" key={gift.id} onClick={()=>{
-									this.$gift_data.gift = gift
-									this.__hide_gift_layer()
-									this.__send_gift()
-								}}>
-									<div className="gift-icon">
-										<img src={gift.icon}/>
+						<div className="title">
+							送礼物
+							<div className="close-btn" onClick={()=>{
+								this.__hide_gift_layer()
+							}}></div>
+						</div>
+						<div className="content">
+							<div className="gifts">
+								{this.props.giftlist.map((gift)=>(
+									<div className="gift-item" key={gift.id} onClick={()=>{
+										this.$gift_data.gift = gift
+										this.__hide_gift_layer()
+										this.__send_gift()
+									}}>
+										<div className="gift-icon">
+											<img src={gift.icon}/>
+										</div>
+										<div className="gift-name">{gift.name}</div>
 									</div>
-									<div className="gift-name">{gift.name}</div>
-								</div>
-							})}
+								))}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -416,7 +530,8 @@ const mapDispatchToProps = dispatch => ({
 	onGiftSwitch    : (status) => dispatch(onGiftSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
-	onUserMuted 	: (id, status) => dispatch(onUserMuted(id, status))
+	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
+	onDancing 		: (id, status) => dispatch(onDancing(id, status))
 })
   
 export default connect(

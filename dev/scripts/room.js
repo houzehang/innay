@@ -85,7 +85,7 @@ class Room extends Eventer {
 		let stream = this.__get_stream(id)
 		if (!stream) return
 		let isMaster = this.inst.props.room.teacher_id == id
-		let muted  = !this.__isMuted(id)
+		let muted  = this.__isMuted(id)
 		if (muted && !isMaster) {
 			stream.disableAudio()
 			console.log("disable audio",id)

@@ -11,11 +11,12 @@ class StudentHead extends React.Component {
 		)) : ""
 		return this.props.user ? (
 					<div className="student">
-						<div className="avatar-head" id={"student_"+this.props.user.id}>
-							{this.props.user.stream?"":<img src={this.props.user.avatarurl}/>}
+						<div className="avatar-head" id={"student_"+this.props.user.id} style={{
+							backgroundImage : `url(${this.props.user.avatarurl})`
+						}}>
 						</div>
 						<div className="avatar-info">{this.props.user.child_name}</div>
-						{this.props.handsup.opened ? <div className="avatar-handsup">{this.props.handsup.count||""}</div>:""}
+						{this.props.handsup.opened ? <div className="avatar-handsup">{this.props.handsup.rank||""}</div>:""}
 						<div className="avatar-details">
 							<div className="summary">
 								<div className="summary-inner">
@@ -36,6 +37,9 @@ class StudentHead extends React.Component {
 										}}></button>
 										<button className="gift-btn" onClick={()=>{
 											this.props.onClickGift(this.props.user)
+										}}></button>
+										<button className={this.props.user.dancing?"speak-btn on":"speak-btn"} onClick={()=>{
+											this.props.onClickView(this.props.user)
 										}}></button>
 									</div>
 								</div>
@@ -62,7 +66,8 @@ StudentHead.propTypes = {
 	handsup		 : PropTypes.object.isRequired,
 	speak 		 : PropTypes.bool,
 	onClickSpeak : PropTypes.func,
-	onClickGift  : PropTypes.func
+	onClickGift  : PropTypes.func,
+	onClickView  : PropTypes.func
 }
 
 export default StudentHead

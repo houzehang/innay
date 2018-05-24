@@ -76,8 +76,8 @@ class Signalize extends Eventer {
 			let new_user_joined = (account)=>{
 				// 获取用户信息
 				let userinfo 
-				if (account == this.$inst.props.account.id) {
-					userinfo = this.$inst.props.account
+				if (account == this.$inst.props.teacher.id) {
+					userinfo = this.$inst.props.teacher
 				} else {
 					for(let i=0,len=this.$inst.props.students.length;i<len;i++) {
 						let item = this.$inst.props.students[i]
@@ -87,7 +87,9 @@ class Signalize extends Eventer {
 						}
 					}
 				}
-				this.trigger("CHANNEL_NEW_USER", userinfo)
+				if (userinfo) {
+					this.trigger("CHANNEL_NEW_USER", userinfo)
+				}
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
 				new_user_joined(account)

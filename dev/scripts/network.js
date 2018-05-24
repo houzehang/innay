@@ -20,7 +20,7 @@ class Network extends Eventer {
 		}
 	}
 
-	__request(url, data, method="get") {
+	__request(url, data = {}, method="get") {
 		return Q.Promise((resolve, reject)=>{
 			$.ajax(this.$base_url + url, {
 				headers: { 
@@ -126,6 +126,13 @@ class Network extends Eventer {
 	 */
 	closeRoom(channel_id) {
 		return this.__request("/room/close_the_room", {channel_id}, "post")
+	}
+
+	/**
+	 * 获取当前时间
+	 */
+	getServerTime() {
+		return this.__request('/api/time')
 	}
 }
 

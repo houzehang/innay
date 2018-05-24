@@ -94,9 +94,9 @@ export const onNewGift = (data) => ({
 	data
 })
 
-export const onUserMuted = (id, mute=true) => ({
+export const onUserMuted = (id, mute=true, recovering=false) => ({
 	type: types.USER_MUTED,
-	id, mute
+	id, mute, recovering
 })
 
 export const onNewStream = (stream) => ({
@@ -132,4 +132,9 @@ export const onGiftSwitch = (status) => ({
 export const onHandsupRank = (id, rank) => ({
 	type: types.HANDSUP_RANK,
 	id, rank
+})
+
+export const onDancing = (id, status) => ({
+	type: types.DANCING,
+	id, status
 })

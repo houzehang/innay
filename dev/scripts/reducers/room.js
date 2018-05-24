@@ -1,19 +1,22 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, NEW_GIFT, HANDSUP_RANK } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING } from '../constants/ActionTypes'
 
 const room = (state = {}, action) => {
-	let streamId, teacher, switches, students
+	let streamId, teacher, switches, students, dancing
 	switch (action.type) {
 		case ROOM_INFO:
 		let data = action.data
 		let teacher = {
-			name: data.teacher_name,
+			child_name: data.teacher_name,
 			avatarurl: data.teacher_avatar,
 			id: data.teacher_id
 		}
 		return {
 			...state,
 			info: action.data,
-			switches: {},
+			switches: {
+				gift: true
+			},
+			dancing: [],
 			teacher
 		}
 		break
@@ -46,9 +49,13 @@ const room = (state = {}, action) => {
 			if (item.id == gift.uid) {
 				item.gift_total = gift.total
 				if (item.gifts) {
-					item.gifts.forEach((gift)=>{
-						if (gift.id == gift.gift.id) {
-							//@todo 
+					item.gifts.forEach((item)=>{
+						if (item.id == gift.gift.id) {
+							if (gift.single) {
+								item.total = gift.single 
+							} else {
+								item.total++
+							}
 						}
 					})
 				}
@@ -66,6 +73,9 @@ const room = (state = {}, action) => {
 				let item = students[i]
 				if (item.id == action.id) {
 					item.unmuted = !action.mute
+					if (item.unmuted && !action.recovering) {
+						item.speak++
+					}
 				}
 			}
 		}
@@ -147,6 +157,25 @@ const room = (state = {}, action) => {
 				let item = students[i]
 				if (item.id == action.id) {
 					item.rank = action.rank
+					item.handsup++
+					break
+				}
+			}
+		}
+		return {
+			...state,
+			students
+		}
+		break
+		case DANCING:
+		students = [...state.students]
+		if (students) {
+			for(let i=0,len=students.length;i<len;i++) {
+				let item = students[i]
+				if (item.id == action.id) {
+					item.dancing = action.status
+				} else {
+					item.dancing = false
 				}
 			}
 		}
