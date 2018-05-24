@@ -354,7 +354,11 @@ class Course extends React.Component {
 			day = date.getDate(),
 			hour = date.getHours(),
 			minutes = date.getMinutes()
-		return [<p key="0">{hour}:{minutes}</p>,<p key="1">{year}/{month}/{day}</p>]
+		let format   = (num)=>num>9?num:("0"+num)
+		return [
+			<p key="0">{format(hour)}:{format(minutes)}</p>,
+			<p key="1">{year}/{month}/{day}</p>
+		]
 	}
 
 	__counter_time_to_str() {

@@ -47,47 +47,6 @@ html,body {
 		justify-content: center;
 		flex-direction: column;
 		align-items: center;
-		.enter-layer {
-			.dialog {
-				.content {
-					display: block;
-				}
-			}
-			.title-icon {
-				.view-base("enter-title.png");
-			}
-			.enter-btn {
-				.view-base("enter-btn.png");
-				&:active {
-					opacity: 1;
-					.view-base("enter-btn-down.png");
-				}
-			}
-		}
-		.back-layer {
-			.title-icon {
-				.view-base("back-title.png");
-			}
-			.ok-btn {
-				.view-base("ok-btn.png");
-				&:active {
-					opacity: 1;
-					.view-base("ok-btn-off.png");
-				}
-			}
-		}
-		.exit-layer {
-			.title-icon {
-				.view-base("end-course.png");
-			}
-			.exit-btn {
-				.view-base("end-course-btn.png");
-				&:active {
-					opacity: 1;
-					.view-base("end-course-btn-down.png");
-				}
-			}
-		}
 		.gift-layer {
 			.dialog {
 				width: 7.3rem;
@@ -221,7 +180,7 @@ html,body {
 					}
 				}
 				.nothing {
-					height: 2.56rem;
+					height: 1.24rem;
 					display: flex;
 					justify-content: center;
 					align-items: center;
@@ -284,74 +243,6 @@ html,body {
 							}
 						}
 					}
-				}
-			}
-		}
-		&.student-page {
-			transition: all 300ms 0s ease-in-out;
-			background: url(../assets/student-bg.jpg) no-repeat center center;
-			background-size: cover;
-			justify-content: center;
-			.student-icon {
-				.view-base('student-icon.png');
-				margin: 0 auto;
-			}
-			.time {
-				margin-top: 0.88rem;
-				margin-bottom: 0.9rem;
-				font-size: 0.66rem;
-				color: #fff;
-				font-weight: bold;
-				-webkit-text-stroke: 0.04rem #b05f1e;
-				letter-spacing: 0.1rem;
-				span {
-					font-size: 1.12rem;
-					color: #ffe15a;
-				}
-			}
-			.lesson-box {
-				border: 0.1rem solid #ffca59;
-				border-radius: 0.8rem;
-				background: #fff;
-				font-size: 0.4rem;
-				width: 11.82rem;
-				height: 2.6rem;
-				line-height: 1.5;
-				text-align: center;
-				display: flex;
-				align-items: center;
-				justify-content: space-around;
-				.cover {
-					width: 1.3rem;
-					height: 1.3rem;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					overflow: hidden;
-					img {
-						width: 100%;
-					}
-					margin-left: 0.4rem;
-					margin-right: 0.4rem;
-				}
-				.info {
-					text-align: left;
-					line-height: 1;
-					flex: 1;
-					.title {
-						font-size: 0.4rem;
-						color: #333333;
-					}
-					.teacher {
-						font-size: 0.34rem;
-						color: #333333;
-						margin-top: 0.38rem;
-						line-height: 0.36rem;
-					}
-				}
-				.start-btn {
-					margin: 0 0.4rem;
-					.view-base("start-btn.png");
 				}
 			}
 		}
