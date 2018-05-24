@@ -7,8 +7,8 @@
     "start": "electron .",
     "watch": "nodemon --watch . --watch config ./boot.js",
     "build": "webpack --config webpack.prod.config.js",
-    "package-win": "gulp;echo 'module.exports = {DEBUG : false}' > env.js; electron-packager ./ youbao --asar=true --platform=win32 --arch=x64 --electron-version=1.8.7 --overwrite --icon=./dist/win-icon.ico --ignore=\"(dev)|(youbao-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
-    "package-mac": "gulp;echo 'module.exports = {DEBUG : false}' > env.js; electron-packager ./ youbao --asar=true --platform=darwin --arch=x64 --electron-version=1.8.7 --overwrite --icon=./dist/mac-icon.icns --ignore=\"(dev)|(youbao-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-win": "echo 'module.exports = {DEBUG : false}' > env.js;npm run build; electron-packager ./ muwen --asar=true --platform=win32 --arch=x64 --electron-version=1.8.7 --overwrite --icon=./dist/win-icon.ico --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-mac": "echo 'module.exports = {DEBUG : false}' > env.js;npm run build; electron-packager ./ muwen --asar=true --platform=darwin --arch=x64 --electron-version=1.8.7 --overwrite --icon=./dist/mac-icon.icns --ignore=\"(dev)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
     "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
   },
   "dependencies": {

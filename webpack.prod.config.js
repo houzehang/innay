@@ -68,7 +68,7 @@ module.exports = {
       sourceMap: true
     }),
     new HtmlWebpackPlugin({
-      title: "大语文",
+      title: "沐文",
       template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html"
     }),

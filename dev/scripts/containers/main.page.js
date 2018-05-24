@@ -6,7 +6,8 @@ import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
-	onLogout, onStartCourse, onEndCourse
+	onLogout, onStartCourse, onEndCourse,
+	confirm
 } from '../actions'
 
 class Main extends React.Component {
@@ -115,62 +116,47 @@ class Main extends React.Component {
 		return (
 			<div className="page calendar-page">
 				<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
-				{calendar}
-				{
-					this.props.rooms ? 
-					<div className="courses">
-						<div className="title">
-							<div className="label">今日课程</div>
-						</div>
-						{
-							this.props.rooms.length == 0 ? <div className="nothing"></div> :
-							(this.props.rooms.map((room,index)=>(
-								<div className="row" key={index}>
-									<div className="cover">
-										<img src={room.avatar} alt=""/>
+				<div className="calendar-inner">
+					{calendar}
+					{
+						this.props.rooms ? 
+						<div className="courses">
+							<div className="title">
+								<div className="label">今日课程</div>
+							</div>
+							{
+								this.props.rooms.length == 0 ? <div className="nothing">今日没有课哦~</div> :
+								(this.props.rooms.map((room,index)=>(
+									<div className="row" key={index}>
+										<div className="cover">
+											<img src={room.avatar} alt=""/>
+										</div>
+										<div className="info">
+											<div className="name">{room.name}</div>
+											<div className="index">{room.lesson_name}</div>
+											<div className="date">上课时间：{room.start_time}</div>
+										</div>
+										<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
+											this.onStartRoom(room)
+										}}></button>
 									</div>
-									<div className="info">
-										<div className="name">{room.name}</div>
-										<div className="index">{room.lesson_name}</div>
-										<div className="date">上课时间：{room.start_time}</div>
-									</div>
-									<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
-										this.onStartRoom(room)
-									}}></button>
-								</div>
-							)))
-						}
-					</div>:""
-				}
-				<div className="mask enter-layer" style={{display:"none"}}>
-					<div className="dialog">
-						<button className="close-btn" onClick={()=>{
-							this.closeLayer(".enter-layer")
-						}}></button>
-						<div className="title-icon"></div>
-						<div className="content">上课时间：<span className="enter-time">{this.props.room?this.props.room.start_time:""}</span><br/>确认现在开始上课吗？</div>
-						<button className="enter-btn" onClick={()=>{
-							this.onEnterRoom()
-						}}></button>
-					</div>
+								)))
+							}
+						</div>:""
+					}
 				</div>
 			</div>
 		)
 	}
 
-	closeLayer(target) {
-		$(target).removeClass("show")
-		setTimeout(()=>{
-			$(target).hide()
-		},300)
-	}
-
 	onStartRoom(data) {
 		this.props.onRoomInfo(data)
-		$(".enter-layer").show()
-		setTimeout(()=>{
-			$(".enter-layer").addClass("show")
-		},100)
+		this.props.confirm({
+			content: <div>上课时间：{data.start_time}<br/>确认现在开始上课吗？</div>,
+			sure: ()=>{
+				this.onEnterRoom()
+			}
+		})
 	}
 
 	onEnterRoom() {
@@ -213,7 +199,8 @@ const mapDispatchToProps = dispatch => ({
 	onRoomInfo	   : (data) => dispatch(onRoomInfo(data)),
 	onCalendarData : (data) => dispatch(onCalendarData(data)),
 	onLogout       : () => dispatch(onLogout()),
-	onStartCourse  : () => dispatch(onStartCourse())
+	onStartCourse  : () => dispatch(onStartCourse()),
+	confirm 	   : (data) => dispatch(confirm(data))
 })
   
 export default connect(

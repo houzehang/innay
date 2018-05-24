@@ -47,8 +47,7 @@ class Login extends React.Component {
 			<div className="full-h">
 				<div className="page login-page">
 					<div className="login-box">
-						<div className="icon"></div>
-						<div className="title"></div>
+						<div className="title">登录</div>
 						<div className="input-control">
 							<div className="input-box">
 								<input type="number" onChange={(event)=>{
@@ -65,7 +64,7 @@ class Login extends React.Component {
 						</div>
 						<button className="login-btn" onClick={()=>{
 							this.onLogin()
-						}}></button>
+						}}>登录</button>
 					</div>
 				</div>
 			</div>

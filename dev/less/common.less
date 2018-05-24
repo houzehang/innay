@@ -6,18 +6,18 @@ body {
 		width: 100%;
 		height: 100%;
 		background: rgba(0, 0, 0, 0.65) url(../assets/loading.svg) no-repeat center center;
-		background-size: 2rem auto;
+		background-size: 1rem auto;
 		z-index: 102;
 		left: 0;
 		top: 0;
 		color: #fff;
-		font-size: 0.3rem;
+		font-size: 0.16rem;
 		text-align: center;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		.loading-text {
-			margin-top: 2rem;
+			margin-top: 1rem;
 			.animation-i(blink,2s,0s,linear);
 		}
 	}
@@ -149,22 +149,20 @@ body {
 		}
 	}
 	.calendar-box {
-		font-size: 0.30rem;
-		color: #333;
-		width: 12rem;
-		border: 6rem/100 solid #f9d438;
-		border-radius: 8rem/100;
-		margin: 0 auto 0.6rem;
+		font-size: 0.17rem;
+		color: #000000;
+		width: 8.2rem;
+		margin: 0 auto 0.3rem;
 		background: #fff;
 	}
 	.cal-bd {
-		border-bottom: 1rem/100 solid #dbdbdb;
+		border-bottom: 1rem/100 solid #cccccc;
 	}
 	.highlight {
 		color: #ff2a2a;
 	}
 	.calendar-head {
-		height: 92rem/100;
+		height: 0.46rem;
 		display: flex;
 		align-items: center;
 	}
@@ -176,21 +174,20 @@ body {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		height: 103rem/100;
+		height: 50rem/100;
 		color: #000;
 	}
 	.calendar-control .control-l,
 	.calendar-control .control-r {
-		width: 116rem/100;
-		height: 66rem/100;
+		width: 60rem/100;
+		height: 50rem/100;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 	}
 	.calendar-control .control-l img,
 	.calendar-control .control-r img{
-		width: 15rem/100;
-		height: 26rem/100;
+		width: 7rem/100;
 	}
 	.calendar-control .control-r img {
 		transform: scaleX(-1);
@@ -203,15 +200,16 @@ body {
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
-		height: 86rem/100;
+		height: 46rem/100;
 	}
 	.calendar-col {
-		width: 56rem/100;
-		height: 56rem/100;
+		width: 33rem/100;
+		height: 33rem/100;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		border-radius: 50%;
+		position: relative;
 	}
 	.calendar-col.disabled {
 		color: #fff;
@@ -222,7 +220,16 @@ body {
 		background: #ff2a2a;
 	}
 	.calendar-col.highlighted {
-		color: #fff;
-		background: #f9d438;
+		&::after {
+			content: "";
+			position: absolute;
+			width: 0.06rem;
+			height: 0.06rem;
+			border-radius: 50%;
+			background: #ff2a2a;
+			bottom: 0;
+			left: 50%;
+			margin-left: -0.03rem;
+		}
 	}
 }
