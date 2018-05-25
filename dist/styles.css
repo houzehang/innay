@@ -1465,7 +1465,7 @@ body .page.course-page {
 html .page.course-page .inner,
 body .page.course-page .inner {
   width: 12.72rem;
-  margin: 0.14rem;
+  margin: 0.1rem 0.15rem;
   display: flex;
   flex: 1;
 }
@@ -1533,7 +1533,7 @@ html .page.course-page .inner .content,
 body .page.course-page .inner .content {
   position: relative;
   flex: 1;
-  margin: 0 0.14rem;
+  margin: 0 0.15rem;
   display: flex;
   flex-direction: column;
 }
