@@ -11,12 +11,15 @@ html,body {
 		height: 100%;
 		width: 100%;
 	}
+	video {
+		object-fit: contain;
+	}
 	.fixed {
 		position: fixed !important;
 		.name {
 			position: absolute;
 			width: 100%;
-			height: 0.5rem;
+			height: 0.5rem !important;
 			line-height: 0.5rem;
 			font-size: 0.18rem;
 			color: #fff;
@@ -406,6 +409,10 @@ html,body {
 									display: flex;
 									justify-content: center;
 									align-items: center;
+									div,video {
+										width: 100%;
+										height: 100%;
+									}
 									img {
 										height: 100%;
 									}
@@ -458,6 +465,10 @@ html,body {
 									background-size: cover;
 									background-repeat: no-repeat;
 									background-position: center center;
+									div,video {
+										width: 100%;
+										height: 100%;
+									}
 								}
 								.avatar-handsup {
 									position: absolute;
@@ -483,7 +494,7 @@ html,body {
 									bottom: 0;
 									left: 0;
 								}
-								&:hover {
+								&.hover {
 									.summary .summary-inner {
 										transform: translateX(0);
 										opacity: 1;

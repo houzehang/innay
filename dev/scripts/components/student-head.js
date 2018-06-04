@@ -2,18 +2,43 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 class StudentHead extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = { hover: false }
+	}
+	__bind() {
+		if (this.props.user && !this.$binded) {
+			this.$binded = true
+			$(".student-area").on("mouseover", `#player_${this.props.user.id}`, (event)=>{
+				if (this.props.user.dancing) {
+					event.stopPropagation()
+					event.preventDefault()
+				}
+			})
+		}
+	}
 	render() {
-		let gifts = this.props.user ? this.props.user.gifts.map((item)=>(
+		this.__bind()
+		let gifts = this.props.user.stream ? this.props.user.gifts.map((item)=>(
 			<div className={"item gift-"+item.id} key={item.id}>
 				<div className="icon"></div>
 				<div className="num">{item.total}</div>
 			</div>
 		)) : ""
-		return this.props.user ? (
-					<div className="student" key={this.props.user.id+""}>
+		return this.props.user.stream ? (
+					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={(event)=>{
+						this.setState({ hover:true })
+					}} onMouseOut={(event)=>{
+						this.setState({ hover:false })
+					}}>
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={{
 							backgroundImage : `url(${this.props.user.avatarurl})`
 						}}>
+							{this.props.tencent?(
+								<div id={"player_"+this.props.user.id}>
+									<video id={"video"+this.props.user.id} autoPlay={true} playsInline={true}/>
+								</div>
+							):""}
 						</div>
 						<div className="avatar-info">{this.props.user.child_name}</div>
 						{this.props.handsup.opened ? <div className="avatar-handsup">{this.props.handsup.rank||""}</div>:""}
@@ -63,6 +88,7 @@ StudentHead.propTypes = {
 			total	: PropTypes.number
 		}))
 	}),
+	tencent 	 : PropTypes.bool,
 	handsup		 : PropTypes.object.isRequired,
 	speak 		 : PropTypes.bool,
 	onClickSpeak : PropTypes.func,

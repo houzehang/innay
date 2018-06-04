@@ -13,11 +13,10 @@ import {
 	confirm
 } from '../actions'
 const net 		= require("../network")
-const Room 		= require("../AgoraStream")
-const Signalize	= require('../AgoraSignal')
+const Room 		= require("../TencentStream")
+const Signalize	= require('../TencentSignal')
 const Session   = require('../session')
 const Const   	= require('../../const')
-const {remote}  = $require("electron");
 
 class Course extends React.Component {
 	constructor(props) {
@@ -76,8 +75,8 @@ class Course extends React.Component {
 		this.$room.on("NEW_STREAM", (stream)=>{
 			// 判断是不是主班老师
 			let id = stream.getId()
-			let isMaster = this.isChairMaster(id)
 			let isSubMaster = this.isSubMaster(id)
+			console.log(id, isSubMaster)
 			if (isSubMaster) {
 				return
 			}
@@ -281,17 +280,10 @@ class Course extends React.Component {
 		let id = student.id
 		let dom = $(`#video${id}`)
 		clearTimeout(this.$put_timer)
-		console.trace("__put to dance",dom,student)
 		if (dom.length > 0) {
 			let target = $("#dancing-head")
 			let size = [ target.width(), target.height() ]
 			let scale = dom.width() / dom.height()
-			dom.css({
-				left  : size[0] - size[1] * scale >> 1,
-				top   : 0, 
-				width : size[1] * scale,
-				height: size[1]
-			})
 			$(`#player_${id}`).addClass("fixed").css({
 				"left"     : target.offset().left,
 				"top"      : target.offset().top,
@@ -313,18 +305,11 @@ class Course extends React.Component {
 		let id = student.id
 		let dom = $(`#video${id}`)
 		clearTimeout(this.$back_timer)
-		console.log("back from dancing",student)
 		if (dom.length > 0) {
 			let target = $(`#student_${id}`)
 			if (target.length > 0) {
 				let size = [ target.width(), target.height() ]
 				let scale = dom.width() / dom.height()
-				dom.css({
-					left  : size[0] - size[1] * scale >> 1,
-					top   : 0, 
-					width : size[1] * scale,
-					height: size[1]
-				})
 				$(`#player_${id}`).removeClass("fixed").css({
 					"left"     : 0,
 					"top"      : 0,
@@ -418,7 +403,7 @@ class Course extends React.Component {
 			<StudentHead key={student.id} handsup={{
 				opened: this.props.switches.handsup,
 				rank  : student.rank || ""
-			}} user={student.stream?student:null} onClickSpeak={(user)=>{
+			}} user={student} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -442,7 +427,7 @@ class Course extends React.Component {
 				}
 			}} onClickView={(user)=>{
 				this.props.onDancing(user.id, !user.dancing)
-			}}/>
+			}} tencent={true}/>
 		))
 		return (
 			<div className="page course-page">
@@ -505,6 +490,11 @@ class Course extends React.Component {
 								<div className="avatar">
 									<div className="avatar-head" id="master-head">
 									{this.props.teacher.stream?"":<img src={this.props.teacher.avatarurl}/>}
+										<div id={"player_"+this.props.teacher.id}>
+											<video id={"video"+this.props.teacher.id} style={{
+												display: this.props.teacher.stream ? "block" : "none"
+											}}/>
+										</div>
 									</div>
 									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
 								</div>
