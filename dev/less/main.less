@@ -389,6 +389,8 @@ html,body {
 					display: flex;
 					flex-direction: column;
 					.avatars {
+						overflow: scroll;
+						-webkit-overflow-scrolling: touch;
 						flex: 1;
 						display: flex;
 						justify-content: space-between;
@@ -495,25 +497,24 @@ html,body {
 									left: 0;
 								}
 								&.hover {
-									.summary .summary-inner {
-										transform: translateX(0);
+									.summary {
+										width: 2.43rem;
 										opacity: 1;
 									}
 								}
 								.summary {
-									width: 2.43rem;
+									width: 0;
 									height: 0.84rem;
 									overflow: hidden;
 									position: absolute;
 									right: 0.7rem;
 									top: 0;
+									transition: all 300ms 0s ease-in-out;
+									opacity: 0;
 									.summary-inner {
-										width: 100%;
+										width: 2.43rem;
 										height: 100%;
-										transition: all 300ms 0s ease-in-out;
-										transform: translateX(100%);
 										background: rgba(88, 93, 122, 0.9);
-										opacity: 0;
 									}
 									.items {
 										height: 0.5rem;

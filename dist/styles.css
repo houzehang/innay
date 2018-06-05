@@ -1182,6 +1182,10 @@ body .full-h {
   height: 100%;
   width: 100%;
 }
+html video,
+body video {
+  object-fit: contain;
+}
 html .fixed,
 body .fixed {
   position: fixed !important;
@@ -1190,7 +1194,7 @@ html .fixed .name,
 body .fixed .name {
   position: absolute;
   width: 100%;
-  height: 0.5rem;
+  height: 0.5rem !important;
   line-height: 0.5rem;
   font-size: 0.18rem;
   color: #fff;
@@ -1630,6 +1634,8 @@ body .page.course-page .inner .info {
 }
 html .page.course-page .inner .info .avatars,
 body .page.course-page .inner .info .avatars {
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
   flex: 1;
   display: flex;
   justify-content: space-between;
@@ -1657,6 +1663,13 @@ body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head 
   display: flex;
   justify-content: center;
   align-items: center;
+}
+html .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head div,
+body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head div,
+html .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head video,
+body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head video {
+  width: 100%;
+  height: 100%;
 }
 html .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head img,
 body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head img {
@@ -1721,6 +1734,13 @@ body .page.course-page .inner .info .avatars .student-area .student .avatar-head
   background-repeat: no-repeat;
   background-position: center center;
 }
+html .page.course-page .inner .info .avatars .student-area .student .avatar-head div,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-head div,
+html .page.course-page .inner .info .avatars .student-area .student .avatar-head video,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-head video {
+  width: 100%;
+  height: 100%;
+}
 html .page.course-page .inner .info .avatars .student-area .student .avatar-handsup,
 body .page.course-page .inner .info .avatars .student-area .student .avatar-handsup {
   position: absolute;
@@ -1747,28 +1767,27 @@ body .page.course-page .inner .info .avatars .student-area .student .avatar-info
   bottom: 0;
   left: 0;
 }
-html .page.course-page .inner .info .avatars .student-area .student:hover .summary .summary-inner,
-body .page.course-page .inner .info .avatars .student-area .student:hover .summary .summary-inner {
-  transform: translateX(0);
+html .page.course-page .inner .info .avatars .student-area .student.hover .summary,
+body .page.course-page .inner .info .avatars .student-area .student.hover .summary {
+  width: 2.43rem;
   opacity: 1;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary,
 body .page.course-page .inner .info .avatars .student-area .student .summary {
-  width: 2.43rem;
+  width: 0;
   height: 0.84rem;
   overflow: hidden;
   position: absolute;
   right: 0.7rem;
   top: 0;
+  transition: all 300ms 0s ease-in-out;
+  opacity: 0;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner,
 body .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner {
-  width: 100%;
+  width: 2.43rem;
   height: 100%;
-  transition: all 300ms 0s ease-in-out;
-  transform: translateX(100%);
   background: rgba(88, 93, 122, 0.9);
-  opacity: 0;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .items,
 body .page.course-page .inner .info .avatars .student-area .student .summary .items {

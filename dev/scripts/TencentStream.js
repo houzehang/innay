@@ -7,6 +7,7 @@ class TencentStream extends Eventer {
 		super()
 		this.$prefix = "userid_web_"
 		this.inst = inst
+		this.$roomId = Const.ROOM_ID
 		this.$streams_list 	= []
 		this.$streams_hash 	= {}
 	}
@@ -30,17 +31,18 @@ class TencentStream extends Eventer {
 							userId	    : response.userID,
 							userSig 	: response.userSig
 						}, ()=>{
-							console.log("init success..")
 							let audio = null, video = null
 							this.$rtc.getVideoDevices((devices)=>{
+								console.log(devices)
 								devices.forEach((item)=>{
-									if (item.label == "FaceTime HD Camera" && item.kind == "videoinput") {
+									if (/facetime/i.test(item.label) && item.kind == "videoinput") {
 										video = item.deviceId
 									}
 								})
 								this.$rtc.getAudioDevices((devices)=>{
+									console.log(devices)
 									devices.forEach((item)=>{
-										if (item.label == "Built-in Microphone" && item.kind == "audioinput") {
+										if (/(built-in)|(内建)/i.test(item.label) && item.kind == "audioinput") {
 											audio = item.deviceId
 										}
 									})
@@ -194,7 +196,7 @@ class TencentStream extends Eventer {
 				
 			});
 			this.$rtc.createRoom({
-				roomid: 896923782,
+				roomid: this.$roomId,
 				role  : "miniwhite"
 			}, (result)=>{
 				console.log("create room success",result)
