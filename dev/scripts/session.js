@@ -21,51 +21,46 @@ class Session extends Eventer {
 
 	init(dom) {
 		this.$dom = $(dom)
-		this.__createWebview()
 		this.__bind()
-		this.$dom.html("")
-		this.$dom.append(this.$webview)
+		this.__createWebview()
 	}
 	/**
 	 * 创建webview
 	 */
 	__createWebview() {
-		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
-		this.$webview = webview[0];
+		let prefix = "https://kecheng.runsnailrun.com"
+		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
+			window.CANVAS_HOLDER   = "#course-content"
+			window.CANVAS_LOCATION = `${prefix}/app?from=app`
+			window.CANVAS_SIZE     = [ 
+				$("#course-content").width(), 
+				$("#course-content").height()
+			]
+			console.log("window.CANVAS_SIZE",window.CANVAS_SIZE)
+			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
+				if (!/^\//.test(result)) {
+					result = "/app" + result
+				}
+				$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
+				return
+			})
+			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
+				if (/(flexible)|(zepto)/.test(result)) return
+				if (!/^\//.test(result)) {
+					result = "/app/" + result
+				}
+				$(`<script type="text/javascript" src="${prefix+result}"></script>`).appendTo("body")
+				return
+			})
+		})
+		// let partition = this.uuid()
+		// let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
+		// this.$webview = webview[0];
 	}
 
 	__bind() {
-		if (this.$webview) {
-			if (DEBUG) {
-				$(this.$webview).off('dom-ready');
-				$(this.$webview).on('dom-ready', () => {
-					this.$webview.openDevTools();
-				});
-			}
-			$(this.$webview).off('page-title-updated');
-			$(this.$webview).on('page-title-updated', (event)=>{
-				event = event.originalEvent;
-				let parsed = event.title.match(/^#PART#(\d+)#(\d+)#(.+)$/);
-				if (parsed) {
-					let index = parseInt(parsed[1],10),
-						total = parseInt(parsed[2],10);
-					if (index == total) {
-						this.$_parts.push(parsed[3]);
-						let data = this.$_parts.join("");
-						try {
-							this.receive_message(JSON.parse(data));
-						} catch(e) {
-							console.error(e,data);
-						}
-						this.$_parts = [];
-					} else if (index < total){
-						this.$_parts.push(parsed[3]);
-					} else {
-						this.$_parts = [];
-					}
-				}
-			});
+		window.BridgeH5Command = (callback, content)=>{
+			this.receive_message(JSON.parse(content));
 		}
 	}
 
@@ -84,7 +79,7 @@ class Session extends Eventer {
 			for(let key in extra) {
 				message[key] = extra[key]
 			}
-			this.$webview.executeJavaScript(`BridgeH5Do(${JSON.stringify(message)})`);
+			BridgeH5Do(JSON.stringify(message))
 		} else {
 			this.$queue.push([type, data, extra])
 		}

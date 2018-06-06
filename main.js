@@ -26,7 +26,7 @@ app.on('ready', ()=>{
             frame: true,
             autoHideMenuBar: true,
             webPreferences : {
-                webSecurity: false,
+                webSecurity: true,
                 javascript: true,
                 plugins: true
             }

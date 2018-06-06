@@ -466,7 +466,7 @@ class Course extends React.Component {
 						}}></button>
 					</div>
 					<div className="content">
-						<div className="course-content" id="course-content"></div>
+						<div className="course-content kc-canvas-area" id="course-content"></div>
 						<div className="operations">
 							<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 								if (this.props.switches.handsup) {
