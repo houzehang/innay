@@ -19,8 +19,7 @@ class Session extends Eventer {
 		return this.$webview
 	}
 
-	init(dom) {
-		this.$dom = $(dom)
+	init() {
 		this.__bind()
 		this.__createWebview()
 	}
@@ -43,14 +42,24 @@ class Session extends Eventer {
 				$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
 				return
 			})
+			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
 				if (/(flexible)|(zepto)/.test(result)) return
 				if (!/^\//.test(result)) {
 					result = "/app/" + result
 				}
-				$(`<script type="text/javascript" defer src="${prefix+result}"></script>`).appendTo("body")
+				scripts.push(prefix+result)
 				return
 			})
+			let _next = ()=>{
+				let script = scripts.shift()
+				if (script) {
+					$.getScript(script, ()=>{
+						_next()
+					})
+				}
+			}
+			_next()
 		})
 		// let partition = this.uuid()
 		// let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
