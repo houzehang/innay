@@ -73,6 +73,7 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
+		this.$room.init()
 		this.$room.on("NEW_STREAM", (stream)=>{
 			// 判断是不是主班老师
 			let id = stream.getId()
@@ -81,7 +82,7 @@ class Course extends React.Component {
 			if (isSubMaster) {
 				return
 			}
-			console.log("new stream",stream)
+			console.log("new stream")
 			this.props.onNewStream(stream)
 		})
 		this.$room.on("REMOVE_STREAM", (stream)=>{
@@ -279,31 +280,35 @@ class Course extends React.Component {
 			this.__back_from_dancing(this.$last_dancing)
 		}
 		let id = student.id
-		let dom = $(`#video${id}`)
-		clearTimeout(this.$put_timer)
-		console.trace("__put to dance",dom,student)
-		if (dom.length > 0) {
-			let target = $("#dancing-head")
-			let size = [ target.width(), target.height() ]
-			let scale = dom.width() / dom.height()
-			dom.css({
-				left  : size[0] - size[1] * scale >> 1,
-				top   : 0, 
-				width : size[1] * scale,
-				height: size[1]
-			})
-			$(`#player_${id}`).addClass("fixed").css({
-				"left"     : target.offset().left,
-				"top"      : target.offset().top,
-				"width"    : size[0],
-				"height"   : size[1]
-			}).append(`<div class="name">${student.child_name}</div>`)
-			this.$last_dancing = student
-		} else {
-			this.$put_timer = setTimeout(()=>{
-				this.__put_to_dancing(student)
-			},1000)
-		}
+		$(`#student_${id}`).empty()
+		this.$room.dance(id, $("#dancing-head")[0])
+		this.$last_dancing = student
+		// let dom = $(`#student_${id} canvas`)
+		// clearTimeout(this.$put_timer)
+		// console.trace("__put to dance",dom,student)
+		// if (dom.length > 0) {
+		// 	let target = $("#dancing-head")
+		// 	let size = [ target.width(), target.height() ]
+		// 	let scale = dom.width() / dom.height()
+		// 	dom.data("size", [dom.width(), dom.height()]).css({
+		// 		left  : size[0] - size[1] * scale >> 1,
+		// 		top   : 0, 
+		// 		width : size[1] * scale,
+		// 		height: size[1]
+		// 	})
+		// 	$(`#student_${id} div`).addClass("fixed").css({
+		// 		"left"     : target.offset().left,
+		// 		"top"      : target.offset().top,
+		// 		"width"    : size[0],
+		// 		"height"   : size[1],
+		// 		"background" : "#000"
+		// 	}).append(`<span class="name">${student.child_name}</span>`)
+		// 	this.$last_dancing = student
+		// } else {
+		// 	this.$put_timer = setTimeout(()=>{
+		// 		this.__put_to_dancing(student)
+		// 	},1000)
+		// }
 	}
 
 	__back_from_dancing(student) {
@@ -311,33 +316,9 @@ class Course extends React.Component {
 			return
 		}
 		let id = student.id
-		let dom = $(`#video${id}`)
-		clearTimeout(this.$back_timer)
-		console.log("back from dancing",student)
-		if (dom.length > 0) {
-			let target = $(`#student_${id}`)
-			if (target.length > 0) {
-				let size = [ target.width(), target.height() ]
-				let scale = dom.width() / dom.height()
-				dom.css({
-					left  : size[0] - size[1] * scale >> 1,
-					top   : 0, 
-					width : size[1] * scale,
-					height: size[1]
-				})
-				$(`#player_${id}`).removeClass("fixed").css({
-					"left"     : 0,
-					"top"      : 0,
-					"width"    : "100%",
-					"height"   : "100%"
-				})
-				$(`#player_${id} .name`).remove()
-			}
-		} else {
-			this.$back_timer = setTimeout(()=>{
-				this.__back_from_dancing(student)
-			},1000)
-		}
+		$(`#dancing-head`).empty()
+		this.$room.dance(id, $(`#student_${id}`)[0])
+		this.$last_dancing = null
 	}
 
 	__time_to_str() {

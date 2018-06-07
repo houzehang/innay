@@ -28,7 +28,6 @@ const store = createStore(
 	applyMiddleware(...middleware)
 )
 store.dispatch(restoreUserInfo())
-
 render(
 	<Provider store={store}>
 		<App/>

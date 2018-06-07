@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
-import Course from './course.tencent.page'
+import Course from './course.page'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 

@@ -1,0 +1,26 @@
+Error :setVideoProfile, :1579
+
+Create video stream channel for type : 0, uid :0
+
+Create video stream channel for type : 1, uid :25
+
+duration : 2, tx :57187, rx :38711, txbr :0, rxbr :0, txAudioBr :0, rxAudioBr :0, users :2
+
+duration : 4, tx :137557, rx :64356, txbr :321, rxbr :102, txAudioBr :18, rxAudioBr :0, users :2
+
+duration : 6, tx :215652, rx :96018, txbr :312, rxbr :126, txAudioBr :18, rxAudioBr :0, users :2
+
+duration : 8, tx :310258, rx :100039, txbr :378, rxbr :16, txAudioBr :19, rxAudioBr :0, users :1
+
+Create video stream channel for type : 1, uid :25
+
+duration : 10, tx :421847, rx :121449, txbr :446, rxbr :85, txAudioBr :19, rxAudioBr :0, users :2
+
+duration : 12, tx :537881, rx :141286, txbr :463, rxbr :79, txAudioBr :18, rxAudioBr :0, users :2
+
+duration : 14, tx :657361, rx :158335, txbr :477, rxbr :68, txAudioBr :19, rxAudioBr :0, users :2
+
+duration : 16, tx :787319, rx :172574, txbr :519, rxbr :56, txAudioBr :17, rxAudioBr :0, users :2
+
+duration : 18, tx :930713, rx :190139, txbr :573, rxbr :70, txAudioBr :11, rxAudioBr :0, users :2
+

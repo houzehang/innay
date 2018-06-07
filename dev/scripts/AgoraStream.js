@@ -5,36 +5,31 @@ class Room extends Eventer {
 	constructor(inst) {
 		super()
 		this.inst = inst
-		this.__init()
 		this.$streams_list 	= []
 		this.$streams_hash 	= {}
 	}
 
-	__add_stream(stream) {
-		let id = stream.getId()
-		let index = this.$streams_hash[id]
-		if (index == undefined) {
-			this.$streams_list.push(stream)
-			this.$streams_hash[id] = this.$streams_list.length-1
+	init() {
+		this.$client = new AgoraRtcEngine() // eslint-disable-line
+		this.$client.initialize(Const.AGORA_APPID);
+		this.$client.setChannelProfile(1);
+		this.$client.setClientRole(1);
+		this.$client.setAudioProfile(0, 1);
+		this.$client.setParameters('{"che.audio.live_for_comm":true}');
+		this.$client.setParameters('{"che.audio.enable.agc":false}');
+		this.$client.setParameters('{"che.video.moreFecSchemeEnable":true}');
+		this.$client.setParameters('{"che.video.lowBitRateStreamParameter":{"width":192,"height":108,"frameRate":15,"bitRate":100}}');
+		this.$client.enableDualStreamMode(true);
+		this.$client.enableVideo();
+		this.$client.enableLocalVideo(true);
+		let isMaster = this.inst.props.room.teacher_id == 
+					   this.inst.props.account.id
+		if (isMaster) {
+			this.$client.setVideoProfile(45);
 		} else {
-			this.$streams_list[index] = stream
+			this.$client.setVideoProfile(2);
 		}
-		this.stream_audio(id)
-	}
-
-	__remove_stream(stream) {
-		let id = stream.getId()
-		let index = this.$streams_hash[id]
-		this.$streams_list.splice(index,1)
-		this.$streams_hash = {}
-		this.$streams_list.forEach((item,index)=>{
-			this.$streams_hash[item.getId()] = index
-		})
-	}
-
-	__get_stream(id) {
-		let index = this.$streams_hash[id]
-		return this.$streams_list[index]
+		this.__init()
 	}
 
 	__init() {
@@ -42,28 +37,18 @@ class Room extends Eventer {
 			if (this.$inited) {
 				resolve()
 			} else {
-				AgoraRTC.getDevices(function (devices) {
-					let audio = null, video = null
-					devices.forEach((item)=>{
-						if (item.label == "Built-in Microphone" && item.kind == "audioinput") {
-							audio = item.deviceId
-						} else if (item.label == "FaceTime HD Camera" && item.kind == "videoinput") {
-							video = item.deviceId
-						}
-					})
-					this.$video_device_id = video
-					this.$audio_device_id = audio
+				this.$client.getVideoDevices().forEach((item)=>{
+					if (/facetime/i.test(item.devicename)) {
+						this.$client.setVideoDevice(item.deviceid);
+					}
 				})
-				var client = AgoraRTC.createClient({mode: 'interop'});
-				client.init(Const.AGORA_APPID, ()=>{
-					this.$inited = true
-					resolve()
-				}, (error)=>{
-					this.$inited = false
-					console.log("error",error)
-					reject()
-				});
-				this.$client = client
+				this.$client.getAudioRecordingDevices().forEach((item)=>{
+					if (/(built-in)|(内置)/i.test(item.devicename)) {
+						this.$client.setAudioRecordingDevice(item.deviceid);
+					}
+				}) 
+				this.$inited = true
+				resolve()
 			}
 		})
 	}
@@ -82,16 +67,37 @@ class Room extends Eventer {
 	}
 
 	stream_audio(id) {
-		let stream = this.__get_stream(id)
-		if (!stream) return
 		let isMaster = this.inst.props.room.teacher_id == id
 		let muted  = this.__isMuted(id)
-		if (muted && !isMaster) {
-			stream.disableAudio()
+		muted = muted && !isMaster
+		if (id == this.inst.props.account.id) {
+			this.$client.muteLocalAudioStream(muted)
+		} else {
+			this.$client.muteRemoteAudioStream(id, muted)
+		}
+		if (muted) {
 			console.log("disable audio",id)
 		} else {
 			console.log("enable audio",id)
-			stream.enableAudio()
+		}
+	}
+
+	dance(id, dom) {
+		this.$client.subscribe(id, dom)
+	}
+
+	__stream(id) {
+		return { 
+			getId: ()=>id, 
+			play: (dom)=>{
+				dom = $(`#${dom}`)[0]
+				if (id == this.inst.props.account.id) {
+					this.$client.setupLocalVideo(dom)
+					this.$client.startPreview()
+				} else {
+					this.$client.subscribe(id, dom)
+				}
+			} 
 		}
 	}
 
@@ -99,7 +105,7 @@ class Room extends Eventer {
 		this.$client.on('error', (err)=>{
 			console.log("Got error msg:", err.reason);
 			if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-				this.$client.renewChannelKey(channelKey, ()=>{
+				this.$client.renewToken(this.inst.props.channel_token, ()=>{
 					console.log("Renew channel key successfully");
 				}, function(err){
 					console.log("Renew channel key failed: ", err);
@@ -107,100 +113,50 @@ class Room extends Eventer {
 			}
 		});
 	
-		this.$client.on('stream-added', (evt)=>{
-			var stream = evt.stream;
-			console.log("New stream added: " + stream.getId());
-			console.log("Subscribe ", stream);
-			console.log(this.$client.remoteVideoStreamTypes)
-			// this.$client.setRemoteVideoStreamType(stream, 1);
-			this.$client.subscribe(stream, (err)=>{
-				console.log("Subscribe stream failed", err);
-			});
-		});
-	
-		this.$client.on('stream-subscribed', (evt)=>{
-			var stream = evt.stream;
-			console.log("Subscribe remote stream successfully: " + stream.getId());
-			this.trigger("NEW_STREAM", stream)
-			this.__add_stream(stream)
-		});
-	
-		this.$client.on('stream-removed', (evt)=>{
-			var stream = evt.stream;
-			stream.stop();
-			this.trigger("REMOVE_STREAM", stream)
-			this.__remove_stream(stream)
-			console.log("Remote stream is removed " + stream.getId());
-		});
-	
-		this.$client.on('peer-leave', (evt)=>{
-			var stream = evt.stream;
-			if (stream) {
-				stream.stop();
-				this.trigger("REMOVE_STREAM", stream)
-				this.__remove_stream(stream)
-				console.log(evt.uid + " leaved from this channel");
+		this.$client.on('addstream', (id)=>{
+			console.log("add stream", id);
+			let isMaster = this.inst.props.room.teacher_id == id
+			if (isMaster) {
+				this.$client.setRemoteVideoStreamType(id, 0);
+			} else {
+				this.$client.setRemoteVideoStreamType(id, 1);
 			}
+			this.trigger("NEW_STREAM", this.__stream(id))
 		});
-        let stream = AgoraRTC.createStream({
-			streamID	: this.inst.props.account.id, 
-			audio 		: true, 
-			cameraId	: this.$video_device_id, 
-			microphoneId: this.$audio_device_id, 
-			video		: true, screen: false
+	
+		this.$client.on('removestream', (id)=>{
+			console.log("remove stream", id);
+			this.trigger("REMOVE_STREAM", this.__stream(id))
 		});
-		if (this.inst.props.account.id == this.inst.props.teacher.id) {
-			stream.setVideoProfile(Const.VIDEO_T_QUALITY)
-		} else {
-			stream.setVideoProfile(Const.VIDEO_S_QUALITY);
-		}
 
-        stream.on("accessAllowed", function() {
-        });
-        stream.on("accessDenied", function() {
-			alert("无法访问您的摄像头或麦克风")
-        });
-
-        stream.init(()=>{
-			this.__add_stream(stream)
-			this.stream_audio(stream.getId())
-			this.trigger("NEW_STREAM", stream)
-			this.$client.publish(stream, function (err) {
-				alert("无法连接您的视频流，请确定您的网络是否良好。")
-			});
-
-			this.$client.on('stream-published', function (evt) {
-			});
-        }, function (err) {
-			alert("无法访问您的摄像头或麦克风")
+		this.$client.on('userjoined', (id)=>{
+			// var stream = this.$client.streams.get(id);
+			console.log("userjoined",id)
 		});
-		this.$local_stream = stream
+		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 	}
 
 	start() {
 		this.__init().then(()=>{
-			this.$client.join(this.inst.props.room.channel_token, this.inst.props.room.channel_id, this.inst.props.account.id, (uid)=>{
+			this.$client.joinChannel(this.inst.props.room.channel_token, this.inst.props.room.channel_id, '', this.inst.props.account.id);
+			this.$client.on('joinedchannel', () => {
 				this.__start_stream()
-			}, (error)=>{
-				console.log("join error",error)
 			});
 		},()=>{}).done()
 	}
 
 	leave() {
-		this.$streams_list.forEach((stream)=>{
-			this.$client.unpublish(stream, (err)=>{
-				console.log("unpublish stream failed ", err)
-			})
-			stream.stop()
-			stream.close()
-		})
-		this.$client.leave(()=>{
-			this.trigger("LEAVE_ROOM", this.$client)
-			console.log("client leaves channel");
-		}, (err)=>{
+		try {
+			this.$client.videoSourceLeave();
+			this.$client.videoSourceRelease();
+			this.$client.leaveChannel();
+			this.$client.on('leavechannel', (...args) => {
+				this.$client.removeAllListeners();
+				this.trigger("LEAVE_ROOM", this.$client)
+			});
+		} catch (err) {
 			console.log("client leave failed ", err);
-		});
+		}
 	}
 }
 

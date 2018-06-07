@@ -1543,6 +1543,8 @@ body .page.course-page .inner .content {
 }
 html .page.course-page .inner .content .course-content,
 body .page.course-page .inner .content .course-content {
+  overflow: hidden;
+  position: relative;
   flex: 1;
 }
 html .page.course-page .inner .content .course-content .webview,

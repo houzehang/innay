@@ -9,7 +9,7 @@ class StudentHead extends React.Component {
 	__bind() {
 		if (this.props.user && !this.$binded) {
 			this.$binded = true
-			$(".student-area").on("mouseover", `#player_${this.props.user.id}`, (event)=>{
+			$(".student-area").on("mouseover", `#student_${this.props.user.id} .fixed`, (event)=>{
 				if (this.props.user.dancing) {
 					event.stopPropagation()
 					event.preventDefault()
@@ -19,13 +19,13 @@ class StudentHead extends React.Component {
 	}
 	render() {
 		this.__bind()
-		let gifts = this.props.user.stream ? this.props.user.gifts.map((item)=>(
+		let gifts = this.props.user ? this.props.user.gifts.map((item)=>(
 			<div className={"item gift-"+item.id} key={item.id}>
 				<div className="icon"></div>
 				<div className="num">{item.total}</div>
 			</div>
 		)) : ""
-		return this.props.user.stream ? (
+		return this.props.user ? (
 					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={(event)=>{
 						this.setState({ hover:true })
 					}} onMouseOut={(event)=>{

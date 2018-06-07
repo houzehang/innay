@@ -36,7 +36,6 @@ class Session extends Eventer {
 				$("#course-content").width(), 
 				$("#course-content").height()
 			]
-			console.log("window.CANVAS_SIZE",window.CANVAS_SIZE)
 			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
 				if (!/^\//.test(result)) {
 					result = "/app" + result
@@ -49,7 +48,7 @@ class Session extends Eventer {
 				if (!/^\//.test(result)) {
 					result = "/app/" + result
 				}
-				$(`<script type="text/javascript" src="${prefix+result}"></script>`).appendTo("body")
+				$(`<script type="text/javascript" defer src="${prefix+result}"></script>`).appendTo("body")
 				return
 			})
 		})
