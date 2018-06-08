@@ -19,13 +19,17 @@ class StudentHead extends React.Component {
 	}
 	render() {
 		this.__bind()
-		let gifts = this.props.user ? this.props.user.gifts.map((item)=>(
+		let hasUser = this.props.user
+		if (this.props.tencent) {
+			hasUser = this.props.user.stream
+		}
+		let gifts = hasUser ? this.props.user.gifts.map((item)=>(
 			<div className={"item gift-"+item.id} key={item.id}>
 				<div className="icon"></div>
 				<div className="num">{item.total}</div>
 			</div>
 		)) : ""
-		return this.props.user ? (
+		return hasUser ? (
 					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={(event)=>{
 						this.setState({ hover:true })
 					}} onMouseOut={(event)=>{
