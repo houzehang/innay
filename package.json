@@ -7,8 +7,8 @@
     "start": "electron .",
     "watch": "nodemon --watch . --watch config ./boot.js",
     "build": "webpack --config webpack.prod.config.js",
-    "package-win": "npm run build; electron-packager ./ muwen --asar=true --platform=win32 --arch=x64 --electron-version=2.0.2 --overwrite --icon=./icns/win-icon.ico --ignore=\"(dev)|(icns)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)|(package-mac)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
-    "package-mac": "echo 'module.exports = {DEBUG : false}' > env.js;npm run build; electron-packager ./ muwen --asar=true --platform=darwin --arch=x64 --electron-version=2.0.2 --overwrite --icon=./icns/mac-icon.icns --ignore=\"(dev)|(icns)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)|(package-mac)\";electron-osx-sign './muwen-darwin-x64/muwen.app' --platform=darwin --type=distribution; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-win": "echo 'module.exports = {DEBUG : false}' > env.js; npm run build; electron-packager ./ muwen --platform=win32 --arch=ia32 --electron-version=2.0.2 --overwrite --icon=./icns/win-icon.ico --ignore=\"(dev|icns|muwen-.*|windows-installer|docs|gulpfile\\.js|package-mac|node_modules)\"; echo 'module.exports = {DEBUG : true}' > env.js;",
+    "package-mac": "echo 'module.exports = {DEBUG : false}' > env.js; npm run build; electron-packager ./ muwen --platform=darwin --arch=x64 --electron-version=2.0.2 --overwrite --icon=./icns/mac-icon.icns --ignore=\"(dev)|(icns)|(muwen-.*)|(windows-installer)|(docs)|(gulpfile.js)|(package-mac)|(node_modules)\";electron-osx-sign './muwen-darwin-x64/muwen.app' --platform=darwin --type=distribution; echo 'module.exports = {DEBUG : true}' > env.js;",
     "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
   },
   "dependencies": {

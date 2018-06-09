@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
-import Course from './course.tencent.page'
+import Course from './course.page'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
@@ -17,8 +17,13 @@ class Main extends React.Component {
 		this.state = {}
 	}
 
+	strToDate(str) {
+		let parsed = str.split(/[-: ]/)
+		return new Date(parsed[0], parsed[1] - 1, parsed[2], parsed[3], parsed[4], parsed[5])
+	  }
+
 	componentDidMount() {
-		let { calendar, account } = this.props  
+		let { account } = this.props  
 		if (account.dentity == types.DENTITY.STUDENT) {
 			net.lessonsByDate().then((res)=>{
 				// 计算剩余时间
@@ -52,41 +57,45 @@ class Main extends React.Component {
 		}
 		return (
 			<div className="page student-page">
-				<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
-				<div className="student-icon"></div>
-				{ room ? ([
-					room.left > 0 ? (
-						<div key="0" className="time">距离下次上课还有
-						{
-							room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
-						}
-						{
-							room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
-						}
-						{
-							room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
-						}
+				<div className="inner">
+					<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
+					<div className="student-icon"></div>
+					{ room ? ([
+						room.left > 0 ? (
+							<div key="0" className="time">距离下次上课还有
+							{
+								room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
+							}
+							{
+								room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
+							}
+							{
+								room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
+							}
+							</div>
+						) : (
+							<div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
+						),
+						<div key="1" className="lesson-box">
+							<div className="cover">
+								<img src={room.avatar} alt=""/>
+							</div>
+							<div className="info">
+								<div className="name">{room.name}</div>
+								<div className="index">老师：{room.teacher_name}</div>
+							</div>
+							<button className={!room.can_enter?"start-btn disabled":"start-btn"} onClick={()=>{
+								this.onStartRoom(room)
+							}}></button>
 						</div>
-					) : (
-						<div className="time">老师开始讲课啦，赶快进入教室哦！</div>
-					),
-					<div key="1" className="lesson-box">
-						<div className="cover">
-							<img src={room.avatar} alt=""/>
+					]) : ([
+						<div key="0" className="time">接下来没有课程啦～</div>,
+						<div key="1" className="no-lesson">
+							去“沐文大语文”小程序<br/>
+							和其他小朋友一起读诗
 						</div>
-						<div className="info">
-							<div className="title">{room.name}</div>
-							<div className="teacher">老师：{room.teacher_name}</div>
-						</div>
-						<button className={!room.can_enter?"start-btn disabled":"start-btn"}></button>
-					</div>
-				]) : ([
-					<div key="0" className="time">接下来没有课程啦～</div>,
-					<div key="1" className="lesson-box">
-						去“大语文”小程序<br/>
-						和其他小朋友一起读诗
-					</div>
-				]) }
+					]) }
+				</div>
 			</div>
 		)
 	}

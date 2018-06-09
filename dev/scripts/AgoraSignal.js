@@ -17,7 +17,8 @@ class Signalize extends Eventer {
 				resolve();
 			} else {
 				// 傻逼的sdk，accout参数必须为字符串
-				this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
+				// this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
+				this.$session = this.$signal.login(this.$inst.props.account.id+"", "_no_need_token")
 				this.$session.onLoginSuccess = ()=>{
 					this.$inited = true
 					resolve()
@@ -27,6 +28,7 @@ class Signalize extends Eventer {
 					if (ecode == Const.LOGIN_E_NET) {
 						setTimeout(()=>{
 							this.$inited = false
+							this.$session.logout()
 							this.init().then(resolve, reject).done()
 						},2000)
 					}

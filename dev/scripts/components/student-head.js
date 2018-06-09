@@ -60,16 +60,20 @@ class StudentHead extends React.Component {
 										</div>
 										{gifts}
 									</div>
-									<div className="btns">
-										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
-											this.props.onClickSpeak(this.props.user)
-										}}></button>
+									<div className={this.props.isTeacher?"btns":"btns student"}>
+										{this.props.isTeacher?(
+											<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
+												this.props.onClickSpeak(this.props.user)
+											}}></button>
+										):""}
 										<button className="gift-btn" onClick={()=>{
 											this.props.onClickGift(this.props.user)
 										}}></button>
-										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
-											this.props.onClickView(this.props.user)
-										}}></button>
+										{this.props.isTeacher?(
+											<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
+												this.props.onClickView(this.props.user)
+											}}></button>
+										):""}
 									</div>
 								</div>
 							</div>
@@ -93,6 +97,7 @@ StudentHead.propTypes = {
 		}))
 	}),
 	tencent 	 : PropTypes.bool,
+	isTeacher 	 : PropTypes.bool,
 	handsup		 : PropTypes.object.isRequired,
 	speak 		 : PropTypes.bool,
 	onClickSpeak : PropTypes.func,

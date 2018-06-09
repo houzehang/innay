@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import StudentHead from '../components/student-head'
+import Devices from './devices'
 import { 
 	onEndCourse, onGiftList, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
@@ -10,14 +11,14 @@ import {
 	onPauseCourse,
 	onResumeCourse,
 	onCourseTick,
-	confirm
+	confirm, alert
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
 const Signalize	= require('../AgoraSignal')
 const Session   = require('../session')
 const Const   	= require('../../const')
-const {remote}  = $require("electron");
+import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
 	constructor(props) {
@@ -112,7 +113,6 @@ class Course extends React.Component {
 		this.$session.on("NEW_MESSAGE", (message)=>{
 			console.log("receive new session message",message)
 			if (message.to == "app") {
-				let data = message.message
 				switch(message.type) {
 					case Const.JS_READY :
 					break
@@ -125,7 +125,6 @@ class Course extends React.Component {
 					case Const.OPEN_GIFT:
 					case Const.CLOSE_GIFT:
 					this.__on_signal_message(message)
-					break
 					break
 				}
 			} else if (message.to == "all") {
@@ -170,6 +169,7 @@ class Course extends React.Component {
 
 	__on_signal_message(message) {
 		let data = message.message
+		console.log("signal message",message)
 		switch(message.type) {
 			case "closeroom":
 			this.leaveCourse()
@@ -195,6 +195,12 @@ class Course extends React.Component {
 			break
 			case Const.CLOSE_GIFT:
 			this.props.onGiftSwitch(false)
+			break
+			case Const.PUT_DANCE:
+			this.props.onDancing(data.id, true)
+			break
+			case Const.BACK_DANCE:
+			this.props.onDancing(data.id, false)
 			break
 			case "racerank":
 			this.props.onHandsupRank(data.uid, data.rank)
@@ -272,50 +278,24 @@ class Course extends React.Component {
 		}
 	}
 
-	__put_to_dancing(student) {
+	__put_to_dancing(id) {
 		if (this.$last_dancing) {
-			if (this.$last_dancing.id == student.id) {
+			if (this.$last_dancing == id) {
 				return
 			}
 			this.__back_from_dancing(this.$last_dancing)
 		}
-		let id = student.id
+		console.log("do put message",id)
 		$(`#student_${id}`).empty()
-		this.$room.dance(id, $("#dancing-head")[0])
-		this.$last_dancing = student
-		// let dom = $(`#student_${id} canvas`)
-		// clearTimeout(this.$put_timer)
-		// console.trace("__put to dance",dom,student)
-		// if (dom.length > 0) {
-		// 	let target = $("#dancing-head")
-		// 	let size = [ target.width(), target.height() ]
-		// 	let scale = dom.width() / dom.height()
-		// 	dom.data("size", [dom.width(), dom.height()]).css({
-		// 		left  : size[0] - size[1] * scale >> 1,
-		// 		top   : 0, 
-		// 		width : size[1] * scale,
-		// 		height: size[1]
-		// 	})
-		// 	$(`#student_${id} div`).addClass("fixed").css({
-		// 		"left"     : target.offset().left,
-		// 		"top"      : target.offset().top,
-		// 		"width"    : size[0],
-		// 		"height"   : size[1],
-		// 		"background" : "#000"
-		// 	}).append(`<span class="name">${student.child_name}</span>`)
-		// 	this.$last_dancing = student
-		// } else {
-		// 	this.$put_timer = setTimeout(()=>{
-		// 		this.__put_to_dancing(student)
-		// 	},1000)
-		// }
+		this.$room.dance(id, $("#dancing-head")[0], true)
+		this.$last_dancing = id
 	}
 
-	__back_from_dancing(student) {
-		if (!this.$last_dancing || this.$last_dancing.id != student.id) {
+	__back_from_dancing(id) {
+		if (!this.$last_dancing || this.$last_dancing != id) {
 			return
 		}
-		let id = student.id
+		this.$session.send_message(Const.BACK_DANCE, { id })
 		$(`#dancing-head`).empty()
 		this.$room.dance(id, $(`#student_${id}`)[0])
 		this.$last_dancing = null
@@ -351,6 +331,33 @@ class Course extends React.Component {
 		]
 	}
 
+	setVideoDevices(devices) {
+		this.$video_devices = devices
+	}
+
+	setAudioDevices(devices) {
+		this.$audio_devices = devices
+	}
+
+	setSpeakerDevices(devices) {
+		console.log("devices",devices)
+		this.$speaker_devices = devices
+	}
+
+	onHelpClick() {
+		this.props.alert({
+			title: "设备调试",
+			content : <Devices rtc={this.$room.rtc} 
+				video_devices={this.$video_devices}
+				audio_devices={this.$audio_devices}
+				speaker_devices={this.$speaker_devices}
+			/>,
+			sure: ()=>{
+
+			}
+		})
+	}
+
 	render() {
 		let dancing
 		setTimeout(()=>{
@@ -369,7 +376,7 @@ class Course extends React.Component {
 				})
 			}
 			if (dancing) {
-				this.__put_to_dancing(dancing)
+				this.__put_to_dancing(dancing.id)
 			} else {
 				if (this.$last_dancing) {
 					this.__back_from_dancing(this.$last_dancing)
@@ -378,15 +385,13 @@ class Course extends React.Component {
 			}
 		},0)
 		let students = (this.props.students||[]).concat()
-		students.sort((prev,next)=>{
-			if (next.stream) {
-				if (prev.stream) {
-					return prev.stream_time - next.stream_time > 0 ? 1 : -1
-				} else {
-					return 1
-				}
+		students.forEach((item)=>{
+			if (!item.stream_time) {
+				item.stream_time = new Date().getTime() + 10000000
 			}
-			return 0
+		})
+		students.sort((prev,next)=>{
+			return next.stream_time < prev.stream_time ? 1 : -1
 		})
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
@@ -396,7 +401,7 @@ class Course extends React.Component {
 			}
 		}
 		students = students.map((student)=>(
-			<StudentHead key={student.id} handsup={{
+			<StudentHead key={student.id} isTeacher={this.props.account.dentity == types.DENTITY.MASTER} handsup={{
 				opened: this.props.switches.handsup,
 				rank  : student.rank || ""
 			}} user={student.stream?student:null} onClickSpeak={(user)=>{
@@ -411,6 +416,9 @@ class Course extends React.Component {
 				}
 			}} onClickGift={(user)=>{
 				if (user.id == this.props.account.id) {
+					this.props.alert({
+						content : "不能给自己送礼物哦~"
+					})
 					return
 				}
 				if (this.isMaster() || this.props.switches.gift) {
@@ -419,66 +427,79 @@ class Course extends React.Component {
 					}
 					this.__show_gift_layer()
 				} else {
-					alert("现在还不能送礼物哦~")
+					this.props.alert({
+						content : "现在还不能送礼物哦~"
+					})
 				}
 			}} onClickView={(user)=>{
-				this.props.onDancing(user.id, !user.dancing)
+				if (user.dancing) {
+					this.$session.send_message(Const.BACK_DANCE, { id: user.id })
+				} else {
+					this.$session.send_message(Const.PUT_DANCE, { id: user.id })
+				}
 			}}/>
 		))
 		return (
 			<div className="page course-page">
 				<div className="inner">
-					<div className="controls">
-						<button className="course-start" disabled={this.props.status.started?"true":""} onClick={()=>{
-							this.props.onBeginCourse()
-						}}></button>
-						<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
-							if (this.props.status.paused) {
-								this.props.onResumeCourse()
-								console.log("send message coursepause")
-								this.$session.send_message(Const.COURSE_RESUME)
-							} else {
-								this.props.onPauseCourse()
-								this.$session.send_message(Const.COURSE_PAUSE)
-							}
-						}}></button>
-						<button className="course-end" onClick={()=>{
-							this.preLeaveCourse()
-						}}></button>
-					</div>
-					<div className="content">
-						<div className="course-content kc-canvas-area" id="course-content"></div>
-						<div className="operations">
-							<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
-								if (this.props.switches.handsup) {
-									this.$session.send_message(Const.CLOSE_RACE)
+					{this.props.account.dentity != types.DENTITY.STUDENT?(
+						<div className="controls">
+							<button className="course-start" disabled={this.props.status.started?"true":""} onClick={()=>{
+								this.props.onBeginCourse()
+							}}></button>
+							<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
+								if (this.props.status.paused) {
+									this.props.onResumeCourse()
+									console.log("send message coursepause")
+									this.$session.send_message(Const.COURSE_RESUME)
 								} else {
-									this.$session.send_message(Const.OPEN_RACE)
+									this.props.onPauseCourse()
+									this.$session.send_message(Const.COURSE_PAUSE)
 								}
 							}}></button>
-							<button className={this.props.switches.gift?"course-gift":"course-gift off"} onClick={()=>{
-								if (this.props.switches.gift) {
-									this.$session.send_message(Const.CLOSE_GIFT)
-								} else {
-									this.$session.send_message(Const.OPEN_GIFT)
-								}
+							<button className="course-end" onClick={()=>{
+								this.preLeaveCourse()
 							}}></button>
-							<button className="course-prevpage" onClick={()=>{
-								this.$session.send_message("appprevpage")
-							}}></button>
-							<button className="course-nextpage" onClick={()=>{
-								this.$session.send_message("appnextpage")
-							}}></button>
-							<button className="course-prevstep" onClick={()=>{
-								this.$session.send_message("appprevstep")
-							}}></button>
-							<button className="course-nextstep" onClick={()=>{
-								this.$session.send_message("appnextstep")
-							}}></button>
-							<button className="course-clear" onClick={()=>{
-								this.$session.send_message("appclearall")
+							<button className="help-btn" onClick={()=>{
+								this.onHelpClick()
 							}}></button>
 						</div>
+					):""}
+					<div className="content">
+						<div className="course-content kc-canvas-area" id="course-content"></div>
+						{this.props.account.dentity != types.DENTITY.STUDENT?(
+							<div className="operations">
+								<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
+									if (this.props.switches.handsup) {
+										this.$session.send_message(Const.CLOSE_RACE)
+									} else {
+										this.$session.send_message(Const.OPEN_RACE)
+									}
+								}}></button>
+								<button className={this.props.switches.gift?"course-gift":"course-gift off"} onClick={()=>{
+									if (this.props.switches.gift) {
+										this.$session.send_message(Const.CLOSE_GIFT)
+									} else {
+										this.$session.send_message(Const.OPEN_GIFT)
+									}
+								}}></button>
+								<button className="course-prevpage" onClick={()=>{
+									this.$session.send_message("appprevpage")
+								}}></button>
+								<button className="course-prevstep" onClick={()=>{
+									this.$session.send_message("appprevstep")
+								}}></button>
+								<button className="course-clear" onClick={()=>{
+									this.$session.send_message("appclearall")
+								}}></button>
+								<button className="course-nextstep" onClick={()=>{
+									this.$session.send_message("appnextstep")
+								}}></button>
+								<button className="course-nextpage" onClick={()=>{
+									this.$session.send_message("appnextpage")
+								}}></button>
+							</div>
+						):""}
 					</div>
 					<div className="info">
 						<div className="avatars">
@@ -490,7 +511,7 @@ class Course extends React.Component {
 									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
 								</div>
 								<div className={dancing?"avatar":"avatar nothing"}>
-									<div className="ph-text">未指定学生发言</div>
+									<div className="ph-text">未指定小朋友发言</div>
 									<div className="avatar-head" id="dancing-head"></div>
 									<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
 								</div>
@@ -499,12 +520,21 @@ class Course extends React.Component {
 								{students}
 							</div>
 						</div>
-						<div className="counter">
-							倒计时：
-							{this.__counter_time_to_str()}
-							<div className="split"></div>
-							<div className="time">{this.__time_to_str()}</div>
-						</div>
+						{this.props.account.dentity != types.DENTITY.STUDENT?(
+							<div className="counter">
+								倒计时：
+								{this.__counter_time_to_str()}
+								<div className="split"></div>
+								<div className="time">{this.__time_to_str()}</div>
+							</div>
+						):(
+							<div className="counter pull-right">
+								<button className="help-btn" onClick={()=>{
+									this.onHelpClick()
+								}}></button>
+								<div className="time">{this.__time_to_str()}</div>
+							</div>
+						)}
 					</div>
 				</div>
 				{this.props.giftlist?(
@@ -571,6 +601,7 @@ const mapDispatchToProps = dispatch => ({
 	onResumeCourse 	: () => dispatch(onResumeCourse()),
 	onCourseTick 	: () => dispatch(onCourseTick()),
 	confirm 		: (data) => dispatch(confirm(data)),
+	alert 	    	: (data) => dispatch(alert(data)),
 })
   
 export default connect(

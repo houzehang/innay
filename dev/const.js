@@ -44,4 +44,6 @@ module.exports = {
 	CLOSE_GIFT  : "closegift",
 	COURSE_PAUSE  : "coursepause",
 	COURSE_RESUME : "courseresume",
+	PUT_DANCE     : "putdance",
+	BACK_DANCE    : "backdance",
 };

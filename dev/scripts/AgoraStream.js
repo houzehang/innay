@@ -32,21 +32,31 @@ class Room extends Eventer {
 		this.__init()
 	}
 
+	get rtc() {
+		return this.$client
+	}
+
 	__init() {
 		return Q.Promise((resolve, reject)=>{
 			if (this.$inited) {
 				resolve()
 			} else {
-				this.$client.getVideoDevices().forEach((item)=>{
+				let video_devices = this.$client.getVideoDevices()
+				video_devices.forEach((item)=>{
 					if (/facetime/i.test(item.devicename)) {
 						this.$client.setVideoDevice(item.deviceid);
 					}
 				})
-				this.$client.getAudioRecordingDevices().forEach((item)=>{
+				this.inst.setVideoDevices(video_devices)
+				let audio_devices = this.$client.getAudioRecordingDevices()
+				audio_devices.forEach((item)=>{
 					if (/(built-in)|(内置)/i.test(item.devicename)) {
 						this.$client.setAudioRecordingDevice(item.deviceid);
 					}
 				}) 
+				this.inst.setAudioDevices(audio_devices)
+				let speaker_devices = this.$client.getAudioPlaybackDevices()
+				this.inst.setSpeakerDevices(speaker_devices)
 				this.$inited = true
 				resolve()
 			}
@@ -67,12 +77,16 @@ class Room extends Eventer {
 	}
 
 	stream_audio(id) {
-		let isMaster = this.inst.props.room.teacher_id == id
+		let isTeacher = this.inst.props.room.teacher_id == id
 		let muted  = this.__isMuted(id)
-		muted = muted && !isMaster
+		muted = muted && !isTeacher
 		if (id == this.inst.props.account.id) {
+			console.log("mute self...",muted)
 			this.$client.muteLocalAudioStream(muted)
 		} else {
+			let isMaster = this.inst.props.room.teacher_id == 
+			this.inst.props.account.id
+			if (!isMaster) return
 			this.$client.muteRemoteAudioStream(id, muted)
 		}
 		if (muted) {
@@ -82,8 +96,19 @@ class Room extends Eventer {
 		}
 	}
 
-	dance(id, dom) {
-		this.$client.subscribe(id, dom)
+	dance(id, dom, largeMode) {
+		if (id == this.inst.props.account.id) {
+			this.$client.setupLocalVideo(dom)
+		} else {
+			this.$client.subscribe(id, dom)
+			let setStreamResult
+			if (largeMode) {
+				setStreamResult = this.$client.setRemoteVideoStreamType(id, 0)
+			} else {
+				setStreamResult = this.$client.setRemoteVideoStreamType(id, 1)
+			}
+			console.log("setStreamResult",setStreamResult)
+		}
 	}
 
 	__stream(id) {
@@ -134,6 +159,7 @@ class Room extends Eventer {
 			console.log("userjoined",id)
 		});
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
+		this.stream_audio(this.inst.props.account.id)
 	}
 
 	start() {

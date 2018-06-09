@@ -1216,6 +1216,30 @@ html button:active,
 body button:active {
   opacity: 0.6;
 }
+html .sound-tester,
+body .sound-tester {
+  width: 100%;
+}
+html .sound-tester .label,
+body .sound-tester .label {
+  font-size: 0.16rem;
+  line-height: 1.2;
+  margin-top: 0.2rem;
+}
+html .sound-tester select,
+body .sound-tester select {
+  width: 100%;
+  font-size: 0.14rem;
+}
+html .help-btn,
+body .help-btn {
+  background: #fff url(./de3f23051b065b56e566f4e3e5f4792c.png) no-repeat center center;
+  background-size: 0.2rem auto;
+  width: 0.3rem !important;
+  height: 0.3rem !important;
+  border-radius: 50%;
+  line-height: 0;
+}
 html .page,
 body .page {
   width: 100%;
@@ -1460,11 +1484,127 @@ html .page.calendar-page .courses .row .start-btn[disabled]::after,
 body .page.calendar-page .courses .row .start-btn[disabled]::after {
   content: "\5DF2\4E0A\8BFE";
 }
+html .page.student-page,
+body .page.student-page {
+  transition: all 300ms 0s ease-in-out;
+  background: #2d3144;
+  flex-direction: column;
+}
+html .page.student-page .inner,
+body .page.student-page .inner {
+  width: 12.72rem;
+  margin: 0.1rem 0.15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  background: #484f70;
+}
+html .page.student-page .inner .student-icon,
+body .page.student-page .inner .student-icon {
+  width: 8.2rem;
+  height: 3.4rem;
+  background: url(./15cf0d99d812a8e7c14c2261c6e985b5.jpg) no-repeat center center;
+}
+html .page.student-page .inner .time,
+body .page.student-page .inner .time {
+  font-size: 0.26rem;
+  color: #fff;
+  padding: 0.3rem 0;
+}
+html .page.student-page .inner .time span,
+body .page.student-page .inner .time span {
+  font-size: 0.4rem;
+  color: #b87947;
+  margin: 0 0.1rem;
+}
+html .page.student-page .inner .no-lesson,
+body .page.student-page .inner .no-lesson {
+  width: 7.88rem;
+  background: #fff;
+  padding: 0.16rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  font-size: 0.16rem;
+  line-height: 1.5;
+}
+html .page.student-page .inner .lesson-box,
+body .page.student-page .inner .lesson-box {
+  width: 7.88rem;
+  background: #fff;
+  padding: 0.16rem;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #cccccc;
+}
+html .page.student-page .inner .lesson-box .cover,
+body .page.student-page .inner .lesson-box .cover {
+  width: 1.37rem;
+  height: 0.92rem;
+  margin-right: 0.12rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+html .page.student-page .inner .lesson-box .cover img,
+body .page.student-page .inner .lesson-box .cover img {
+  width: 100%;
+}
+html .page.student-page .inner .lesson-box .info,
+body .page.student-page .inner .lesson-box .info {
+  flex: 1;
+}
+html .page.student-page .inner .lesson-box .info .name,
+body .page.student-page .inner .lesson-box .info .name {
+  font-size: 0.19rem;
+  color: #363636;
+  line-height: 0.21rem;
+  font-weight: bold;
+  margin-bottom: 0.16rem;
+}
+html .page.student-page .inner .lesson-box .info .index,
+body .page.student-page .inner .lesson-box .info .index {
+  font-size: 0.17rem;
+  color: #363636;
+  line-height: 0.19rem;
+  margin-bottom: 0.18rem;
+}
+html .page.student-page .inner .lesson-box .start-btn,
+body .page.student-page .inner .lesson-box .start-btn {
+  margin-right: 0.27rem;
+  width: 1.38rem;
+  height: 0.48rem;
+  background: #3882c2;
+  color: #fff;
+  font-size: 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.06rem;
+}
+html .page.student-page .inner .lesson-box .start-btn::after,
+body .page.student-page .inner .lesson-box .start-btn::after {
+  content: "\5F00\59CB\4E0A\8BFE";
+}
+html .page.student-page .inner .lesson-box .start-btn[disabled],
+body .page.student-page .inner .lesson-box .start-btn[disabled] {
+  background: #b5b5b5;
+}
+html .page.student-page .inner .lesson-box .start-btn[disabled]::after,
+body .page.student-page .inner .lesson-box .start-btn[disabled]::after {
+  content: "\5DF2\4E0A\8BFE";
+}
 html .page.course-page,
 body .page.course-page {
   transition: all 300ms 0s ease-in-out;
   background: #2d3144;
   flex-direction: column;
+  overflow: hidden;
 }
 html .page.course-page .inner,
 body .page.course-page .inner {
@@ -1475,6 +1615,8 @@ body .page.course-page .inner {
 }
 html .page.course-page .inner .controls,
 body .page.course-page .inner .controls {
+  position: relative;
+  margin-right: 0.15rem;
   width: 0.93rem;
   height: 100%;
   background: #484f70;
@@ -1533,11 +1675,19 @@ html .page.course-page .inner .controls button.course-end::after,
 body .page.course-page .inner .controls button.course-end::after {
   content: "\7ED3\675F";
 }
+html .page.course-page .inner .controls button.help-btn,
+body .page.course-page .inner .controls button.help-btn {
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 0.2rem;
+}
 html .page.course-page .inner .content,
 body .page.course-page .inner .content {
   position: relative;
   flex: 1;
-  margin: 0 0.15rem;
+  margin: 0 0.15rem 0 0;
   display: flex;
   flex-direction: column;
 }
@@ -1641,6 +1791,10 @@ body .page.course-page .inner .info .avatars {
   flex: 1;
   display: flex;
   justify-content: space-between;
+}
+html .page.course-page .inner .info .avatars::-webkit-scrollbar,
+body .page.course-page .inner .info .avatars::-webkit-scrollbar {
+  display: none;
 }
 html .page.course-page .inner .info .avatars .teacher-area,
 body .page.course-page .inner .info .avatars .teacher-area {
@@ -1850,6 +2004,10 @@ body .page.course-page .inner .info .avatars .student-area .student .summary .bt
   align-items: center;
   padding: 0 0.12rem;
 }
+html .page.course-page .inner .info .avatars .student-area .student .summary .btns.student,
+body .page.course-page .inner .info .avatars .student-area .student .summary .btns.student {
+  justify-content: center;
+}
 html .page.course-page .inner .info .avatars .student-area .student .summary .btns button,
 body .page.course-page .inner .info .avatars .student-area .student .summary .btns button {
   height: 0.24rem;
@@ -1904,6 +2062,14 @@ body .page.course-page .inner .info .counter {
   display: flex;
   align-items: center;
   margin-top: 0.2rem;
+}
+html .page.course-page .inner .info .counter.pull-right,
+body .page.course-page .inner .info .counter.pull-right {
+  justify-content: flex-end;
+}
+html .page.course-page .inner .info .counter.pull-right .help-btn,
+body .page.course-page .inner .info .counter.pull-right .help-btn {
+  margin-right: 0.4rem;
 }
 html .page.course-page .inner .info .counter .couter-g,
 body .page.course-page .inner .info .counter .couter-g {
