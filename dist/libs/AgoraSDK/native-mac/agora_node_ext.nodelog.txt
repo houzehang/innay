@@ -412,3 +412,47 @@ duration : 406, tx :29457446, rx :356953, txbr :560, rxbr :6, txAudioBr :13, rxA
 
 duration : 407, tx :29606063, rx :358503, txbr :594, rxbr :6, txAudioBr :13, rxAudioBr :0, users :1
 
+duration : 410, tx :29747894, rx :360263, txbr :567, rxbr :7, txAudioBr :12, rxAudioBr :0, users :1
+
+duration : 412, tx :29892042, rx :361882, txbr :576, rxbr :6, txAudioBr :13, rxAudioBr :0, users :1
+
+duration : 413, tx :30034937, rx :363580, txbr :571, rxbr :6, txAudioBr :12, rxAudioBr :0, users :1
+
+duration : 415, tx :30179942, rx :365285, txbr :580, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 417, tx :30324141, rx :366844, txbr :576, rxbr :6, txAudioBr :10, rxAudioBr :0, users :1
+
+duration : 419, tx :30469662, rx :368521, txbr :582, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 421, tx :30609408, rx :370092, txbr :558, rxbr :6, txAudioBr :10, rxAudioBr :0, users :1
+
+duration : 424, tx :30754505, rx :371718, txbr :580, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 426, tx :30898822, rx :373550, txbr :577, rxbr :7, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 427, tx :31038525, rx :375169, txbr :558, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 429, tx :31185827, rx :376740, txbr :589, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 431, tx :31356865, rx :378966, txbr :684, rxbr :8, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 433, tx :31509106, rx :380871, txbr :608, rxbr :7, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 435, tx :31649226, rx :382490, txbr :560, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 437, tx :31787510, rx :384200, txbr :553, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 439, tx :31940437, rx :385826, txbr :611, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 442, tx :32087534, rx :387531, txbr :588, rxbr :6, txAudioBr :13, rxAudioBr :0, users :1
+
+duration : 444, tx :32215054, rx :389129, txbr :510, rxbr :6, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 446, tx :32350727, rx :390700, txbr :542, rxbr :6, txAudioBr :16, rxAudioBr :0, users :1
+
+duration : 448, tx :32495523, rx :392405, txbr :579, rxbr :6, txAudioBr :14, rxAudioBr :0, users :1
+
+duration : 450, tx :32645232, rx :394158, txbr :598, rxbr :7, txAudioBr :11, rxAudioBr :0, users :1
+
+duration : 452, tx :32783077, rx :395777, txbr :551, rxbr :6, txAudioBr :12, rxAudioBr :0, users :1
+
