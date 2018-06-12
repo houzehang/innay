@@ -6,6 +6,7 @@ class Devices extends React.Component {
 		let currentVideoDevice 	 = this.props.rtc.getCurrentVideoDevice(),
 			currentSpeakerDevice = this.props.rtc.getCurrentAudioPlaybackDevice(),
 			currentAudioDevice   = this.props.rtc.getCurrentAudioRecordingDevice()
+		console.log("currentSpeakerDevice",currentSpeakerDevice)
 		this.state = {
 			currentVideoDevice, 
 			currentSpeakerDevice,
