@@ -486,14 +486,8 @@ class Course extends React.Component {
 								<button className="course-prevpage" onClick={()=>{
 									this.$session.send_message("appprevpage")
 								}}></button>
-								<button className="course-prevstep" onClick={()=>{
-									this.$session.send_message("appprevstep")
-								}}></button>
 								<button className="course-clear" onClick={()=>{
 									this.$session.send_message("appclearall")
-								}}></button>
-								<button className="course-nextstep" onClick={()=>{
-									this.$session.send_message("appnextstep")
 								}}></button>
 								<button className="course-nextpage" onClick={()=>{
 									this.$session.send_message("appnextpage")

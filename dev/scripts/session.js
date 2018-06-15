@@ -42,6 +42,7 @@ class Session extends Eventer {
 				$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
 				return
 			})
+			$(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
 				if (/(flexible)|(zepto)/.test(result)) return
