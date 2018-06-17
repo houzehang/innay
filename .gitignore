@@ -21,5 +21,5 @@ _ide_helper.php
 *-darwin-x64
 *-win32-x64
 windows-installer
-muwen-win32-ia32
+muwen-win32-ia32*
 agora_node_ext.nodelog.txt
