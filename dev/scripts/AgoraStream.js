@@ -64,7 +64,9 @@ class Room extends Eventer {
 	}
 
 	__isMuted(id) {
-		let muted = false
+		if (this.inst.props.room.teacher_id == id) {
+			return false
+		}
 		if (!this.inst.props.students) {
 			return true
 		}
@@ -74,14 +76,12 @@ class Room extends Eventer {
 				return !item.unmuted
 			}
 		}
+		return true
 	}
 
 	stream_audio(id) {
-		let isTeacher = this.inst.props.room.teacher_id == id
 		let muted  = this.__isMuted(id)
-		muted = muted && !isTeacher
 		if (id == this.inst.props.account.id) {
-			console.log("mute self...",muted)
 			this.$client.muteLocalAudioStream(muted)
 		} else {
 			let isMaster = this.inst.props.room.teacher_id == 

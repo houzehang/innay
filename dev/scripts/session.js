@@ -27,7 +27,12 @@ class Session extends Eventer {
 	 * 创建webview
 	 */
 	__createWebview() {
-		let prefix = "https://kecheng.runsnailrun.com"
+		let prefix
+		if (DEBUG) {
+			prefix = "http://localhost:3000"
+		} else {
+			prefix = "https://kecheng.runsnailrun.com"
+		}
 		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 			window.CANVAS_HOLDER   = "#course-content"
 			window.CANVAS_LOCATION = `${prefix}/app?from=app`

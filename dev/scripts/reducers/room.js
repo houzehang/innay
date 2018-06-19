@@ -81,6 +81,7 @@ const room = (state = {}, action) => {
 				let item = students[i]
 				if (item.id == action.id) {
 					item.unmuted = !action.mute
+					console.log("set muted!",item.unmuted)
 					if (item.unmuted && !action.recovering) {
 						item.speak++
 					}
@@ -148,9 +149,18 @@ const room = (state = {}, action) => {
 		case HANDSUP_SWITCH:
 		switches = {...state.switches}
 		switches.handsup = action.status
+		students = [...state.students]
+		if (students) {
+			for(let i=0,len=students.length;i<len;i++) {
+				let item = students[i]
+				item.rank = null
+				break
+			}
+		}
 		return {
 			...state,
-			switches
+			switches,
+			students
 		}
 		break
 		case GIFT_SWITCH:

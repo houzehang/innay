@@ -111,25 +111,7 @@ class Course extends React.Component {
 			this.__on_signal_message(message)
 		})
 		this.$session.on("NEW_MESSAGE", (message)=>{
-			console.log("receive new session message",message)
-			if (message.to == "app") {
-				switch(message.type) {
-					case Const.JS_READY :
-					break
-					case "starttest":
-					break
-					case Const.OPEN_MIC:
-					case Const.CLOSE_MIC:
-					case Const.OPEN_RACE:
-					case Const.CLOSE_RACE:
-					case Const.OPEN_GIFT:
-					case Const.CLOSE_GIFT:
-					this.__on_signal_message(message)
-					break
-				}
-			} else if (message.to == "all") {
-				this.$signal.send(message)
-			}
+			this.__on_session_message(message)
 		})
 		net.getGiftsList().then((data)=>{
 			this.props.onGiftList(data.gifts)
@@ -167,12 +149,58 @@ class Course extends React.Component {
 		},1000)
 	}
 
+	__on_session_message(message, force) {
+		console.log("receive new session message",message)
+		if (message.to == "app" || force) {
+			let data = message.message
+			switch(message.type) {
+				case Const.JS_READY :
+				break
+				case "starttest":
+				break
+				case Const.OPEN_MIC:
+				this.props.onUserMuted(data.uid, false, message.to=="app")
+				this.$room.stream_audio(data.uid)
+				break
+				case Const.CLOSE_MIC:
+				this.props.onUserMuted(data.uid, true)
+				this.$room.stream_audio(data.uid)
+				break
+				case Const.OPEN_GIFT:
+				this.props.onGiftSwitch(true)
+				break
+				case Const.CLOSE_GIFT:
+				this.props.onGiftSwitch(false)
+				break
+				case Const.PUT_DANCE:
+				this.props.onDancing(data.id, true)
+				break
+				case Const.BACK_DANCE:
+				this.props.onDancing(data.id, false)
+				break
+				default:
+				this.__on_signal_message(message)
+				break
+			}
+		} else if (message.to == "all") {
+			this.$signal.send(message)
+		}
+	}
+
 	__on_signal_message(message) {
 		let data = message.message
 		console.log("signal message",message)
 		switch(message.type) {
 			case "closeroom":
 			this.leaveCourse()
+			break
+			case Const.OPEN_MIC:
+			case Const.CLOSE_MIC:
+			case Const.OPEN_GIFT:
+			case Const.CLOSE_GIFT:
+			case Const.PUT_DANCE:
+			case Const.BACK_DANCE:
+			this.$session.send_message(null, null, message)
 			break
 			case Const.OPEN_RACE:
 			this.props.onHandsupSwitch(true)
@@ -181,26 +209,6 @@ class Course extends React.Component {
 			case Const.CLOSE_RACE:
 			this.props.onHandsupSwitch(false)
 			this.$session.send_message(null, null, message)
-			break
-			case Const.OPEN_MIC:
-			this.props.onUserMuted(data.uid, false, message.to=="app")
-			this.$room.stream_audio(data.uid)
-			break
-			case Const.CLOSE_MIC:
-			this.props.onUserMuted(data.uid, true)
-			this.$room.stream_audio(data.uid)
-			break
-			case Const.OPEN_GIFT:
-			this.props.onGiftSwitch(true)
-			break
-			case Const.CLOSE_GIFT:
-			this.props.onGiftSwitch(false)
-			break
-			case Const.PUT_DANCE:
-			this.props.onDancing(data.id, true)
-			break
-			case Const.BACK_DANCE:
-			this.props.onDancing(data.id, false)
 			break
 			case "racerank":
 			this.props.onHandsupRank(data.uid, data.rank)
