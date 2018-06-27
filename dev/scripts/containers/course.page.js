@@ -24,9 +24,14 @@ class Course extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$session 	= new Session(this)
-		this.$room 		= new Room(this)
-		this.$signal	= new Signalize(this)
+		this.$recording = this.props.recording
 		this.state 		= { time: new Date().getTime()/1000 }
+		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER ||
+						  this.$recording
+		if (!this.$recording) {
+			this.$room 		= new Room(this)
+			this.$signal	= new Signalize(this)
+		}
 	}
 
 	isMaster(id) {
@@ -74,42 +79,63 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
-		this.$room.init()
-		this.$room.on("NEW_STREAM", (stream)=>{
-			// 判断是不是主班老师
-			let id = stream.getId()
-			let isMaster = this.isChairMaster(id)
-			let isSubMaster = this.isSubMaster(id)
-			if (isSubMaster) {
-				return
+		if (!this.$recording) {
+			this.$room.init()
+			this.$room.on("NEW_STREAM", (stream)=>{
+				// 判断是不是主班老师
+				let id = stream.getId()
+				let isSubMaster = this.isSubMaster(id)
+				if (isSubMaster) {
+					return
+				}
+				console.log("new stream")
+				this.props.onNewStream(stream)
+			})
+			this.$room.on("REMOVE_STREAM", (stream)=>{
+				this.props.onStreamLeave(stream)
+			})
+			this.$room.on("LEAVE_ROOM", ()=>{
+				this.$session.destroy()
+				this.props.onEndCourse()
+			})
+			this.$signal.on("CHANNEL_NEW_USER", (user)=>{
+				this.$session.send_message(Const.MEMBER_ADD, {}, {
+					userinfos  : [user]
+				})
+				console.log("channel new user...",user)
+			})
+			this.$signal.on("CHANNEL_USER_LEAVE", (id)=>{
+				this.$session.send_message(Const.MEMBER_LEAVE, {
+				}, {
+					userinfos  : [id]
+				})
+			})
+			this.$signal.on("NEW_MESSAGE", (message)=>{
+				console.log("receive new signal message",message)
+				this.__on_signal_message(message)
+			})
+		} else {
+			// 向服务器拉取录播的视频流
+			let data = {
+				23 : {
+					url: "https://kecheng-server.oss-cn-beijing.aliyuncs.com/1022_3452c367ea4c44fcab114d7a60524de5.f0.mp4",
+					created_at: 1529754515000
+				},
+				26 : {
+					url: "https://kecheng-server.oss-cn-beijing.aliyuncs.com/1022_3452c367ea4c44fcab114d7a60524de5.f0.mp4",
+					created_at: 1529754515000
+				}
 			}
-			console.log("new stream")
-			this.props.onNewStream(stream)
-		})
-		this.$room.on("REMOVE_STREAM", (stream)=>{
-			this.props.onStreamLeave(stream)
-		})
-		this.$room.on("LEAVE_ROOM", ()=>{
-			this.$session.destroy()
-			this.props.onEndCourse()
-		})
-		this.$signal.on("CHANNEL_NEW_USER", (user)=>{
-			this.$session.send_message(Const.MEMBER_ADD, {
-			}, {
-				userinfos  : [user]
-			})
-			console.log("channel new user...",user)
-		})
-		this.$signal.on("CHANNEL_USER_LEAVE", (id)=>{
-			this.$session.send_message(Const.MEMBER_LEAVE, {
-			}, {
-				userinfos  : [id]
-			})
-		})
-		this.$signal.on("NEW_MESSAGE", (message)=>{
-			console.log("receive new signal message",message)
-			this.__on_signal_message(message)
-		})
+			this.$record_video_data = data
+			for(let id in data) {
+				let isMaster = this.isMaster(id)
+				if (isMaster) {
+					let stream = this.__build_stream(id)
+					this.props.onNewStream(stream)
+					break
+				}
+			}
+		}
 		this.$session.on("NEW_MESSAGE", (message)=>{
 			this.__on_session_message(message)
 		})
@@ -118,8 +144,10 @@ class Course extends React.Component {
 		})
 		net.getRoomInfo(this.props.room.channel_id).then((result)=>{
 			this.props.onRoomMoreInfo(result)
-			this.$room.start()
-			this.$signal.join()
+			if (!this.$recording) {
+				this.$room.start()
+				this.$signal.join()
+			}
 			// 发送init-room
 			let masters = []
 			this.props.room.teachers.forEach((teacher)=>{
@@ -131,6 +159,7 @@ class Course extends React.Component {
 				channel_id: this.props.room.channel_id,
 				token: net.token
 			}, {
+				recording  : this.$recording,
 				master_ids : masters,
 				userinfos  : userinfos
 			})
@@ -140,6 +169,37 @@ class Course extends React.Component {
 			this.setState({ time: res.time*1000 })
 		})
 		this.__tick()
+	}
+
+	__build_stream(id) {
+		let data = this.$record_video_data[id]
+		if (!data) return
+		return { 
+			getId: ()=>id, 
+			play: (dom)=>{
+				if (data.showing) return
+				data.showing = true
+				dom = $(`#${dom}`)
+				$(`<div id="record_${id}"><video id="video_${id}" src='${data.url}'></video></div>`).css({
+					"width":"100%","height":"100%"
+				}).appendTo(dom)
+				let isMaster = this.isMaster(id),
+					video    = $(`#video_${id}`)
+				if (isMaster) {
+					video.on("timeupdate", ()=>{
+						let time = video[0].currentTime * 1000 >> 0
+						time = data.created_at - 0 + time
+						this.$session.send_message("recordtimeupdate", {time})
+					})
+					this.$record_video = video
+					if (this.$record_ready) {
+						video[0].play()
+					}
+				} else {
+					video[0].play()
+				}
+			}
+		}
 	}
 
 	__tick() {
@@ -159,24 +219,59 @@ class Course extends React.Component {
 				case "starttest":
 				break
 				case Const.OPEN_MIC:
-				this.props.onUserMuted(data.uid, false, message.to=="app")
-				this.$room.stream_audio(data.uid)
+				if (!this.$recording) {
+					this.props.onUserMuted(data.uid, false, message.to=="app")
+					this.$room.stream_audio(data.uid)
+				}
 				break
 				case Const.CLOSE_MIC:
-				this.props.onUserMuted(data.uid, true)
-				this.$room.stream_audio(data.uid)
+				if (!this.$recording) {
+					this.props.onUserMuted(data.uid, true)
+					this.$room.stream_audio(data.uid)
+				}
 				break
 				case Const.OPEN_GIFT:
-				this.props.onGiftSwitch(true)
+				if (!this.$recording) {
+					this.props.onGiftSwitch(true)
+				}
 				break
 				case Const.CLOSE_GIFT:
-				this.props.onGiftSwitch(false)
+				if (!this.$recording) {
+					this.props.onGiftSwitch(false)
+				}
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
 				break
 				case Const.BACK_DANCE:
 				this.props.onDancing(data.id, false)
+				break
+				case Const.MEMBER_ADD:
+				if (this.$recording) {
+					data.forEach((item)=>{
+						let stream = this.__build_stream(item.id)
+						if (stream) {
+							this.props.onNewStream(stream)
+						}
+					})
+				}
+				break
+				case Const.MEMBER_LEAVE:
+				// if (this.$recording) {
+				// 	data.forEach((id)=>{
+				// 		let stream = this.__build_stream(id)
+				// 		if (stream) {
+				// 			stream.leave()
+				// 			this.props.onStreamLeave(stream)
+				// 		}
+				// 	})
+				// }
+				break
+				case "record_ready":
+				if (this.$record_video) {
+					this.$record_video[0].play()
+				}
+				this.$record_ready = true
 				break
 				default:
 				this.__on_signal_message(message)
@@ -235,6 +330,7 @@ class Course extends React.Component {
 				// 发送关闭房间请求
 				net.closeRoom(this.props.room.channel_id).then((res)=>{
 					if (res.status) {
+						this.$session.send_message(Const.STOP_COURSE)
 						this.$signal.send({
 							type: "closeroom",
 							from: this.props.account.id,
@@ -294,8 +390,18 @@ class Course extends React.Component {
 			this.__back_from_dancing(this.$last_dancing)
 		}
 		console.log("do put message",id)
-		$(`#student_${id}`).empty()
-		this.$room.dance(id, $("#dancing-head")[0], true)
+		if (this.$recording) {
+			$(`#record_${id}`).css({
+				position: "fixed",
+				left	: $("#dancing-head").offset().left,
+				top 	: $("#dancing-head").offset().top,
+				width	: $("#dancing-head").width(),
+				height	: $("#dancing-head").height()
+			})
+		} else {
+			$(`#student_${id}`).empty()
+			this.$room.dance(id, $("#dancing-head")[0], true)
+		}
 		this.$last_dancing = id
 	}
 
@@ -303,9 +409,18 @@ class Course extends React.Component {
 		if (!this.$last_dancing || this.$last_dancing != id) {
 			return
 		}
-		this.$session.send_message(Const.BACK_DANCE, { id })
-		$(`#dancing-head`).empty()
-		this.$room.dance(id, $(`#student_${id}`)[0])
+		if (this.$recording) {
+			$(`#record_${id}`).css({
+				position: "static",
+				left	: 0,
+				top 	: 0,
+				width	: "100%",
+				height	: "100%"
+			})
+		} else {
+			$(`#dancing-head`).empty()
+			this.$room.dance(id, $(`#student_${id}`)[0])
+		}
 		this.$last_dancing = null
 	}
 
@@ -381,6 +496,10 @@ class Course extends React.Component {
 						student.stream.play('student_'+student.id)
 						student.stream_inited = true
 					}
+					if (!student.stream && student.id == this.$last_dancing) {
+						this.$room.rtc.rtcengine.unsubscribe(this.$last_dancing)
+						this.$last_dancing = null
+					}
 				})
 			}
 			if (dancing) {
@@ -403,13 +522,13 @@ class Course extends React.Component {
 		})
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
-			if (item.dancing) {
+			if (item.dancing && item.stream) {
 				dancing = item
 				break
 			}
 		}
 		students = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={this.props.account.dentity == types.DENTITY.MASTER} handsup={{
+			<StudentHead key={student.id} isTeacher={!this.$view_mode} handsup={{
 				opened: this.props.switches.handsup,
 				rank  : student.rank || ""
 			}} user={student.stream?student:null} onClickSpeak={(user)=>{
@@ -450,9 +569,10 @@ class Course extends React.Component {
 		return (
 			<div className="page course-page">
 				<div className="inner">
-					{this.props.account.dentity != types.DENTITY.STUDENT?(
+					{!this.$view_mode?(
 						<div className="controls">
 							<button className="course-start" disabled={this.props.status.started?"true":""} onClick={()=>{
+								this.$session.send_message(Const.START_COURSE)
 								this.props.onBeginCourse()
 							}}></button>
 							<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
@@ -475,7 +595,7 @@ class Course extends React.Component {
 					):""}
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
-						{this.props.account.dentity != types.DENTITY.STUDENT?(
+						{!this.$view_mode?(
 							<div className="operations">
 								<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 									if (this.props.switches.handsup) {
@@ -522,7 +642,7 @@ class Course extends React.Component {
 								{students}
 							</div>
 						</div>
-						{this.props.account.dentity != types.DENTITY.STUDENT?(
+						{!this.$view_mode?(
 							<div className="counter">
 								倒计时：
 								{this.__counter_time_to_str()}

@@ -1460,7 +1460,9 @@ body .page.calendar-page .courses .row .info .date {
   line-height: 0.19rem;
 }
 html .page.calendar-page .courses .row .start-btn,
-body .page.calendar-page .courses .row .start-btn {
+body .page.calendar-page .courses .row .start-btn,
+html .page.calendar-page .courses .row .record-btn,
+body .page.calendar-page .courses .row .record-btn {
   margin-right: 0.27rem;
   width: 1.38rem;
   height: 0.48rem;
@@ -1473,16 +1475,30 @@ body .page.calendar-page .courses .row .start-btn {
   border-radius: 0.06rem;
 }
 html .page.calendar-page .courses .row .start-btn::after,
-body .page.calendar-page .courses .row .start-btn::after {
+body .page.calendar-page .courses .row .start-btn::after,
+html .page.calendar-page .courses .row .record-btn::after,
+body .page.calendar-page .courses .row .record-btn::after {
   content: "\5F00\59CB\4E0A\8BFE";
 }
 html .page.calendar-page .courses .row .start-btn[disabled],
-body .page.calendar-page .courses .row .start-btn[disabled] {
+body .page.calendar-page .courses .row .start-btn[disabled],
+html .page.calendar-page .courses .row .record-btn[disabled],
+body .page.calendar-page .courses .row .record-btn[disabled] {
   background: #b5b5b5;
 }
 html .page.calendar-page .courses .row .start-btn[disabled]::after,
-body .page.calendar-page .courses .row .start-btn[disabled]::after {
+body .page.calendar-page .courses .row .start-btn[disabled]::after,
+html .page.calendar-page .courses .row .record-btn[disabled]::after,
+body .page.calendar-page .courses .row .record-btn[disabled]::after {
   content: "\5DF2\4E0A\8BFE";
+}
+html .page.calendar-page .courses .row .record-btn,
+body .page.calendar-page .courses .row .record-btn {
+  background: #8b460e;
+}
+html .page.calendar-page .courses .row .record-btn::after,
+body .page.calendar-page .courses .row .record-btn::after {
+  content: "\8BFE\7A0B\56DE\653E";
 }
 html .page.student-page,
 body .page.student-page {
@@ -1575,7 +1591,9 @@ body .page.student-page .inner .lesson-box .info .index {
   margin-bottom: 0.18rem;
 }
 html .page.student-page .inner .lesson-box .start-btn,
-body .page.student-page .inner .lesson-box .start-btn {
+body .page.student-page .inner .lesson-box .start-btn,
+html .page.student-page .inner .lesson-box .record-btn,
+body .page.student-page .inner .lesson-box .record-btn {
   margin-right: 0.27rem;
   width: 1.38rem;
   height: 0.48rem;
@@ -1588,16 +1606,30 @@ body .page.student-page .inner .lesson-box .start-btn {
   border-radius: 0.06rem;
 }
 html .page.student-page .inner .lesson-box .start-btn::after,
-body .page.student-page .inner .lesson-box .start-btn::after {
+body .page.student-page .inner .lesson-box .start-btn::after,
+html .page.student-page .inner .lesson-box .record-btn::after,
+body .page.student-page .inner .lesson-box .record-btn::after {
   content: "\5F00\59CB\4E0A\8BFE";
 }
 html .page.student-page .inner .lesson-box .start-btn[disabled],
-body .page.student-page .inner .lesson-box .start-btn[disabled] {
+body .page.student-page .inner .lesson-box .start-btn[disabled],
+html .page.student-page .inner .lesson-box .record-btn[disabled],
+body .page.student-page .inner .lesson-box .record-btn[disabled] {
   background: #b5b5b5;
 }
 html .page.student-page .inner .lesson-box .start-btn[disabled]::after,
-body .page.student-page .inner .lesson-box .start-btn[disabled]::after {
+body .page.student-page .inner .lesson-box .start-btn[disabled]::after,
+html .page.student-page .inner .lesson-box .record-btn[disabled]::after,
+body .page.student-page .inner .lesson-box .record-btn[disabled]::after {
   content: "\5DF2\4E0A\8BFE";
+}
+html .page.student-page .inner .lesson-box .record-btn,
+body .page.student-page .inner .lesson-box .record-btn {
+  background: #8b460e;
+}
+html .page.student-page .inner .lesson-box .record-btn::after,
+body .page.student-page .inner .lesson-box .record-btn::after {
+  content: "\8BFE\7A0B\56DE\653E";
 }
 html .page.course-page,
 body .page.course-page {
@@ -1824,6 +1856,7 @@ html .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head 
 body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head div,
 html .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head video,
 body .page.course-page .inner .info .avatars .teacher-area .avatar .avatar-head video {
+  background: #000;
   width: 100%;
   height: 100%;
 }
@@ -1894,6 +1927,7 @@ html .page.course-page .inner .info .avatars .student-area .student .avatar-head
 body .page.course-page .inner .info .avatars .student-area .student .avatar-head div,
 html .page.course-page .inner .info .avatars .student-area .student .avatar-head video,
 body .page.course-page .inner .info .avatars .student-area .student .avatar-head video {
+  background: #000;
   width: 100%;
   height: 100%;
 }

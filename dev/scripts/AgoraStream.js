@@ -84,10 +84,11 @@ class Room extends Eventer {
 		if (id == this.inst.props.account.id) {
 			this.$client.muteLocalAudioStream(muted)
 		} else {
-			let isMaster = this.inst.props.room.teacher_id == 
-			this.inst.props.account.id
-			if (!isMaster) return
-			this.$client.muteRemoteAudioStream(id, muted)
+			// let isMaster = this.inst.props.room.teacher_id == 
+			// this.inst.props.account.id
+			// if (!isMaster) return
+			// this.$client.muteRemoteAudioStream(id, muted)
+			// console.log("set remote audio",id,muted)
 		}
 		if (muted) {
 			console.log("disable audio",id)

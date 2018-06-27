@@ -47,4 +47,6 @@ module.exports = {
 	PUT_DANCE     : "putdance",
 	BACK_DANCE    : "backdance",
 	SCENE_MOVE    : "scenemove",
+	START_COURSE  : "startcourse",
+	STOP_COURSE   : "stopcourse"
 };

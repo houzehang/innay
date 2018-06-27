@@ -16,12 +16,12 @@ cp env.js output
 cp main.js output
 cp package.json output
 
-rm -rf output/dist/libs/AgoraSDK/native-win
 
 echo "step(3/${TOTAL_STEP}) package bundles"
 
 if [ "$1" = "-mac" -o "$1" = "-all" ];then
 
+	rm -rf output/dist/libs/AgoraSDK/native-win
 	echo "packaging for mac platform"
 	electron-packager ./output muwen --platform=darwin --arch=x64 --asar --electron-version=2.0.2 --overwrite --icon=./icns/mac-icon.icns 
 	electron-osx-sign "./muwen-darwin-x64/muwen.app" --platform=darwin --type=distribution
@@ -29,6 +29,7 @@ if [ "$1" = "-mac" -o "$1" = "-all" ];then
 fi
 if [ "$1" = "-win" -o "$1" = "-all" ];then
 
+	rm -rf output/dist/libs/AgoraSDK/native-mac
 	echo "packaging for windows platform"
 	electron-packager ./output muwen --platform=win32 --arch=ia32 --electron-version=2.0.2 --overwrite --icon=./icns/win-icon.ico;
 

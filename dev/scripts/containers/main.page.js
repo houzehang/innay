@@ -14,7 +14,7 @@ class Main extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$calendarRef = React.createRef()
-		this.state = {}
+		this.state = { recording: false }
 	}
 
 	strToDate(str) {
@@ -87,6 +87,9 @@ class Main extends React.Component {
 							<button className={!room.can_enter?"start-btn disabled":"start-btn"} onClick={()=>{
 								this.onStartRoom(room)
 							}}></button>
+							<button className="record-btn" onClick={()=>{
+								this.onRecordRoom(room)
+							}}></button>
 						</div>
 					]) : ([
 						<div key="0" className="time">接下来没有课程啦～</div>,
@@ -148,6 +151,9 @@ class Main extends React.Component {
 										<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>
+										<button className="record-btn" onClick={()=>{
+											this.onRecordRoom(room)
+										}}></button>
 									</div>
 								)))
 							}
@@ -168,6 +174,12 @@ class Main extends React.Component {
 		})
 	}
 
+	onRecordRoom(data) {
+		this.setState({ recording: true })
+		this.props.onRoomInfo(data)
+		this.onEnterRoom()
+	}
+
 	onEnterRoom() {
 		this.props.onStartCourse()
 	}
@@ -186,7 +198,7 @@ class Main extends React.Component {
 		}
 		return (
 			<div className="full-h">
-				{this.props.started?<Course/>:content}
+				{this.props.started?<Course recording={this.state.recording}/>:content}
 			</div>
 		)
 	}

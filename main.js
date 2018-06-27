@@ -31,7 +31,7 @@ app.on('ready', ()=>{
                 plugins: true
             }
         })
-        // $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
+        $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
         // 加载本地入口文件，用于生成主UI界面
         $main.loadURL(`file://${__dirname}/dist/index.html`)
         // $main.loadURL('https://wx.qq.com')
