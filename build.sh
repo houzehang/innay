@@ -20,19 +20,16 @@ cp package.json output
 echo "step(3/${TOTAL_STEP}) package bundles"
 
 if [ "$1" = "-mac" -o "$1" = "-all" ];then
-
+	cp -r libs/AgoraSDK/native-mac output/dist/libs/AgoraSDK
 	rm -rf output/dist/libs/AgoraSDK/native-win
 	echo "packaging for mac platform"
-	electron-packager ./output muwen --platform=darwin --arch=x64 --asar --electron-version=2.0.2 --overwrite --icon=./icns/mac-icon.icns 
-	electron-osx-sign "./muwen-darwin-x64/muwen.app" --platform=darwin --type=distribution
-
+	./node_modules/.bin/build --mac -p always
 fi
 if [ "$1" = "-win" -o "$1" = "-all" ];then
-
+	cp -r libs/AgoraSDK/native-win output/dist/libs/AgoraSDK
 	rm -rf output/dist/libs/AgoraSDK/native-mac
 	echo "packaging for windows platform"
-	electron-packager ./output muwen --platform=win32 --arch=ia32 --electron-version=2.0.2 --overwrite --icon=./icns/win-icon.ico;
-
+	./node_modules/.bin/build --win -p always
 fi
 
 echo "step(4/${TOTAL_STEP}) cleaning files"

@@ -62,7 +62,8 @@ module.exports = {
     }),
     new ExtractTextPlugin("styles.css"),
     new CopyWebpackPlugin([
-      { from: 'libs/**/*', to: '' }
+      { from: 'libs/**/*', to: '' },
+      { from: 'dev/version.html', to: 'version.html', toType: "file" }
     ]),
     new UglifyJSPlugin({
       sourceMap: true
