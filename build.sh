@@ -4,8 +4,13 @@ if [ -d ./output ];then
 	rm -rf ./output
 fi
 TOTAL_STEP=4
-echo 'module.exports = {DEBUG : false}' > env.js
 echo "step(1/${TOTAL_STEP}) compiling files"
+if [ "$2" = "-debug" ];then
+	echo 'debug mode'
+	echo 'module.exports = {DEBUG : true}' > env.js
+else
+	echo 'module.exports = {DEBUG : false}' > env.js
+fi
 npm run build; 
 mkdir output
 echo "step(2/${TOTAL_STEP}) copy files"

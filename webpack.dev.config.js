@@ -3,11 +3,11 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
-    app : './dev/scripts/app.js'
+    app : './dev/scripts/app.js',
+    version : './dev/scripts/version.js'
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -60,14 +60,12 @@ module.exports = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
+      chunks: ["app"],
       title: "大语文",
       template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html",
       alwaysWriteToDisk: true
     }),
-    new CopyWebpackPlugin([
-      { from: 'dev/version.html', to: 'version.html', toType: "file" }
-    ]),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
         'http://localhost:3030/libs/flexible.js',
@@ -78,7 +76,14 @@ module.exports = {
         'http://localhost:3030/libs/jquery-3.3.1.min.js'
       ],
       publicPath: false,
-      append: false
+      append: false,
+      files: ['index.html']
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["version"],
+      template: path.resolve(__dirname, "dev", "version.html"),
+      filename: "version.html",
+      alwaysWriteToDisk: true
     }),
     new HtmlWebpackHarddiskPlugin({
       outputPath: path.resolve(__dirname, 'dist')

@@ -25,7 +25,10 @@ class Course extends React.Component {
 		super(props)
 		this.$session 	= new Session(this)
 		this.$recording = this.props.recording
-		this.state 		= { time: new Date().getTime()/1000 }
+		this.state 		= { 
+			time: new Date().getTime()/1000, 
+			control: !this.props.status.started 
+		}
 		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER ||
 						  this.$recording
 		if (!this.$recording) {
@@ -570,27 +573,44 @@ class Course extends React.Component {
 			<div className="page course-page">
 				<div className="inner">
 					{!this.$view_mode?(
-						<div className="controls">
-							<button className="course-start" disabled={this.props.status.started?"true":""} onClick={()=>{
-								this.$session.send_message(Const.START_COURSE)
-								this.props.onBeginCourse()
-							}}></button>
-							<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
-								if (this.props.status.paused) {
-									this.props.onResumeCourse()
-									console.log("send message coursepause")
-									this.$session.send_message(Const.COURSE_RESUME)
-								} else {
-									this.props.onPauseCourse()
-									this.$session.send_message(Const.COURSE_PAUSE)
+						<div className="controls-wrapper">
+							<div className={this.state.control?"controls open":"controls close"}  onClick={()=>{
+								if (!this.state.control) {
+									this.setState({control: true})
 								}
-							}}></button>
-							<button className="course-end" onClick={()=>{
-								this.preLeaveCourse()
-							}}></button>
-							<button className="help-btn" onClick={()=>{
-								this.onHelpClick()
-							}}></button>
+							}}>
+								{!this.props.status.started?(
+									<button className="course-start" onClick={()=>{
+										this.setState({control: false})
+										this.$session.send_message(Const.START_COURSE)
+										this.props.onBeginCourse()
+									}}></button>
+								):(
+									<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
+										if (this.props.status.paused) {
+											this.props.onResumeCourse()
+											console.log("send message coursepause")
+											this.$session.send_message(Const.COURSE_RESUME)
+										} else {
+											this.props.onPauseCourse()
+											this.$session.send_message(Const.COURSE_PAUSE)
+										}
+									}}></button>
+								)}
+								<button className="course-end" onClick={()=>{
+									this.preLeaveCourse()
+								}}></button>
+								<button className="course-next" onClick={()=>{
+								}}></button>
+								<button className="help-btn" onClick={()=>{
+									this.onHelpClick()
+								}}></button>
+								<div className="switch-btn" onClick={()=>{
+									if (this.state.control) {
+										this.setState({control: false})
+									}
+								}}></div>
+							</div>
 						</div>
 					):""}
 					<div className="content">
@@ -627,8 +647,9 @@ class Course extends React.Component {
 						<div className="avatars">
 							<div className="teacher-area">
 								<div className="avatar">
-									<div className="avatar-head" id="master-head">
-									{this.props.teacher.stream?"":<img src={this.props.teacher.avatarurl}/>}
+									<div className="avatar-head" id="master-head" style={{
+										"backgroundImage" : this.props.teacher.stream?"":`url(${this.props.teacher.avatarurl})`
+									}}>
 									</div>
 									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
 								</div>

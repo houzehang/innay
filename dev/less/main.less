@@ -52,14 +52,6 @@ html,body {
 			font-size: 0.14rem;
 		}
 	}
-	.help-btn {
-		background: #fff url(../assets/sound.png) no-repeat center center;
-		background-size: 0.2rem auto;
-		width: 0.3rem !important;
-		height: 0.3rem !important;
-		border-radius: 50%;
-		line-height: 0;
-	}
 	.page {
 		width: 100%;
 		height: 100%;
@@ -386,19 +378,63 @@ html,body {
 			flex-direction: column;
 			overflow: hidden;
 			.inner {
+				position: relative;
 				width: 12.72rem;
 				margin: 0.1rem 0.15rem;
 				display: flex;
 				flex: 1;
-				.controls {
+				.controls-wrapper {
 					position: relative;
+					width: 0.09rem;
+					z-index: 100;
+				}
+				.controls {
+					position: absolute;
+					left: -0.15rem;
+					top: 0;
+					z-index: 2;
 					margin-right: 0.15rem;
-					width: 0.93rem;
 					height: 100%;
 					background: #484f70;
 					display: flex;
 					flex-direction: column;
 					align-items: center;
+					transition: all 200ms 0s ease-in-out;
+					.switch-btn {
+						position: absolute;
+					}
+					&.open {
+						width: 1.05rem;
+						.switch-btn {
+							width: 0.34rem;
+							height: 2.39rem;
+							background: url(../assets/sidebar-close.png) no-repeat center center;
+							background-size: 100% auto;
+							right: -0.24rem;
+							top: 50%;
+							transform: translateY(-50%);
+						}
+						button {
+							transform: scale(1);
+							opacity: 1;
+						}
+					}
+					&.close {
+						width: 0.24rem;
+						button {
+							transform: scale(0);
+							opacity: 0;
+						}
+						.switch-btn {
+							width: 0.17rem;
+							height: 0.31rem;
+							background: url(../assets/sidebar-open.png) no-repeat center center;
+							background-size: 100% auto;
+							top: 50%;
+							transform: translateY(-50%) translateX(-50%);
+							left: 50%;
+						}
+					}
 					button {
 						width: 0.5rem;
 						height: 0.5rem;
@@ -408,6 +444,10 @@ html,body {
 						line-height: 0.18rem;
 						text-align: center;
 						margin-top: 0.6rem;
+						transition: all 200ms 0s ease-in-out;
+						&:active {
+							opacity: 0.6;
+						}
 						&.course-start {
 							margin-top: 0.3rem;
 							background: url(../assets/course-start.png) no-repeat center top;
@@ -439,12 +479,23 @@ html,body {
 								content: "结束"
 							}
 						}
+						&.course-next {
+							background: url(../assets/course-next.png) no-repeat center top;
+							background-size: 100% auto;
+							&::after {
+								content: "切课"
+							}
+						}
 						&.help-btn {
+							border-radius: 50%;
+							line-height: 0;
 							padding: 0;
 							position: absolute;
 							left: 50%;
 							transform: translateX(-50%);
 							bottom: 0.2rem;
+							background: url(../assets/course-tester.png) no-repeat center top;
+							background-size: 100% auto;
 						}
 					}
 				}
@@ -479,7 +530,7 @@ html,body {
 						}
 					}
 					.operations {
-						height: 0.9rem;
+						height: 0.77rem;
 						background: #3882c2;
 						display: flex;
 						button {
@@ -528,7 +579,7 @@ html,body {
 					}
 				}
 				.info {
-					width: 3.46rem;
+					width: 4.02rem;
 					display: flex;
 					flex-direction: column;
 					.avatars {
@@ -541,12 +592,13 @@ html,body {
 						display: flex;
 						justify-content: space-between;
 						.teacher-area {
-							width: 2.64rem;
+							width: 2.78rem;
 							.avatar {
 								width: 100%;
-								height: 3.24rem;
+								height: 3.08rem;
 								position: relative;
 								&:first-child {
+									height: 3.84rem;
 									margin-bottom: 0.14rem;
 								}
 								.avatar-head {
@@ -557,12 +609,12 @@ html,body {
 									display: flex;
 									justify-content: center;
 									align-items: center;
+									background-repeat: no-repeat;
+									background-size: cover;
+									background-position: center center;
 									div,video {
 										background: #000;
 										width: 100%;
-										height: 100%;
-									}
-									img {
 										height: 100%;
 									}
 								}
@@ -586,7 +638,7 @@ html,body {
 									display: none;
 								}
 								&.nothing {
-									background: #e7e7e7 url(../assets/course-ph.png) no-repeat center top 0.58rem;
+									background: #e7e7e7 url(../assets/course-ph.png) no-repeat center top 0.38rem;
 									background-size: 1.45rem auto;
 									.avatar-info,.avatar-head {
 										display: none;
@@ -598,14 +650,14 @@ html,body {
 							}
 						}
 						.student-area {
-							width: 0.7rem;
+							width: 1.1rem;
 							.student {
 								width: 100%;
-								height: 0.83rem;
+								height: 0.88rem;
 								position: relative;
 								margin-bottom: 0.15rem;
 								.avatar-head {
-									width: 100%;
+									width: 0.8rem;
 									height: 100%;
 									overflow: hidden;
 									display: flex;
@@ -622,7 +674,7 @@ html,body {
 								}
 								.avatar-handsup {
 									position: absolute;
-									right: 0;
+									left: 0;
 									top: 0;
 									background: rgba(0,0,0,0.5) url(../assets/course-student-headsup.png) no-repeat left 0.05rem center;
 									background-size: 0.15rem auto;
@@ -634,15 +686,18 @@ html,body {
 								}
 								.avatar-info {
 									position: absolute;
-									width: 100%;
-									background: rgba(0, 0, 0, 0.5);
-									height: 0.24rem;
-									line-height: 0.24rem;
-									font-size: 0.14rem;
-									color: #ffffff;
+									width: 0.3rem;
+									background: #565b72;
+									height: 100%;
+									line-height: 0.18rem;
+									font-size: 0.16rem;
+									color: #cdcdcd;
 									text-align: center;
-									bottom: 0;
-									left: 0;
+									top: 0;
+									right: 0;
+									display: flex;
+									align-items: center;
+									justify-content: center;
 								}
 								&.hover {
 									.summary {
@@ -652,10 +707,10 @@ html,body {
 								}
 								.summary {
 									width: 0;
-									height: 0.84rem;
+									height: 0.88rem;
 									overflow: hidden;
 									position: absolute;
-									right: 0.7rem;
+									right: 1.1rem;
 									top: 0;
 									transition: all 300ms 0s ease-in-out;
 									opacity: 0;
@@ -755,16 +810,22 @@ html,body {
 						}
 					}
 					.counter {
-						height: 0.38rem;
+						height: 0.34rem;
 						font-size: 0.16rem;
 						color: #ececec;
 						display: flex;
 						align-items: center;
-						margin-top: 0.2rem;
+						margin-top: 0.08rem;
 						&.pull-right {
 							justify-content: flex-end;
 							.help-btn {
 								margin-right: 0.4rem;
+								background: #fff url(../assets/sound.png) no-repeat center center;
+								background-size: 0.2rem auto;
+								width: 0.3rem !important;
+								height: 0.3rem !important;
+								border-radius: 50%;
+								line-height: 0;
 							}
 						}
 						.couter-g {

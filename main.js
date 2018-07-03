@@ -17,50 +17,73 @@ const {autoUpdater} = require("electron-updater");
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
-log.info('App starting...');
 
-let win;
+let updateWindow, loaded;
 
-function sendStatusToWindow(text) {
-  log.info(text);
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.send('message', text);
-  })
+function sendStatusToWindow(status, data) {
+    if (!loaded) {
+        updateWindow.webContents.on('did-finish-load', () => {
+            loaded = true
+            if (updateWindow) {
+                log.info("send message",status);
+                updateWindow.webContents.send('message', status, data);
+            }
+        })
+    } else {
+        if (updateWindow) {
+            log.info("send message",status);
+            updateWindow.webContents.send('message', status, data);
+        }
+    }
 }
 
 function createUpdateWindow() {
-  win = new BrowserWindow();
-  win.webContents.openDevTools();
-  win.on('closed', () => {
-    win = null;
-  });
-  win.loadURL(`file://${__dirname}/dist/version.html#v${app.getVersion()}`);
-  return win;
+    updateWindow = new BrowserWindow({width: 600, height: 300, 
+        resizable: false,
+        center: true,
+        frame: false,
+        autoHideMenuBar: true,
+        webPreferences : {
+            webSecurity: true,
+            javascript: true,
+            plugins: true
+        }
+    });
+    if (DEBUG) {
+        updateWindow.webContents.openDevTools();
+    }
+    updateWindow.on('closed', () => {
+        updateWindow = null;
+    });
+    updateWindow.loadURL(`file://${__dirname}/dist/version.html#v${app.getVersion()}`);
 }
 autoUpdater.on('checking-for-update', () => {
-  sendStatusToWindow('Checking for update...');
+    sendStatusToWindow(Const.UPDATE.CHECKING);
 })
-autoUpdater.on('update-available', (ev, info) => {
-  sendStatusToWindow('Update available.');
+autoUpdater.on('update-available', () => {
+    sendStatusToWindow(Const.UPDATE.AVAILABLE);
 })
-autoUpdater.on('update-not-available', (ev, info) => {
-  sendStatusToWindow('Update not available.');
-  createMainWindow()
-  win.close()
+autoUpdater.on('update-not-available', () => {
+    sendStatusToWindow(Const.UPDATE.LASTEST);
+    createMainWindow()
+    updateWindow.close()
 })
-autoUpdater.on('error', (ev, err) => {
-  sendStatusToWindow('Error in auto-updater.');
+autoUpdater.on('error', (err) => {
+    sendStatusToWindow(Const.UPDATE.ERROR);
+    setTimeout(()=>{
+        createMainWindow()
+        updateWindow.close()
+    },2000)
 })
-autoUpdater.on('download-progress', (ev, progressObj) => {
-  sendStatusToWindow('Download progress...');
+autoUpdater.on('download-progress', (progress) => {
+    sendStatusToWindow(Const.UPDATE.DOWNLOADING, progress);
 })
-autoUpdater.on('update-downloaded', (ev, info) => {
-  sendStatusToWindow('Update downloaded; will install in 5 seconds');
+autoUpdater.on('update-downloaded', () => {
+    sendStatusToWindow(Const.UPDATE.DOWNLOADED);
+    setTimeout(()=>{
+        autoUpdater.quitAndInstall();  
+    },3000)
 });
-
-autoUpdater.on('update-downloaded', (ev, info) => {
-    autoUpdater.quitAndInstall();  
-})
 
 app.on('ready', function()  {
     createUpdateWindow();
@@ -68,8 +91,7 @@ app.on('ready', function()  {
 });
 
 function createMainWindow() {
-    // 创建主窗口，配置详见Electron官方文档
-    let $main = new BrowserWindow({width: 1300, height: 768, 
+    let $main = new BrowserWindow({width: 1300, height: 790, 
         resizable: DEBUG,
         center: true,
         frame: true,
@@ -81,11 +103,9 @@ function createMainWindow() {
         }
     })
     $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
-    // 加载本地入口文件，用于生成主UI界面
     $main.loadURL(`file://${__dirname}/dist/index.html`)
     
     if (DEBUG) {
-        // 打开调试器
         $main.webContents.openDevTools();
     }
     $main.webContents.on('will-navigate', (ev, url) => {

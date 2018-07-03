@@ -10,7 +10,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 module.exports = {
   entry: {
     vendor: [ 'react', 'react-dom' ],
-    app : './dev/scripts/app.js'
+    app : './dev/scripts/app.js',
+    version : './dev/scripts/version.js'
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -60,7 +61,7 @@ module.exports = {
     new CleanWebpackPlugin(['dist'], {
       root: __dirname
     }),
-    new ExtractTextPlugin("styles.css"),
+    new ExtractTextPlugin("[name].[hash].css"),
     new CopyWebpackPlugin([
       { from: 'libs/**/*', to: '' },
       { from: 'dev/version.html', to: 'version.html', toType: "file" }
@@ -69,9 +70,15 @@ module.exports = {
       sourceMap: true
     }),
     new HtmlWebpackPlugin({
+      chunks: ["app"],
       title: "沐文",
       template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html"
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["version"],
+      template: path.resolve(__dirname, "dev", "version.html"),
+      filename: "version.html",
     }),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
@@ -83,7 +90,16 @@ module.exports = {
         './libs/jquery-3.3.1.min.js'
       ],
       publicPath: false,
-      append: false
+      append: false,
+      files: ['index.html']
+    }),
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        './libs/flexible.js'
+      ],
+      publicPath: false,
+      append: false,
+      files: ['version.html']
     })
   ],
 };

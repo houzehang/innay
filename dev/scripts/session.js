@@ -67,9 +67,6 @@ class Session extends Eventer {
 			}
 			_next()
 		})
-		// let partition = this.uuid()
-		// let webview   = $(`<webview class="webview" src="https://kecheng.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
-		// this.$webview = webview[0];
 	}
 
 	__bind() {
