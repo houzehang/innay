@@ -23,26 +23,10 @@ class Entry extends React.Component {
 			if (!dialog.hide) {
 				if (dialog.alert) {
 					const configure = dialog.alert
-					return <Dialog content={configure.content} title={configure.title} type="alert" open={!dialog.hide} sure={()=>{
-						if (configure.sure) {
-							configure.sure()
-						}
-					}} cancel={()=>{
-						if (configure.sure) {
-							configure.sure()
-						}
-					}}/>
+					return <Dialog configure={configure} type="alert" open={!dialog.hide}/>
 				} else if (dialog.confirm) {
 					const configure = dialog.confirm
-					return <Dialog content={configure.content} title={configure.title} type="confirm" open={!dialog.hide} sure={()=>{
-						if (configure.sure) {
-							configure.sure()
-						}
-					}} cancel={()=>{
-						if (configure.cancel) {
-							configure.cancel()
-						}
-					}}/>
+					return <Dialog configure={configure} type="confirm" open={!dialog.hide}/>
 				}
 			}
 			return ""

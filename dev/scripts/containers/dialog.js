@@ -1,5 +1,6 @@
 import React from 'react';
 import { hide } from '../actions'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 class Dialog extends React.Component {
@@ -15,8 +16,8 @@ class Dialog extends React.Component {
 	}
 
 	hide() {
-		if (this.props.cancel) {
-			this.props.cancel()
+		if (this.props.configure.cancel) {
+			this.props.configure.cancel()
 		}
 		this.setState({showing: false})
 		setTimeout(()=>{
@@ -25,8 +26,8 @@ class Dialog extends React.Component {
 	}
 
 	sure() {
-		if (this.props.sure) {
-			this.props.sure()
+		if (this.props.configure.sure) {
+			this.props.configure.sure()
 		}
 		this.hide()
 	}
@@ -40,17 +41,31 @@ class Dialog extends React.Component {
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>确定</button>)
 		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")}>
 			<div className="dialog">
-				<div className="title">
-					{this.props.title || "提示"}
+				<div className="title" style={this.props.configure.viewport}>
+					{this.props.configure.title || "提示"}
 					<div className="close-btn" onClick={this.hide.bind(this)}></div>
 				</div>
 				<div className="content">
-					<div className="texts">{this.props.content}</div>
+					<div className="texts">{this.props.configure.content}</div>
 					<div className="btns">{buttons}</div>
 				</div>
 			</div>
 		</div>
 	}
+}
+
+Dialog.propTypes = {
+	configure: PropTypes.shape({
+		title	: PropTypes.string,
+		content	: PropTypes.any.isRequired,
+		type	: PropTypes.string,
+		sure	: PropTypes.func,
+		cancel	: PropTypes.func,
+		viewport: PropTypes.shape({
+			width : PropTypes.string.isRequired,
+			height: PropTypes.string
+		})
+	})
 }
 
 const mapDispatchToProps = (dispatch, ownProps) => {

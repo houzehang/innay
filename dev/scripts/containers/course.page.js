@@ -474,6 +474,9 @@ class Course extends React.Component {
 	onHelpClick() {
 		this.props.alert({
 			title: "设备调试",
+			viewport: {
+				width: "7.02rem"
+			},
 			content : <Devices rtc={this.$room.rtc} 
 				video_devices={this.$video_devices}
 				audio_devices={this.$audio_devices}
