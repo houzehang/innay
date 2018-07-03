@@ -619,7 +619,7 @@ class Course extends React.Component {
 					):""}
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
-						{this.props.switches.handsup?<HandsUp users={handsupStudents} onClickClose={()=>{
+						{this.props.switches.handsup&&!this.$view_mode?<HandsUp users={handsupStudents} onClickClose={()=>{
 							this.$session.send_message(Const.CLOSE_RACE)
 						}}/>:""}
 						{!this.$view_mode?(
