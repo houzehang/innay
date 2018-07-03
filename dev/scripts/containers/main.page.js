@@ -15,6 +15,9 @@ class Main extends React.Component {
 		super(props)
 		this.$calendarRef = React.createRef()
 		this.state = { recording: false }
+		net.on("LOGOUT_NEEDED", ()=>{
+			this.onLogout()
+		})
 	}
 
 	strToDate(str) {

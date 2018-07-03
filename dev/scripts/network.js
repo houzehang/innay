@@ -4,7 +4,7 @@ const context 	= require('./context')
 class Network extends Eventer {
 	constructor() {
 		super()
-		this.$base_url = "https://kecheng.runsnailrun.com"
+		this.$base_url = "https://kecheng1.runsnailrun.com"
 		this.__restore_token()
 	}
 
@@ -21,6 +21,7 @@ class Network extends Eventer {
 	}
 
 	__request(url, data = {}, method="get") {
+		data.client = "pc"
 		return Q.Promise((resolve, reject)=>{
 			$.ajax(this.$base_url + url, {
 				headers: { 
@@ -35,10 +36,15 @@ class Network extends Eventer {
 						this.trigger("LOGIN_NEEDED")
 					}
 				},
-				success: function(res){
+				success: (res)=>{
 					resolve(res.data)
 				},
-				error: function(res) {
+				error: (res)=>{
+					if (res.status == 401) {
+						//登录
+						this.trigger("LOGOUT_NEEDED")
+						return
+					}
 					if (res.responseJSON) {
 						alert(res.responseJSON.message)
 					} else {
@@ -73,7 +79,7 @@ class Network extends Eventer {
 	 * @param {*} data 
 	 */
 	login(data) {
-		return this.__request("/user/login", data)
+		return this.__request("/user/login", data, "post")
 	}
 
 	/**
@@ -82,7 +88,6 @@ class Network extends Eventer {
 	 */
 	lessons(date) {
 		return this.__request("/room/lesson_date", {
-			client_type: "app",
 			date
 		})
 	}
@@ -92,7 +97,6 @@ class Network extends Eventer {
 	 */
 	lessonsByDate(date) {
 		return this.__request("/room/lesson_list", {
-			client_type: "app",
 			date
 		})
 	}

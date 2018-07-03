@@ -531,11 +531,8 @@ class Course extends React.Component {
 				break
 			}
 		}
-		students = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={!this.$view_mode} handsup={{
-				opened: this.props.switches.handsup,
-				rank  : student.rank || ""
-			}} user={student.stream?student:null} onClickSpeak={(user)=>{
+		let studentHeads = students.map((student)=>(
+			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.stream?student:null} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -570,6 +567,12 @@ class Course extends React.Component {
 				}
 			}}/>
 		))
+		let handsupStudents = []
+		students.forEach((student)=>{
+			if (student.stream) {
+				handsupStudents.push(student)
+			}
+		})
 		return (
 			<div className="page course-page">
 				<div className="inner">
@@ -616,12 +619,8 @@ class Course extends React.Component {
 					):""}
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
-						{this.props.switches.handsup?<HandsUp users={
-							students.map((student)=>({
-								
-							}))
-						} onClickClose={()=>{
-
+						{this.props.switches.handsup?<HandsUp users={handsupStudents} onClickClose={()=>{
+							this.$session.send_message(Const.CLOSE_RACE)
 						}}/>:""}
 						{!this.$view_mode?(
 							<div className="operations">
@@ -668,7 +667,7 @@ class Course extends React.Component {
 								</div>
 							</div>
 							<div className="student-area">
-								{students}
+								{studentHeads}
 							</div>
 						</div>
 						{!this.$view_mode?(

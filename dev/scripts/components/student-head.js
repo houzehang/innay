@@ -45,7 +45,6 @@ class StudentHead extends React.Component {
 							):""}
 						</div>
 						<div className="avatar-info">{this.props.user.child_name}</div>
-						{this.props.handsup.opened ? <div className="avatar-handsup">{this.props.handsup.rank||""}</div>:""}
 						<div className="avatar-details">
 							<div className="summary">
 								<div className="summary-inner">
@@ -98,7 +97,6 @@ StudentHead.propTypes = {
 	}),
 	tencent 	 : PropTypes.bool,
 	isTeacher 	 : PropTypes.bool,
-	handsup		 : PropTypes.object.isRequired,
 	speak 		 : PropTypes.bool,
 	onClickSpeak : PropTypes.func,
 	onClickGift  : PropTypes.func,
