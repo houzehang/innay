@@ -36,7 +36,7 @@ class StudentHead extends React.Component {
 						this.setState({ hover:false })
 					}}>
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={{
-							backgroundImage : `url(${this.props.user.avatarurl})`
+							backgroundImage : `url(${this.props.user.child_avatar})`
 						}}>
 							{this.props.tencent?(
 								<div id={"player_"+this.props.user.id}>

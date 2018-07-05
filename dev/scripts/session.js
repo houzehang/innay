@@ -31,7 +31,7 @@ class Session extends Eventer {
 		if (DEBUG) {
 			prefix = "http://localhost:3000"
 		} else {
-			prefix = "https://kecheng.runsnailrun.com"
+			prefix = "https://kecheng1.runsnailrun.com"
 		}
 		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 			window.CANVAS_HOLDER   = "#course-content"

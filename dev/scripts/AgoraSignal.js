@@ -87,7 +87,7 @@ class Signalize extends Eventer {
 							userinfo = {
 								child_name: item.child_name,
 								id: item.id,
-								avatarurl: item.avatarurl
+								avatarurl: item.child_avatar
 							}
 							break
 						}
