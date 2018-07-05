@@ -1,0 +1,265 @@
+body {
+	.mask.dialog-layer .dialog.tester {
+		.content .texts {
+			padding: 0;
+		}
+		.sound-tester {
+			&.s-1,&.s-2,&.s-3 {
+				.steps {
+					.step {
+						&.step-1 {
+							color: #ffac29;
+							.step-num {
+								background: #ffac29;
+							}
+						}
+						&.step-2 .icon {
+							background-image: url(../assets/tester-step-2.png);
+						}
+						&.step-3 .icon {
+							background-image: url(../assets/tester-step-3.png);
+						}
+					}
+				}
+			}
+			&.s-2,&.s-3 {
+				.steps {
+					.l1 {
+						background: #ffac29;
+					}
+					.step {
+						&.step-2 {
+							color: #ffac29;
+							.icon {
+								background-image: url(../assets/tester-step-2-on.png);
+							}
+							.step-num {
+								background: #ffac29;
+							}
+						}
+						&.step-3 .icon {
+							background-image: url(../assets/tester-step-3.png);
+						}
+					}
+				}
+			}
+			&.s-3 {
+				.steps {
+					.l2 {
+						background: #ffac29;
+					}
+					.step {
+						&.step-2 .icon {
+							background-image: url(../assets/tester-step-2-on.png);
+						}
+						&.step-3 {
+							color: #ffac29;
+							.icon {
+								background-image: url(../assets/tester-step-3-on.png);
+							}
+							.step-num {
+								background: #ffac29;
+							}
+						}
+					}
+				}
+			}
+			.steps {
+				height: 1.42rem;
+				border-bottom: 1px solid #e9e9e9;
+				display: flex;
+				justify-content: center;
+				position: relative;
+				.line {
+					width: 2.34rem;
+					height: 2px;
+					background: #b2b2b2;
+					position: absolute;
+					top: 0.88rem;
+					&.l1 {
+						left: 1.16rem;
+					}
+					&.l2 {
+						left: 3.5rem;
+					}
+				}
+				.step {
+					flex: 1;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					flex-direction: column;
+					color: #b2b2b2;
+					.step-name {
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						font-size: 0.18rem;
+						height: 0.2rem;
+						margin-bottom: 0.15rem;
+						.icon {
+							width: 0.18rem;
+							height: 0.18rem;
+							background-repeat: no-repeat;
+							background-size: auto 0.18rem;
+							background-position: center center;
+							margin-right: 0.05rem;
+						}
+					}
+					&.step-1 .icon {
+						background-image: url(../assets/tester-step-1-on.png);
+					}
+					.step-num {
+						width: 0.4rem;
+						height: 0.4rem;
+						font-size: 0.24rem;
+						color: #fff;
+						text-align: center;
+						line-height: 0.4rem;
+						background: #b2b2b2;
+						border-radius: 50%;
+						position: relative;
+						z-index: 1;
+					}
+				}
+			}
+			.step-content {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				.step-title {
+					font-size: 0.22rem;
+					color: #333333;
+					height: 0.66rem;
+					line-height: 0.66rem;
+					text-align: center;
+				}
+				.selector {
+					position: relative;
+					display: flex;
+					height: 0.4rem;
+					justify-content: center;
+					align-items: center;
+					font-size: 0.18rem;
+					color: #333333;
+					.select-box {
+						font-size: 0.18rem;
+						color: #808080;
+						height: 0.4rem;
+						border: 1px solid #e9e9e9;
+						border-radius: 0.1rem;
+						padding-left: 0.2rem;
+						width: 2.9rem;
+						background: url(../assets/tester-select.png) no-repeat center right 0.1rem;
+						background-size: 0.18rem auto;
+					}
+					.select {
+						position: absolute;
+						right: 0;
+						top: 0;
+						width: 2.9rem;
+						height: 0.4rem;
+						opacity: 0;
+					}
+				}
+				.video-area {
+					width: 3.72rem;
+					height: 2.1rem;
+					margin: 0.25rem auto; 
+				}
+				.mic-area {
+					display: flex;
+					align-items: center;
+					height: 2.1rem;
+					margin: 0.25rem auto; 
+					.mic-icon {
+						width: 0.41rem;
+						height: 0.6rem;
+						background: url(../assets/tester-speaker.png) no-repeat center center;
+						background-size: 100% auto;
+						margin-right: 0.26rem;
+					}
+					.mic-step {
+						width: 0.1rem;
+						height: 0.4rem;
+						background: #cdcdcd;
+						border-radius: 0.05rem;
+						margin-right: 0.15rem;
+						&.on {
+							background: #39be4f;
+						}
+					}
+				}
+				.music-area {
+					height: 2.1rem;
+					margin: 0.25rem auto; 
+					display: flex;
+					align-items: center;
+					.music-icon {
+						width: 0.47rem;
+						height: 0.5rem;
+						background: url(../assets/tester-music.png) no-repeat center center;
+						background-size: 100% auto;
+						margin-right: 0.24rem;
+					}
+					.progress-bar {
+						width: 3.1rem;
+						height: 0.12rem;
+						background: #cdcdcd;
+						border-radius: 0.05rem;
+						.progress-bar-i {
+							height: 100%;
+							background: #39be4f;
+							border-radius: 0.04rem;
+							position: relative;
+							.progress-bar-cursor {
+								width: 0.16rem;
+								height: 0.16rem;
+								border-radius: 50%;
+								border: 1px solid #cdcdcd;
+								background: #fff;
+								box-shadow: 0px 0px 4px 0px rgba(21, 62, 28, 0.34);
+								position: absolute;
+								top: -0.02rem;
+								right: -0.15rem;
+							}
+						}
+					}
+				}
+				.rangeslider {
+					margin: 0;
+				}
+				.rangeslider-horizontal .rangeslider__fill {
+					background: #39be4f;
+				}
+				.rangeslider .rangeslider__handle {
+					outline: none;
+				}
+				.rangeslider-horizontal .rangeslider__handle:after {
+					display: none;
+				}
+				.step-btn {
+					width: 2.58rem;
+					height: 0.48rem;
+					background: #ffac29;
+					color: #fff;
+					font-size: 0.2rem;
+					line-height: 0.48rem;
+					text-align: center;
+					border-radius: 0.2rem;
+				}
+				.prev-step-btn {
+					position: absolute;
+					background: url(../assets/tester-back.png) no-repeat left center;
+					background-size: 0.1rem auto;
+					padding-left: 0.2rem;
+					font-size: 0.2rem;
+					color: #bababa;
+					left: 0.2rem;
+					bottom: 0.42rem;
+				}
+			}
+		}
+	}
+}

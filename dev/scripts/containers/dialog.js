@@ -40,14 +40,15 @@ class Dialog extends React.Component {
 		}
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>确定</button>)
 		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")}>
-			<div className="dialog">
-				<div className="title" style={this.props.configure.viewport}>
+			<div className={"dialog "+(this.props.configure.classname||"")} style={this.props.configure.styles}>
+				<div className="title">
 					{this.props.configure.title || "提示"}
 					<div className="close-btn" onClick={this.hide.bind(this)}></div>
 				</div>
 				<div className="content">
 					<div className="texts">{this.props.configure.content}</div>
-					<div className="btns">{buttons}</div>
+					{this.props.configure.nobutton?"":<div className="btns">{buttons}</div>}
+					
 				</div>
 			</div>
 		</div>
