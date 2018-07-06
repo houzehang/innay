@@ -423,6 +423,12 @@ html,body {
 							left: 50%;
 						}
 					}
+					.spliter {
+						height: 1px;
+						background: #2d3144;
+						width: 100%;
+						margin: 0.35rem auto 0;
+					}
 					button {
 						width: 0.5rem;
 						height: 0.5rem;
@@ -435,6 +441,14 @@ html,body {
 						transition: all 200ms 0s ease-in-out;
 						&:active {
 							opacity: 0.6;
+						}
+						&.page-back {
+							margin-top: 0.3rem;
+							background: url(../assets/page-back.png) no-repeat center top;
+							background-size: 100% auto;
+							&::after {
+								content: "返回"
+							}
 						}
 						&.course-start {
 							margin-top: 0.3rem;

@@ -81,6 +81,8 @@ class Course extends React.Component {
 		clearInterval(this.$tick_timer)
 		clearTimeout(this.$back_timer)
 		clearTimeout(this.$put_timer)
+		$(`#dancing-head`).empty()
+		$('.avatar-head').empty()
 	}
 
 	componentDidMount() {
@@ -332,23 +334,32 @@ class Course extends React.Component {
 		this.$signal.leave()
 	}
 
-	preLeaveCourse() {
-		this.props.confirm({
-			content : "确定要结束本次课程吗？",
-			sure: ()=>{
-				// 发送关闭房间请求
-				net.closeRoom(this.props.room.channel_id).then((res)=>{
-					if (res.status) {
-						this.$session.send_message(Const.STOP_COURSE)
-						this.$signal.send({
-							type: "closeroom",
-							from: this.props.account.id,
-							to: "all"
-						})
-					}
-				})
-			}
-		})
+	preLeaveCourse(leaveOnly) {
+		if (leaveOnly) {
+			this.props.confirm({
+				content : "确定要临时退出房间吗？",
+				sure: ()=>{
+					this.leaveCourse()
+				}
+			})
+		} else {
+			this.props.confirm({
+				content : "确定要结束本次课程吗？",
+				sure: ()=>{
+					// 发送关闭房间请求
+					net.closeRoom(this.props.room.channel_id).then((res)=>{
+						if (res.status) {
+							this.$session.send_message(Const.STOP_COURSE)
+							this.$signal.send({
+								type: "closeroom",
+								from: this.props.account.id,
+								to: "all"
+							})
+						}
+					})
+				}
+			})
+		}
 	}
 
 	__show_gift_layer() {
@@ -409,6 +420,7 @@ class Course extends React.Component {
 			})
 		} else {
 			$(`#student_${id}`).empty()
+			$("#dancing-head").empty()
 			this.$room.dance(id, $("#dancing-head")[0], true)
 		}
 		this.$last_dancing = id
@@ -428,6 +440,7 @@ class Course extends React.Component {
 			})
 		} else {
 			$(`#dancing-head`).empty()
+			$(`#student_${id}`).empty()
 			this.$room.dance(id, $(`#student_${id}`)[0])
 		}
 		this.$last_dancing = null
@@ -585,6 +598,10 @@ class Course extends React.Component {
 									this.setState({control: true})
 								}
 							}}>
+								<button className="page-back" onClick={()=>{
+									this.preLeaveCourse(true)
+								}}></button>
+								<div className="spliter"></div>
 								{!this.props.status.started?(
 									<button className="course-start" onClick={()=>{
 										this.setState({control: false})

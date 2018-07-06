@@ -107,7 +107,7 @@ class Devices extends React.Component {
 	onStopPreview() {
 		this.$previewing = false
 		this.$client.stopPreview();
-		$("#video-area").html("")
+		$("#video-area").empty()
 		setTimeout(()=>{
 			this.setState({step: 2})
 		})
@@ -268,34 +268,39 @@ class Devices extends React.Component {
 	}
 
 	render() {
-		return  <div className="sound-outer"><div className={"sound-tester s-"+this.state.step}>
-			<div className="steps">
-				<div className="line l1"></div>
-				<div className="line l2"></div>
-				<div className="step step-1">
-					<div className="step-name">
-						<i className="icon"></i>
-						摄像头检测
+		return  <div className="sound-outer">
+			<button className="page-back" onClick={()=>{
+				this.props.onExitTester()
+			}}></button>
+			<div className={"sound-tester s-"+this.state.step}>
+				<div className="steps">
+					<div className="line l1"></div>
+					<div className="line l2"></div>
+					<div className="step step-1">
+						<div className="step-name">
+							<i className="icon"></i>
+							摄像头检测
+						</div>
+						<div className="step-num">1</div>
 					</div>
-					<div className="step-num">1</div>
-				</div>
-				<div className="step step-2">
-					<div className="step-name">
-						<i className="icon"></i>
-						麦克风检测
+					<div className="step step-2">
+						<div className="step-name">
+							<i className="icon"></i>
+							麦克风检测
+						</div>
+						<div className="step-num">2</div>
 					</div>
-					<div className="step-num">2</div>
-				</div>
-				<div className="step step-3">
-					<div className="step-name">
-						<i className="icon"></i>
-						扬声器检测
+					<div className="step step-3">
+						<div className="step-name">
+							<i className="icon"></i>
+							扬声器检测
+						</div>
+						<div className="step-num">3</div>
 					</div>
-					<div className="step-num">3</div>
 				</div>
+				{this[`step${this.state.step}`]()}
 			</div>
-			{this[`step${this.state.step}`]()}
-		</div></div>
+		</div>
 	}
 }
 

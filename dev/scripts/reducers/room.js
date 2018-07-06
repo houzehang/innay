@@ -27,13 +27,11 @@ const room = (state = {}, action) => {
 			status,
 			teacher
 		}
-		break
 		case ROOM_GIFT:
 		return {
 			...state,
 			gifts: action.data
 		}
-		break
 		case ROOM_MORE_INFO:
 		let info = {...state.info}
 		info.channel_token = action.data.channel_token
@@ -42,13 +40,11 @@ const room = (state = {}, action) => {
 			info,
 			students: action.data.students
 		}
-		break
 		case GIFT_LIST:
 		return {
 			...state,
 			giftlist: action.data
 		}
-		break
 		case NEW_GIFT:
 		let gift = action.data
 		students = [...state.students]
@@ -73,7 +69,6 @@ const room = (state = {}, action) => {
 			...state,
 			students
 		}
-		break
 		case USER_MUTED:
 		students = [...state.students]
 		if (students) {
@@ -92,7 +87,6 @@ const room = (state = {}, action) => {
 			...state,
 			students
 		}
-		break
 		case NEW_STREAM:
 		streamId = action.stream.getId()
 		teacher  = {...state.teacher}
@@ -118,7 +112,6 @@ const room = (state = {}, action) => {
 				students
 			}
 		}
-		break
 		case STREAM_LEAVE:
 		streamId = action.stream.getId()
 		teacher  = {...state.teacher}
@@ -145,7 +138,6 @@ const room = (state = {}, action) => {
 				students
 			}
 		}
-		break
 		case HANDSUP_SWITCH:
 		switches = {...state.switches}
 		switches.handsup = action.status
@@ -154,7 +146,6 @@ const room = (state = {}, action) => {
 			for(let i=0,len=students.length;i<len;i++) {
 				let item = students[i]
 				item.rank = null
-				break
 			}
 		}
 		return {
@@ -162,7 +153,6 @@ const room = (state = {}, action) => {
 			switches,
 			students
 		}
-		break
 		case GIFT_SWITCH:
 		switches = {...state.switches}
 		switches.gift = action.status
@@ -170,7 +160,6 @@ const room = (state = {}, action) => {
 			...state,
 			switches
 		}
-		break
 		case HANDSUP_RANK:
 		students = [...state.students]
 		if (students) {
@@ -187,7 +176,6 @@ const room = (state = {}, action) => {
 			...state,
 			students
 		}
-		break
 		case DANCING:
 		students = [...state.students]
 		if (students) {
@@ -204,7 +192,6 @@ const room = (state = {}, action) => {
 			...state,
 			students
 		}
-		break
 		case COURSE_BEGIN:
 		status = {...state.status}
 		status.started = true
@@ -213,7 +200,6 @@ const room = (state = {}, action) => {
 			...state,
 			status
 		}
-		break
 		case COURSE_PAUSE:
 		status = {...state.status}
 		status.paused = true
@@ -222,7 +208,6 @@ const room = (state = {}, action) => {
 			...state,
 			status
 		}
-		break
 		case COURSE_RESUME:
 		status = {...state.status}
 		status.paused = false
@@ -231,7 +216,6 @@ const room = (state = {}, action) => {
 			...state,
 			status
 		}
-		break
 		case COURSE_END:
 		status = {...state.status}
 		status.started = false
@@ -241,7 +225,6 @@ const room = (state = {}, action) => {
 			...state,
 			status
 		}
-		break
 		case COURSE_TICK:
 		status = {...state.status}
 		if (status.started && !status.paused && status.duration > 0) {
@@ -254,7 +237,6 @@ const room = (state = {}, action) => {
 		} else {
 			return state
 		}
-		break
 		default:
 		return state
 	}

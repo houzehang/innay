@@ -23,23 +23,16 @@ class Session extends Eventer {
 		// this.__bind()
 		// this.__createWebview()
 
-
 		this.$dom = $(dom)
 		this.__createWebview()
 		this.__bind()
-		this.$dom.html("")
+		this.$dom.empty()
 		this.$dom.append(this.$webview)
 	}
 	/**
 	 * 创建webview
 	 */
 	__createWebview() {
-		// let prefix
-		// if (DEBUG) {
-		// 	prefix = "http://localhost:3000"
-		// } else {
-		// 	prefix = "https://kecheng1.runsnailrun.com"
-		// }
 		// $.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 		// 	window.CANVAS_HOLDER   = "#course-content"
 		// 	window.CANVAS_LOCATION = `${prefix}/app?from=app`
@@ -74,10 +67,16 @@ class Session extends Eventer {
 		// 	}
 		// 	_next()
 		// })
+		let prefix
+		if (DEBUG) {
+			prefix = "http://localhost:3000"
+		} else {
+			prefix = "https://kecheng1.runsnailrun.com"
+		}
 
 
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="https://kecheng1.runsnailrun.com/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" src="${prefix}/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
 		this.$webview = webview[0];
 	}
 
