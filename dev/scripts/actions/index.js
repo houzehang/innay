@@ -154,3 +154,11 @@ export const onResumeCourse = ()=>({
 export const onCourseTick = ()=>({
 	type: types.COURSE_TICK
 })
+
+export const onEnterTester = ()=>({
+	type: types.ENTER_TESTER
+})
+
+export const onExitTester = ()=>({
+	type: types.EXIT_TESTER
+})

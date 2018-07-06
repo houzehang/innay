@@ -12,7 +12,8 @@ import {
 	onPauseCourse,
 	onResumeCourse,
 	onCourseTick,
-	confirm, alert
+	confirm, alert,
+	onEnterTester
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
@@ -100,7 +101,11 @@ class Course extends React.Component {
 			})
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
-				this.props.onEndCourse()
+				if (this.$waiting_to_tester) {
+					this.props.onEnterTester()
+				} else {
+					this.props.onEndCourse()
+				}
 			})
 			this.$signal.on("CHANNEL_NEW_USER", (user)=>{
 				this.$session.send_message(Const.MEMBER_ADD, {}, {
@@ -476,6 +481,7 @@ class Course extends React.Component {
 			title: "设备检测",
 			content : "即将进行设备检测，是否暂时退出教室？",
 			sure: ()=>{
+				this.$waiting_to_tester = true
 				this.leaveCourse()
 			}
 		})
@@ -748,6 +754,7 @@ const mapDispatchToProps = dispatch => ({
 	onCourseTick 	: () => dispatch(onCourseTick()),
 	confirm 		: (data) => dispatch(confirm(data)),
 	alert 	    	: (data) => dispatch(alert(data)),
+	onEnterTester 	: () => dispatch(onEnterTester()),
 })
   
 export default connect(

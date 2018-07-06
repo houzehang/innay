@@ -106,10 +106,14 @@ function createMainWindow() {
     })
     $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
-    
     if (DEBUG) {
         $main.webContents.openDevTools();
     }
+    $main.webContents.on('did-finish-load', () => {
+        $main.webContents.send('configure', {
+            __dirname, __apppath: app.getAppPath()
+        });
+    })
     $main.webContents.on('will-navigate', (ev, url) => {
         ev.preventDefault();
     });

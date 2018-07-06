@@ -18,12 +18,15 @@ dmg:
 
 mac:
   asar: true
+  asarUnpack: "**/music.mp3"
   category: public.app-category.tools
   icon: icns/mac-icon.icns
 
 win:
   asar: true
-  asarUnpack: "**/native-win/*"
+  asarUnpack: 
+    - "**/native-win/*"
+    - "**/music.mp3"
   target: 
     target: nsis
     arch:

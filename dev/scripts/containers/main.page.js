@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
 import Course from './course.page'
+import Devices from './devices'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
@@ -194,15 +195,19 @@ class Main extends React.Component {
 	render() {
 		let { account } = this.props 
 		let content
-		if (account.dentity == types.DENTITY.STUDENT) {
-			content = this.__student_page()
+		if (this.props.started) {
+			content = <Course recording={this.state.recording}/>
+		} else if (this.props.testing) {
+			content = <Devices />
 		} else {
-			content = this.__master_page()
+			if (account.dentity == types.DENTITY.STUDENT) {
+				content = this.__student_page()
+			} else {
+				content = this.__master_page()
+			}
 		}
 		return (
-			<div className="full-h">
-				{this.props.started?<Course recording={this.state.recording}/>:content}
-			</div>
+			<div className="full-h">{content}</div>
 		)
 	}
 }
@@ -214,7 +219,8 @@ const mapStateToProps = (state, ownProps) => {
 		room 	: state.room.info,
 		gifts 	: state.room.gifts,
 		calendar: state.main.calendar,
-		started : state.main.courseStarted
+		started : state.main.courseStarted,
+		testing : state.main.enterTester
 	}
 }
 

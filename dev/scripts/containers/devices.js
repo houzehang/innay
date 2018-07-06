@@ -5,29 +5,51 @@ import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
 import path from 'path';
+const Const = require("../../const")
 const DEBUG = require("../../../env").DEBUG
-
+import { 
+	onExitTester
+} from '../actions'
 class Devices extends React.Component {
 	constructor(props) {
 		super(props)
-		let currentVideoDevice 	 = this.props.rtc.getCurrentVideoDevice(),
-			currentSpeakerDevice = this.props.rtc.getCurrentAudioPlaybackDevice(),
-			currentAudioDevice   = this.props.rtc.getCurrentAudioRecordingDevice()
+		this.$client = new AgoraRtcEngine()
+		this.$client.initialize(Const.AGORA_APPID);
+		this.$client.setChannelProfile(1);
+		this.$client.setClientRole(1);
+		this.$client.setAudioProfile(0, 1);
+		this.$client.setParameters('{"che.audio.live_for_comm":true}');
+		this.$client.setParameters('{"che.audio.enable.agc":false}');
+		this.$client.setParameters('{"che.video.moreFecSchemeEnable":true}');
+		this.$client.setParameters('{"che.video.lowBitRateStreamParameter":{"width":192,"height":108,"frameRate":15,"bitRate":100}}');
+		this.$client.enableDualStreamMode(true);
+		this.$client.enableVideo();
+		this.$client.enableLocalVideo(true);
+		this.$client.setVideoProfile(45);
+
+		let video_devices = this.$client.getVideoDevices()
+		let audio_devices = this.$client.getAudioRecordingDevices()
+		let speaker_devices = this.$client.getAudioPlaybackDevices()
+
+		let currentVideoDevice 	 = this.$client.getCurrentVideoDevice(),
+			currentSpeakerDevice = this.$client.getCurrentAudioPlaybackDevice(),
+			currentAudioDevice   = this.$client.getCurrentAudioRecordingDevice()
+
 		let currentVideoName, currentSpeakerName, currentAudioName
-		for(let i=0,len=this.props.video_devices.length;i<len;i++) {
-			let item = this.props.video_devices[i]
+		for(let i=0,len=video_devices.length;i<len;i++) {
+			let item = video_devices[i]
 			if (item.deviceid == currentVideoDevice) {
 				currentVideoName = item.devicename
 			}
 		}
-		for(let i=0,len=this.props.audio_devices.length;i<len;i++) {
-			let item = this.props.audio_devices[i]
+		for(let i=0,len=audio_devices.length;i<len;i++) {
+			let item = audio_devices[i]
 			if (item.deviceid == currentAudioDevice) {
 				currentAudioName = item.devicename
 			}
 		}
-		for(let i=0,len=this.props.speaker_devices.length;i<len;i++) {
-			let item = this.props.speaker_devices[i]
+		for(let i=0,len=speaker_devices.length;i<len;i++) {
+			let item = speaker_devices[i]
 			if (item.deviceid == currentSpeakerDevice) {
 				currentSpeakerName = item.devicename
 			}
@@ -39,77 +61,61 @@ class Devices extends React.Component {
 			currentSpeakerName,
 			currentAudioDevice,
 			currentAudioName,
-			volume: 0.5,
+			video_devices, audio_devices, speaker_devices,
+			volume: this.$client.getAudioPlaybackVolume(),
 			step: 1
 		}
 	}
 
 	componentDidMount() {
-		console.log("start test...")
-		this.props.rtc.startAudioRecordingDeviceTest(100)
-		this.props.rtc.on('audiovolumeindication', (...args) => {
-			console.log(args)
-		});
 	}
 
 	componentWillUnmount() {
-		this.giveBackCamera()
+		try {
+			this.$client.stopPreview();
+			this.$client.stopAudioRecordingDeviceTest();
+			this.$client.removeAllListeners('audiovolumeindication');
+			this.$client.stopAudioPlaybackDeviceTest();
+		} catch (err) {
+			console.log("client leave failed ", err);
+		}
 	}
 
-	isMaster(id) {
-		if (!id) {
-			id = this.props.account.id
-		}
-		for(let i=0,len=this.props.room.teachers.length;i<len;i++) {
-			let item = this.props.room.teachers[i]
-			if (item.id == id) {
-				return true
+	onStartMicTest() {
+		this.$client.startAudioRecordingDeviceTest(100)
+		this.$client.on('audiovolumeindication', (uid, volume, speaker, totalVolume) => {
+			if (this.state.step == 2) {
+				this.setState({
+					inputVolume: parseInt(totalVolume / 255 * 13, 10)
+				});
 			}
-		}
-	}
-
-	isChairMaster(id) {
-		if (!id) {
-			id = this.props.account.id
-		}
-		return this.props.room.teacher_id == id
-	}
-
-	isSubMaster(id) {
-		if (!id) {
-			id = this.props.account.id
-		}
-		return this.isMaster(id) && !this.isChairMaster(id)
-	}
-
-	giveBackCamera() {
-		if (this.state.step != 1) {
-			return
-		}
-		if (this.isChairMaster()) {
-			let target = $('#master-head')
-			if (target.length > 0) {
-				target.html("")
-				this.props.rtc.setupLocalVideo(target[0])
-			}
-		} else {
-			let target = $('#student_'+this.props.account.id)
-			if (target.length > 0) {
-				target.html("")
-				this.props.rtc.setupLocalVideo(target[0])
-			}
-		}
+		});
 	}
 
 	onChangeVolume(value) {
-        let audio = findDOMNode(this.refs.tester_audio);
-        audio.volume = value/100
 		this.setState({volume: value})
+		this.$client.setAudioPlaybackVolume(value);
+	}
+
+	onStartPreview() {
+		if (this.$previewing) return
+		this.$client.setupLocalVideo($("#video-area")[0]);
+		this.$client.startPreview();
+		this.$previewing = true
+	}
+
+	onStopPreview() {
+		this.$previewing = false
+		this.$client.stopPreview();
+		$("#video-area").html("")
+		setTimeout(()=>{
+			this.setState({step: 2})
+		})
 	}
 
 	step1() {
 		setTimeout(()=>{
-			this.props.rtc.setupLocalVideo($('#video-area')[0])
+			this.onStartPreview()
 		},0)
 		return (
 			<div className="step-content">
@@ -120,11 +126,11 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentVideoDevice : event.target.value, currentVideoName: name})
-						this.props.rtc.setVideoDevice(event.target.value);
+						this.$client.setVideoDevice(event.target.value);
 					}}>
 					{
-						this.props.video_devices.length > 0 ?
-							this.props.video_devices.map((device)=>(
+						this.state.video_devices.length > 0 ?
+							this.state.video_devices.map((device)=>(
 							<option key={device.deviceid} value={device.deviceid}>
 								{device.devicename}
 							</option>
@@ -137,13 +143,12 @@ class Devices extends React.Component {
 					</select>
 				</div>
 				<div className="video-area" id="video-area"></div>
-				<button onClick={()=>{
-					this.giveBackCamera()
-					$('#video-area').html("")
-					setTimeout(()=>{
-						this.setState({step: 2})
-					},100)
-				}} className="step-btn">下一步</button>
+				<div className="step-btns">
+					<button onClick={()=>{
+						this.onStartMicTest()
+						this.onStopPreview()
+					}} className="step-btn">下一步</button>
+				</div>
 			</div>
 		)
 	}
@@ -151,7 +156,11 @@ class Devices extends React.Component {
 	step2() {
 		let Steps = []
 		for(let i=0;i<12;i++) {
-			Steps.push(<div className="mic-step" key={i}></div>)
+			if (i >= this.state.inputVolume) {
+				Steps.push(<div className="mic-step" key={i}></div>)
+			} else {
+				Steps.push(<div className="mic-step on" key={i}></div>)
+			}
 		}
 		return (
 			<div className="step-content">
@@ -162,11 +171,11 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentAudioDevice : event.target.value, currentAudioName: name})
-						this.props.rtc.setAudioRecordingDevice(event.target.value);
+						this.$client.setAudioRecordingDevice(event.target.value);
 					}}>
 					{
-						this.props.audio_devices.length > 0 ?
-							this.props.audio_devices.map((device)=>(
+						this.state.audio_devices.length > 0 ?
+							this.state.audio_devices.map((device)=>(
 							<option key={device.deviceid} value={device.deviceid}>
 								{device.devicename}
 							</option>
@@ -182,12 +191,16 @@ class Devices extends React.Component {
 					<div className="mic-icon"></div>
 					{Steps}
 				</div>
-				<button onClick={()=>{
-					this.setState({step: 3})
-				}} className="step-btn">下一步</button>
-				<button onClick={()=>{
-					this.setState({step: 1})
-				}} className="prev-step-btn">上一步</button>
+				<div className="step-btns">
+					<button onClick={()=>{
+    					this.$client.stopAudioRecordingDeviceTest();
+						this.setState({step: 3})
+					}} className="step-btn">下一步</button>
+					<button onClick={()=>{
+    					this.$client.stopAudioRecordingDeviceTest();
+						this.setState({step: 1})
+					}} className="prev-step-btn">上一步</button>
+				</div>
 			</div>
 		)
 	}
@@ -196,14 +209,11 @@ class Devices extends React.Component {
 		setTimeout(()=>{
 			let filepath;
 			if (DEBUG) {
-				filepath = path.join(__dirname, 'libs/AgoraSDK/music.mp3');
+				filepath = path.join(process.env.PATHES.__dirname,'libs','AgoraSDK','music.mp3');
 			} else {
-				filepath = path.join(this.props.rtc.appPath, '../app', 'AgoraSDK/music.mp3');
+				filepath = path.join(process.env.PATHES.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
 			}
-			console.log(__dirname,filepath,this.props.rtc.appPath)
-
-			console.log(process.env.APP_PATH)
-			this.props.rtc.startAudioPlaybackDeviceTest(filepath);
+			this.$client.startAudioPlaybackDeviceTest(filepath);
 		},0)
 		return (
 			<div className="step-content">
@@ -214,11 +224,11 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentSpeakerDevice : event.target.value, currentSpeakerName: name})
-						this.props.rtc.setAudioPlaybackDevice(event.target.value);
+						this.$client.setAudioPlaybackDevice(event.target.value);
 					}}>
 					{
-						this.props.speaker_devices.length > 0 ?
-							this.props.speaker_devices.map((device)=>(
+						this.state.speaker_devices.length > 0 ?
+							this.state.speaker_devices.map((device)=>(
 							<option key={device.deviceid} value={device.deviceid}>
 								{device.devicename}
 							</option>
@@ -235,7 +245,7 @@ class Devices extends React.Component {
 					<div className="progress-bar">
 						<Slider
 						min={0}
-						max={100}
+						max={255}
 						value={this.state.volume}
 						onChange={(value)=>{
 							this.onChangeVolume(value)
@@ -243,16 +253,22 @@ class Devices extends React.Component {
 						/>
 					</div>
 				</div>
-				<button className="step-btn">完成</button>
-				<button onClick={()=>{
-					this.setState({step: 2})
-				}} className="prev-step-btn">上一步</button>
+				<div className="step-btns">
+					<button className="step-btn" onClick={()=>{
+						this.props.onExitTester()
+					}}>完成</button>
+					<button onClick={()=>{
+						this.$client.stopAudioPlaybackDeviceTest();
+						this.onStartMicTest()
+						this.setState({step: 2})
+					}} className="prev-step-btn">上一步</button>
+				</div>
 			</div>
 		)
 	}
 
 	render() {
-		return  <div className={"sound-tester s-"+this.state.step}>
+		return  <div className="sound-outer"><div className={"sound-tester s-"+this.state.step}>
 			<div className="steps">
 				<div className="line l1"></div>
 				<div className="line l2"></div>
@@ -279,7 +295,7 @@ class Devices extends React.Component {
 				</div>
 			</div>
 			{this[`step${this.state.step}`]()}
-		</div>
+		</div></div>
 	}
 }
 
@@ -290,7 +306,12 @@ const mapStateToProps = (state, ownProps) => {
 	}
 }
 
+
+const mapDispatchToProps = dispatch => ({
+	onExitTester : () => dispatch(onExitTester())
+})
+
 export default connect(
 	mapStateToProps,
-	null
+	mapDispatchToProps
 )(Devices)
