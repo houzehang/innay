@@ -105,7 +105,7 @@ class Session extends Eventer {
 			})
 			this.$queue = []
 		}
-		this.trigger("NEW_MESSAGE", message)
+		this.trigger("NEW_MESSAGE", message) 
 	}
 
 	destroy() {

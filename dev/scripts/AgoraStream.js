@@ -10,7 +10,7 @@ class Room extends Eventer {
 	}
 
 	init() {
-		this.$client = new AgoraRtcEngine() // eslint-disable-line
+		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(Const.AGORA_APPID);
 		this.$client.setChannelProfile(1);
 		this.$client.setClientRole(1);
@@ -42,18 +42,8 @@ class Room extends Eventer {
 				resolve()
 			} else {
 				let video_devices = this.$client.getVideoDevices()
-				video_devices.forEach((item)=>{
-					if (/facetime/i.test(item.devicename)) {
-						this.$client.setVideoDevice(item.deviceid);
-					}
-				})
 				this.inst.setVideoDevices(video_devices)
 				let audio_devices = this.$client.getAudioRecordingDevices()
-				audio_devices.forEach((item)=>{
-					if (/(built-in)|(内置)/i.test(item.devicename)) {
-						this.$client.setAudioRecordingDevice(item.deviceid);
-					}
-				}) 
 				this.inst.setAudioDevices(audio_devices)
 				let speaker_devices = this.$client.getAudioPlaybackDevices()
 				this.inst.setSpeakerDevices(speaker_devices)
@@ -119,7 +109,6 @@ class Room extends Eventer {
 				dom = $(`#${dom}`)[0]
 				if (id == this.inst.props.account.id) {
 					this.$client.setupLocalVideo(dom)
-					this.$client.startPreview()
 				} else {
 					this.$client.subscribe(id, dom)
 				}

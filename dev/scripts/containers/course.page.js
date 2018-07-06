@@ -472,18 +472,12 @@ class Course extends React.Component {
 	}
 
 	onHelpClick() {
-		this.props.alert({
+		this.props.confirm({
 			title: "设备检测",
-			styles: {
-				width: "7.02rem"
-			},
-			classname: "tester",
-			nobutton: true,
-			content : <Devices rtc={this.$room.rtc} 
-				video_devices={this.$video_devices}
-				audio_devices={this.$audio_devices}
-				speaker_devices={this.$speaker_devices}
-			/>
+			content : "即将进行设备检测，是否暂时退出教室？",
+			sure: ()=>{
+				this.leaveCourse()
+			}
 		})
 	}
 

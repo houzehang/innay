@@ -91,6 +91,8 @@ app.on('ready', function()  {
 });
 
 function createMainWindow() {
+    process.env.APP_PATH = app.getAppPath();
+    console.log("app path",process.env.APP_PATH)
     let $main = new BrowserWindow({width: 1300, height: 790, 
         resizable: DEBUG,
         center: true,

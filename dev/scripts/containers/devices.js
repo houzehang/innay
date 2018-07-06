@@ -4,6 +4,8 @@ require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
+import path from 'path';
+const DEBUG = require("../../../env").DEBUG
 
 class Devices extends React.Component {
 	constructor(props) {
@@ -101,7 +103,7 @@ class Devices extends React.Component {
 
 	onChangeVolume(value) {
         let audio = findDOMNode(this.refs.tester_audio);
-        audio.volume = value
+        audio.volume = value/100
 		this.setState({volume: value})
 	}
 
@@ -192,7 +194,16 @@ class Devices extends React.Component {
 
 	step3() {
 		setTimeout(()=>{
-			this.onChangeVolume(this.state.volume)
+			let filepath;
+			if (DEBUG) {
+				filepath = path.join(__dirname, 'libs/AgoraSDK/music.mp3');
+			} else {
+				filepath = path.join(this.props.rtc.appPath, '../app', 'AgoraSDK/music.mp3');
+			}
+			console.log(__dirname,filepath,this.props.rtc.appPath)
+
+			console.log(process.env.APP_PATH)
+			this.props.rtc.startAudioPlaybackDeviceTest(filepath);
 		},0)
 		return (
 			<div className="step-content">
@@ -221,12 +232,10 @@ class Devices extends React.Component {
 				</div>
 				<div className="music-area">
 					<div className="music-icon"></div>
-					<audio ref="tester_audio" src={require("../../assets/sounder.mp3")} autoPlay={true} loop={true}/>
 					<div className="progress-bar">
 						<Slider
 						min={0}
-						max={1}
-						step={0.01}
+						max={100}
 						value={this.state.volume}
 						onChange={(value)=>{
 							this.onChangeVolume(value)
