@@ -319,8 +319,8 @@ class Course extends React.Component {
 			case "racerank":
 			this.props.onHandsupRank(data.uid, data.rank)
 			break
-			case "starttest":
-			case "stoptest":
+			case Const.START_TEST:
+			case Const.STOP_TEST:
 			break
 			case "gift":
 			this.props.onNewGift(data)
@@ -645,6 +645,7 @@ class Course extends React.Component {
 							<div className="operations">
 								<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 									if (this.props.switches.handsup) {
+										console.log("Const.CLOSE_RACE",Const.CLOSE_RACE)
 										this.$session.send_message(Const.CLOSE_RACE)
 									} else {
 										this.$session.send_message(Const.OPEN_RACE)

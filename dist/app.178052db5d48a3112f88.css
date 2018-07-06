@@ -272,6 +272,15 @@ body .sound-outer {
   display: flex;
   align-items: center;
 }
+body .sound-outer .page-back {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: url(./a39abc1070254e8df3c832c6bf2aeb40.png) no-repeat center center;
+  background-size: 100% auto;
+  position: absolute;
+  left: 0.2rem;
+  top: 0.2rem;
+}
 body .sound-outer .sound-tester {
   background: #fff;
   border-radius: 0.1rem;
@@ -2228,6 +2237,13 @@ body .page.course-page .inner .controls.close .switch-btn {
   transform: translateY(-50%) translateX(-50%);
   left: 50%;
 }
+html .page.course-page .inner .controls .spliter,
+body .page.course-page .inner .controls .spliter {
+  height: 1px;
+  background: #2d3144;
+  width: 100%;
+  margin: 0.35rem auto 0;
+}
 html .page.course-page .inner .controls button,
 body .page.course-page .inner .controls button {
   width: 0.5rem;
@@ -2243,6 +2259,16 @@ body .page.course-page .inner .controls button {
 html .page.course-page .inner .controls button:active,
 body .page.course-page .inner .controls button:active {
   opacity: 0.6;
+}
+html .page.course-page .inner .controls button.page-back,
+body .page.course-page .inner .controls button.page-back {
+  margin-top: 0.3rem;
+  background: url(./9dc51a0897ebb855184d7f26f6065e23.png) no-repeat center top;
+  background-size: 100% auto;
+}
+html .page.course-page .inner .controls button.page-back::after,
+body .page.course-page .inner .controls button.page-back::after {
+  content: "\8FD4\56DE";
 }
 html .page.course-page .inner .controls button.course-start,
 body .page.course-page .inner .controls button.course-start {
