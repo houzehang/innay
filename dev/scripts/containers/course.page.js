@@ -362,6 +362,15 @@ class Course extends React.Component {
 		}
 	}
 
+	__on_clipshare() {
+		this.props.confirm({
+			content : "确认截取所有学生屏幕吗？",
+			sure: ()=>{
+				this.$session.send_message("clipshare")
+			}
+		})
+	}
+
 	__show_gift_layer() {
 		$(".gift-layer").show()
 		setTimeout(()=>{
@@ -657,6 +666,9 @@ class Course extends React.Component {
 									} else {
 										this.$session.send_message(Const.OPEN_GIFT)
 									}
+								}}></button>
+								<button className="course-clip" onClick={()=>{
+									this.__on_clipshare()
 								}}></button>
 								<button className="course-prevpage" onClick={()=>{
 									this.$session.send_message("appprevpage")

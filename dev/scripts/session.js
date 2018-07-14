@@ -86,6 +86,9 @@ class Session extends Eventer {
 		// }
 
 		if (this.$webview) {
+			$(this.$webview).on("dom-ready", ()=>{
+				$(this.$webview)[0].openDevTools(); 
+			});
 			$(this.$webview).off('page-title-updated');
 			$(this.$webview).on('page-title-updated', (event)=>{
 				event = event.originalEvent;

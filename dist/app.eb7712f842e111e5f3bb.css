@@ -1730,6 +1730,10 @@ body {
   padding: 0;
   font-family: "Helvetica Neue", "Hiragino Sans GB", "Segoe UI", "Microsoft Yahei", "\5FAE\8F6F\96C5\9ED1", Tahoma, Arial, STHeiti, sans-serif;
 }
+html *,
+body * {
+  cursor: default;
+}
 html .full-h,
 body .full-h {
   height: 100%;
@@ -2405,6 +2409,11 @@ html .page.course-page .inner .content .operations button.course-gift.off,
 body .page.course-page .inner .content .operations button.course-gift.off {
   background-image: url(./caf9ede90eafad727f90da569c7c5643.png);
   background-size: auto 0.38rem;
+}
+html .page.course-page .inner .content .operations button.course-clip,
+body .page.course-page .inner .content .operations button.course-clip {
+  background: url(./4f2127e505dbb2e265386287b5024c1e.png) no-repeat center center;
+  background-size: 0.26rem 0.26rem;
 }
 html .page.course-page .inner .content .operations button.course-nextpage,
 body .page.course-page .inner .content .operations button.course-nextpage {
