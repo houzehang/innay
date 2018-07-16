@@ -22,7 +22,7 @@ class Handsup extends React.Component {
 				{this.props.users.map(user=>(
 					<div className="handsup-user" key={user.id}>
 						<div className="avatar" style={{
-							backgroundImage: `url(${user.avatarurl})`
+							backgroundImage: `url(${user.child_avatar})`
 						}}></div>
 						<div className="nickname">{user.child_name}</div>
 						{user.rank?<div className="rank">{user.rank}</div>:""}

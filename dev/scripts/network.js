@@ -138,6 +138,13 @@ class Network extends Eventer {
 	getServerTime() {
 		return this.__request('/api/time')
 	}
+
+	/**
+	 * 开始上课
+	 */
+	beginClass(channel_id) {
+		return this.__request('/room/class_begin',{channel_id},"post")
+	}
 }
 
 module.exports = new Network

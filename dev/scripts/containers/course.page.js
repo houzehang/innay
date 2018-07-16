@@ -615,6 +615,7 @@ class Course extends React.Component {
 									<button className="course-start" onClick={()=>{
 										this.setState({control: false})
 										this.$session.send_message(Const.START_COURSE)
+										net.beginClass(this.props.room.channel_id)
 										this.props.onBeginCourse()
 									}}></button>
 								):(
