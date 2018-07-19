@@ -80,15 +80,24 @@ class Session extends Eventer {
 		this.$webview = webview[0];
 	}
 
+	reload() {
+		if (this.$webview) {
+			this.$webview.reload()
+			this.$jsready = false
+		}
+	}
+
 	__bind() {
 		// window.BridgeH5Command = (callback, content)=>{
 		// 	this.receive_message(JSON.parse(content));
 		// }
 
 		if (this.$webview) {
-			$(this.$webview).on("dom-ready", ()=>{
-				$(this.$webview)[0].openDevTools(); 
-			});
+			if (DEBUG) {
+				$(this.$webview).on("dom-ready", ()=>{
+					$(this.$webview)[0].openDevTools(); 
+				});
+			}
 			$(this.$webview).off('page-title-updated');
 			$(this.$webview).on('page-title-updated', (event)=>{
 				event = event.originalEvent;

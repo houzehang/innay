@@ -83,9 +83,20 @@ class Course extends React.Component {
 		clearTimeout(this.$put_timer)
 		$(`#dancing-head`).empty()
 		$('.avatar-head').empty()
+		clearTimeout(this.$reload_timer)
+		$(window).off("resize")
 	}
 
 	componentDidMount() {
+		this.$reload_timer = null
+		$(window).on("resize", ()=>{
+			clearTimeout(this.$reload_timer)
+			this.$reload_timer = setTimeout(()=>{
+				this.$session.reload()
+				// 发送init room message
+				this.__send_init_room()
+			},1000)
+		})
 		if (!this.$recording) {
 			this.$room.init()
 			this.$room.on("NEW_STREAM", (stream)=>{
@@ -159,27 +170,31 @@ class Course extends React.Component {
 				this.$room.start()
 				this.$signal.join()
 			}
-			// 发送init-room
-			let masters = []
-			this.props.room.teachers.forEach((teacher)=>{
-				masters.push(teacher.id)
-			})
-			let userinfos = [ this.props.teacher ]
-			userinfos.concat(this.props.students)
-			this.$session.send_message(Const.INIT_ROOM, {
-				channel_id: this.props.room.channel_id,
-				token: net.token
-			}, {
-				recording  : this.$recording,
-				master_ids : masters,
-				userinfos  : userinfos
-			})
+			this.__send_init_room()
 		})
 		this.$session.init("#course-content")
 		net.getServerTime().then((res)=>{
 			this.setState({ time: res.time*1000 })
 		})
 		this.__tick()
+	}
+
+	__send_init_room() {
+		// 发送init-room
+		let masters = []
+		this.props.room.teachers.forEach((teacher)=>{
+			masters.push(teacher.id)
+		})
+		let userinfos = [ this.props.teacher ]
+		userinfos.concat(this.props.students)
+		this.$session.send_message(Const.INIT_ROOM, {
+			channel_id: this.props.room.channel_id,
+			token: net.token
+		}, {
+			recording  : this.$recording,
+			master_ids : masters,
+			userinfos  : userinfos
+		})
 	}
 
 	__build_stream(id) {
