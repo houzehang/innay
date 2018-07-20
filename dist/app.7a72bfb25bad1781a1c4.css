@@ -2410,6 +2410,16 @@ body .page.course-page .inner .content .operations button.course-gift.off {
   background-image: url(./caf9ede90eafad727f90da569c7c5643.png);
   background-size: auto 0.38rem;
 }
+html .page.course-page .inner .content .operations button.course-magic,
+body .page.course-page .inner .content .operations button.course-magic {
+  background: url(./3bb46f093857942c3a839cc2f562766b.png) no-repeat center center;
+  background-size: 0.26rem 0.26rem;
+}
+html .page.course-page .inner .content .operations button.course-magic.off,
+body .page.course-page .inner .content .operations button.course-magic.off {
+  background-image: url(./29687235e7bd1c04350ac7cd8c45983c.png);
+  background-size: auto 0.38rem;
+}
 html .page.course-page .inner .content .operations button.course-clip,
 body .page.course-page .inner .content .operations button.course-clip {
   background: url(./4f2127e505dbb2e265386287b5024c1e.png) no-repeat center center;
