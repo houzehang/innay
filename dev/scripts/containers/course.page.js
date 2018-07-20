@@ -693,15 +693,17 @@ class Course extends React.Component {
 									this.__on_clipshare()
 								}}></button>
 								<button className="course-prevpage" onClick={()=>{
+									this.props.onMagicSwitch(false)
 									this.$session.send_message("appprevpage")
 								}}></button>
 								<button className="course-clear" onClick={()=>{
 									this.$session.send_message("appclearall")
 								}}></button>
 								<button className="course-nextpage" onClick={()=>{
+									this.props.onMagicSwitch(false)
 									this.$session.send_message("appnextpage")
 								}}></button>
-								<button className={this.props.switches.magic?"course-handsup":"course-handsup off"} onClick={()=>{
+								<button className={this.props.switches.magic?"course-magic":"course-magic off"} onClick={()=>{
 									if (this.props.switches.magic) {
 										this.$session.send_message(Const.DISABLE_MAGIC)
 									} else {
