@@ -13,7 +13,8 @@ import {
 	onResumeCourse,
 	onCourseTick,
 	confirm, alert,
-	onEnterTester
+	onEnterTester,
+	onMagicSwitch
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
@@ -265,6 +266,12 @@ class Course extends React.Component {
 				if (!this.$recording) {
 					this.props.onGiftSwitch(false)
 				}
+				break
+				case Const.ENABLE_MAGIC:
+				this.props.onMagicSwitch(true)
+				break
+				case Const.DISABLE_MAGIC:
+				this.props.onMagicSwitch(false)
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
@@ -670,7 +677,6 @@ class Course extends React.Component {
 							<div className="operations">
 								<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
 									if (this.props.switches.handsup) {
-										console.log("Const.CLOSE_RACE",Const.CLOSE_RACE)
 										this.$session.send_message(Const.CLOSE_RACE)
 									} else {
 										this.$session.send_message(Const.OPEN_RACE)
@@ -694,6 +700,13 @@ class Course extends React.Component {
 								}}></button>
 								<button className="course-nextpage" onClick={()=>{
 									this.$session.send_message("appnextpage")
+								}}></button>
+								<button className={this.props.switches.magic?"course-handsup":"course-handsup off"} onClick={()=>{
+									if (this.props.switches.magic) {
+										this.$session.send_message(Const.DISABLE_MAGIC)
+									} else {
+										this.$session.send_message(Const.ENABLE_MAGIC)
+									}
 								}}></button>
 							</div>
 						):""}
@@ -789,6 +802,7 @@ const mapDispatchToProps = dispatch => ({
 	onStreamLeave	: (data) => dispatch(onStreamLeave(data)),
 	onHandsupSwitch : (status) => dispatch(onHandsupSwitch(status)),
 	onGiftSwitch    : (status) => dispatch(onGiftSwitch(status)),
+	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),

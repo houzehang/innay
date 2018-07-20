@@ -120,6 +120,11 @@ export const onHandsupSwitch = (status) => ({
 	status
 })
 
+export const onMagicSwitch = (status) => ({
+	type: types.MAGIC_SWITCH,
+	status
+})
+
 export const onGiftSwitch = (status) => ({
 	type: types.GIFT_SWITCH,
 	status

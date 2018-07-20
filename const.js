@@ -49,6 +49,8 @@ module.exports = {
 	SCENE_MOVE    : "scenemove",
 	START_COURSE  : "startcourse",
 	STOP_COURSE   : "stopcourse",
+	ENABLE_MAGIC  : "enablemagic",
+	DISABLE_MAGIC : "disablemagic",
 	UPDATE : {
 		AVAILABLE: "update available",
 		LASTEST  : "the lastest version",

@@ -76,7 +76,7 @@ class Session extends Eventer {
 
 
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="${prefix}/app?from=app" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
 		this.$webview = webview[0];
 	}
 

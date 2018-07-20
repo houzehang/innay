@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -21,7 +21,7 @@ const room = (state = {}, action) => {
 			...state,
 			info: action.data,
 			switches: {
-				gift: true
+				gift: true,
 			},
 			dancing: [],
 			status,
@@ -156,6 +156,13 @@ const room = (state = {}, action) => {
 		case GIFT_SWITCH:
 		switches = {...state.switches}
 		switches.gift = action.status
+		return {
+			...state,
+			switches
+		}
+		case MAGIC_SWITCH:
+		switches = {...state.switches}
+		switches.magic = action.status
 		return {
 			...state,
 			switches
