@@ -5,8 +5,9 @@ import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
 import path from 'path';
-const Const = require("../../const")
-const DEBUG = require("../../../env").DEBUG
+const Const 	= require("../../const")
+const DEBUG 	= require("../../../env").DEBUG
+const Storage 	= require("../Storage")
 import { 
 	onExitTester
 } from '../actions'
@@ -27,8 +28,8 @@ class Devices extends React.Component {
 		this.$client.enableLocalVideo(true);
 		this.$client.setVideoProfile(45);
 
-		let video_devices = this.$client.getVideoDevices()
-		let audio_devices = this.$client.getAudioRecordingDevices()
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices 	= this.$client.getAudioRecordingDevices()
 		let speaker_devices = this.$client.getAudioPlaybackDevices()
 
 		let currentVideoDevice 	 = this.$client.getCurrentVideoDevice(),
@@ -126,6 +127,7 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentVideoDevice : event.target.value, currentVideoName: name})
+						Storage.store("VIDEO_DEVICE",event.target.value)
 						this.$client.setVideoDevice(event.target.value);
 					}}>
 					{
@@ -171,6 +173,7 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentAudioDevice : event.target.value, currentAudioName: name})
+						Storage.store("AUDIO_DEVICE",event.target.value)
 						this.$client.setAudioRecordingDevice(event.target.value);
 					}}>
 					{
@@ -224,6 +227,7 @@ class Devices extends React.Component {
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
 						this.setState({currentSpeakerDevice : event.target.value, currentSpeakerName: name})
+						Storage.store("PLAYBACK_DEVICE",event.target.value)
 						this.$client.setAudioPlaybackDevice(event.target.value);
 					}}>
 					{

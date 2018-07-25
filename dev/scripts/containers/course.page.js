@@ -14,13 +14,15 @@ import {
 	onCourseTick,
 	confirm, alert,
 	onEnterTester,
-	onMagicSwitch
+	onMagicSwitch,
+	showLoading,hideLoading
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
 const Signalize	= require('../AgoraSignal')
 const Session   = require('../session')
 const Const   	= require('../../const')
+const Storage   = require('../Storage')
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
@@ -86,6 +88,7 @@ class Course extends React.Component {
 		$('.avatar-head').empty()
 		clearTimeout(this.$reload_timer)
 		$(window).off("resize")
+		this.props.hideLoading()
 	}
 
 	componentDidMount() {
@@ -361,6 +364,7 @@ class Course extends React.Component {
 			this.props.confirm({
 				content : "确定要临时退出房间吗？",
 				sure: ()=>{
+					this.props.showLoading("正在退出房间...")
 					this.leaveCourse()
 				}
 			})
@@ -368,6 +372,7 @@ class Course extends React.Component {
 			this.props.confirm({
 				content : "确定要结束本次课程吗？",
 				sure: ()=>{
+					this.props.showLoading("正在退出房间...")
 					// 发送关闭房间请求
 					net.closeRoom(this.props.room.channel_id).then((res)=>{
 						if (res.status) {
@@ -689,6 +694,13 @@ class Course extends React.Component {
 										this.$session.send_message(Const.OPEN_GIFT)
 									}
 								}}></button>
+								<button className={this.props.switches.magic?"course-magic":"course-magic off"} onClick={()=>{
+									if (this.props.switches.magic) {
+										this.$session.send_message(Const.DISABLE_MAGIC)
+									} else {
+										this.$session.send_message(Const.ENABLE_MAGIC)
+									}
+								}}></button>
 								<button className="course-clip" onClick={()=>{
 									this.__on_clipshare()
 								}}></button>
@@ -702,13 +714,6 @@ class Course extends React.Component {
 								<button className="course-nextpage" onClick={()=>{
 									this.props.onMagicSwitch(false)
 									this.$session.send_message("appnextpage")
-								}}></button>
-								<button className={this.props.switches.magic?"course-magic":"course-magic off"} onClick={()=>{
-									if (this.props.switches.magic) {
-										this.$session.send_message(Const.DISABLE_MAGIC)
-									} else {
-										this.$session.send_message(Const.ENABLE_MAGIC)
-									}
 								}}></button>
 							</div>
 						):""}
@@ -817,6 +822,8 @@ const mapDispatchToProps = dispatch => ({
 	confirm 		: (data) => dispatch(confirm(data)),
 	alert 	    	: (data) => dispatch(alert(data)),
 	onEnterTester 	: () => dispatch(onEnterTester()),
+	showLoading 	: (message) => dispatch(showLoading(message)),
+	hideLoading 	: () => dispatch(hideLoading()),
 })
   
 export default connect(

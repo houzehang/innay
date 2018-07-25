@@ -1,6 +1,8 @@
 const Const 	= require("../const")
 const Q 		= require("q")
 const Eventer   = require('./eventer')
+const Storage 	= require('./Storage')
+
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -33,7 +35,50 @@ class Room extends Eventer {
 		} else {
 			this.$client.enableLocalVideo(false);
 		}
+		this.__resume_devices()
 		this.__init()
+	}
+
+	__is_device_in(devices, id) {
+		if (!id) return false
+		let found
+		for(let i=0,len=devices.length;i<len;i++) {
+			let item = devices[i]
+			if (item.deviceid == id) {
+				found = true
+				break
+			}
+		}
+		return found
+	}
+
+	__resume_devices() {
+		let videoDevice 	= Storage.get("VIDEO_DEVICE"),
+			audioDevice 	= Storage.get("AUDIO_DEVICE"),
+			playbackDevice  = Storage.get("PLAYBACK_DEVICE")
+		
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices 	= this.$client.getAudioRecordingDevices()
+		let playback_devices= this.$client.getAudioPlaybackDevices()
+		if (!this.__is_device_in(video_devices,videoDevice)) {
+			videoDevice = null
+		}
+		if (!this.__is_device_in(audio_devices,audioDevice)) {
+			audioDevice = null
+		}
+		if (!this.__is_device_in(playback_devices,playbackDevice)) {
+			playbackDevice = null
+		}
+		console.log("videoDevice, audioDevice, playbackDevice",videoDevice, audioDevice, playbackDevice)
+		if (videoDevice) {
+			this.$client.setVideoDevice(videoDevice);
+		}
+		if (audioDevice) {
+			this.$client.setAudioRecordingDevice(audioDevice);
+		}
+		if (playbackDevice) {
+			this.$client.setAudioPlaybackDevice(playbackDevice);
+		}
 	}
 
 	get rtc() {

@@ -20,7 +20,7 @@ export const showLoading = (message) => dispatch => {
 	loading.show(message)
 }
 
-export const hideLoading = (message) => dispatch => {
+export const hideLoading = () => dispatch => {
 	loading.hide()
 }
 
