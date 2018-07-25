@@ -4,7 +4,7 @@ require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
-import path from 'path';
+const path		= $require("path")
 const Const 	= require("../../const")
 const DEBUG 	= require("../../../env").DEBUG
 const Storage 	= require("../Storage")
@@ -212,9 +212,9 @@ class Devices extends React.Component {
 		setTimeout(()=>{
 			let filepath;
 			if (DEBUG) {
-				filepath = path.join(process.env.PATHES.__dirname,'libs','AgoraSDK','music.mp3');
+				filepath = path.join(window.ENV_PATHES.__dirname,'libs','AgoraSDK','music.mp3');
 			} else {
-				filepath = path.join(process.env.PATHES.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
+				filepath = path.join(window.ENV_PATHES.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
 			}
 			this.$client.startAudioPlaybackDeviceTest(filepath);
 		},0)

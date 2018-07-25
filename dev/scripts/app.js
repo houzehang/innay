@@ -24,7 +24,7 @@ import thunk from 'redux-thunk'
 const {ipcRenderer} = $require('electron');
 ipcRenderer.on('configure', (event, data)=>{
 	console.log("configure",data)
-	process.env.PATHES = data
+	window.ENV_PATHES = data
 })
 
 const middleware = [ thunk ];

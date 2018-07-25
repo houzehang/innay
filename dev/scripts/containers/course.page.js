@@ -521,7 +521,6 @@ class Course extends React.Component {
 	}
 
 	setSpeakerDevices(devices) {
-		console.log("devices",devices)
 		this.$speaker_devices = devices
 	}
 
@@ -530,6 +529,7 @@ class Course extends React.Component {
 			title: "设备检测",
 			content : "即将进行设备检测，是否暂时退出教室？",
 			sure: ()=>{
+				this.props.showLoading("正在退出房间...")
 				this.$waiting_to_tester = true
 				this.leaveCourse()
 			}

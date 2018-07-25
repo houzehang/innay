@@ -18,7 +18,9 @@ class Loading {
 	}
 
 	hide() {
-		this.$dom.fadeOut()
+		if (this.$dom) {
+			this.$dom.fadeOut()
+		}
 	}
 }
 
