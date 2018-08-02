@@ -156,10 +156,13 @@ class Room extends Eventer {
 			getId: ()=>id, 
 			play: (dom)=>{
 				dom = $(`#${dom}`)[0]
-				if (id == this.inst.props.account.id) {
-					this.$client.setupLocalVideo(dom)
-				} else {
-					this.$client.subscribe(id, dom)
+				if (dom) {
+					$(dom).empty()
+					if (id == this.inst.props.account.id) {
+						this.$client.setupLocalVideo(dom)
+					} else {
+						this.$client.subscribe(id, dom)
+					}
 				}
 			} 
 		}
