@@ -37,6 +37,7 @@ class Room extends Eventer {
 		}
 		this.__resume_devices()
 		this.__init()
+		console.log("Agora Version",this.$client.getVersion())
 	}
 
 	__is_device_in(devices, id) {

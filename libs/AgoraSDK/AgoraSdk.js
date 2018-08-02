@@ -1,5 +1,3 @@
-const EventEmitter = $require('events');
-
 class AgoraRtcEngine extends EventEmitter {
   constructor() {
     super();
@@ -9,138 +7,161 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   initEventHandler() {
-    const self = this;
-    this.rtcengine.onEvent('joinchannel', (channel, uid, elapsed) => {
+    var self = this;
+    this.rtcengine.onEvent('joinchannel', function(channel, uid, elapsed) {
       self.emit('joinedchannel', channel, uid, elapsed);
     });
 
-    this.rtcengine.onEvent('rejoinchannel', (channel, uid, elapsed) => {
+    this.rtcengine.onEvent('rejoinchannel', function(channel, uid, elapsed) {
       self.emit('rejoinedchannel', channel, uid, elapsed);
     });
 
-    this.rtcengine.onEvent('warning', (warn, msg) => {
+    this.rtcengine.onEvent('warning', function(warn, msg) {
       self.emit('warning', warn, msg);
     });
 
-    this.rtcengine.onEvent('error', (err, msg) => {
+    this.rtcengine.onEvent('error', function(err, msg) {
       self.emit('error', err, msg);
     });
 
-    this.rtcengine.onEvent('audioquality', (uid, quality, delay, lost) => {
+    this.rtcengine.onEvent('audioquality', function(uid, quality, delay, lost) {
       self.emit('audioquality', uid, quality, delay, lost);
     });
 
-    this.rtcengine.onEvent('audiovolumeindication', (uid, volume, speakerNumber, totalVolume) => {
+    this.rtcengine.onEvent('audiovolumeindication', function(
+      uid,
+      volume,
+      speakerNumber,
+      totalVolume
+    ) {
       self.emit('audiovolumeindication', uid, volume, speakerNumber, totalVolume);
     });
 
-    this.rtcengine.onEvent('leavechannel', () => {
+    this.rtcengine.onEvent('leavechannel', function() {
       self.emit('leavechannel');
     });
 
     /**
-         * stats Properties:
-         *      unsigned int duration;
-       *        unsigned int txBytes;
-        *       unsigned int rxBytes;
-       *        unsigned short txKBitRate;
-       *        unsigned short rxKBitRate;
-       *        unsigned short rxAudioKBitRate;
-       *        unsigned short txAudioKBitRate;
-       *        unsigned short rxVideoKBitRate;
-       *        unsigned short txVideoKBitRate;
-        *       unsigned int userCount;
-       *        double cpuAppUsage;
-       *        double cpuTotalUsage;
-         */
-    this.rtcengine.onEvent('rtcstats', (stats) => {
+     * Stats Properties:
+     *      unsigned int duration;
+     *        unsigned int txBytes;
+     *       unsigned int rxBytes;
+     *        unsigned short txKBitRate;
+     *        unsigned short rxKBitRate;
+     *        unsigned short rxAudioKBitRate;
+     *        unsigned short txAudioKBitRate;
+     *        unsigned short rxVideoKBitRate;
+     *        unsigned short txVideoKBitRate;
+     *       unsigned int userCount;
+     *        double cpuAppUsage;
+     *        double cpuTotalUsage;
+     */
+    this.rtcengine.onEvent('rtcstats', function(stats) {
       self.emit('rtcstats', stats);
     });
 
     /**
-         *
-         *        int sentBitrate;
-         *        int sentFrameRate;
-         */
-    this.rtcengine.onEvent('localvideostats', (stats) => {
+     *
+     *        Int sentBitrate;
+     *        int sentFrameRate;
+     */
+    this.rtcengine.onEvent('localvideostats', function(stats) {
       self.emit('localvideostats', stats);
     });
 
     /**
-         *
-         *        uid_t uid;
-         *        int delay;  // obsolete
-	     *        int width;
-	     *        int height;
-	     *        int receivedBitrate;
-	     *        int receivedFrameRate;
-         *         REMOTE_VIDEO_STREAM_TYPE rxStreamType;
-         *
-         */
-    this.rtcengine.onEvent('remotevideostats', (stats) => {
+     *
+     *        Uid_t uid;
+     *        int delay;  // obsolete
+     *        int width;
+     *        int height;
+     *        int receivedBitrate;
+     *        int receivedFrameRate;
+     *         REMOTE_VIDEO_STREAM_TYPE rxStreamType;
+     *
+     */
+    this.rtcengine.onEvent('remotevideostats', function(stats) {
       self.emit('remotevideostats', stats);
     });
 
-    this.rtcengine.onEvent('audiodevicestatechanged', (deviceId, deviceType, deviceState) => {
+    this.rtcengine.onEvent('audiodevicestatechanged', function(
+      deviceId,
+      deviceType,
+      deviceState
+    ) {
       self.emit('audiodevicestatechanged', deviceId, deviceType, deviceState);
     });
 
-    this.rtcengine.onEvent('audiomixingfinished', () => {
+    this.rtcengine.onEvent('audiomixingfinished', function() {
       self.emit('audiomixingfinished');
     });
 
-    this.rtcengine.onEvent('apicallexecuted', (api, err) => {
+    this.rtcengine.onEvent('apicallexecuted', function(api, err) {
       self.emit('apicallexecuted', api, err);
     });
 
-    this.rtcengine.onEvent('remoteaudiomixingbegin', () => {
+    this.rtcengine.onEvent('remoteaudiomixingbegin', function() {
       self.emit('remoteaudiomixingbegin');
     });
 
-    this.rtcengine.onEvent('remoteaudiomixingend', () => {
+    this.rtcengine.onEvent('remoteaudiomixingend', function() {
       self.emit('remoteaudiomixingend');
     });
 
-    this.rtcengine.onEvent('audioeffectfinished', (soundId) => {
+    this.rtcengine.onEvent('audioeffectfinished', function(soundId) {
       self.emit('audioeffectfinished', soundId);
     });
 
-    this.rtcengine.onEvent('videodevicestatechanged', (deviceId, deviceType, deviceState) => {
+    this.rtcengine.onEvent('videodevicestatechanged', function(
+      deviceId,
+      deviceType,
+      deviceState
+    ) {
       self.emit('videodevicestatechanged', deviceId, deviceType, deviceState);
     });
 
-    this.rtcengine.onEvent('networkquality', (uid, txquality, rxquality) => {
+    this.rtcengine.onEvent('networkquality', function(uid, txquality, rxquality) {
       self.emit('networkquality', uid, txquality, rxquality);
     });
 
-    this.rtcengine.onEvent('lastmilequality', (quality) => {
+    this.rtcengine.onEvent('lastmilequality', function(quality) {
       self.emit('lastmilequality', quality);
     });
 
-    this.rtcengine.onEvent('firstlocalvideoframe', (width, height, elapsed) => {
+    this.rtcengine.onEvent('firstlocalvideoframe', function(width, height, elapsed) {
       self.emit('firstlocalvideoframe', width, height, elapsed);
     });
 
-    this.rtcengine.onEvent('firstremotevideodecoded', (uid, width, height, elapsed) => {
-      // self.emit("addstream", uid, width, height, elapsed);
+    this.rtcengine.onEvent('firstremotevideodecoded', function(
+      uid,
+      width,
+      height,
+      elapsed
+    ) {
+      // Self.emit("addstream", uid, width, height, elapsed);
       self.emit('addstream', uid, elapsed);
     });
 
-    this.rtcengine.onEvent('videosizechanged', (uid, width, height, rotation) => {
+    this.rtcengine.onEvent('videosizechanged', function(uid, width, height, rotation) {
       self.emit('videosizechanged', uid, width, height, rotation);
     });
 
-    this.rtcengine.onEvent('firstremotevideoframe', (uid, width, height, elapsed) => {
+    this.rtcengine.onEvent('firstremotevideoframe', function(
+      uid,
+      width,
+      height,
+      elapsed
+    ) {
       self.emit('firstremotevideoframe', uid, width, height, elapsed);
     });
 
-    this.rtcengine.onEvent('userjoined', (uid, elapsed) => {
-      console.log(`user : ${uid} joined.`);
-      // self.emit("userjoined", uid, elapsed);
+    this.rtcengine.onEvent('userjoined', function(uid, elapsed) {
+      console.log('user : ' + uid + ' joined.');
+      // Self.emit("userjoined", uid, elapsed);
       self.emit('userjoined', uid, elapsed);
     });
 
-    this.rtcengine.onEvent('useroffline', (uid, reason) => {
+    this.rtcengine.onEvent('useroffline', function(uid, reason) {
       if (!self.streams) {
         self.streams = {};
         console.log('Warning!!!!!!, streams is undefined.');
@@ -151,112 +172,124 @@ class AgoraRtcEngine extends EventEmitter {
       self.emit('removestream', uid, reason);
     });
 
-    this.rtcengine.onEvent('usermuteaudio', (uid, muted) => {
+    this.rtcengine.onEvent('usermuteaudio', function(uid, muted) {
       self.emit('usermuteaudio', uid, muted);
     });
 
-    this.rtcengine.onEvent('usermutevideo', (uid, muted) => {
+    this.rtcengine.onEvent('usermutevideo', function(uid, muted) {
       self.emit('usermutevideo', uid, muted);
     });
 
-    this.rtcengine.onEvent('userenablevideo', (uid, enabled) => {
+    this.rtcengine.onEvent('userenablevideo', function(uid, enabled) {
       self.emit('userenablevideo', uid, enabled);
     });
 
-    this.rtcengine.onEvent('userenablelocalvideo', (uid, enabled) => {
+    this.rtcengine.onEvent('userenablelocalvideo', function(uid, enabled) {
       self.emit('userenablelocalvideo', uid, enabled);
     });
 
-    this.rtcengine.onEvent('cameraready', () => {
+    this.rtcengine.onEvent('cameraready', function() {
       self.emit('cameraready');
     });
 
-    this.rtcengine.onEvent('videostopped', () => {
+    this.rtcengine.onEvent('videostopped', function() {
       self.emit('videostopped');
     });
 
-    this.rtcengine.onEvent('connectionlost', () => {
+    this.rtcengine.onEvent('connectionlost', function() {
       self.emit('connectionlost');
     });
 
-    this.rtcengine.onEvent('connectioninterrupted', () => {
+    this.rtcengine.onEvent('connectioninterrupted', function() {
       self.emit('connectioninterrupted');
     });
 
-    this.rtcengine.onEvent('connectionbanned', () => {
+    this.rtcengine.onEvent('connectionbanned', function() {
       self.emit('connectionbanned');
     });
 
-    this.rtcengine.onEvent('refreshrecordingservicestatus', (status) => {
+    this.rtcengine.onEvent('refreshrecordingservicestatus', function(status) {
       self.emit('refreshrecordingservicestatus', status);
     });
 
-    this.rtcengine.onEvent('streammessage', (uid, streamId, msg, len) => {
+    this.rtcengine.onEvent('streammessage', function(uid, streamId, msg, len) {
       self.emit('streammessage', uid, streamId, msg, len);
     });
 
-    this.rtcengine.onEvent('streammessageerror', (uid, streamid, code, missed, cached) => {
+    this.rtcengine.onEvent('streammessageerror', function(
+      uid,
+      streamId,
+      code,
+      missed,
+      cached
+    ) {
       self.emit('streammessageerror', uid, streamId, code, missed, cached);
     });
 
-    this.rtcengine.onEvent('mediaenginestartcallsuccess', () => {
+    this.rtcengine.onEvent('mediaenginestartcallsuccess', function() {
       self.emit('mediaenginestartcallsuccess');
     });
 
-    this.rtcengine.onEvent('requestchannelkey', () => {
+    this.rtcengine.onEvent('requestchannelkey', function() {
       self.emit('requestchannelkey');
     });
 
-    this.rtcengine.onEvent('fristlocalaudioframe', (elapsed) => {
+    this.rtcengine.onEvent('fristlocalaudioframe', function(elapsed) {
       self.emit('firstlocalaudioframe', elapsed);
     });
 
-    this.rtcengine.onEvent('firstremoteaudioframe', (uid, elapsed) => {
+    this.rtcengine.onEvent('firstremoteaudioframe', function(uid, elapsed) {
       self.emit('firstremoteaudioframe', uid, elapsed);
     });
 
-    this.rtcengine.onEvent('activespeaker', (uid) => {
+    this.rtcengine.onEvent('activespeaker', function(uid) {
       self.emit('activespeaker', uid);
     });
 
-    this.rtcengine.onEvent('clientrolechanged', (oldRole, newRole) => {
+    this.rtcengine.onEvent('clientrolechanged', function(oldRole, newRole) {
       self.emit('clientrolechanged', oldRole, newRole);
     });
 
-    this.rtcengine.onEvent('audiodevicevolumechanged', (deviceType, volume, muted) => {
+    this.rtcengine.onEvent('audiodevicevolumechanged', function(
+      deviceType,
+      volume,
+      muted
+    ) {
       self.emit('audiodevicevolumechanged', deviceType, volume, muted);
     });
 
-    this.rtcengine.onEvent('videosourcejoinsuccess', (uid) => {
+    this.rtcengine.onEvent('videosourcejoinsuccess', function(uid) {
       self.emit('videosourcejoinedsuccess', uid);
     });
 
-    this.rtcengine.onEvent('videosourcerequestnewtoken', () => {
+    this.rtcengine.onEvent('videosourcerequestnewtoken', function() {
       self.emit('videosourcerequestnewtoken');
     });
 
-    this.rtcengine.onEvent('videosourceleavechannel', () => {
+    this.rtcengine.onEvent('videosourceleavechannel', function() {
       self.emit('videosourceleavechannel');
     });
-    this.rtcengine.registerDeliverFrame((infos) => {
-      const len = infos.length;
-      // console.log("len : " + len);
-      for (let i = 0; i < len; i++) {
-        const info = infos[i];
-        const type = info.type;
-        const uid = info.uid;
-        const header = info.header;
-        const ydata = info.ydata;
-        const udata = info.udata;
-        const vdata = info.vdata;
-        // console.log("uid : " + uid);
+    this.rtcengine.registerDeliverFrame(function(infos) {
+      var len = infos.length;
+      // Console.log("len : " + len);
+      for (var i = 0; i < len; i++) {
+        var info = infos[i];
+        var type = info.type;
+        var uid = info.uid;
+        var header = info.header;
+        var ydata = info.ydata;
+        var udata = info.udata;
+        var vdata = info.vdata;
+        // Console.log("uid : " + uid);
         if (!header || !ydata || !udata || !vdata) {
-          console.log(`Invalid data param ： ${header} ${ydata} ${udata} ${vdata}`);
+          console.log(
+            'Invalid data param ： ' + header + ' ' + ydata + ' ' + udata + ' ' + vdata
+          );
           continue;
         }
-        let render = null;
+        var render = null;
         /*
-                * type 0 is local video
+                * Type 0 is local video
                 * type 1 is remote video
                 * type 2 is device test video
                 * type 3 is video source video
@@ -273,7 +306,7 @@ class AgoraRtcEngine extends EventEmitter {
           render = self.streams.videosource;
         }
         if (!render) {
-          console.log(`Can't find render for uid : ${uid}`);
+          console.log("Can't find render for uid : " + uid);
           continue;
         }
         self.drawImage(render, header, ydata, udata, vdata);
@@ -282,88 +315,123 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   drawImage(render, header, yplanedata, uplanedata, vplanedata) {
-    if (header.byteLength != 20) { //
-      console.error(`invalid image header ${header.byteLength}`);
+    if (header.byteLength != 20) {
+      //
+      console.error('invalid image header ' + header.byteLength);
       return;
     }
     if (yplanedata.byteLength === 20) {
-      console.error(`invalid image yplane ${yplane.byteLength}`);
+      console.error('invalid image yplane ' + yplane.byteLength);
       return;
     }
     if (uplanedata.byteLength === 20) {
-      console.error(`invalid image uplanedata ${uplanedata.byteLength}`);
+      console.error('invalid image uplanedata ' + uplanedata.byteLength);
       return;
     }
-    if (yplanedata.byteLength != uplanedata.byteLength * 4
-      || uplanedata.byteLength != vplanedata.byteLength
+    if (
+      yplanedata.byteLength != uplanedata.byteLength * 4 ||
+      uplanedata.byteLength != vplanedata.byteLength
     ) {
-      console.error(`invalid image header ${yplanedata.byteLength} ${uplanedata.byteLength} ${vplanedata.byteLength}`);
+      console.error(
+        'invalid image header ' +
+          yplanedata.byteLength +
+          ' ' +
+          uplanedata.byteLength +
+          ' ' +
+          vplanedata.byteLength
+      );
       return;
     }
-    const headerLength = 20;
-    const dv = new DataView(header);
-    const format = dv.getUint8(0);
-    const mirror = dv.getUint8(1);
-    const width = dv.getUint16(2);
-    const height = dv.getUint16(4);
-    const left = dv.getUint16(6);
-    const top = dv.getUint16(8);
-    const right = dv.getUint16(10);
-    const bottom = dv.getUint16(12);
-    const rotation = dv.getUint16(14);
-    const ts = dv.getUint32(16);
-    const xWidth = width + left + right;
-    const xHeight = height + top + bottom;
-    const yLength = xWidth * xHeight;
-    const yBegin = headerLength;
-    const yEnd = yBegin + yLength;
-    const uLength = yLength / 4;
-    const uBegin = yEnd;
-    const uEnd = uBegin + uLength;
-    const vLength = yLength / 4;
-    const vBegin = uEnd;
-    const vEnd = vBegin + vLength;
+    var headerLength = 20;
+    var dv = new DataView(header);
+    var format = dv.getUint8(0);
+    var mirror = dv.getUint8(1);
+    var width = dv.getUint16(2);
+    var height = dv.getUint16(4);
+    var left = dv.getUint16(6);
+    var top = dv.getUint16(8);
+    var right = dv.getUint16(10);
+    var bottom = dv.getUint16(12);
+    var rotation = dv.getUint16(14);
+    var ts = dv.getUint32(16);
+    var xWidth = width + left + right;
+    var xHeight = height + top + bottom;
+    var yLength = xWidth * xHeight;
+    var yBegin = headerLength;
+    var yEnd = yBegin + yLength;
+    var uLength = yLength / 4;
+    var uBegin = yEnd;
+    var uEnd = uBegin + uLength;
+    var vLength = yLength / 4;
+    var vBegin = uEnd;
+    var vEnd = vBegin + vLength;
     render.renderImage({
-      mirror,
-      width,
-      height,
-      left,
-      top,
-      right,
-      bottom,
-      rotation,
+      mirror: mirror,
+      width: width,
+      height: height,
+      left: left,
+      top: top,
+      right: right,
+      bottom: bottom,
+      rotation: rotation,
       yplane: new Uint8Array(yplanedata),
       uplane: new Uint8Array(uplanedata),
       vplane: new Uint8Array(vplanedata)
     });
-    const now32 = (Date.now() & 0xFFFFFFFF) >>> 0;
-    const latency = now32 - ts;
+    var now32 = (Date.now() & 0xffffffff) >>> 0;
+    var latency = now32 - ts;
   }
 
   initRender(view) {
-    const render = new AgoraRender();
-    render.start(view, () => {
+    var render = new AgoraRender();
+    render.start(view, function() {
       console.log('render start fail.');
     });
     return render;
   }
 
-  initialize(appid, onSuccess, onFailed) {
+  /**
+   *
+   * @description initialize agora real-time-communicating engine with appid
+   * @param {String} appid
+   */
+  initialize(appid) {
     return this.rtcengine.initialize(appid);
   }
 
+  /**
+   *
+   * @description return current version and build of sdk
+   */
   getVersion() {
     return this.rtcengine.getVersion();
   }
 
+  /**
+   *
+   * @description Get error description of the given errorCode
+   * @param {Number} errorCode
+   */
   getErrorDescription(errorCode) {
     return this.rtcengine.getErrorDescription();
   }
 
-  joinChannel(key, name, chan_info, uid) {
-    return this.rtcengine.joinChannel(key, name, chan_info, uid);
+  /**
+   *
+   * @description Join channel with token, channel, channel_info and uid
+   * @requires channel
+   * @param {String} token
+   * @param {String} channel
+   * @param {String} chan_info
+   * @param {Number} uid
+   */
+  joinChannel(token, channel, chan_info, uid) {
+    return this.rtcengine.joinChannel(token, channel, chan_info, uid);
   }
 
+  /**
+   * @description Leave channel
+   */
   leaveChannel() {
     return this.rtcengine.leaveChannel();
   }
@@ -407,7 +475,7 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   setupViewContentMode(uid, mode) {
-    const render = this.streams[uid];
+    let render = this.streams[uid];
     if (!render) {
       return false;
     }
@@ -420,10 +488,23 @@ class AgoraRtcEngine extends EventEmitter {
     return this.rtcengine.renewToken(newtoken);
   }
 
+  /**
+   * @description Set channel profile(before join channel) since sdk will do optimization according to scenario.
+   * @description 0 (default) for communication, 1 for live broadcasting, 2 for in-game
+   * @param {Number} profile
+   * @returns 0 for success, <0 for failure
+   */
   setChannelProfile(profile) {
     return this.rtcengine.setChannelProfile(profile);
   }
 
+  /**
+   *
+   * @description In live broadcasting mode, set client role, 1 for anchor, 2 for audience
+   * @param {Number} role
+   * @param {*} permissionKey
+   * @returns 0 for success, <0 for failure
+   */
   setClientRole(role, permissionKey) {
     return this.rtcengine.setClientRole(role, permissionKey);
   }
@@ -444,10 +525,18 @@ class AgoraRtcEngine extends EventEmitter {
     return this.rtcengine.disableLastmileTest();
   }
 
+  /**
+   * @description Use before join channel to enable video communication, or you will only join with audio-enabled
+   * @returns 0 for success, <0 for failure
+   */
   enableVideo() {
     return this.rtcengine.enableVideo();
   }
 
+  /**
+   * @description Use to disable video and use pure audio communication
+   * @returns 0 for success, <0 for failure
+   */
   disableVideo() {
     return this.rtcengine.disableVideo();
   }
@@ -460,7 +549,12 @@ class AgoraRtcEngine extends EventEmitter {
     return this.rtcengine.stopPreview();
   }
 
-  setVideoProfile(profile, swapWidthAndHeight) {
+  /**
+   * 
+   * @param {number} profile - enumeration values represent video profile
+   * @param {boolean} [swapWidthAndHeight = false] - Whether to swap width and height
+   */
+  setVideoProfile(profile, swapWidthAndHeight=false) {
     return this.rtcengine.setVideoProfile(profile, swapWidthAndHeight);
   }
 
@@ -472,6 +566,12 @@ class AgoraRtcEngine extends EventEmitter {
     return this.rtcengine.disableAudio();
   }
 
+  /**
+   * @description Set audio profile (before join channel) depending on your scenario
+   * @param {Number} profile
+   * @param {Number} scenario
+   * @returns 0 for success, <0 for failure
+   */
   setAudioProfile(profile, scenario) {
     return this.rtcengine.setAudioProfile(profile, scenario);
   }
@@ -641,11 +741,21 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   setRecordingAudioFrameParameters(sampleRate, channel, mode, samplesPerCall) {
-    return this.rtcengine.setRecordingAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
+    return this.rtcengine.setRecordingAudioFrameParameters(
+      sampleRate,
+      channel,
+      mode,
+      samplesPerCall
+    );
   }
 
   setPlaybackAudioFrameParameters(sampleRate, channel, mode, sampelsPerCall) {
-    return this.rtcengine.setPlaybackAudioFrameParameters(sampleRate, channel, mode, samplesPerCall);
+    return this.rtcengine.setPlaybackAudioFrameParameters(
+      sampleRate,
+      channel,
+      mode,
+      samplesPerCall
+    );
   }
 
   setMixedAudioFrameParameters(sampleRate, samplesPerCall) {
@@ -673,94 +783,94 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   /**
-     *
-     * @param {*} windowId
-     * @param {*} captureFreq
-     * @param {*} rect
-     *            right > left, top > bottom
-     * @param {*} bitrate
-     */
+   *
+   * @param {*} windowId
+   * @param {*} captureFreq
+   * @param {*} rect
+   *            right > left, top > bottom
+   * @param {*} bitrate
+   */
   startScreenCapture(windowId, captureFreq, rect, bitrate) {
     return this.rtcengine.startScreenCapture(windowId, captureFreq, rect, bitrate);
   }
 
   /**
-     *
-     * @param {*} publisherConfiguration
-     *    propertys :
-     *      width : int
-     *      height : int
-     *      framerate : int
-     *      bitrate : int
-     *      defaultlayout : int
-     *      lifecycle : int
-     *      owner : boolean
-     *      injectstreamwidth : int
-     *      injectstreamheight : int
-     *      injectstreamurl: string
-     *      publishurl : string
-     *      rawstreamurl :string
-     *      extrainfo : string
-     *
-     */
+   *
+   * @param {*} publisherConfiguration
+   *    propertys :
+   *      width : int
+   *      height : int
+   *      framerate : int
+   *      bitrate : int
+   *      defaultlayout : int
+   *      lifecycle : int
+   *      owner : boolean
+   *      injectstreamwidth : int
+   *      injectstreamheight : int
+   *      injectstreamurl: string
+   *      publishurl : string
+   *      rawstreamurl :string
+   *      extrainfo : string
+   *
+   */
   configPublisher(publisherConfiguration) {
     return this.rtcengine.configPublisher(publisherConfiguration);
   }
 
   /**
-     *
-     * @param {*} liveTranscoding
-     *    Properties:
-     *      width : int
-     *      height : int
-     *      videobitrate : int
-     *      videoframerate : int
-     *      lowlatency : boolean
-     *      videogop : int
-     *      videocodecprofile : int
-     *      backgroundcolor : uint
-     *      usercount : uint
-     *      audiosamplerate : int
-     *      audiobitrate : int
-     *      audiochannels : int
-     *      transcodingusers : Array of object type TranscodingUser
-     *
-     *   Properties of TranscodingUser
-     *      uid : uint
-     *      x : int
-     *      y : int
-     *      width : int
-     *      height : int
-     *      zorder : int
-     *      alpha : double
-     *      audiochannel : int
-     */
+   *
+   * @param {*} liveTranscoding
+   *    Properties:
+   *      width : int
+   *      height : int
+   *      videobitrate : int
+   *      videoframerate : int
+   *      lowlatency : boolean
+   *      videogop : int
+   *      videocodecprofile : int
+   *      backgroundcolor : uint
+   *      usercount : uint
+   *      audiosamplerate : int
+   *      audiobitrate : int
+   *      audiochannels : int
+   *      transcodingusers : Array of object type TranscodingUser
+   *
+   *   Properties of TranscodingUser
+   *      uid : uint
+   *      x : int
+   *      y : int
+   *      width : int
+   *      height : int
+   *      zorder : int
+   *      alpha : double
+   *      audiochannel : int
+   */
   setLiveTranscoding(liveTranscoding) {
     return this.rtcengine.setLiveTranscoding(liveTranscoding);
   }
 
   /**
-     *
-     * @param {*} layout
-     *    Properties:
-     *      canvaswidth : int
-     *      canvasheight : int
-     *      backgroundcolor : string
-     *      regioncount : int
-     *      appdata : string
-     *      appdatalength : int
-     *      regions : Array of object type Region
-     *
-     *   Properties of Region
-     *      uid : uint
-     *      x : double
-     *      y : double
-     *      width : double
-     *      height : double
-     *      zorder : int
-     *      alpha : double
-     *      rendermode : int
-     */
+   *
+   * @param {*} layout
+   *    Properties:
+   *      canvaswidth : int
+   *      canvasheight : int
+   *      backgroundcolor : string
+   *      regioncount : int
+   *      appdata : string
+   *      appdatalength : int
+   *      regions : Array of object type Region
+   *
+   *   Properties of Region
+   *      uid : uint
+   *      x : double
+   *      y : double
+   *      width : double
+   *      height : double
+   *      zorder : int
+   *      alpha : double
+   *      rendermode : int
+   */
   setVideoCompositingLayout(layout) {
     return this.rtcengine.setVideoCompositingLayout(layout);
   }
@@ -774,18 +884,18 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   /**
-     *
-     * @param {*} injectStreamConfig
-     *   properties :
-     *      width : int
-     *      height : int
-     *      videogop : int
-     *      videoframerate : int
-     *      videobitrate : int
-     *      audiosamplerate : int
-     *      audiobitrate : int
-     *      audiochannels : int
-     */
+   *
+   * @param {*} injectStreamConfig
+   *   properties :
+   *      width : int
+   *      height : int
+   *      videogop : int
+   *      videoframerate : int
+   *      videobitrate : int
+   *      audiosamplerate : int
+   *      audiobitrate : int
+   *      audiochannels : int
+   */
   addInjectStreamUrl(injectStreamConfig) {
     return this.rtcengine.addInjectStreamUrl(injectStreamConfig);
   }
@@ -870,7 +980,7 @@ class AgoraRtcEngine extends EventEmitter {
     return this.rtcengine.setLocalVideoMirrorMode(mirrortype);
   }
 
-  // sendPublishingRequest(uid) {
+  // SendPublishingRequest(uid) {
   //     return this.rtcengine.sendPublishingRequest(uid);
   // }
 
@@ -892,6 +1002,14 @@ class AgoraRtcEngine extends EventEmitter {
 
   videoSourceInitialize(appid) {
     return this.rtcengine.videoSourceInitialize(appid);
+  }
+
+  /**
+   * @description Set it to true to enable web interoperability
+   * @param {Boolean} bool 
+   */
+  videoSourceEnableWebSdkInteroperability(bool) {
+    return this.rtcengine.videoSourceEnableWebSdkInteroperability(bool)
   }
 
   videoSourceJoin(token, cname, chanInfo, uid) {
@@ -1035,71 +1153,89 @@ class AgoraRtcEngine extends EventEmitter {
   }
 
   /*------------------------------------------------
-  |   v2.2.0 apis
-  \*----------------------------------------------*/
+    |   v2.2.0 apis
+    \*----------------------------------------------*/
   getEffectsVolume() {
     return this.rtcengine.getEffectsVolume();
   }
+
   /**
-   * @param {int} volume - [0.0, 100.0] 
+   * @param {int} volume - [0.0, 100.0]
    */
   setEffectsVolume(volume) {
     return this.rtcengine.setEffectsVolume(volume);
   }
+
   /**
-   * @param {int} soundId 
+   * @param {int} soundId
    * @param {int} volume - [0.0, 100.0]
    */
   setVolumeOfEffect(soundId, volume) {
     return this.setVolumeOfEffect(soundId, volume);
   }
+
   /**
-   * 
-   * @param {int} soundId 
-   * @param {string} filePath 
+   *
+   * @param {int} soundId
+   * @param {String} filePath
    * @param {int} loopcount - 0: once, 1: twice, -1: infinite
    * @param {double} pitch - [0.5, 2]
    * @param {double} pan - [-1, 1]
    * @param {int} gain - [0, 100]
-   * @param {boolean} publish 
+   * @param {boolean} publish
    */
   playEffect(soundId, filePath, loopcount, pitch, pan, gain, publish) {
-    return this.rtcengine.playEffect(soundId, filePath, loopcount, pitch, pan, gain, publish);
+    return this.rtcengine.playEffect(
+      soundId,
+      filePath,
+      loopcount,
+      pitch,
+      pan,
+      gain,
+      publish
+    );
   }
+
   /**
-   * 
-   * @param {int} soundId 
+   *
+   * @param {int} soundId
    */
   stopEffect(soundId) {
     return this.rtcengine.stopEffect(soundId);
   }
+
   /**
-   * 
-   * @param {int} soundId 
-   * @param {string} filePath 
+   *
+   * @param {int} soundId
+   * @param {String} filePath
    */
   preloadEffect(soundId, filePath) {
     return this.rtcengine.preloadEffect(soundId, filePath);
   }
+
   /**
-   * 
-   * @param {int} soundId 
+   *
+   * @param {int} soundId
    */
   unloadEffect(soundId) {
     return this.rtcengine.unloadEffect(soundId);
   }
+
   pauseEffect(soundId) {
     return this.rtcengine.pauseEffect(soundId);
   }
+
   pauseAllEffects() {
     return this.rtcengine.pauseAllEffects();
   }
+
   resumeEffect(soundId) {
     return this.rtcengine.resumeEffect(soundId);
   }
+
   resumeAllEffects() {
     return this.rtcengine.resumeAllEffects();
   }
-};
+}
 
 module.exports = AgoraRtcEngine;

@@ -8,9 +8,9 @@ SERVER=root@59.110.14.106
 DIR=/usr/share/nginx/html/muwen
 VERSION=$1
 
-scp build/*.json ${SERVER}:${DIR}
-scp build/*.yml  ${SERVER}:${DIR}
 scp build/*${VERSION}.exe  ${SERVER}:${DIR}
 scp build/*${VERSION}*.zip  ${SERVER}:${DIR}
+scp build/*.yml  ${SERVER}:${DIR}
+scp build/*.json ${SERVER}:${DIR}
 
 echo "deploy done."

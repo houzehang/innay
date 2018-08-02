@@ -120,8 +120,17 @@ function createMainWindow() {
     $main.on('closed', function (event) {
         mainWindow = null
     })
+    $main.on('crashed', function(event) {
+        log.error("main window crashed",event);
+        createMainWindow()
+        $main.destroy()
+    })
 }
 
 app.on('window-all-closed', () => {
     app.quit();
+});
+
+process.on('uncaughtException', function (err) {
+    log.error("uncaughtException",err);
 });

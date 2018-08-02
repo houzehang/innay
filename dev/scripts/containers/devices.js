@@ -32,9 +32,27 @@ class Devices extends React.Component {
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
 		let speaker_devices = this.$client.getAudioPlaybackDevices()
 
-		let currentVideoDevice 	 = this.$client.getCurrentVideoDevice(),
-			currentSpeakerDevice = this.$client.getCurrentAudioPlaybackDevice(),
-			currentAudioDevice   = this.$client.getCurrentAudioRecordingDevice()
+		let currentVideoDevice 	= Storage.get("VIDEO_DEVICE"),
+			currentAudioDevice 	= Storage.get("AUDIO_DEVICE"),
+			currentSpeakerDevice= Storage.get("PLAYBACK_DEVICE")
+		if (!currentVideoDevice) {
+			currentVideoDevice  = this.$client.getCurrentVideoDevice()
+		}
+		if (!currentAudioDevice) {
+			currentAudioDevice  = this.$client.getCurrentAudioRecordingDevice()
+		}
+		if (!currentSpeakerDevice) {
+			currentSpeakerDevice= this.$client.getCurrentAudioPlaybackDevice()
+		}
+		if (currentVideoDevice) {
+			this.$client.setVideoDevice(currentVideoDevice);
+		}
+		if (currentAudioDevice) {
+			this.$client.setAudioRecordingDevice(currentAudioDevice);
+		}
+		if (currentSpeakerDevice) {
+			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
+		}
 
 		let currentVideoName, currentSpeakerName, currentAudioName
 		for(let i=0,len=video_devices.length;i<len;i++) {

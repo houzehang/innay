@@ -28,6 +28,7 @@ import * as types from '../constants/ActionTypes'
 class Course extends React.Component {
 	constructor(props) {
 		super(props)
+		this.$uuid      = 0
 		this.$session 	= new Session(this)
 		this.$recording = this.props.recording
 		this.state 		= { 
@@ -40,6 +41,10 @@ class Course extends React.Component {
 			this.$room 		= new Room(this)
 			this.$signal	= new Signalize(this)
 		}
+	}
+
+	get uuid() {
+		return ++this.$uuid
 	}
 
 	isMaster(id) {
@@ -242,7 +247,7 @@ class Course extends React.Component {
 	__on_session_message(message, force) {
 		console.log("receive new session message",message)
 		if (message.to == "app" || force) {
-			let data = message.message
+			let data = message.message, result
 			switch(message.type) {
 				case Const.JS_READY :
 				break
@@ -308,6 +313,15 @@ class Course extends React.Component {
 					this.$record_video[0].play()
 				}
 				this.$record_ready = true
+				break
+				case "playsound":
+				let url = data.url, needevent = data.needevent
+				result = this.$room.rtc.startAudioMixing(url,true,false,1)
+				console.log("start audio mix",url,result,needevent)
+				break
+				case "stopsound":
+				result = this.$room.rtc.stopAudioMixing()
+				console.log("stop audio mix",result)
 				break
 				default:
 				this.__on_signal_message(message)

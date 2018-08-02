@@ -83,10 +83,10 @@ module.exports = {
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
         './libs/flexible.js',
-        './libs/AgoraSDK/AgoraSdk.js',
-        './libs/AgoraSDK/AgoraSig-1.3.0.js',
-        './libs/AgoraSDK/AgoraRender.js',
         './libs/AgoraSDK/webgl-utils.js',
+        './libs/AgoraSDK/AgoraRender.js',
+        './libs/AgoraSDK/AgoraSdk.js',
+        './libs/AgoraSDK/AgoraSig-1.2.1.3.js',
         './libs/jquery-3.3.1.min.js'
       ],
       publicPath: false,
