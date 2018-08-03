@@ -85,8 +85,28 @@ class Course extends React.Component {
 		}
 	}
 
+	playMusic(url, needevent) {
+		this.stopMusic()
+		let result = this.$room.rtc.startAudioMixing(url,true,false,1)
+		console.log("start audio mix",url,result,needevent)
+		if (needevent) {
+			this.$playing = url
+			this.$session.send_message("soundupdate",{url:this.$playing,time:0})
+		}
+	}
+
+	stopMusic() {
+		let result = this.$room.rtc.stopAudioMixing()
+		console.log("stop audio mix",result)
+		if (this.$playing) {
+			this.$session.send_message("soundended", {url:this.$playing})
+			this.$playing = null
+		}
+	}
+
 	componentWillUnmount() {
 		clearInterval(this.$tick_timer)
+		clearInterval(this.$music_timer)
 		clearTimeout(this.$back_timer)
 		clearTimeout(this.$put_timer)
 		$(`#dancing-head`).empty()
@@ -185,6 +205,13 @@ class Course extends React.Component {
 		net.getServerTime().then((res)=>{
 			this.setState({ time: res.time*1000 })
 		})
+		this.$room.rtc.on("audiomixingfinished", ()=>{
+			console.log("on audiomixingfinished",this.$playing)
+			if (this.$playing) {
+				this.$session.send_message("soundended", {url:this.$playing})
+				this.$playing = null
+			}
+		})
 		this.__tick()
 	}
 
@@ -242,6 +269,13 @@ class Course extends React.Component {
 			this.setState({ time: this.state.time+1000 })
 			this.props.onCourseTick()
 		},1000)
+		this.$music_timer = setInterval(()=>{
+			if (this.$playing) {
+				// 检测播放音乐
+				let time = this.$room.rtc.getAudioMixingCurrentPosition()
+				this.$session.send_message("soundupdate",{url:this.$playing,time})
+			}
+		},100)
 	}
 
 	__on_session_message(message, force) {
@@ -316,12 +350,10 @@ class Course extends React.Component {
 				break
 				case "playsound":
 				let url = data.url, needevent = data.needevent
-				result = this.$room.rtc.startAudioMixing(url,true,false,1)
-				console.log("start audio mix",url,result,needevent)
+				this.playMusic(url, needevent)
 				break
 				case "stopsound":
-				result = this.$room.rtc.stopAudioMixing()
-				console.log("stop audio mix",result)
+				this.stopMusic()
 				break
 				default:
 				this.__on_signal_message(message)

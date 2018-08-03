@@ -457,6 +457,7 @@ body .sound-outer .sound-tester .step-content .video-area {
   width: 3.72rem;
   height: 2.1rem;
   margin: 0.25rem auto;
+  overflow: hidden;
 }
 body .sound-outer .sound-tester .step-content .mic-area {
   display: flex;
