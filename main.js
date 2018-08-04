@@ -9,6 +9,7 @@ const {DEBUG}      = require('./env.js');
 const Const        = require('./const.js'); 
 const fs           = require("fs");
 const path         = require("path");
+const reporter     = require("reporter")
 
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
@@ -18,6 +19,7 @@ const {autoUpdater} = require("electron-updater");
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
+// console.log("platform",fs.readFileSync(logpath,"utf8"))
 let updateWindow, loaded;
 
 function sendStatusToWindow(status, data) {

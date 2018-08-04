@@ -92,14 +92,18 @@ class Course extends React.Component {
 		if (needevent) {
 			this.$playing = url
 			this.$session.send_message("soundupdate",{url:this.$playing,time:0})
+		} else {
+			this.$playing = false
 		}
 	}
 
-	stopMusic() {
+	stopMusic(noevent) {
 		let result = this.$room.rtc.stopAudioMixing()
 		console.log("stop audio mix",result)
 		if (this.$playing) {
-			this.$session.send_message("soundended", {url:this.$playing})
+			if (!noevent) {
+				this.$session.send_message("soundended", {url:this.$playing})
+			}
 			this.$playing = null
 		}
 	}
@@ -353,7 +357,8 @@ class Course extends React.Component {
 				this.playMusic(url, needevent)
 				break
 				case "stopsound":
-				this.stopMusic()
+				let noevent = data.noevent
+				this.stopMusic(noevent)
 				break
 				default:
 				this.__on_signal_message(message)
