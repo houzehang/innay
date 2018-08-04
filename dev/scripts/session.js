@@ -68,11 +68,11 @@ class Session extends Eventer {
 		// 	_next()
 		// })
 		let prefix
-		// if (DEBUG) {
-		// 	prefix = "http://localhost:3000"
-		// } else {
+		if (DEBUG) {
+			prefix = "http://localhost:3000"
+		} else {
 			prefix = "https://kecheng1.runsnailrun.com"
-		// }
+		}
 
 
 		let partition = this.uuid()
