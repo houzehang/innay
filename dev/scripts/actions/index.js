@@ -125,6 +125,11 @@ export const onMagicSwitch = (status) => ({
 	status
 })
 
+export const onMuteAllSwitch = (status) => ({
+	type: types.MUTEALL_SWITCH,
+	status
+})
+
 export const onGiftSwitch = (status) => ({
 	type: types.GIFT_SWITCH,
 	status

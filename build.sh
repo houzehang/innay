@@ -19,6 +19,7 @@ cp -r installers output
 cp const.js output
 cp env.js output
 cp main.js output
+cp reporter.js output
 cp package.json output
 
 

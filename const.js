@@ -51,6 +51,8 @@ module.exports = {
 	STOP_COURSE   : "stopcourse",
 	ENABLE_MAGIC  : "enablemagic",
 	DISABLE_MAGIC : "disablemagic",
+	MUTE_ALL 	  : "#muteall",
+	UNMUTE_ALL 	  : "#unmuteall",
 	UPDATE : {
 		AVAILABLE: "update available",
 		LASTEST  : "the lastest version",

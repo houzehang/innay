@@ -7,7 +7,7 @@ import {
 	onEndCourse, onGiftList, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onGiftSwitch, onNewGift,
-	onHandsupRank, onUserMuted, onDancing,
+	onHandsupRank, onUserMuted, onMuteAllSwitch, onDancing,
 	onBeginCourse,
 	onPauseCourse,
 	onResumeCourse,
@@ -318,6 +318,14 @@ class Course extends React.Component {
 				break
 				case Const.DISABLE_MAGIC:
 				this.props.onMagicSwitch(false)
+				break
+				case Const.MUTE_ALL:
+				this.props.onMuteAllSwitch(true)
+				this.$room.stream_audio(this.props.account.id)
+				break
+				case Const.UNMUTE_ALL:
+				this.props.onMuteAllSwitch(false)
+				this.$room.stream_audio(this.props.account.id)
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
@@ -752,6 +760,13 @@ class Course extends React.Component {
 										this.$session.send_message(Const.ENABLE_MAGIC)
 									}
 								}}></button>
+								<button className={this.props.switches.muteall?"course-muteall off":"course-muteall"} onClick={()=>{
+									if (this.props.switches.muteall) {
+										this.$session.send_message(Const.UNMUTE_ALL)
+									} else {
+										this.$session.send_message(Const.MUTE_ALL)
+									}
+								}}></button>
 								<button className="course-clip" onClick={()=>{
 									this.__on_clipshare()
 								}}></button>
@@ -861,6 +876,7 @@ const mapDispatchToProps = dispatch => ({
 	onHandsupSwitch : (status) => dispatch(onHandsupSwitch(status)),
 	onGiftSwitch    : (status) => dispatch(onGiftSwitch(status)),
 	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
+	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),

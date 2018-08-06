@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -165,6 +165,22 @@ const room = (state = {}, action) => {
 		switches.magic = action.status
 		return {
 			...state,
+			switches
+		}
+		case MUTEALL_SWITCH:
+		switches = {...state.switches}
+		students = [...state.students]
+		if (students) {
+			for(let i=0,len=students.length;i<len;i++) {
+				let item = students[i]
+				item.unmuted = !action.status
+				console.log("set muted!",item.unmuted)
+			}
+		}
+		switches.muteall = action.status
+		return {
+			...state,
+			students,
 			switches
 		}
 		case HANDSUP_RANK:
