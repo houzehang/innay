@@ -2425,6 +2425,16 @@ body .page.course-page .inner .content .operations button.course-magic.off {
   background-image: url(./29687235e7bd1c04350ac7cd8c45983c.png);
   background-size: auto 0.38rem;
 }
+html .page.course-page .inner .content .operations button.course-muteall,
+body .page.course-page .inner .content .operations button.course-muteall {
+  background: url(./e0bbd903d5b0ba8ed447f1302f260c3e.png) no-repeat center center;
+  background-size: auto 0.26rem;
+}
+html .page.course-page .inner .content .operations button.course-muteall.off,
+body .page.course-page .inner .content .operations button.course-muteall.off {
+  background-image: url(./086ebe439110e7e6d62a69eabe8d9a75.png);
+  background-size: auto 0.38rem;
+}
 html .page.course-page .inner .content .operations button.course-clip,
 body .page.course-page .inner .content .operations button.course-clip {
   background: url(./4f2127e505dbb2e265386287b5024c1e.png) no-repeat center center;
@@ -2525,6 +2535,42 @@ body .page.course-page .inner .info .avatars .teacher-area .avatar .ph-text {
   text-align: center;
   display: none;
 }
+html .page.course-page .inner .info .avatars .teacher-area .avatar .draft-text,
+body .page.course-page .inner .info .avatars .teacher-area .avatar .draft-text {
+  display: none;
+}
+html .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text,
+body .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text {
+  background: #fff;
+  display: block;
+  position: absolute;
+  width: 2.38rem;
+  height: 2.18rem;
+  overflow: scroll;
+  left: 0;
+  top: 0;
+  padding: 0.2rem;
+  padding-top: 0.7rem;
+  font-size: 0.2rem;
+  color: #666666;
+  line-height: 1.5;
+}
+html .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text::before,
+body .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text::before {
+  content: "";
+  position: absolute;
+  background: url(./e91b894a56a117a1d68f3264d6d0cd80.png) no-repeat center center;
+  background-size: 100% auto;
+  width: 1.14rem;
+  height: 0.36rem;
+  left: 50%;
+  top: 0.2rem;
+  margin-left: -0.57rem;
+}
+html .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text .none,
+body .page.course-page .inner .info .avatars .teacher-area .avatar.draft .draft-text .none {
+  display: none;
+}
 html .page.course-page .inner .info .avatars .teacher-area .avatar.nothing,
 body .page.course-page .inner .info .avatars .teacher-area .avatar.nothing {
   background: #e7e7e7 url(./8a6807b7bc8662c49c02741496dab778.png) no-repeat center top 0.38rem;
@@ -2538,6 +2584,10 @@ body .page.course-page .inner .info .avatars .teacher-area .avatar.nothing .avat
 }
 html .page.course-page .inner .info .avatars .teacher-area .avatar.nothing .ph-text,
 body .page.course-page .inner .info .avatars .teacher-area .avatar.nothing .ph-text {
+  display: block;
+}
+html .page.course-page .inner .info .avatars .teacher-area .avatar.nothing .draft,
+body .page.course-page .inner .info .avatars .teacher-area .avatar.nothing .draft {
   display: block;
 }
 html .page.course-page .inner .info .avatars .student-area,

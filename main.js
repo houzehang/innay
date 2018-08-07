@@ -9,7 +9,6 @@ const {DEBUG}      = require('./env.js');
 const Const        = require('./const.js'); 
 const fs           = require("fs");
 const path         = require("path");
-const reporter     = require("./reporter")
 
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
@@ -126,12 +125,6 @@ function createMainWindow() {
         log.error("main window crashed",event);
         createMainWindow()
         $main.destroy()
-    })
-    ipcMain.on('log',(data)=>{
-        reporter.write(data)
-    })
-    ipcMain.on('report',()=>{
-        reporter.report(true)
     })
 }
 

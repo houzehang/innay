@@ -7,7 +7,6 @@ class Reporter {
 		this.$logpath 		= log.transports.file.findLogPath("kecheng-pc")
 		this.$user_id 		= 0
 		this.$channel_id 	= ""
-		this.report(true)
 	}
 
 	set user(id) {

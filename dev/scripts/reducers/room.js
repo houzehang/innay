@@ -22,6 +22,7 @@ const room = (state = {}, action) => {
 			info: action.data,
 			switches: {
 				gift: true,
+				muteall:true
 			},
 			dancing: [],
 			status,

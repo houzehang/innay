@@ -662,6 +662,40 @@ html,body {
 									text-align: center;
 									display: none;
 								}
+								.draft-text {
+									display: none;
+								}
+								&.draft {
+									.draft-text {
+										background: #fff;
+										display: block;
+										position: absolute;
+										width: 2.38rem;
+										height: 2.18rem;
+										overflow: scroll;
+										left: 0;
+										top: 0;
+										padding: 0.2rem;
+										padding-top: 0.7rem;
+										font-size: 0.2rem;
+										color: #666666;
+										line-height: 1.5;
+										&::before {
+											content: "";
+											position: absolute;
+											background: url(../assets/draft.png) no-repeat center center;
+											background-size: 100% auto;
+											width: 1.14rem;
+											height: 0.36rem;
+											left: 50%;
+											top: 0.2rem;
+											margin-left: -0.57rem;
+										}
+										.none {
+											display: none;
+										}
+									}
+								}
 								&.nothing {
 									background: #e7e7e7 url(../assets/course-ph.png) no-repeat center top 0.38rem;
 									background-size: 1.45rem auto;
@@ -669,6 +703,9 @@ html,body {
 										display: none;
 									}
 									.ph-text {
+										display: block;
+									}
+									.draft {
 										display: block;
 									}
 								}

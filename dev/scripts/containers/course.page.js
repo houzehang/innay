@@ -108,6 +108,14 @@ class Course extends React.Component {
 		}
 	}
 
+	showDraft(draft) {
+		this.setState({ draft })
+	}
+
+	hideDraft() {
+		this.setState({ draft: null })
+	}
+
 	componentWillUnmount() {
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
@@ -368,8 +376,14 @@ class Course extends React.Component {
 				let noevent = data.noevent
 				this.stopMusic(noevent)
 				break
+				case "showdraft":
+				let content = data.content
+				this.showDraft(data.content)
+				break
 				default:
-				this.__on_signal_message(message)
+				if (message.type.indexOf("*") == -1) {
+					this.__on_signal_message(message)
+				}
 				break
 			}
 		} else if (message.to == "all") {
@@ -406,8 +420,14 @@ class Course extends React.Component {
 			case Const.START_TEST:
 			case Const.STOP_TEST:
 			break
+			case Const.NEXT_PAGE:
+			this.hideDraft()
+			this.$session.send_message(null, null, message)
+			break
 			case "gift":
 			this.props.onNewGift(data)
+			this.$session.send_message(null, null, message)
+			break
 			default:
 			this.$session.send_message(null, null, message)
 		}
@@ -794,10 +814,11 @@ class Course extends React.Component {
 									</div>
 									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
 								</div>
-								<div className={dancing?"avatar":"avatar nothing"}>
+								<div className={dancing?"avatar":(this.state.draft?"avatar draft":"avatar nothing")}>
 									<div className="ph-text">未指定小朋友发言</div>
 									<div className="avatar-head" id="dancing-head"></div>
 									<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
+									<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
 								</div>
 							</div>
 							<div className="student-area">
