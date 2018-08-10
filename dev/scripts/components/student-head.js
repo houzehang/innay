@@ -23,19 +23,15 @@ class StudentHead extends React.Component {
 		if (this.props.tencent) {
 			hasUser = this.props.user.stream
 		}
-		let gifts = hasUser ? this.props.user.gifts.map((item)=>(
-			<div className={"item gift-"+item.id} key={item.id}>
-				<div className="icon"></div>
-				<div className="num">{item.total}</div>
-			</div>
-		)) : ""
 		return hasUser ? (
 					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={(event)=>{
 						this.setState({ hover:true })
 					}} onMouseOut={(event)=>{
 						this.setState({ hover:false })
 					}}>
-						<div className="avatar-head" id={"student_"+this.props.user.id} style={{
+						<div onDoubleClick={()=>{
+							this.props.onClickGift(this.props.user)
+						}} className="avatar-head" id={"student_"+this.props.user.id} style={{
 							backgroundImage : `url(${this.props.user.child_avatar})`
 						}}>
 							{this.props.tencent?(
@@ -57,7 +53,10 @@ class StudentHead extends React.Component {
 											<div className="icon"></div>
 											<div className="num">{this.props.user.speak}</div>
 										</div>
-										{gifts}
+										<div className="item gift-2">
+											<div className="icon"></div>
+											<div className="num">{this.props.user.gift_total || 0}</div>
+										</div>
 									</div>
 									<div className={this.props.isTeacher?"btns":"btns student"}>
 										{this.props.isTeacher?(
@@ -65,9 +64,6 @@ class StudentHead extends React.Component {
 												this.props.onClickSpeak(this.props.user)
 											}}></button>
 										):""}
-										<button className="gift-btn" onClick={()=>{
-											this.props.onClickGift(this.props.user)
-										}}></button>
 										{this.props.isTeacher?(
 											<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
 												this.props.onClickView(this.props.user)

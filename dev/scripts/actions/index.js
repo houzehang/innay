@@ -80,11 +80,6 @@ export const onRoomMoreInfo = (data) => ({
 	data
 })
 
-export const onGiftList = (data) => ({
-	type: types.GIFT_LIST,
-	data
-})
-
 export const onNewGift = (data) => ({
 	type: types.NEW_GIFT,
 	data
@@ -171,4 +166,9 @@ export const onEnterTester = ()=>({
 
 export const onExitTester = ()=>({
 	type: types.EXIT_TESTER
+})
+
+export const onUpdateGift = (data)=>({
+	type: types.GIFT_UPDATE,
+	data
 })

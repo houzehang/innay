@@ -4,9 +4,9 @@ import StudentHead from '../components/student-head'
 import HandsUp from '../components/handsup'
 import Devices from './devices'
 import { 
-	onEndCourse, onGiftList, onRoomMoreInfo,
+	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
-	onHandsupSwitch, onGiftSwitch, onNewGift,
+	onHandsupSwitch, onNewGift,
 	onHandsupRank, onUserMuted, onMuteAllSwitch, onDancing,
 	onBeginCourse,
 	onPauseCourse,
@@ -15,7 +15,8 @@ import {
 	confirm, alert,
 	onEnterTester,
 	onMagicSwitch,
-	showLoading,hideLoading
+	showLoading,hideLoading,
+	onUpdateGift
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
@@ -109,7 +110,9 @@ class Course extends React.Component {
 	}
 
 	showDraft(draft) {
-		this.setState({ draft })
+		if (this.isMaster()) {
+			this.setState({ draft })
+		}
 	}
 
 	hideDraft() {
@@ -201,9 +204,6 @@ class Course extends React.Component {
 		}
 		this.$session.on("NEW_MESSAGE", (message)=>{
 			this.__on_session_message(message)
-		})
-		net.getGiftsList().then((data)=>{
-			this.props.onGiftList(data.gifts)
 		})
 		net.getRoomInfo(this.props.room.channel_id).then((result)=>{
 			this.props.onRoomMoreInfo(result)
@@ -311,16 +311,6 @@ class Course extends React.Component {
 					this.$room.stream_audio(data.uid)
 				}
 				break
-				case Const.OPEN_GIFT:
-				if (!this.$recording) {
-					this.props.onGiftSwitch(true)
-				}
-				break
-				case Const.CLOSE_GIFT:
-				if (!this.$recording) {
-					this.props.onGiftSwitch(false)
-				}
-				break
 				case Const.ENABLE_MAGIC:
 				this.props.onMagicSwitch(true)
 				break
@@ -386,7 +376,7 @@ class Course extends React.Component {
 				}
 				break
 			}
-		} else if (message.to == "all") {
+		} else {
 			this.$signal.send(message)
 		}
 	}
@@ -477,44 +467,50 @@ class Course extends React.Component {
 		})
 	}
 
-	__show_gift_layer() {
-		$(".gift-layer").show()
-		setTimeout(()=>{
-			$(".gift-layer").addClass("show")
-		},100)
+	/**
+	 * 给所有人发送礼物
+	 */
+	__send_gift_to_all() {
+		this.props.confirm({
+			title: "礼物奖励",
+			content : "确认送给所有学生奖励吗？",
+			sure: ()=>{
+				this.__send_gift()
+			}
+		})
 	}
 
-	__hide_gift_layer() {
-		$(".gift-layer").removeClass("show")
-		setTimeout(()=>{
-			$(".gift-layer").hide()
-		},300)
-	}
-
-	__send_gift() {
-		if (this.$gift_data) {
-			console.log("send gift",this.$gift_data)
-			net.sendGift({
-				channel_id : this.props.room.channel_id,
-				to_id: this.$gift_data.to,
-				gift_id: this.$gift_data.gift.id
-			}).then((res)=>{
-				let total = res.total, toUser = this.getUser(this.$gift_data.to),
-					single = res.single
+	__send_gift(user) {
+		let ids = []
+		if (!user) {
+			this.props.students.forEach((student)=>{
+				if (student.stream) {
+					ids.push(student.id)
+				}
+			})
+			if (ids.length == 0) {
+				return
+			}
+		}
+		net.sendGift({
+			channel_id : this.props.room.channel_id,
+			to_id: user ? user.id : ids.join(",")
+		}).then((res)=>{
+			// 送礼物结果
+			// 更新本地礼物数量
+			this.props.onUpdateGift(res)
+			res.forEach((item)=>{
 				this.$signal.send({
 					type: "gift",
 					from: this.props.account.id,
-					to: "all",
+					to: item.to_id,
 					message: {
-						uid: this.$gift_data.to,
-						gift: this.$gift_data.gift,
-						total, single,
-						from_username: this.props.account.child_name,
-						to_username: toUser.child_name
+						uid: item.to_id,
+						total: item.total
 					}
 				})
 			})
-		}
+		})
 	}
 
 	__put_to_dancing(id) {
@@ -673,21 +669,9 @@ class Course extends React.Component {
 					})
 				}
 			}} onClickGift={(user)=>{
-				if (user.id == this.props.account.id) {
-					this.props.alert({
-						content : "不能给自己送礼物哦~"
-					})
-					return
-				}
-				if (this.isMaster() || this.props.switches.gift) {
-					this.$gift_data = {
-						to: user.id
-					}
-					this.__show_gift_layer()
-				} else {
-					this.props.alert({
-						content : "现在还不能送礼物哦~"
-					})
+				// 只有老师可以送礼物
+				if (this.isMaster()) {
+					this.__send_gift(user)
 				}
 			}} onClickView={(user)=>{
 				if (user.dancing) {
@@ -766,12 +750,8 @@ class Course extends React.Component {
 										this.$session.send_message(Const.OPEN_RACE)
 									}
 								}}></button>
-								<button className={this.props.switches.gift?"course-gift":"course-gift off"} onClick={()=>{
-									if (this.props.switches.gift) {
-										this.$session.send_message(Const.CLOSE_GIFT)
-									} else {
-										this.$session.send_message(Const.OPEN_GIFT)
-									}
+								<button className="course-gift" onClick={()=>{
+									this.__send_gift_to_all()
 								}}></button>
 								<button className={this.props.switches.magic?"course-magic":"course-magic off"} onClick={()=>{
 									if (this.props.switches.magic) {
@@ -842,34 +822,6 @@ class Course extends React.Component {
 						)}
 					</div>
 				</div>
-				{this.props.giftlist?(
-				<div className="mask gift-layer dialog-layer" style={{display:"none"}}>
-					<div className="dialog">
-						<div className="title">
-							送礼物
-							<div className="close-btn" onClick={()=>{
-								this.__hide_gift_layer()
-							}}></div>
-						</div>
-						<div className="content">
-							<div className="gifts">
-								{this.props.giftlist.map((gift)=>(
-									<div className="gift-item" key={gift.id} onClick={()=>{
-										this.$gift_data.gift = gift
-										this.__hide_gift_layer()
-										this.__send_gift()
-									}}>
-										<div className="gift-icon">
-											<img src={gift.icon}/>
-										</div>
-										<div className="gift-name">{gift.name}</div>
-									</div>
-								))}
-							</div>
-						</div>
-					</div>
-				</div>
-				):""}
 			</div>
 		)
 	}
@@ -879,10 +831,8 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		account : state.login.account,
 		room 	: state.room.info,
-		gifts 	: state.room.gifts,
 		students: state.room.students,
 		teacher : state.room.teacher,
-		giftlist: state.room.giftlist,
 		started : state.main.courseStarted,
 		switches: state.room.switches,
 		status  : state.room.status
@@ -890,12 +840,10 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	onGiftList		: (data) => dispatch(onGiftList(data)),
 	onRoomMoreInfo	: (data) => dispatch(onRoomMoreInfo(data)),
 	onNewStream		: (data) => dispatch(onNewStream(data)),
 	onStreamLeave	: (data) => dispatch(onStreamLeave(data)),
 	onHandsupSwitch : (status) => dispatch(onHandsupSwitch(status)),
-	onGiftSwitch    : (status) => dispatch(onGiftSwitch(status)),
 	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
 	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
@@ -912,6 +860,7 @@ const mapDispatchToProps = dispatch => ({
 	onEnterTester 	: () => dispatch(onEnterTester()),
 	showLoading 	: (message) => dispatch(showLoading(message)),
 	hideLoading 	: () => dispatch(hideLoading()),
+	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
 })
   
 export default connect(

@@ -113,6 +113,11 @@ class Signalize extends Eventer {
 				let message = JSON.parse(msg)
 				this.trigger("NEW_MESSAGE", message)
 			};
+			this.$session.onMessageInstantReceive = (account, uid, msg)=>{
+				console.log("receive new peer message", msg, account)
+				let message = JSON.parse(msg)
+				this.trigger("NEW_MESSAGE", message)
+			}
 		},()=>{})
 	}
 
@@ -125,11 +130,20 @@ class Signalize extends Eventer {
 	}
 
 	send(message) {
-		message = JSON.stringify(message)
 		if (this.$channel) {
-			this.$channel.messageChannelSend(message, ()=>{
-				console.log("消息发送成功")
-			})
+			if (message.to == "all") {
+				let content = JSON.stringify(message)
+				this.$channel.messageChannelSend(content, ()=>{
+					console.log("全局消息发送成功")
+				})
+			} else {
+				let to = message.to + ""
+				let content = JSON.stringify(message)
+				console.log("发送局部消息",to,content)
+				this.$session.messageInstantSend(to, content, ()=>{
+					console.log("独立消息发送成功，发送给",message.to)
+				})
+			}
 		} else {
 			this.$queue.push(message)
 		}

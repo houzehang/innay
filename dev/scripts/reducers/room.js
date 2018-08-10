@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, GIFT_LIST, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH,GIFT_UPDATE } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -41,11 +41,6 @@ const room = (state = {}, action) => {
 			info,
 			students: action.data.students
 		}
-		case GIFT_LIST:
-		return {
-			...state,
-			giftlist: action.data
-		}
 		case NEW_GIFT:
 		let gift = action.data
 		students = [...state.students]
@@ -53,17 +48,6 @@ const room = (state = {}, action) => {
 			let item = students[i]
 			if (item.id == gift.uid) {
 				item.gift_total = gift.total
-				if (item.gifts) {
-					item.gifts.forEach((item)=>{
-						if (item.id == gift.gift.id) {
-							if (gift.single) {
-								item.total = gift.single 
-							} else {
-								item.total++
-							}
-						}
-					})
-				}
 			}
 		}
 		return {
@@ -260,6 +244,25 @@ const room = (state = {}, action) => {
 			}
 		} else {
 			return state
+		}
+		case GIFT_UPDATE:
+		students = [...state.students]
+		let gifts = action.data
+		if (students) {
+			for(let i=0,len=students.length;i<len;i++) {
+				let item = students[i]
+				for(let j=0,jlen=gifts.length;j<jlen;j++) {
+					let gift = gifts[j]
+					if (gift.to_id == item.id) {
+						item.gift_total = gift.total
+						break
+					}
+				}
+			}
+		}
+		return {
+			...state,
+			students
 		}
 		default:
 		return state

@@ -2651,10 +2651,11 @@ body .page.course-page .inner .info .avatars .student-area .student .avatar-info
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 }
 html .page.course-page .inner .info .avatars .student-area .student.hover .summary,
 body .page.course-page .inner .info .avatars .student-area .student.hover .summary {
-  width: 2.43rem;
+  width: 1.2rem;
   opacity: 1;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary,
@@ -2670,7 +2671,7 @@ body .page.course-page .inner .info .avatars .student-area .student .summary {
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner,
 body .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner {
-  width: 2.43rem;
+  width: 1.2rem;
   height: 100%;
   background: rgba(88, 93, 122, 0.9);
 }
