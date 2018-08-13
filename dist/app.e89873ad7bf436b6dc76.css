@@ -2435,6 +2435,16 @@ body .page.course-page .inner .content .operations button.course-muteall.off {
   background-image: url(./086ebe439110e7e6d62a69eabe8d9a75.png);
   background-size: auto 0.38rem;
 }
+html .page.course-page .inner .content .operations button.course-rank,
+body .page.course-page .inner .content .operations button.course-rank {
+  background: url(./09a51d76b5e63ab4f82c28d2017894ad.png) no-repeat center center;
+  background-size: auto 0.26rem;
+}
+html .page.course-page .inner .content .operations button.course-rank.off,
+body .page.course-page .inner .content .operations button.course-rank.off {
+  background-image: url(./96a5b86f1cfbed77ff7fb99bd7477de2.png);
+  background-size: auto 0.38rem;
+}
 html .page.course-page .inner .content .operations button.course-clip,
 body .page.course-page .inner .content .operations button.course-clip {
   background: url(./4f2127e505dbb2e265386287b5024c1e.png) no-repeat center center;

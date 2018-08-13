@@ -53,6 +53,8 @@ module.exports = {
 	DISABLE_MAGIC : "disablemagic",
 	MUTE_ALL 	  : "#muteall",
 	UNMUTE_ALL 	  : "#unmuteall",
+	SHOW_RANKS    : "*showranks",
+	HIDE_RANKS    : "*hideranks",
 	UPDATE : {
 		AVAILABLE: "update available",
 		LASTEST  : "the lastest version",

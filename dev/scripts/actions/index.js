@@ -130,6 +130,11 @@ export const onGiftSwitch = (status) => ({
 	status
 })
 
+export const onRankSwitch = (status) => ({
+	type: types.RANK_SWITCH,
+	status
+})
+
 export const onHandsupRank = (id, rank) => ({
 	type: types.HANDSUP_RANK,
 	id, rank

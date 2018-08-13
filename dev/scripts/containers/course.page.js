@@ -15,7 +15,7 @@ import {
 	confirm, alert,
 	onEnterTester,
 	onMagicSwitch,
-	showLoading,hideLoading,
+	showLoading,hideLoading,onRankSwitch,
 	onUpdateGift
 } from '../actions'
 const net 		= require("../network")
@@ -177,7 +177,7 @@ class Course extends React.Component {
 				})
 			})
 			this.$signal.on("NEW_MESSAGE", (message)=>{
-				console.log("receive new signal message",message)
+				console.log("receive new from app",message)
 				this.__on_signal_message(message)
 			})
 		} else {
@@ -291,7 +291,6 @@ class Course extends React.Component {
 	}
 
 	__on_session_message(message, force) {
-		console.log("receive new session message",message)
 		if (message.to == "app" || force) {
 			let data = message.message, result
 			switch(message.type) {
@@ -324,6 +323,12 @@ class Course extends React.Component {
 				case Const.UNMUTE_ALL:
 				this.props.onMuteAllSwitch(false)
 				this.$room.stream_audio(this.props.account.id)
+				break
+				case Const.SHOW_RANKS:
+				this.props.onRankSwitch(true)
+				break
+				case Const.HIDE_RANKS:
+				this.props.onRankSwitch(false)
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
@@ -367,7 +372,6 @@ class Course extends React.Component {
 				this.stopMusic(noevent)
 				break
 				case "showdraft":
-				let content = data.content
 				this.showDraft(data.content)
 				break
 				default:
@@ -383,7 +387,6 @@ class Course extends React.Component {
 
 	__on_signal_message(message) {
 		let data = message.message
-		console.log("signal message",message)
 		switch(message.type) {
 			case "closeroom":
 			this.leaveCourse()
@@ -781,6 +784,13 @@ class Course extends React.Component {
 									this.props.onMagicSwitch(false)
 									this.$session.send_message("appnextpage")
 								}}></button>
+								<button className={this.props.switches.rank?"course-rank":"course-rank off"} onClick={()=>{
+									if (this.props.switches.rank) {
+										this.$session.send_message(Const.HIDE_RANKS)
+									} else {
+										this.$session.send_message(Const.SHOW_RANKS)
+									}
+								}}></button>
 							</div>
 						):""}
 					</div>
@@ -845,6 +855,7 @@ const mapDispatchToProps = dispatch => ({
 	onStreamLeave	: (data) => dispatch(onStreamLeave(data)),
 	onHandsupSwitch : (status) => dispatch(onHandsupSwitch(status)),
 	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
+	onRankSwitch    : (status) => dispatch(onRankSwitch(status)),
 	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
