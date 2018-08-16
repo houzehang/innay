@@ -16,6 +16,7 @@ class Signalize extends Eventer {
 			if (this.$inited) {
 				resolve();
 			} else {
+				this.trigger("CONNECT_SIGNAL")
 				// 傻逼的sdk，accout参数必须为字符串
 				// this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
 				this.$session = this.$signal.login(this.$inst.props.account.id+"", "_no_need_token")
@@ -23,6 +24,7 @@ class Signalize extends Eventer {
 					this.$inited = true
 					resolve()
 					console.log("session logined...")
+					this.trigger("CONNECTED_SIGNAL")
 				}
 				this.$session.onLoginFailed = (ecode)=>{
 					if (ecode == Const.LOGIN_E_NET) {
@@ -33,15 +35,18 @@ class Signalize extends Eventer {
 						},2000)
 					}
 					console.log("session login failed...",ecode)
+					this.trigger("CONNECT_SIGNAL_ERROR")
 				}
 				this.$session.onLogout = (ecode)=>{
-					if (ecode == Const.LOGOUT_E_NET) {
+					if (ecode != Const.LOGOUT_SUCCESS) {
+						console.log("session logout",ecode)
+						this.trigger("CONNECT_SIGNAL_ERROR")
 						setTimeout(()=>{
 							this.$inited = false
+							this.$session.logout()
 							this.init().then(resolve, reject).done()
 						},2000)
 					}
-					console.log("session logout",ecode)
 				}
 				this.$session.onError = (ecode)=>{
 					if (ecode == Const.GENERAL_E_NOT_LOGIN) {
@@ -51,12 +56,13 @@ class Signalize extends Eventer {
 						},2000)
 					}
 					console.log("session error",ecode)
+					this.trigger("CONNECT_SIGNAL_ERROR")
 				}
 			}
 		})
 	}
 
-	join() {
+	join(complete) {
 		this.init().then(()=>{
 			let channel = this.$session.channelJoin(this.$inst.props.room.channel_id)
 			channel.onChannelJoined = ()=>{
@@ -68,12 +74,17 @@ class Signalize extends Eventer {
 					this.send(message)
 				})
 				this.$queue = []
+				this.trigger("CONNECTED_SIGNAL")
+				if (complete) {
+					complete()
+				}
 			}
 			channel.onChannelJoinFailed = ()=>{
 				console.log("channel join failed, retry after 2s")
 				setTimeout(()=>{
 					this.join()
 				}, 2000)
+				this.trigger("CONNECT_SIGNAL_ERROR")
 			}
 			let new_user_joined = (account)=>{
 				// 获取用户信息
@@ -131,10 +142,19 @@ class Signalize extends Eventer {
 
 	send(message) {
 		if (this.$channel) {
+			let $timer = setTimeout(()=>{
+				this.$session.logout()
+				// 重连
+				this.$inited = false
+				this.join(()=>{
+					this.send(message)
+				})
+			},1000)
 			if (message.to == "all") {
 				let content = JSON.stringify(message)
 				this.$channel.messageChannelSend(content, ()=>{
 					console.log("全局消息发送成功")
+					clearTimeout($timer)
 				})
 			} else {
 				let to = message.to + ""
@@ -142,6 +162,7 @@ class Signalize extends Eventer {
 				console.log("发送局部消息",to,content)
 				this.$session.messageInstantSend(to, content, ()=>{
 					console.log("独立消息发送成功，发送给",message.to)
+					clearTimeout($timer)
 				})
 			}
 		} else {

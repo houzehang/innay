@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH,GIFT_UPDATE } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -265,6 +265,52 @@ const room = (state = {}, action) => {
 						break
 					}
 				}
+			}
+		}
+		return {
+			...state,
+			students
+		}
+		case PROGRESS_UPDATE:
+		students = [...state.students]
+		let percent = action.percent,
+			sid     = action.id
+		if (students) {
+			if (percent == 100) {
+				let found = null, rank = 1
+				for(let i=0,len=students.length;i<len;i++) {
+					let item = students[i]
+					if (item.id == sid) {
+						item.percent = percent
+						found = item
+					} else if (item.progress_rank) {
+						rank++
+					}
+				}
+				if (found) {
+					found.progress_rank = rank
+				}
+			} else {
+				for(let i=0,len=students.length;i<len;i++) {
+					let item = students[i]
+					if (item.id == sid) {
+						item.percent = percent
+						break
+					}
+				}
+			}
+		}
+		return {
+			...state,
+			students
+		}
+		case PROGRESS_RESET:
+		students = [...state.students]
+		if (students) {
+			for(let i=0,len=students.length;i<len;i++) {
+				let item = students[i]
+				item.progress_rank = null
+				item.percent = null
 			}
 		}
 		return {

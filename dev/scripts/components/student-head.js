@@ -40,7 +40,11 @@ class StudentHead extends React.Component {
 								</div>
 							):""}
 						</div>
-						<div className="avatar-info">{this.props.user.child_name}</div>
+						<div className="avatar-info">
+							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
+							{this.props.user.percent ? <div className={this.props.user.percent==100?"avatar-bar full":"avatar-bar"} style={{"width":this.props.user.percent+"%"}}></div>:"" }
+							<div className="avatar-name">{this.props.user.child_name}</div>
+						</div>
 						<div className="avatar-details">
 							<div className="summary">
 								<div className="summary-inner">

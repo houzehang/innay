@@ -612,6 +612,7 @@ html,body {
 					}
 				}
 				.info {
+					position: relative;
 					width: 4.02rem;
 					display: flex;
 					flex-direction: column;
@@ -630,6 +631,7 @@ html,body {
 								width: 100%;
 								height: 3.08rem;
 								position: relative;
+								margin-bottom: 0.42rem;
 								&:first-child {
 									height: 3.84rem;
 									margin-bottom: 0.14rem;
@@ -725,9 +727,9 @@ html,body {
 								width: 100%;
 								height: 0.88rem;
 								position: relative;
-								margin-bottom: 0.15rem;
+								margin-bottom: 0.20rem;
 								.avatar-head {
-									width: 0.8rem;
+									width: 100%;
 									height: 100%;
 									overflow: hidden;
 									display: flex;
@@ -755,32 +757,62 @@ html,body {
 									padding: 0.05rem 0.05rem 0.05rem 0.23rem;
 								}
 								.avatar-info {
-									position: absolute;
-									width: 0.3rem;
+									z-index: 3;
+									position: relative;
+									width: 100%;
 									background: #565b72;
-									height: 100%;
-									line-height: 0.18rem;
-									font-size: 0.16rem;
-									overflow: hidden;
+									height: 0.16rem;
+									line-height: 0.16rem;
+									font-size: 0.12rem;
 									text-overflow: ellipsis;
-									color: #cdcdcd;
+									color: #fff;
 									text-align: center;
-									top: 0;
-									right: 0;
 									display: flex;
 									align-items: center;
 									justify-content: center;
 									user-select: none;
+									.avatar-rank {
+										padding-left: 0.04rem;
+										width: 0.15rem;
+										height: 0.16rem;
+										background: url(../assets/progress-arrow.png) no-repeat center center;
+										background-size: 100% auto;
+										position: absolute;
+										top: -0.16rem;
+										right: 0;
+										line-height: 0.16rem;
+										font-size: 0.12rem;
+										color: #ffffff;
+									}
+									.avatar-bar {
+										width: 0%;
+										position: absolute;
+										height: 100%;
+										background: #ffc029;
+										left: 0;
+										top: 0;
+										transition: all 200ms 0s ease-in-out;
+										&.full {
+											background: #00af43;
+										}
+									}
+									.avatar-name {
+										position: relative;
+										z-index: 2;
+										white-space: nowrap;
+										overflow: hidden;
+										text-overflow: ellipsis;
+									}
 								}
 								&.hover {
 									.summary {
-										width: 1.2rem;
+										width: 1.4rem;
 										opacity: 1;
 									}
 								}
 								.summary {
 									width: 0;
-									height: 0.88rem;
+									height: 1.04rem;
 									overflow: hidden;
 									position: absolute;
 									right: 1.1rem;
@@ -788,12 +820,12 @@ html,body {
 									transition: all 300ms 0s ease-in-out;
 									opacity: 0;
 									.summary-inner {
-										width: 1.2rem;
+										width: 1.4rem;
 										height: 100%;
 										background: rgba(88, 93, 122, 0.9);
 									}
 									.items {
-										height: 0.5rem;
+										height: 0.58rem;
 										border-bottom: 1px solid #666e93;
 										display: flex;
 										align-items: center;
@@ -838,7 +870,7 @@ html,body {
 										display: flex;
 										justify-content: space-between;
 										align-items: center;
-										padding: 0 0.12rem;
+										padding: 0.04rem 0.12rem;
 										&.student {
 											justify-content: center;
 										}
@@ -883,23 +915,25 @@ html,body {
 						}
 					}
 					.counter {
+						position: absolute;
+						width: 100%;
+						background: #2d3144;
+						left: 0;
+						bottom: 0;
 						height: 0.34rem;
 						font-size: 0.16rem;
 						color: #ececec;
 						display: flex;
 						align-items: center;
-						margin-top: 0.08rem;
-						&.pull-right {
-							justify-content: flex-end;
-							.help-btn {
-								margin-right: 0.4rem;
-								background: #fff url(../assets/sound.png) no-repeat center center;
-								background-size: 0.2rem auto;
-								width: 0.3rem !important;
-								height: 0.3rem !important;
-								border-radius: 50%;
-								line-height: 0;
-							}
+						padding-top: 0.08rem;
+						.help-btn {
+							margin-right: 0.4rem;
+							background: #fff url(../assets/sound.png) no-repeat center center;
+							background-size: 0.2rem auto;
+							width: 0.3rem !important;
+							height: 0.3rem !important;
+							border-radius: 50%;
+							line-height: 0;
 						}
 						.couter-g {
 							width: 0.66rem;

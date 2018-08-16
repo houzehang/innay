@@ -2472,6 +2472,7 @@ body .page.course-page .inner .content .operations button.course-prevstep {
 }
 html .page.course-page .inner .info,
 body .page.course-page .inner .info {
+  position: relative;
   width: 4.02rem;
   display: flex;
   flex-direction: column;
@@ -2497,6 +2498,7 @@ body .page.course-page .inner .info .avatars .teacher-area .avatar {
   width: 100%;
   height: 3.08rem;
   position: relative;
+  margin-bottom: 0.42rem;
 }
 html .page.course-page .inner .info .avatars .teacher-area .avatar:first-child,
 body .page.course-page .inner .info .avatars .teacher-area .avatar:first-child {
@@ -2609,11 +2611,11 @@ body .page.course-page .inner .info .avatars .student-area .student {
   width: 100%;
   height: 0.88rem;
   position: relative;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.20rem;
 }
 html .page.course-page .inner .info .avatars .student-area .student .avatar-head,
 body .page.course-page .inner .info .avatars .student-area .student .avatar-head {
-  width: 0.8rem;
+  width: 100%;
   height: 100%;
   overflow: hidden;
   display: flex;
@@ -2646,32 +2648,66 @@ body .page.course-page .inner .info .avatars .student-area .student .avatar-hand
 }
 html .page.course-page .inner .info .avatars .student-area .student .avatar-info,
 body .page.course-page .inner .info .avatars .student-area .student .avatar-info {
-  position: absolute;
-  width: 0.3rem;
+  z-index: 3;
+  position: relative;
+  width: 100%;
   background: #565b72;
-  height: 100%;
-  line-height: 0.18rem;
-  font-size: 0.16rem;
-  overflow: hidden;
+  height: 0.16rem;
+  line-height: 0.16rem;
+  font-size: 0.12rem;
   text-overflow: ellipsis;
-  color: #cdcdcd;
+  color: #fff;
   text-align: center;
-  top: 0;
-  right: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
 }
+html .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-rank,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-rank {
+  padding-left: 0.04rem;
+  width: 0.15rem;
+  height: 0.16rem;
+  background: url(./63e4c3bfce9c7d42c9ed06206994ca8c.png) no-repeat center center;
+  background-size: 100% auto;
+  position: absolute;
+  top: -0.16rem;
+  right: 0;
+  line-height: 0.16rem;
+  font-size: 0.12rem;
+  color: #ffffff;
+}
+html .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-bar,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-bar {
+  width: 0%;
+  position: absolute;
+  height: 100%;
+  background: #ffc029;
+  left: 0;
+  top: 0;
+  transition: all 200ms 0s ease-in-out;
+}
+html .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-bar.full,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-bar.full {
+  background: #00af43;
+}
+html .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-name,
+body .page.course-page .inner .info .avatars .student-area .student .avatar-info .avatar-name {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 html .page.course-page .inner .info .avatars .student-area .student.hover .summary,
 body .page.course-page .inner .info .avatars .student-area .student.hover .summary {
-  width: 1.2rem;
+  width: 1.4rem;
   opacity: 1;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary,
 body .page.course-page .inner .info .avatars .student-area .student .summary {
   width: 0;
-  height: 0.88rem;
+  height: 1.04rem;
   overflow: hidden;
   position: absolute;
   right: 1.1rem;
@@ -2681,13 +2717,13 @@ body .page.course-page .inner .info .avatars .student-area .student .summary {
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner,
 body .page.course-page .inner .info .avatars .student-area .student .summary .summary-inner {
-  width: 1.2rem;
+  width: 1.4rem;
   height: 100%;
   background: rgba(88, 93, 122, 0.9);
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .items,
 body .page.course-page .inner .info .avatars .student-area .student .summary .items {
-  height: 0.5rem;
+  height: 0.58rem;
   border-bottom: 1px solid #666e93;
   display: flex;
   align-items: center;
@@ -2742,7 +2778,7 @@ body .page.course-page .inner .info .avatars .student-area .student .summary .bt
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 0.12rem;
+  padding: 0.04rem 0.12rem;
 }
 html .page.course-page .inner .info .avatars .student-area .student .summary .btns.student,
 body .page.course-page .inner .info .avatars .student-area .student .summary .btns.student {
@@ -2796,19 +2832,20 @@ body .page.course-page .inner .info .avatars .student-area .student.nothing .ava
 }
 html .page.course-page .inner .info .counter,
 body .page.course-page .inner .info .counter {
+  position: absolute;
+  width: 100%;
+  background: #2d3144;
+  left: 0;
+  bottom: 0;
   height: 0.34rem;
   font-size: 0.16rem;
   color: #ececec;
   display: flex;
   align-items: center;
-  margin-top: 0.08rem;
+  padding-top: 0.08rem;
 }
-html .page.course-page .inner .info .counter.pull-right,
-body .page.course-page .inner .info .counter.pull-right {
-  justify-content: flex-end;
-}
-html .page.course-page .inner .info .counter.pull-right .help-btn,
-body .page.course-page .inner .info .counter.pull-right .help-btn {
+html .page.course-page .inner .info .counter .help-btn,
+body .page.course-page .inner .info .counter .help-btn {
   margin-right: 0.4rem;
   background: #fff url(./de3f23051b065b56e566f4e3e5f4792c.png) no-repeat center center;
   background-size: 0.2rem auto;

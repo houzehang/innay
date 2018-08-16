@@ -16,7 +16,8 @@ import {
 	onEnterTester,
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
-	onUpdateGift
+	onProgressUpdate,
+	onUpdateGift, onProgressReset
 } from '../actions'
 const net 		= require("../network")
 const Room 		= require("../AgoraStream")
@@ -164,6 +165,15 @@ class Course extends React.Component {
 					this.props.onEndCourse()
 				}
 			})
+			this.$signal.on("CONNECT_SIGNAL", ()=>{
+				this.props.showLoading("正在建立连接...")
+			})
+			this.$signal.on("CONNECTED_SIGNAL", ()=>{
+				this.props.hideLoading()
+			})
+			this.$signal.on("CONNECT_SIGNAL_ERROR", ()=>{
+				this.props.showLoading("连接出错，正在重试！")
+			})
 			this.$signal.on("CHANNEL_NEW_USER", (user)=>{
 				this.$session.send_message(Const.MEMBER_ADD, {}, {
 					userinfos  : [user]
@@ -278,7 +288,6 @@ class Course extends React.Component {
 
 	__tick() {
 		this.$tick_timer = setInterval(()=>{
-			this.setState({ time: this.state.time+1000 })
 			this.props.onCourseTick()
 		},1000)
 		this.$music_timer = setInterval(()=>{
@@ -414,12 +423,24 @@ class Course extends React.Component {
 			case Const.STOP_TEST:
 			break
 			case Const.NEXT_PAGE:
+			this.$playing = false
 			this.hideDraft()
+			this.props.onProgressReset()
+			this.$session.send_message(null, null, message)
+			break
+			case Const.DISABLE_MAGIC:
+			this.props.onProgressReset()
 			this.$session.send_message(null, null, message)
 			break
 			case "gift":
 			this.props.onNewGift(data)
 			this.$session.send_message(null, null, message)
+			break
+			case "progress":
+			//接收到来自学生的进度提示通知界面调整
+			if (this.props.switches.magic) {
+				this.props.onProgressUpdate(message.from, data.percent)
+			}
 			break
 			default:
 			this.$session.send_message(null, null, message)
@@ -558,21 +579,6 @@ class Course extends React.Component {
 			this.$room.dance(id, $(`#student_${id}`)[0])
 		}
 		this.$last_dancing = null
-	}
-
-	__time_to_str() {
-		let time = this.state.time
-		let date = new Date(time)
-		let year = date.getFullYear(),
-			month = date.getMonth() + 1,
-			day = date.getDate(),
-			hour = date.getHours(),
-			minutes = date.getMinutes()
-		let format   = (num)=>num>9?num:("0"+num)
-		return [
-			<p key="0">{format(hour)}:{format(minutes)}</p>,
-			<p key="1">{year}/{month}/{day}</p>
-		]
 	}
 
 	__counter_time_to_str() {
@@ -819,15 +825,12 @@ class Course extends React.Component {
 							<div className="counter">
 								倒计时：
 								{this.__counter_time_to_str()}
-								<div className="split"></div>
-								<div className="time">{this.__time_to_str()}</div>
 							</div>
 						):(
 							<div className="counter pull-right">
 								<button className="help-btn" onClick={()=>{
 									this.onHelpClick()
 								}}></button>
-								<div className="time">{this.__time_to_str()}</div>
 							</div>
 						)}
 					</div>
@@ -872,6 +875,8 @@ const mapDispatchToProps = dispatch => ({
 	showLoading 	: (message) => dispatch(showLoading(message)),
 	hideLoading 	: () => dispatch(hideLoading()),
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
+	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
+	onProgressReset : () => dispatch(onProgressReset()),
 })
   
 export default connect(

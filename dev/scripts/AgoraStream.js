@@ -224,6 +224,7 @@ class Room extends Eventer {
 				this.trigger("LEAVE_ROOM", this.$client)
 			});
 		} catch (err) {
+			this.trigger("LEAVE_ROOM", this.$client)
 			console.log("client leave failed ", err);
 		}
 	}

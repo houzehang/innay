@@ -177,3 +177,12 @@ export const onUpdateGift = (data)=>({
 	type: types.GIFT_UPDATE,
 	data
 })
+
+export const onProgressUpdate = (id, percent)=>({
+	type: types.PROGRESS_UPDATE,
+	percent, id
+})
+
+export const onProgressReset = ()=>({
+	type: types.PROGRESS_RESET
+})
