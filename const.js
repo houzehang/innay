@@ -17,6 +17,7 @@ module.exports = {
 	},
 	CELL_COUNT 			: 4,
 	LOGIN_E_NET			: 201,
+	LOGOUT_E_KICKED		: 103,
 	LOGOUT_E_NET		: 102,
 	LOGOUT_SUCCESS		: 101,
 	GENERAL_E_NOT_LOGIN : 1003,

@@ -1,21 +1,24 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
+import Download from '../components/download'
 import Course from './course.page'
 import Devices from './devices'
+import NetStatus from '../components/netstatus'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm
+	confirm, alert
 } from '../actions'
+const NetDetector = require("../netdetector")
 
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$calendarRef = React.createRef()
-		this.state = { recording: false }
+		this.state = { recording: false, netstatus: 1 }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -23,8 +26,12 @@ class Main extends React.Component {
 
 	strToDate(str) {
 		let parsed = str.split(/[-: ]/)
-		return new Date(parsed[0], parsed[1] - 1, parsed[2], parsed[3], parsed[4], parsed[5])
-	  }
+		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.$detect_timer)
+	}
 
 	componentDidMount() {
 		let { account } = this.props  
@@ -39,6 +46,9 @@ class Main extends React.Component {
 					if (left <= 5 * 60 * 1000) {
 						room.can_enter = true
 					}
+					if (left <= 60 * 60 * 1000) {
+						room.can_download = true
+					}
 					if (left > 0) {
 						let days  	= left / 1000 / 60 / 60 / 24 >> 0
 						left       -= days * 1000 * 60 * 60 * 24
@@ -52,6 +62,19 @@ class Main extends React.Component {
 				this.props.onRoomList(res.rooms)
 			})
 		}
+		let detector = new NetDetector
+		detector.on("NET:ERROR", ()=>{
+			console.log("net error")
+			this.setState({ netstatus: 0 })
+		})
+		detector.on("NET:STATUS", (level)=>{
+			console.log("net status", level)
+			this.setState({ netstatus: level })
+		})
+		this.$detect_timer = setInterval(()=>{
+			detector.check()
+		},5000)
+		detector.check()
 	}
 
 	__student_page() {
@@ -88,12 +111,12 @@ class Main extends React.Component {
 								<div className="name">{room.name}</div>
 								<div className="index">老师：{room.teacher_name}</div>
 							</div>
-							<button className={!room.can_enter?"start-btn disabled":"start-btn"} onClick={()=>{
+							<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={room.can_enter?"":"true"} onClick={()=>{
 								this.onStartRoom(room)
 							}}></button>
-							<button className="record-btn" onClick={()=>{
-								this.onRecordRoom(room)
-							}}></button>
+							{room.can_download?<button className="download-btn" onClick={()=>{
+								this.onDownload(room, room.can_enter)
+							}}></button>:""}
 						</div>
 					]) : ([
 						<div key="0" className="time">接下来没有课程啦～</div>,
@@ -155,8 +178,8 @@ class Main extends React.Component {
 										<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>
-										<button className="record-btn" onClick={()=>{
-											this.onRecordRoom(room)
+										<button className="download-btn" onClick={()=>{
+											this.onDownload(room,room.state!=2)
 										}}></button>
 									</div>
 								)))
@@ -184,6 +207,22 @@ class Main extends React.Component {
 		this.onEnterRoom()
 	}
 
+	onDownload(data, canenter) {
+		this.props.alert({
+			title: "下载课程包",
+			content: <Download name={data.en_name} complete={()=>{
+				if (canenter) {
+					this.onStartRoom(data)
+				} else {
+					this.props.alert({
+						content: "下载完成。"
+					})
+				}
+			}}/>,
+			nobutton: true
+		})
+	}
+
 	onEnterRoom() {
 		this.props.onStartCourse()
 	}
@@ -207,7 +246,7 @@ class Main extends React.Component {
 			}
 		}
 		return (
-			<div className="full-h">{content}</div>
+			<div className="full-h"><NetStatus status={this.state.netstatus}/>{content}</div>
 		)
 	}
 }
@@ -230,7 +269,8 @@ const mapDispatchToProps = dispatch => ({
 	onCalendarData : (data) => dispatch(onCalendarData(data)),
 	onLogout       : () => dispatch(onLogout()),
 	onStartCourse  : () => dispatch(onStartCourse()),
-	confirm 	   : (data) => dispatch(confirm(data))
+	confirm 	   : (data) => dispatch(confirm(data)),
+	alert 	   	   : (data) => dispatch(alert(data))
 })
   
 export default connect(

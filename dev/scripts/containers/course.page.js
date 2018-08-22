@@ -165,14 +165,28 @@ class Course extends React.Component {
 					this.props.onEndCourse()
 				}
 			})
+			let $waiting_timer = null
+			this.$signal.on("RECONNECT_SIGNAL", ()=>{
+				this.props.showLoading("网络不稳定哦，正在重连中~")
+			})
 			this.$signal.on("CONNECT_SIGNAL", ()=>{
-				this.props.showLoading("正在建立连接...")
+				this.props.showLoading("正在连线其他人，稍等一下~")
+				$waiting_timer = setTimeout(()=>{
+					this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
+				},6000)
 			})
 			this.$signal.on("CONNECTED_SIGNAL", ()=>{
 				this.props.hideLoading()
+				clearTimeout($waiting_timer)
+				this.$session.send_message("signal_connected")
 			})
 			this.$signal.on("CONNECT_SIGNAL_ERROR", ()=>{
-				this.props.showLoading("连接出错，正在重试！")
+				this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
+				clearTimeout($waiting_timer)
+			})
+			this.$signal.on("CONNECT_KICKED", ()=>{
+				this.props.showLoading("有人登录了你的帐号哦~")
+				clearTimeout($waiting_timer)
 			})
 			this.$signal.on("CHANNEL_NEW_USER", (user)=>{
 				this.$session.send_message(Const.MEMBER_ADD, {}, {

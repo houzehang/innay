@@ -5,23 +5,22 @@ const dialog = (state = {}, action) => {
 		case SHOW_ALERT:
 		return {
 			...state,
+			confirm: null,
 			alert: action.configure,
 			hide : false
 		}
-		break
 		case SHOW_CONFIRM:
 		return {
 			...state,
+			alert  : null,
 			confirm: action.configure,
 			hide   : false
 		}
-		break
 		case HIDE_DIALOG:
 		return {
 			...state,
 			hide: true
 		}
-		break
 		default:
 		return state
 	}

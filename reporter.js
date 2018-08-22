@@ -48,7 +48,7 @@ class Reporter {
 
 	__request(data) {
 		request({
-			url: "https://kecheng1.runsnailrun.com/api/write_log_file",
+			url: "https://www.muwenyuwen.com/api/write_log_file",
 			method: "POST",
 			json: true,
 			headers: {

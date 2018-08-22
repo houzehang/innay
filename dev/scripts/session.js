@@ -1,5 +1,6 @@
-const Eventer = require("./eventer")
-const DEBUG   = require("../../env").DEBUG
+const Eventer 	= require("./eventer")
+const DEBUG   	= require("../../env").DEBUG
+const TC_DEBUG 	= require("../../env").TC_DEBUG
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -71,12 +72,12 @@ class Session extends Eventer {
 		if (DEBUG) {
 			prefix = "http://localhost:3000"
 		} else {
-			prefix = "https://kecheng1.runsnailrun.com"
+			prefix = "https://www.muwenyuwen.com"
 		}
 
 
 		let partition = this.uuid()
-		let webview   = $(`<webview class="webview" src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng${partition}" preload="./libs/inject.js"></webview>`);
+		let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng${partition}"></webview>`);
 		this.$webview = webview[0];
 	}
 
@@ -88,39 +89,17 @@ class Session extends Eventer {
 	}
 
 	__bind() {
-		// window.BridgeH5Command = (callback, content)=>{
-		// 	this.receive_message(JSON.parse(content));
-		// }
-
 		if (this.$webview) {
-			if (DEBUG) {
-				$(this.$webview).on("dom-ready", ()=>{
-					$(this.$webview)[0].openDevTools(); 
-				});
-			}
-			$(this.$webview).off('page-title-updated');
-			$(this.$webview).on('page-title-updated', (event)=>{
-				event = event.originalEvent;
-				let parsed = event.title.match(/^#PART#(\d+)#(\d+)#(.+)$/);
-				if (parsed) {
-					let index = parseInt(parsed[1],10),
-						total = parseInt(parsed[2],10);
-					if (index == total) {
-						this.$_parts.push(parsed[3]);
-						let data = this.$_parts.join("");
-						try {
-							this.receive_message(JSON.parse(data));
-						} catch(e) {
-							console.error(e,data);
-						}
-						this.$_parts = [];
-					} else if (index < total){
-						this.$_parts.push(parsed[3]);
-					} else {
-						this.$_parts = [];
-					}
+			this.$webview.addEventListener("dom-ready", ()=>{
+				if (TC_DEBUG) {
+					this.$webview.openDevTools(); 
 				}
 			});
+			this.$webview.addEventListener('ipc-message', (event) => {
+				if (event.channel == "message") {
+					this.receive_message(event.args[0]);
+				}
+			})
 		}
 	}
 

@@ -45,10 +45,9 @@ class Dialog extends React.Component {
 					{this.props.configure.title || "提示"}
 					<div className="close-btn" onClick={this.hide.bind(this)}></div>
 				</div>
-				<div className="content">
+				<div className={this.props.configure.nobutton?"content nobtn":"content"}>
 					<div className="texts">{this.props.configure.content}</div>
 					{this.props.configure.nobutton?"":<div className="btns">{buttons}</div>}
-					
 				</div>
 			</div>
 		</div>

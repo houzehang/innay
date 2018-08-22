@@ -228,7 +228,7 @@ html,body {
 							line-height: 0.19rem;
 						}
 					}
-					.start-btn,.record-btn {
+					.start-btn,.record-btn,.download-btn {
 						margin-right: 0.27rem;
 						width: 1.38rem;
 						height: 0.48rem;
@@ -253,6 +253,12 @@ html,body {
 						background: #8b460e;
 						&::after {
 							content: "课程回放";
+						}
+					}
+					.download-btn {
+						background: #8b460e;
+						&::after {
+							content: "下载课程包";
 						}
 					}
 				}
@@ -333,7 +339,7 @@ html,body {
 							margin-bottom: 0.18rem;
 						}
 					}
-					.start-btn,.record-btn {
+					.start-btn,.record-btn,.download-btn {
 						margin-right: 0.27rem;
 						width: 1.38rem;
 						height: 0.48rem;
@@ -353,11 +359,22 @@ html,body {
 								content: "已上课";
 							}
 						}
+						&.waiting {
+							&::after {
+								content: "上课时间未到"
+							}
+						}
 					}
 					.record-btn {
 						background: #8b460e;
 						&::after {
 							content: "课程回放";
+						}
+					}
+					.download-btn {
+						background: #8b460e;
+						&::after {
+							content: "下载课程包";
 						}
 					}
 				}
@@ -544,6 +561,10 @@ html,body {
 							justify-content: center;
 							align-items: center;
 							border-right: 1px solid #3078b6;
+							&:active {
+								background-color: #1e6fb4 !important;
+								opacity: 1;
+							}
 							&.course-clear {
 								background: url(../assets/course-clear.png) no-repeat center center;
 								background-size: 0.26rem 0.26rem;

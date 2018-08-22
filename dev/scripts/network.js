@@ -1,10 +1,15 @@
 const Q 		= require('q')
 const Eventer 	= require('./eventer')
 const context 	= require('./context')
+const DEBUG   	= require("../../env").DEBUG
 class Network extends Eventer {
 	constructor() {
 		super()
-		this.$base_url = "https://kecheng1.runsnailrun.com"
+		if (DEBUG) {
+			this.$base_url = "https://kecheng1.runsnailrun.com"
+		} else {
+			this.$base_url = "https://www.muwenyuwen.com"
+		}
 		this.__restore_token()
 	}
 

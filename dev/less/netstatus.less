@@ -1,0 +1,74 @@
+.netstatus {
+	position: fixed;
+	z-index: 1000;
+	right: 0.2rem;
+	top: 0.2rem;
+	.dot {
+		position: absolute;
+		right: 0;
+		top: 0;
+		z-index: 2;
+		width: 0.16rem;
+		height: 0.16rem;
+		background: #a9a6aa;
+		border-radius: 50%;
+		animation: blink 1s 0s linear infinite;
+	}
+	.desc {
+		height: 0.16rem;
+		padding-right: 0.2rem;
+		padding-left: 0.1rem;
+		border-radius: 0.16rem;
+		background: #fff;
+		color: #333;
+		font-size: 0.12rem;
+		line-height: 0.16rem;
+		opacity: 0;
+		transition: opacity 200ms 0s linear;
+	}
+	&:hover {
+		.desc {
+			opacity: 1;
+		}
+	}
+	&.s-0 {
+		.dot {
+			background: #a9a6aa;
+		}
+		.desc {
+			&::after {
+				content: "网络已断开";
+			}
+		}
+	}
+	&.s-1 {
+		.dot {
+			background: #7ab626;
+		}
+		.desc {
+			&::after {
+				content: "网络状态良好";
+			}
+		}
+	}
+	&.s-2 {
+		.dot {
+			background: #fdde32;
+		}
+		.desc {
+			&::after {
+				content: "网络状态一般";
+			}
+		}
+	}
+	&.s-3 {
+		.dot {
+			background: #c50b43;
+		}
+		.desc {
+			&::after {
+				content: "网络状态很差";
+			}
+		}
+	}
+}

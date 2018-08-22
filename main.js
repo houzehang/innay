@@ -5,11 +5,10 @@
  * 2. 创建主窗口
  * 3. 添加渲染线程监听器
  */
-const {DEBUG}      = require('./env.js');
+const {TC_DEBUG}      = require('./env.js');
 const Const        = require('./const.js'); 
 const fs           = require("fs");
 const path         = require("path");
-
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
 const log = require('electron-log');
@@ -50,7 +49,7 @@ function createUpdateWindow() {
             plugins: true
         }
     });
-    if (DEBUG) {
+    if (TC_DEBUG) {
         updateWindow.webContents.openDevTools();
     }
     updateWindow.on('closed', () => {
@@ -95,7 +94,7 @@ function createMainWindow() {
     process.env.APP_PATH = app.getAppPath();
     console.log("app path",process.env.APP_PATH)
     let $main = new BrowserWindow({width: 1300, height: 790, 
-        resizable: DEBUG,
+        resizable: TC_DEBUG,
         center: true,
         frame: true,
         autoHideMenuBar: true,
@@ -107,7 +106,7 @@ function createMainWindow() {
     })
     $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
-    if (DEBUG) {
+    if (TC_DEBUG) {
         $main.webContents.openDevTools();
     }
     $main.webContents.on('did-finish-load', () => {
