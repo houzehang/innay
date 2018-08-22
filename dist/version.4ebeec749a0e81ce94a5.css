@@ -357,6 +357,16 @@ body .loading-mask .loading-text {
   -moz-animation: blink 2s 0s linear infinite;
   -ms-animation: blink 2s 0s linear infinite;
 }
+body .loading-mask .loading-close {
+  width: 0.3rem;
+  height: 0.3rem;
+  background: rgba(255, 255, 255, 0.6) url(./b81ec460fa214c7304087c8c384fa698.png) no-repeat center center;
+  background-size: 0.15rem auto;
+  position: absolute;
+  right: 0.15rem;
+  top: 0.15rem;
+  border-radius: 50%;
+}
 body .mask {
   left: 0;
   top: 0;
@@ -1007,6 +1017,16 @@ body .loading-mask .loading-text {
   -webkit-animation-fill-mode: forwards;
   -moz-animation: blink 2s 0s linear infinite;
   -ms-animation: blink 2s 0s linear infinite;
+}
+body .loading-mask .loading-close {
+  width: 0.3rem;
+  height: 0.3rem;
+  background: rgba(255, 255, 255, 0.6) url(./b81ec460fa214c7304087c8c384fa698.png) no-repeat center center;
+  background-size: 0.15rem auto;
+  position: absolute;
+  right: 0.15rem;
+  top: 0.15rem;
+  border-radius: 50%;
 }
 body .mask {
   left: 0;
