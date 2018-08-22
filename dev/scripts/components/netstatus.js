@@ -5,7 +5,7 @@ require("../../less/netstatus.less")
 class NetStatus extends React.Component {
 	render() {
 		return (
-			<div className={`netstatus s-${this.props.status}`}>
+			<div className={`netstatus s-${this.props.status} ${this.props.warning?"warning":""}`}>
 				<div className="dot"></div>
 				<div className="desc"></div>
 			</div>
@@ -15,7 +15,8 @@ class NetStatus extends React.Component {
 
 
 NetStatus.propTypes = {
-	status: PropTypes.number.isRequired
+	status: PropTypes.number.isRequired,
+	warning: PropTypes.bool.isRequired
 }
 
 export default NetStatus

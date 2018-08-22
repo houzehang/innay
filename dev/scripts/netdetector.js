@@ -5,8 +5,9 @@ class NetDetector extends Eventer {
 	constructor() {
 		super()
 		this.$size 			= 439924
-		this.$net_status 	= [ 200, 500, 1000, 2000 ]
-		this.$times 		= 1
+		this.$net_status 	= [ 300, 600, 1000, 2000 ]
+		this.$times 		= 2
+		this.$status        = 1
 		if (DEBUG) {
 			this.$file = "https://lessons.runsnailrun.com/netdetector.jpg"
 		} else {
@@ -27,8 +28,10 @@ class NetDetector extends Eventer {
 					break
 				}
 			}
+			this.$status = level
 			complete(level)
 		}, ()=>{
+			this.$status = 0
 			complete(false)
 		})
 	}
@@ -39,6 +42,18 @@ class NetDetector extends Eventer {
 			success: complete,
 			error  : error
 		})
+	}
+
+	get good() {
+		return this.$status == 1
+	}
+
+	get offline() {
+		return this.$status == 0
+	}
+
+	get warning() {
+		return this.$status == 0 || this.$status > 2
 	}
 
 	check() {
@@ -56,6 +71,10 @@ class NetDetector extends Eventer {
 				}
 			})
 		})()
+	}
+
+	unload() {
+		clearTimeout(this.$timer)
 	}
 }
 

@@ -4,9 +4,12 @@ class Loading {
 	}
 
 	__init() {
-		this.$dom = $(`<div class="loading-mask"><div class="loading-text"></div></div>`)
+		this.$dom = $(`<div class="loading-mask"><div class="loading-close"></div><div class="loading-text"></div></div>`)
 		this.$dom.hide().appendTo("body")
 		this.$inited = true
+		$(this.$dom).on("click",".loading-close",()=>{
+			this.hide()
+		})
 	}
 
 	show(message = "") {

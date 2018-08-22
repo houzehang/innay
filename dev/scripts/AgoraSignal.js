@@ -172,7 +172,9 @@ class Signalize extends Eventer {
 		} else {
 			this.trigger("CHANNEL_LEAVED", this.$channel)
 		}
-		this.$session.logout()
+		if (this.$session) {
+			this.$session.logout()
+		}
 	}
 
 	send(message) {

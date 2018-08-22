@@ -10,35 +10,41 @@ class Dialog extends React.Component {
 	}
 
 	componentDidMount() {
-		setTimeout(()=>{
+		this.$show_timer = setTimeout(()=>{
 			this.setState({showing: true})
 		},100)
 	}
 
+	componentWillUnmount() {
+		clearTimeout(this.$show_timer)
+	}
+
 	hide() {
-		if (this.props.configure.cancel) {
-			this.props.configure.cancel()
-		}
 		this.setState({showing: false})
-		setTimeout(()=>{
-			this.props.dispatchHide()
-		},300)
+		this.props.dispatchHide()
+		if (this.props.configure.cancel) {
+			setTimeout(()=>{
+				this.props.configure.cancel()
+			},0)
+		}
 	}
 
 	sure() {
-		if (this.props.configure.sure) {
-			this.props.configure.sure()
-		}
 		this.hide()
+		if (this.props.configure.sure) {
+			setTimeout(()=>{
+				this.props.configure.sure()
+			},0)
+		}
 	}
 
 	render() {
 		let buttons = []
 		const { type } = this.props
 		if (type == "confirm") {
-			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>取消</button>)
+			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{this.props.configure.cancel_txt||"确定"}</button>)
 		}
-		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>确定</button>)
+		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{this.props.configure.sure_txt||"确定"}</button>)
 		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")}>
 			<div className={"dialog "+(this.props.configure.classname||"")} style={this.props.configure.styles}>
 				<div className="title">

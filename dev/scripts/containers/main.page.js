@@ -17,8 +17,9 @@ const NetDetector = require("../netdetector")
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
-		this.$calendarRef = React.createRef()
-		this.state = { recording: false, netstatus: 1 }
+		this.$detect_delay = 5000
+		this.$calendarRef  = React.createRef()
+		this.state = { recording: false, netstatus: 1, netwarning: false }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -30,7 +31,8 @@ class Main extends React.Component {
 	}
 
 	componentWillUnmount() {
-		clearInterval(this.$detect_timer)
+		clearTimeout(this.$detect_timer)
+		this.$detector.unload()
 	}
 
 	componentDidMount() {
@@ -43,12 +45,12 @@ class Main extends React.Component {
 					let date = this.strToDate(room.start_time)
 					let left = date.getTime() - new Date().getTime()
 					room.left = left
-					if (left <= 5 * 60 * 1000) {
-						room.can_enter = true
-					}
-					if (left <= 60 * 60 * 1000) {
-						room.can_download = true
-					}
+					// if (left <= 5 * 60 * 1000) {
+					room.can_enter = true
+					// }
+					// if (left <= 60 * 60 * 1000) {
+					room.can_download = true
+					// }
 					if (left > 0) {
 						let days  	= left / 1000 / 60 / 60 / 24 >> 0
 						left       -= days * 1000 * 60 * 60 * 24
@@ -62,18 +64,31 @@ class Main extends React.Component {
 				this.props.onRoomList(res.rooms)
 			})
 		}
+		this.__start_detector()
+	}
+
+	__set_detect_delay() {
+		let times = [2000,20000,20000,5000,2000]
+		this.$detect_delay = times[this.state.netstatus]
+		clearTimeout(this.$detect_timer)
+		this.$detect_timer = setTimeout(()=>{
+			this.$detector.check()
+		},this.$detect_delay)
+	}
+
+	__start_detector() {
 		let detector = new NetDetector
+		this.$detector = detector
 		detector.on("NET:ERROR", ()=>{
 			console.log("net error")
-			this.setState({ netstatus: 0 })
+			this.setState({ netstatus: 0, netwarning: this.$detector.warning })
+			this.__set_detect_delay()
 		})
 		detector.on("NET:STATUS", (level)=>{
 			console.log("net status", level)
-			this.setState({ netstatus: level })
+			this.setState({ netstatus: level, netwarning: this.$detector.warning })
+			this.__set_detect_delay()
 		})
-		this.$detect_timer = setInterval(()=>{
-			detector.check()
-		},5000)
 		detector.check()
 	}
 
@@ -192,6 +207,35 @@ class Main extends React.Component {
 	}
 
 	onStartRoom(data) {
+		if (this.$detector.offline) {
+			this.props.confirm({
+				content: "您的网络已经断开，建议您检查网络后再开始上课。",
+				sure_txt: "去检查网络",
+				cancel_txt: "坚持上课",
+				cancel: ()=>{
+					setTimeout(()=>{
+						this.__onStartRoom(data)
+					},400)
+				}
+			})
+		} else if (!this.$detector.good) {
+			this.props.confirm({
+				content: "系统检测到您的网络较慢，建议你先下载课程包再开始上课。",
+				sure_txt: "去下载",
+				cancel_txt: "直接上课",
+				sure: ()=>{
+					this.onDownload(data, true)
+				},
+				cancel: ()=>{
+					this.__onStartRoom(data)
+				}
+			})
+		} else {
+			this.__onStartRoom(data)
+		}
+	}
+
+	__onStartRoom(data) {
 		this.props.onRoomInfo(data)
 		this.props.confirm({
 			content: <div>上课时间：{data.start_time}<br/>确认现在开始上课吗？</div>,
@@ -212,7 +256,7 @@ class Main extends React.Component {
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
 				if (canenter) {
-					this.onStartRoom(data)
+					this.__onStartRoom(data)
 				} else {
 					this.props.alert({
 						content: "下载完成。"
@@ -246,7 +290,7 @@ class Main extends React.Component {
 			}
 		}
 		return (
-			<div className="full-h"><NetStatus status={this.state.netstatus}/>{content}</div>
+			<div className="full-h"><NetStatus status={this.state.netstatus} warning={this.state.netwarning}/>{content}</div>
 		)
 	}
 }
