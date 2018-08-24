@@ -1,4 +1,5 @@
 const path = require('path')
+const fs   = require('fs')
 const {ipcMain,app} = require('electron');
 const log = require('electron-log');
 const {DEBUG}   = require('./env.js');
@@ -14,27 +15,24 @@ class StaticServer {
 		} else {
 			this.$dir = path.join(app.getAppPath(), '..', 'downloads');
 		}
+		this.__clearCache()
 		log.log("download dir",this.$dir);
 		ipcMain.on("DOWNLOAD", (event, url)=>{
-			console.log("on download message", url)
-			log.log("on download message",url);
+			this.__log("on download message",url);
 			this.__download(url)
 		})
 		this.$entity.webContents.session.on("will-download", (event, item, webContents)=>{
 			let file = path.join(this.$dir,item.getFilename())
-			log.log("will download",file);
+			this.__log("will download",file);
 			item.setSavePath(file)
 			item.on("updated", (event, state)=>{
 				if (state === 'interrupted') {
-					log.log("Download is interrupted but can be resumed");
-					console.log('Download is interrupted but can be resumed')
+					this.__log("Download is interrupted but can be resumed")
 				} else if (state === 'progressing') {
 					if (item.isPaused()) {
-						log.log("Download is paused");
-						console.log('Download is paused')
+						this.__log("Download is paused")
 					} else {
-						log.log(`Received bytes: ${item.getReceivedBytes()},${item.getTotalBytes()}`);
-						console.log(`Received bytes: ${item.getReceivedBytes()},${item.getTotalBytes()}`)
+						this.__log(`Received bytes: ${item.getReceivedBytes()},${item.getTotalBytes()}`)
 					}
 				}
 			})
@@ -42,18 +40,33 @@ class StaticServer {
 				this.$downloading = false
 				let url = item.getURL()
 				if (state === 'completed') {
-					log.log('Download successfully',file,item.getURL());
-					console.log('Download successfully',file,item.getURL())
+					this.__log('Download successfully',file,item.getURL())
 					this.$loaded[url] = file
 					this.$entity.webContents.send('DOWNLOADED', url, file);
 					this.__download()
 				} else {
-					log.log(`Download failed: ${state}`);
-					console.log(`Download failed: ${state}`)
+					this.__log(`Download failed: ${state}`)
 					this.__download(url)
 				}
 			})
 		})
+	}
+
+	__clearCache () {
+		console.log("clear cache..")
+		let files = [], dir = this.$dir
+		if (fs.existsSync(dir)) {
+			files = fs.readdirSync(dir)
+			files.forEach((file)=>{
+				let curPath = path.join(dir, file)
+				fs.unlinkSync(curPath)
+			})
+		}
+	};
+
+	__log(...params) {
+		log.log(...params);
+		console.log(...params)
 	}
 
 	__download(url) {
@@ -65,10 +78,24 @@ class StaticServer {
 		}
 		url = this.$down_queue.shift()
 		if (this.$loaded[url]) {
+			this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
+			this.__log("file already loaded!", url)
 			this.__download()
 			return
 		}
 		if (url) {
+			// 判断本地硬盘是否存在文件
+			let name = url.match(/([^\/]+)$/)
+			if (name) {
+				let file = path.join(this.$dir,name[1])
+				if (fs.existsSync(file)) {
+					this.$loaded[url] = file
+					this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
+					this.__log("file already exist!", url)
+					this.__download()
+					return
+				}
+			}
 			this.$downloading = true
 			this.$entity.webContents.downloadURL(url)
 		}

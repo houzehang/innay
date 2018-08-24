@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 require("../../less/download.less")
 const ENV = require("../../../env")
+const {ipcRenderer} 	= $require('electron');
 
 class Download extends React.Component {
 	constructor(props) {
@@ -18,6 +19,8 @@ class Download extends React.Component {
 		this.$webview.current.addEventListener('ipc-message', (event) => {
 			if (event.channel == "completed") {
 				this.props.complete()
+			} else if (event.channel == "loadsound") {
+				ipcRenderer.send("DOWNLOAD",event.args[0])
 			}
 		})
 	}
