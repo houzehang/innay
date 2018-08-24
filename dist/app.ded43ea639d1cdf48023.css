@@ -1889,6 +1889,10 @@ body .page {
   flex-direction: column;
   align-items: center;
 }
+html .page::-webkit-scrollbar,
+body .page::-webkit-scrollbar {
+  display: none;
+}
 html .page .gift-layer .dialog,
 body .page .gift-layer .dialog {
   width: 7.3rem;
@@ -2017,6 +2021,10 @@ body .page.calendar-page .calendar-inner {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   padding: 0.3rem 0;
+}
+html .page.calendar-page .calendar-inner::-webkit-scrollbar,
+body .page.calendar-page .calendar-inner::-webkit-scrollbar {
+  display: none;
 }
 html .page.calendar-page .courses,
 body .page.calendar-page .courses {

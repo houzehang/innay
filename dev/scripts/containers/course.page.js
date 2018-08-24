@@ -19,12 +19,14 @@ import {
 	onProgressUpdate,
 	onUpdateGift, onProgressReset
 } from '../actions'
-const net 		= require("../network")
-const Room 		= require("../AgoraStream")
-const Signalize	= require('../AgoraSignal')
-const Session   = require('../session')
-const Const   	= require('../../const')
-const Storage   = require('../Storage')
+const net 			= require("../network")
+const Room 			= require("../AgoraStream")
+const Signalize		= require('../AgoraSignal')
+const Session   	= require('../session')
+const Const   		= require('../../const')
+const Storage   	= require('../Storage')
+const path			= $require("path")
+const {ipcRenderer} 	= $require('electron');
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
@@ -43,6 +45,11 @@ class Course extends React.Component {
 			this.$room 		= new Room(this)
 			this.$signal	= new Signalize(this)
 		}
+		this.$audios_files = {}
+		ipcRenderer.on("DOWNLOADED", (event, url, file)=>{
+			console.log("DOWNLOADED",url, file)
+			this.$audios_files[url] = file
+		})
 	}
 
 	get uuid() {
@@ -87,10 +94,19 @@ class Course extends React.Component {
 		}
 	}
 
+	__load_sound(url) {
+		console.log("call load file...",url)
+		ipcRenderer.send("DOWNLOAD",url)
+	}
+
 	playMusic(url, needevent) {
 		this.stopMusic()
-		let result = this.$room.rtc.startAudioMixing(url,true,false,1)
-		console.log("start audio mix",url,result,needevent)
+		let soundUrl = url
+		if (this.$audios_files[url]) {
+			soundUrl = this.$audios_files[url]
+		}
+		let result = this.$room.rtc.startAudioMixing(soundUrl,true,false,1)
+		console.log("start play effect",soundUrl,needevent,result)
 		if (needevent) {
 			this.$playing = url
 			this.$session.send_message("soundupdate",{url:this.$playing,time:0})
@@ -396,6 +412,9 @@ class Course extends React.Component {
 				break
 				case "showdraft":
 				this.showDraft(data.content)
+				break
+				case "loadsound":
+				this.__load_sound(data.url)
 				break
 				default:
 				if (message.type.indexOf("*") == -1) {

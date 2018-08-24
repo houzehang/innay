@@ -8,6 +8,9 @@ echo "step(1/${TOTAL_STEP}) compiling files"
 if [ "$2" = "-debug" ];then
 	echo 'debug mode'
 	echo 'module.exports = {DEBUG : false,TC_DEBUG : true}' > env.js
+elif [ "$2" = "-xdebug" ];then
+	echo 'xdebug mode'
+	echo 'module.exports = {DEBUG : true,TC_DEBUG : true}' > env.js
 else
 	echo 'module.exports = {DEBUG : false,TC_DEBUG : false}' > env.js
 fi
@@ -19,7 +22,7 @@ cp -r installers output
 cp const.js output
 cp env.js output
 cp main.js output
-cp reporter.js output
+cp staticserv.js output
 cp package.json output
 
 

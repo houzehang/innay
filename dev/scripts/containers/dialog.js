@@ -42,7 +42,7 @@ class Dialog extends React.Component {
 		let buttons = []
 		const { type } = this.props
 		if (type == "confirm") {
-			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{this.props.configure.cancel_txt||"确定"}</button>)
+			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{this.props.configure.cancel_txt||"取消"}</button>)
 		}
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{this.props.configure.sure_txt||"确定"}</button>)
 		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")}>

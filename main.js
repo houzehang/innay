@@ -5,10 +5,11 @@
  * 2. 创建主窗口
  * 3. 添加渲染线程监听器
  */
-const {TC_DEBUG}      = require('./env.js');
+const {TC_DEBUG}   = require('./env.js');
 const Const        = require('./const.js'); 
 const fs           = require("fs");
 const path         = require("path");
+const StaticServ   = require("./staticserv")
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
 const log = require('electron-log');
@@ -125,6 +126,7 @@ function createMainWindow() {
         createMainWindow()
         $main.destroy()
     })
+    new StaticServ($main)
 }
 
 app.on('window-all-closed', () => {
