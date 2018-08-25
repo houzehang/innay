@@ -53,7 +53,7 @@ class StaticServer {
 	}
 
 	__clearCache () {
-		console.log("clear cache..")
+		this.__log("clear cache..")
 		let files = [], dir = this.$dir
 		if (fs.existsSync(dir)) {
 			files = fs.readdirSync(dir)
