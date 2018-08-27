@@ -6,6 +6,7 @@ import {
 	alert
 } from '../actions'
 const net = require("../network")
+const context = require("../context")
 
 class Login extends React.Component {
 	constructor(props) {
@@ -35,6 +36,7 @@ class Login extends React.Component {
 		}).then((res)=>{
 			net.token 		= res.token
 			net.sigtoken 	= res.signaling_token
+			context.user 	= res.user
 			this.props.hideLoading()
 			this.props.loginSuccess(res.user)
 		},()=>{

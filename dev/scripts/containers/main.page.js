@@ -13,6 +13,7 @@ import {
 	confirm, alert
 } from '../actions'
 const NetDetector = require("../netdetector")
+const context = require("../context")
 
 class Main extends React.Component {
 	constructor(props) {
@@ -64,6 +65,7 @@ class Main extends React.Component {
 				this.props.onRoomList(res.rooms)
 			})
 		}
+		context.user = this.props.account
 		this.__start_detector()
 	}
 
@@ -262,7 +264,7 @@ class Main extends React.Component {
 						content: "下载完成。"
 					})
 				}
-			}}/>,
+			}} user={this.props.account}/>,
 			nobutton: true
 		})
 	}

@@ -9,6 +9,14 @@ class Context {
 		this.$dmg = dmg
 	}
 
+	get user() {
+		return this.$user || {}
+	}
+
+	set user(user) {
+		this.$user = user
+	}
+
 	get loading() {
 		return this.$loading
 	}

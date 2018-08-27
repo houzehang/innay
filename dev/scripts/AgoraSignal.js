@@ -179,6 +179,7 @@ class Signalize extends Eventer {
 
 	send(message) {
 		if (this.$channel) {
+			clearTimeout($timer)
 			let $timer = setTimeout(()=>{
 				this.__reconnect(()=>{
 					this.send(message)

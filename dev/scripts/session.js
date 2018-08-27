@@ -118,9 +118,7 @@ class Session extends Eventer {
 			for(let key in extra) {
 				message[key] = extra[key]
 			}
-			// BridgeH5Do(JSON.stringify(message))
-
-			this.$webview.executeJavaScript(`BridgeH5Do(${JSON.stringify(message)})`);
+			this.$webview.send('message', message);
 		} else {
 			this.$queue.push([type, data, extra])
 		}

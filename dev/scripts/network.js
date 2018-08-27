@@ -10,6 +10,7 @@ class Network extends Eventer {
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"
 		}
+		this.$log_queue = []
 		this.__restore_token()
 	}
 
@@ -149,6 +150,23 @@ class Network extends Eventer {
 	 */
 	beginClass(channel_id) {
 		return this.__request('/room/class_begin',{channel_id},"post")
+	}
+
+	/**
+	 * 发送log数据
+	 * @param {*} data 
+	 */
+	log(data={}) {
+		console.log(data)
+		data.user = context.user.id
+		this.$log_queue.push(data)
+		clearTimeout(this.$log_delay)
+		this.$log_delay = setTimeout(()=>{
+			if (this.$log_queue.length > 0) {
+				$.post(`${this.$base_url}/api/h5_log`,{logs:this.$log_queue})
+			}
+			this.$log_queue = []
+		},5000)
 	}
 }
 

@@ -11,11 +11,12 @@ class Download extends React.Component {
 	}
 
 	componentDidMount() {
-		if (ENV.TC_DEBUG) {
-			this.$webview.current.addEventListener("dom-ready", ()=>{
+		this.$webview.current.addEventListener("dom-ready", ()=>{
+			if (ENV.TC_DEBUG) {
 				this.$webview.current.openDevTools(); 
-			});
-		}
+			}
+			this.$webview.current.send("userinfo", this.props.user)
+		});
 		this.$webview.current.addEventListener('ipc-message', (event) => {
 			if (event.channel == "completed") {
 				this.props.complete()
@@ -42,7 +43,8 @@ class Download extends React.Component {
 
 Download.propTypes = {
 	name: PropTypes.string.isRequired,
-	complete: PropTypes.func.isRequired
+	complete: PropTypes.func.isRequired,
+	user: PropTypes.object.isRequired
 }
 
 export default Download

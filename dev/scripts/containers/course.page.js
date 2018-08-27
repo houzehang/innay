@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux'
 import StudentHead from '../components/student-head'
 import HandsUp from '../components/handsup'
-import Devices from './devices'
 import { 
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
@@ -24,8 +23,6 @@ const Room 			= require("../AgoraStream")
 const Signalize		= require('../AgoraSignal')
 const Session   	= require('../session')
 const Const   		= require('../../const')
-const Storage   	= require('../Storage')
-const path			= $require("path")
 const {ipcRenderer} 	= $require('electron');
 import * as types from '../constants/ActionTypes'
 
@@ -47,7 +44,7 @@ class Course extends React.Component {
 		}
 		this.$audios_files = {}
 		ipcRenderer.on("DOWNLOADED", (event, url, file)=>{
-			console.log("DOWNLOADED",url, file)
+			net.log({name:"DOWNLOADED",url,file})
 			this.$audios_files[url] = file
 		})
 	}
@@ -106,7 +103,7 @@ class Course extends React.Component {
 			soundUrl = this.$audios_files[url]
 		}
 		let result = this.$room.rtc.startAudioMixing(soundUrl,true,false,1)
-		console.log("start play effect",soundUrl,needevent,result)
+		net.log({name:"play music",soundUrl,needevent,result})
 		if (needevent) {
 			this.$playing = url
 			this.$session.send_message("soundupdate",{url:this.$playing,time:0})
