@@ -138,7 +138,7 @@ class Main extends React.Component {
 					]) : ([
 						<div key="0" className="time">接下来没有课程啦～</div>,
 						<div key="1" className="no-lesson">
-							去“沐文大语文”小程序<br/>
+							去“明兮大语文”小程序<br/>
 							和其他小朋友一起读诗
 						</div>
 					]) }

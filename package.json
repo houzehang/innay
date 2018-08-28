@@ -1,7 +1,7 @@
 {
   "name": "kecheng-pc",
   "version": "1.0.12",
-  "description": "沐文大语文客户端",
+  "description": "明兮大语文客户端",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

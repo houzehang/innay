@@ -46,7 +46,7 @@ class Network extends Eventer {
 					resolve(res.data)
 				},
 				error: (res)=>{
-					if (res.status == 401) {
+					if (res.status == 401 || res.status == 400) {
 						//登录
 						this.trigger("LOGOUT_NEEDED")
 						return
