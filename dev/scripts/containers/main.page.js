@@ -70,7 +70,7 @@ class Main extends React.Component {
 	}
 
 	__set_detect_delay() {
-		let times = [2000,20000,20000,5000,2000]
+		let times = [2000,20000,20000,10000,10000]
 		this.$detect_delay = times[this.state.netstatus]
 		clearTimeout(this.$detect_timer)
 		this.$detect_timer = setTimeout(()=>{
