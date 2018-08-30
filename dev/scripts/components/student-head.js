@@ -24,10 +24,14 @@ class StudentHead extends React.Component {
 			hasUser = this.props.user.stream
 		}
 		return hasUser ? (
-					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={(event)=>{
-						this.setState({ hover:true })
+					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={()=>{
+						if (this.props.isTeacher) {
+							this.setState({ hover:true })
+						}
 					}} onMouseOut={(event)=>{
-						this.setState({ hover:false })
+						if (this.props.isTeacher) {
+							this.setState({ hover:false })
+						}
 					}}>
 						<div onDoubleClick={()=>{
 							this.props.onClickGift(this.props.user)
@@ -44,36 +48,35 @@ class StudentHead extends React.Component {
 							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
 							{this.props.user.percent ? <div className={this.props.user.percent==100?"avatar-bar full":"avatar-bar"} style={{"width":this.props.user.percent+"%"}}></div>:"" }
 							<div className="avatar-name">{this.props.user.child_name}</div>
+							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
-						<div className="avatar-details">
-							<div className="summary">
-								<div className="summary-inner">
-									<div className="items">
-										<div className="item handsup">
-											<div className="icon"></div>
-											<div className="num">{this.props.user.handsup}</div>
-										</div>
-										<div className="item speak">
-											<div className="icon"></div>
-											<div className="num">{this.props.user.speak}</div>
-										</div>
-										<div className="item gift-2">
-											<div className="icon"></div>
-											<div className="num">{this.props.user.gift_total || 0}</div>
-										</div>
+						<div className="summary">
+							<div className="summary-inner">
+								<div className="items">
+									<div className="item handsup">
+										<div className="icon"></div>
+										<div className="num">{this.props.user.handsup}</div>
 									</div>
-									<div className={this.props.isTeacher?"btns":"btns student"}>
-										{this.props.isTeacher?(
-											<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
-												this.props.onClickSpeak(this.props.user)
-											}}></button>
-										):""}
-										{this.props.isTeacher?(
-											<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
-												this.props.onClickView(this.props.user)
-											}}></button>
-										):""}
+									<div className="item speak">
+										<div className="icon"></div>
+										<div className="num">{this.props.user.speak}</div>
 									</div>
+									<div className="item gift-2">
+										<div className="icon"></div>
+										<div className="num">{this.props.user.gift_total || 0}</div>
+									</div>
+								</div>
+								<div className={this.props.isTeacher?"btns":"btns student"}>
+									{this.props.isTeacher?(
+										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
+											this.props.onClickSpeak(this.props.user)
+										}}></button>
+									):""}
+									{this.props.isTeacher?(
+										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
+											this.props.onClickView(this.props.user)
+										}}></button>
+									):""}
 								</div>
 							</div>
 						</div>

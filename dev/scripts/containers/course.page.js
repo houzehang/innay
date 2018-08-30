@@ -557,7 +557,7 @@ class Course extends React.Component {
 				this.$signal.send({
 					type: "gift",
 					from: this.props.account.id,
-					to: item.to_id,
+					to: "all",
 					message: {
 						uid: item.to_id,
 						total: item.total
@@ -689,6 +689,9 @@ class Course extends React.Component {
 		students.sort((prev,next)=>{
 			return next.stream_time < prev.stream_time ? 1 : -1
 		})
+		students.sort((prev,next)=>{
+			return (next.gift_total||0) < (prev.gift_total||0) ? 1 : -1
+		})
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
 			if (item.dancing && item.stream) {
@@ -726,6 +729,27 @@ class Course extends React.Component {
 				handsupStudents.push(student)
 			}
 		})
+
+		let TeacherView = <div className="teacher-area">
+			<div className="avatars">
+				<div className="avatar">
+					<div className="avatar-head" id="master-head" style={{
+						"backgroundImage" : this.props.teacher.stream?"":`url(${this.props.teacher.avatarurl})`
+					}}>
+					</div>
+					<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
+				</div>
+				<div className={dancing?"avatar":(this.state.draft?"avatar draft":"avatar nothing")}>
+					<div className="ph-text">未指定小朋友发言</div>
+					<div className="avatar-head" id="dancing-head"></div>
+					<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
+					<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
+				</div>
+			</div>
+		</div>
+		let StudentView = <div className="student-area">
+			{studentHeads}
+		</div>
 		return (
 			<div className="page course-page">
 				<div className="inner">
@@ -830,34 +854,16 @@ class Course extends React.Component {
 							</div>
 						):""}
 					</div>
-					<div className="info">
-						<div className="avatars">
-							<div className="teacher-area">
-								<div className="avatar">
-									<div className="avatar-head" id="master-head" style={{
-										"backgroundImage" : this.props.teacher.stream?"":`url(${this.props.teacher.avatarurl})`
-									}}>
-									</div>
-									<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
-								</div>
-								<div className={dancing?"avatar":(this.state.draft?"avatar draft":"avatar nothing")}>
-									<div className="ph-text">未指定小朋友发言</div>
-									<div className="avatar-head" id="dancing-head"></div>
-									<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
-									<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
-								</div>
-							</div>
-							<div className="student-area">
-								{studentHeads}
-							</div>
-						</div>
+					<div className="entities-area">
+						{this.$view_mode?TeacherView:StudentView}
+						{this.$view_mode?StudentView:TeacherView}
 						{!this.$view_mode?(
 							<div className="counter">
 								倒计时：
 								{this.__counter_time_to_str()}
 							</div>
 						):(
-							<div className="counter pull-right">
+							<div className="counter icon">
 								<button className="help-btn" onClick={()=>{
 									this.onHelpClick()
 								}}></button>
