@@ -689,9 +689,6 @@ class Course extends React.Component {
 		students.sort((prev,next)=>{
 			return next.stream_time < prev.stream_time ? 1 : -1
 		})
-		students.sort((prev,next)=>{
-			return (next.gift_total||0) > (prev.gift_total||0) ? 1 : -1
-		})
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
 			if (item.dancing && item.stream) {
