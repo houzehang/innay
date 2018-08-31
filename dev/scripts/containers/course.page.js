@@ -188,10 +188,21 @@ class Course extends React.Component {
 					this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
 				},6000)
 			})
+			this.$signal.on("HIDE_LOADING", ()=>{
+				this.props.hideLoading()
+				clearTimeout($waiting_timer)
+			})
+			this.$signal.on("NETWORK_BAD", ()=>{
+				this.props.showLoading("网络状态不佳，稍等一下~")
+			})
 			this.$signal.on("CONNECTED_SIGNAL", ()=>{
 				this.props.hideLoading()
 				clearTimeout($waiting_timer)
 				this.$session.send_message("signal_connected")
+			})
+			this.$signal.on("RECONNECTED_SIGNAL", ()=>{
+				// 重新连接上，拉取最新消息
+				this.$session.send_message("signal_reconnected")
 			})
 			this.$signal.on("CONNECT_SIGNAL_ERROR", ()=>{
 				this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
@@ -689,6 +700,9 @@ class Course extends React.Component {
 		students.sort((prev,next)=>{
 			return next.stream_time < prev.stream_time ? 1 : -1
 		})
+		// students.sort((prev,next)=>{
+		// 	return (next.gift_total||0) > (prev.gift_total||0) ? 1 : -1
+		// })
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
 			if (item.dancing && item.stream) {

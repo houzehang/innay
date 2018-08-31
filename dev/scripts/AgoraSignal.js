@@ -8,30 +8,33 @@ class Signalize extends Eventer {
 		this.$inst 		= inst
 		this.$signal 	= Signal(Const.AGORA_APPID)
 		this.$inited    = false
+		this.$is_reconn = false
 		this.$queue 	= []
 		this.$heart_t   = null
 	}
 
-	__reconnect(complete=()=>{}) {
+	__reconnect() {
 		clearTimeout(this.$connect_timer)
 		this.$session.logout()
+		this.$channel = null
 		// 重连
 		this.trigger("RECONNECT_SIGNAL")
 		this.$connect_timer = setTimeout(()=>{
-			this.$inited = false
-			this.join(complete)
+			this.$inited 	= false
+			this.$is_reconn = true
+			this.join()
 		},1000)
 	}
 
-	__on_connect(complete) {
+	__on_connect() {
 		clearTimeout(this.$connect_timer)
 		this.trigger("CONNECT_SIGNAL")
 		this.$connect_timer = setTimeout(()=>{
-			this.__reconnect(complete)
+			this.__reconnect()
 		},10000)
 	}
 
-	__connect_error(complete, isKick) {
+	__connect_error(isKick) {
 		clearTimeout(this.$connect_timer)
 		if (isKick) {
 			this.trigger("CONNECT_KICKED")
@@ -40,7 +43,7 @@ class Signalize extends Eventer {
 		}
 		console.log("retry to join")
 		this.$connect_timer = setTimeout(()=>{
-			this.__reconnect(complete)
+			this.__reconnect()
 		},2000)
 	}
 
@@ -62,7 +65,7 @@ class Signalize extends Eventer {
 			if (this.$inited) {
 				resolve();
 			} else {
-				this.__on_connect(resolve)
+				this.__on_connect()
 				// accout参数必须为字符串
 				// this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
 				this.$session = this.$signal.login(this.$inst.props.account.id+"", "_no_need_token")
@@ -73,27 +76,27 @@ class Signalize extends Eventer {
 				}
 				this.$session.onLoginFailed = (ecode)=>{
 					console.log("session login failed...",ecode)
-					this.__connect_error(resolve)
+					this.__connect_error()
 				}
 				this.$session.onLogout = (ecode)=>{
 					if (ecode != Const.LOGOUT_SUCCESS && ecode != 0) {
 						if (ecode == Const.LOGOUT_E_KICKED) {
-							this.__connect_error(resolve, "kick")
+							this.__connect_error("kick")
 						} else {
-							this.__connect_error(resolve)
+							this.__connect_error()
 						}
 						console.log("session logout",ecode)
 					}
 				}
 				this.$session.onError = (ecode)=>{
 					console.log("session error",ecode)
-					this.__connect_error(resolve)
+					this.__connect_error()
 				}
 			}
 		})
 	}
 
-	join(complete) {
+	join() {
 		this.init().then(()=>{
 			let channel = this.$session.channelJoin(this.$inst.props.room.channel_id)
 			channel.onChannelJoined = ()=>{
@@ -106,13 +109,13 @@ class Signalize extends Eventer {
 				})
 				this.$queue = []
 				this.__connect_success()
-				if (complete) {
-					complete()
+				if (this.$is_reconn) {
+					this.trigger("RECONNECTED_SIGNAL")
 				}
 			}
 			channel.onChannelJoinFailed = ()=>{
 				console.log("channel join failed, retry after 2s")
-				this.__connect_error(complete)
+				this.__connect_error()
 			}
 			let new_user_joined = (account)=>{
 				// 获取用户信息
@@ -177,19 +180,26 @@ class Signalize extends Eventer {
 		}
 	}
 
+	__clear_recon_timer() {
+		clearTimeout(this.$recon_timer)
+		this.trigger("HIDE_LOADING")
+	}
+
 	send(message) {
 		if (this.$channel) {
-			clearTimeout($timer)
-			let $timer = setTimeout(()=>{
-				this.__reconnect(()=>{
-					this.send(message)
-				})
+			this.__clear_recon_timer()
+			this.$recon_timer = setTimeout(()=>{
+				this.trigger("NETWORK_BAD")
+				this.$recon_timer = setTimeout(()=>{
+					this.$queue.push(message)
+					this.__reconnect()
+				}, 3000)
 			},2000)
 			if (message.to == "all") {
 				let content = JSON.stringify(message)
 				this.$channel.messageChannelSend(content, ()=>{
 					console.log("全局消息发送成功")
-					clearTimeout($timer)
+					this.__clear_recon_timer()
 				})
 			} else {
 				let to = message.to + ""
@@ -197,7 +207,7 @@ class Signalize extends Eventer {
 				console.log("发送局部消息",to,content)
 				this.$session.messageInstantSend(to, content, ()=>{
 					console.log("独立消息发送成功，发送给",message.to)
-					clearTimeout($timer)
+					this.__clear_recon_timer()
 				})
 			}
 		} else {
