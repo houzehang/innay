@@ -56,7 +56,7 @@ class Signalize extends Eventer {
 	__heart_beat() {
 		clearTimeout(this.$heart_t)
 		this.$heart_t = setTimeout(()=>{
-			this.send({to: this.$inst.props.account.id})
+			this.send({to: this.$inst.props.account.id}, true)
 		},5000)
 	}
 
@@ -154,12 +154,14 @@ class Signalize extends Eventer {
 				console.log("receive new message", msg)
 				let message = JSON.parse(msg)
 				this.trigger("NEW_MESSAGE", message)
+				this.__clear_recon_timer()
 				this.__heart_beat()
 			};
 			this.$session.onMessageInstantReceive = (account, uid, msg)=>{
 				console.log("receive new peer message", msg, account)
 				let message = JSON.parse(msg)
 				this.trigger("NEW_MESSAGE", message)
+				this.__clear_recon_timer()
 				this.__heart_beat()
 			}
 		},()=>{})
@@ -185,21 +187,27 @@ class Signalize extends Eventer {
 		this.trigger("HIDE_LOADING")
 	}
 
-	send(message) {
+	send(message, heatbeat) {
 		if (this.$channel) {
+			if (this.$sending_lock && heatbeat) {
+				// 有消息没发送成功，停止发送心跳连接
+				return
+			}
 			this.__clear_recon_timer()
 			this.$recon_timer = setTimeout(()=>{
 				this.trigger("NETWORK_BAD")
 				this.$recon_timer = setTimeout(()=>{
 					this.$queue.push(message)
 					this.__reconnect()
-				}, 3000)
+				}, 8000)
 			},2000)
+			this.$sending_lock = true
 			if (message.to == "all") {
 				let content = JSON.stringify(message)
 				this.$channel.messageChannelSend(content, ()=>{
 					console.log("全局消息发送成功")
 					this.__clear_recon_timer()
+					this.$sending_lock = false
 				})
 			} else {
 				let to = message.to + ""
@@ -208,6 +216,7 @@ class Signalize extends Eventer {
 				this.$session.messageInstantSend(to, content, ()=>{
 					console.log("独立消息发送成功，发送给",message.to)
 					this.__clear_recon_timer()
+					this.$sending_lock = false
 				})
 			}
 		} else {
