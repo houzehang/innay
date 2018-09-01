@@ -29,6 +29,7 @@ class Network extends Eventer {
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
 		return Q.Promise((resolve, reject)=>{
+			let start = new Date().getTime()
 			$.ajax(this.$base_url + url, {
 				headers: { 
 					"Authorization": `Bearer ${this.$token}`,
@@ -43,6 +44,10 @@ class Network extends Eventer {
 					}
 				},
 				success: (res)=>{
+					let delay = new Date().getTime() - start
+					if (context.detector) {
+						context.detector.onAjaxTime(delay)
+					}
 					resolve(res.data)
 				},
 				error: (res)=>{

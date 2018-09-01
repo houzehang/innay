@@ -2,26 +2,48 @@ const Const   = require('../const')
 const net 	  = require('./network')
 const Q 	  = require('q')
 const Eventer = require('./eventer')
+const context = require('./context')
+
 class Signalize extends Eventer {
 	constructor(inst) {
 		super()
 		this.$inst 		= inst
-		this.$signal 	= Signal(Const.AGORA_APPID)
 		this.$inited    = false
 		this.$is_reconn = false
 		this.$queue 	= []
 		this.$heart_t   = null
 	}
 
-	__reconnect() {
+	__destroy_all() {
+		if (this.$session) {
+			this.$session.onLoginFailed = 
+			this.$session.onLogout = 
+			this.$session.onError  = null
+		}
+		if (this.$channel) {
+			this.$channel.onChannelJoined = 
+			this.$channel.onChannelJoinFailed = 
+			this.$channel.onChannelUserJoined = 
+			this.$channel.onChannelUserLeaved = 
+			this.$channel.onChannelUserList   =
+			this.$channel.onMessageChannelReceive = 
+			this.$channel.onMessageInstantReceive = null
+		}
+		this.__clear_recon_timer()
 		clearTimeout(this.$connect_timer)
-		this.$session.logout()
+		clearTimeout(this.$heart_t)
 		this.$channel = null
+		this.$session.logout()
+	}
+
+	__reconnect() {
+		this.__destroy_all()
 		// 重连
 		this.trigger("RECONNECT_SIGNAL")
 		this.$connect_timer = setTimeout(()=>{
-			this.$inited 	= false
-			this.$is_reconn = true
+			this.$sending_lock 	= false
+			this.$inited 		= false
+			this.$is_reconn 	= true
 			this.join()
 		},1000)
 	}
@@ -51,13 +73,16 @@ class Signalize extends Eventer {
 		clearTimeout(this.$connect_timer)
 		this.trigger("CONNECTED_SIGNAL")
 		this.__heart_beat()
+		if (context.detector) {
+			context.detector.onSignalTime(0)
+		}
 	}
 
 	__heart_beat() {
 		clearTimeout(this.$heart_t)
 		this.$heart_t = setTimeout(()=>{
-			this.send({to: this.$inst.props.account.id}, true)
-		},5000)
+			this.send({to: this.$inst.props.account.id,sig: new Date().getTime()}, true)
+		},10000)
 	}
 
 	init() {
@@ -66,6 +91,7 @@ class Signalize extends Eventer {
 				resolve();
 			} else {
 				this.__on_connect()
+				this.$signal = Signal(Const.AGORA_APPID)
 				// accout参数必须为字符串
 				// this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)
 				this.$session = this.$signal.login(this.$inst.props.account.id+"", "_no_need_token")
@@ -151,18 +177,25 @@ class Signalize extends Eventer {
 				this.trigger("CHANNEL_USER_LEAVE", account)
 			}
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
-				console.log("receive new message", msg)
 				let message = JSON.parse(msg)
+				console.log("receive new message", message)
 				this.trigger("NEW_MESSAGE", message)
 				this.__clear_recon_timer()
 				this.__heart_beat()
 			};
 			this.$session.onMessageInstantReceive = (account, uid, msg)=>{
-				console.log("receive new peer message", msg, account)
-				let message = JSON.parse(msg)
-				this.trigger("NEW_MESSAGE", message)
 				this.__clear_recon_timer()
 				this.__heart_beat()
+				console.log("receive new peer message", msg)
+				let message = JSON.parse(msg)
+				if (message.sig) {
+					let delay = new Date().getTime() - message.sig
+					if (context.detector) {
+						context.detector.onSignalTime(delay)
+					}
+					return
+				}
+				this.trigger("NEW_MESSAGE", message)
 			}
 		},()=>{})
 	}
@@ -195,8 +228,14 @@ class Signalize extends Eventer {
 			}
 			this.__clear_recon_timer()
 			this.$recon_timer = setTimeout(()=>{
+				if (context.detector) {
+					context.detector.onSignalTime(2000)
+				}
 				this.trigger("NETWORK_BAD")
 				this.$recon_timer = setTimeout(()=>{
+					if (context.detector) {
+						context.detector.onSignalTime(10000)
+					}
 					this.$queue.push(message)
 					this.__reconnect()
 				}, 8000)

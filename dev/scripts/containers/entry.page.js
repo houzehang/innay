@@ -9,12 +9,32 @@ import { connect } from 'react-redux'
 import Login from './login.page'
 import Main from './main.page'
 import Dialog from './dialog'
+import NetStatus from '../components/netstatus'
 import { alert, confirm } from '../actions'
 const history = createHistory()
+const NetDetector = require("../netdetector")
+const context = require("../context")
 
 class Entry extends React.Component {
+	constructor(props) {
+		super(props)
+		this.state = {netstatus: 1, netwarning: false}
+	}
 	componentDidMount() {
+		this.__start_detector()
+	}
 
+	componentWillUnmount() {
+		this.$detector.unload()
+	}
+
+	__start_detector() {
+		let detector = new NetDetector
+		context.detector = detector
+		detector.on("NET:STATUS", (level)=>{
+			console.log("net status", level)
+			this.setState({ netstatus: level, netwarning: detector.warning })
+		})
 	}
 	
 	render() {
@@ -43,6 +63,7 @@ class Entry extends React.Component {
 					}
 				}></Route>
 				<DialogComponent/>
+				<NetStatus status={this.state.netstatus} warning={this.state.netwarning}/>
 			</div>
 		</Router>
 	}

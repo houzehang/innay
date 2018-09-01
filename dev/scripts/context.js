@@ -25,6 +25,14 @@ class Context {
 		this.$loading = loading
 	}
 
+	get detector() {
+		return this.$detector
+	}
+
+	set detector(detector) {
+		this.$detector = detector
+	}
+
 	get course() {
 		return this.$course
 	}

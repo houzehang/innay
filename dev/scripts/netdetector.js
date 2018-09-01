@@ -4,44 +4,9 @@ const Eventer 	= require("./eventer")
 class NetDetector extends Eventer {
 	constructor() {
 		super()
-		this.$size 			= 439924
-		this.$net_status 	= [ 300, 600, 1000, 2000 ]
-		this.$times 		= 2
-		this.$status        = 1
-		if (DEBUG) {
-			this.$file = "https://lessons.runsnailrun.com/netdetector.jpg"
-		} else {
-			this.$file = "https://lessons.mw019.com/netdetector.jpg"
-		}
-	}
-
-	__once(complete) {
-		let start_time 	= new Date().getTime(), 
-			level 		= this.$net_status.length
-		this.__detect(()=>{
-			let now 	= new Date().getTime()
-			let delay 	= now - start_time
-			for(let i=0,len=this.$net_status.length;i<len;i++) {
-				let item = this.$net_status[i]
-				if (delay <= item) {
-					level = i + 1
-					break
-				}
-			}
-			this.$status = level
-			complete(level)
-		}, ()=>{
-			this.$status = 0
-			complete(false)
-		})
-	}
-
-	__detect(complete, error) {
-		$.ajax(`${this.$file}?t=${new Date().getTime()}`, {
-			method : "GET",
-			success: complete,
-			error  : error
-		})
+		// 0-4 个状态
+		// 0 为网络断开，1-4 数字越高网络越差
+		this.$status = 1
 	}
 
 	get good() {
@@ -56,25 +21,48 @@ class NetDetector extends Eventer {
 		return this.$status == 0 || this.$status > 2
 	}
 
-	check() {
-		let current = this.$times, T;
-		clearTimeout(this.$timer);
-		(T = ()=>{
-			this.__once((result)=>{
-				if (!result) {
-					this.trigger("NET:ERROR")
-				} else {
-					this.trigger("NET:STATUS", result)
-					if (--current > 0) {
-						this.$timer = setTimeout(T, 1000)
-					}
-				}
-			})
-		})()
+	onSignalTime(delay) {
+		delay -= 0
+		if (!delay) return
+		let status
+		if (delay <= 100) {
+			status = 1
+		} else if (delay <= 300) {
+			status = 2
+		} else if (delay <= 1000) {
+			status = 3
+		} else if (delay <= 3000) {
+			status = 4
+		} else {
+			status = 0
+		}
+		this.__setStatus(status)
+	}
+
+	onAjaxTime(delay) {
+		delay -= 0
+		if (!delay) return
+		let status
+		if (delay <= 300) {
+			status = 1
+		} else if (delay <= 500) {
+			status = 2
+		} else if (delay <= 1200) {
+			status = 3
+		} else if (delay <= 3000) {
+			status = 4
+		} else {
+			status = 0
+		}
+		this.__setStatus(status)
+	}
+
+	__setStatus(value) {
+		this.$status = value
+		this.trigger("NET:STATUS", this.$status)
 	}
 
 	unload() {
-		clearTimeout(this.$timer)
 	}
 }
 

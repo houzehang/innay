@@ -4,7 +4,6 @@ import Calendar from '../components/calendar'
 import Download from '../components/download'
 import Course from './course.page'
 import Devices from './devices'
-import NetStatus from '../components/netstatus'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
@@ -12,7 +11,6 @@ import {
 	onLogout, onStartCourse, onEndCourse,
 	confirm, alert
 } from '../actions'
-const NetDetector = require("../netdetector")
 const context = require("../context")
 
 class Main extends React.Component {
@@ -20,7 +18,7 @@ class Main extends React.Component {
 		super(props)
 		this.$detect_delay = 5000
 		this.$calendarRef  = React.createRef()
-		this.state = { recording: false, netstatus: 1, netwarning: false }
+		this.state = { recording: false }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -29,11 +27,6 @@ class Main extends React.Component {
 	strToDate(str) {
 		let parsed = str.split(/[-: ]/)
 		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
-	}
-
-	componentWillUnmount() {
-		clearTimeout(this.$detect_timer)
-		this.$detector.unload()
 	}
 
 	componentDidMount() {
@@ -66,32 +59,6 @@ class Main extends React.Component {
 			})
 		}
 		context.user = this.props.account
-		this.__start_detector()
-	}
-
-	__set_detect_delay() {
-		let times = [2000,20000,20000,10000,10000]
-		this.$detect_delay = times[this.state.netstatus]
-		clearTimeout(this.$detect_timer)
-		this.$detect_timer = setTimeout(()=>{
-			this.$detector.check()
-		},this.$detect_delay)
-	}
-
-	__start_detector() {
-		let detector = new NetDetector
-		this.$detector = detector
-		detector.on("NET:ERROR", ()=>{
-			console.log("net error")
-			this.setState({ netstatus: 0, netwarning: this.$detector.warning })
-			this.__set_detect_delay()
-		})
-		detector.on("NET:STATUS", (level)=>{
-			console.log("net status", level)
-			this.setState({ netstatus: level, netwarning: this.$detector.warning })
-			this.__set_detect_delay()
-		})
-		detector.check()
 	}
 
 	__student_page() {
@@ -209,7 +176,7 @@ class Main extends React.Component {
 	}
 
 	onStartRoom(data) {
-		if (this.$detector.offline) {
+		if (context.detector.offline) {
 			this.props.confirm({
 				content: "您的网络已经断开，建议您检查网络后再开始上课。",
 				sure_txt: "去检查网络",
@@ -220,7 +187,7 @@ class Main extends React.Component {
 					},400)
 				}
 			})
-		} else if (!this.$detector.good) {
+		} else if (!context.detector.good) {
 			this.props.confirm({
 				content: "系统检测到您的网络较慢，建议你先下载课程包再开始上课。",
 				sure_txt: "去下载",
@@ -292,7 +259,7 @@ class Main extends React.Component {
 			}
 		}
 		return (
-			<div className="full-h"><NetStatus status={this.state.netstatus} warning={this.state.netwarning}/>{content}</div>
+			<div className="full-h">{content}</div>
 		)
 	}
 }
