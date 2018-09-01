@@ -51,14 +51,16 @@ class Network extends Eventer {
 					resolve(res.data)
 				},
 				error: (res)=>{
+					if (res.responseJSON) {
+						alert(res.responseJSON.message)
+					}
 					if (res.status == 401 || res.status == 400) {
 						//登录
 						this.trigger("LOGOUT_NEEDED")
+						reject()
 						return
 					}
-					if (res.responseJSON) {
-						alert(res.responseJSON.message)
-					} else {
+					if (!res.responseJSON) {
 						alert("啊哦，网络出问题啦~")
 					}
 					reject()
