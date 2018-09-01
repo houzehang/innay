@@ -31,10 +31,8 @@ class NetDetector extends Eventer {
 			status = 2
 		} else if (delay <= 1000) {
 			status = 3
-		} else if (delay <= 3000) {
-			status = 4
 		} else {
-			status = 0
+			status = 4
 		}
 		this.__setStatus(status)
 	}
@@ -49,10 +47,8 @@ class NetDetector extends Eventer {
 			status = 2
 		} else if (delay <= 1200) {
 			status = 3
-		} else if (delay <= 3000) {
-			status = 4
 		} else {
-			status = 0
+			status = 4
 		}
 		this.__setStatus(status)
 	}
