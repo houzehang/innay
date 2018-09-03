@@ -10,9 +10,7 @@ class Dialog extends React.Component {
 	}
 
 	componentDidMount() {
-		this.$show_timer = setTimeout(()=>{
-			this.setState({showing: true})
-		},100)
+		this.setState({showing: true})
 	}
 
 	componentWillUnmount() {

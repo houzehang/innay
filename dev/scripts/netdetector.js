@@ -1,12 +1,17 @@
 const DEBUG 	= require("../../env").DEBUG
 const Eventer 	= require("./eventer")
+const net  		= require("./network")
 
 class NetDetector extends Eventer {
 	constructor() {
 		super()
 		// 0-4 个状态
 		// 0 为网络断开，1-4 数字越高网络越差
-		this.$status = 1
+		this.$status 			= 1
+		this.$warn_times 		= 0
+		this.$max_warn_times 	= 3
+		this.$in_bad_status     = false
+		this.$check_timer		= null
 	}
 
 	get good() {
@@ -19,6 +24,29 @@ class NetDetector extends Eventer {
 
 	get warning() {
 		return this.$status == 0 || this.$status > 2
+	}
+
+	check() {
+		let base = "https://lessons.runsnailrun.com/netdetector.jpg"
+		if (!DEBUG) {
+			base = "https://lessons.mw019.com/netdetector.jpg"
+		}
+		let start = new Date().getTime()
+		$.get(`${base}?t=${new Date().getTime()}`,()=>{
+			let delay = new Date().getTime() - start
+			this.onAjaxTime(delay)
+			this.$check_timer = setTimeout(()=>{
+				this.check()
+			},5000)
+		}).fail(()=>{
+			this.$check_timer = setTimeout(()=>{
+				this.check()
+			},5000)
+		})
+	}
+
+	uncheck() {
+		clearTimeout(this.$check_timer)
 	}
 
 	onSignalTime(delay) {
@@ -56,6 +84,24 @@ class NetDetector extends Eventer {
 	__setStatus(value) {
 		this.$status = value
 		this.trigger("NET:STATUS", this.$status)
+		net.log({name:"NET:STATUS", status: this.$status})
+		if (this.warning) {
+			this.$warn_times++
+		} else {
+			this.$warn_times--
+		}
+		// if (this.$warn_times >= this.$max_warn_times) {
+		// 	if (!this.$in_bad_status) {
+		// 		this.trigger("NET_STATUS_BAD")
+		// 		this.$in_bad_status = true
+		// 	}
+		// } else if (this.$warn_times <= 0) {
+		// 	this.$warn_times = 0
+		// 	if (this.$in_bad_status) {
+		// 		this.trigger("NET_STATUS_GOOD")
+		// 		this.$in_bad_status = false
+		// 	}
+		// }
 	}
 
 	unload() {

@@ -186,15 +186,16 @@ class Signalize extends Eventer {
 			this.$session.onMessageInstantReceive = (account, uid, msg)=>{
 				this.__clear_recon_timer()
 				this.__heart_beat()
-				console.log("receive new peer message", msg)
 				let message = JSON.parse(msg)
 				if (message.sig) {
 					let delay = new Date().getTime() - message.sig
 					if (context.detector) {
 						context.detector.onSignalTime(delay)
 					}
+					console.log("receive heart beat message", msg, delay)
 					return
 				}
+				console.log("receive new peer message", msg)
 				this.trigger("NEW_MESSAGE", message)
 			}
 		},()=>{})

@@ -24,6 +24,7 @@ const Signalize		= require('../AgoraSignal')
 const Session   	= require('../session')
 const Const   		= require('../../const')
 const {ipcRenderer} 	= $require('electron');
+const context 		= require('../context')
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
@@ -143,9 +144,11 @@ class Course extends React.Component {
 		clearTimeout(this.$reload_timer)
 		$(window).off("resize")
 		this.props.hideLoading()
+		context.detector.check()
 	}
 
 	componentDidMount() {
+		context.detector.uncheck()
 		this.$reload_timer = null
 		$(window).on("resize", ()=>{
 			clearTimeout(this.$reload_timer)
@@ -673,8 +676,23 @@ class Course extends React.Component {
 				this.props.students.forEach((student)=>{
 					if(student.stream && !student.stream_inited) {
 						console.log("play stream",student.id)
-						student.stream.play('student_'+student.id)
-						student.stream_inited = true
+						// 开启了弱网络优化时
+						if (this.props.netStatus == 0 && !this.isMaster()) {
+							if (student.id == this.props.account.id) {
+								student.stream.play('student_'+student.id)
+								student.stream_inited = true
+							}
+						} else {
+							student.stream.play('student_'+student.id)
+							student.stream_inited = true
+						}
+					}
+					if (student.stream_inited) {
+						// 开启了弱网络优化时
+						if (this.props.netStatus == 0 && !this.isMaster()) {
+							student.stream.stop()
+							student.stream_inited = false
+						}
 					}
 					if (!student.stream && student.id == this.$last_dancing) {
 						this.$room.rtc.rtcengine.unsubscribe(this.$last_dancing)
@@ -889,13 +907,14 @@ class Course extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		account : state.login.account,
-		room 	: state.room.info,
-		students: state.room.students,
-		teacher : state.room.teacher,
-		started : state.main.courseStarted,
-		switches: state.room.switches,
-		status  : state.room.status
+		account 	: state.login.account,
+		room 		: state.room.info,
+		students	: state.room.students,
+		teacher 	: state.room.teacher,
+		started 	: state.main.courseStarted,
+		switches	: state.room.switches,
+		status  	: state.room.status,
+		netStatus 	: state.main.netStatus
 	}
 }
 

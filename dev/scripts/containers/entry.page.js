@@ -10,7 +10,7 @@ import Login from './login.page'
 import Main from './main.page'
 import Dialog from './dialog'
 import NetStatus from '../components/netstatus'
-import { alert, confirm } from '../actions'
+import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
 const history = createHistory()
 const NetDetector = require("../netdetector")
 const context = require("../context")
@@ -35,6 +35,25 @@ class Entry extends React.Component {
 			console.log("net status", level)
 			this.setState({ netstatus: level, netwarning: detector.warning })
 		})
+		detector.on("NET_STATUS_BAD", ()=>{
+			this.props.confirm({
+				content: "系统检测到你的网络不太好，是否开启弱网络优化？（开启后就看不到其他小朋友喽~）",
+				sure: ()=>{
+					this.props.onNetStatusBad()
+				}
+			})
+		})
+		detector.on("NET_STATUS_GOOD", ()=>{
+			this.props.confirm({
+				content: "系统检测到你的网络恢复了，建议你关闭弱网络优化~",
+				sure: ()=>{
+					this.props.onNetStatusGood()
+				}
+			})
+		})
+		setTimeout(()=>{
+			detector.check()
+		},2000)
 	}
 	
 	render() {
@@ -78,7 +97,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		
+		confirm : (data) 	=> dispatch(confirm(data)),
+		onNetStatusBad: () 	=> dispatch(onNetStatusBad()),
+		onNetStatusGood: () => dispatch(onNetStatusGood())
 	}
 }
 

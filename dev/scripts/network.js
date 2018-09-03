@@ -44,10 +44,6 @@ class Network extends Eventer {
 					}
 				},
 				success: (res)=>{
-					let delay = new Date().getTime() - start
-					if (context.detector) {
-						context.detector.onAjaxTime(delay)
-					}
 					resolve(res.data)
 				},
 				error: (res)=>{

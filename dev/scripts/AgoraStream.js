@@ -165,7 +165,11 @@ class Room extends Eventer {
 						this.$client.subscribe(id, dom)
 					}
 				}
-			} 
+			},
+			stop: ()=>{
+				this.$client.rtcengine.unsubscribe(id)
+				$(`#student_${id}`).empty()
+			}
 		}
 	}
 

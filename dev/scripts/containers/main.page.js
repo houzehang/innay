@@ -187,9 +187,9 @@ class Main extends React.Component {
 					},400)
 				}
 			})
-		} else if (!context.detector.good) {
+		} else {
 			this.props.confirm({
-				content: "系统检测到您的网络较慢，建议你先下载课程包再开始上课。",
+				content: "为保证上课体验，建议您先下载课程包再开始上课。",
 				sure_txt: "去下载",
 				cancel_txt: "直接上课",
 				sure: ()=>{
@@ -199,8 +199,6 @@ class Main extends React.Component {
 					this.__onStartRoom(data)
 				}
 			})
-		} else {
-			this.__onStartRoom(data)
 		}
 	}
 

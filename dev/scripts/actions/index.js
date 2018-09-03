@@ -186,3 +186,11 @@ export const onProgressUpdate = (id, percent)=>({
 export const onProgressReset = ()=>({
 	type: types.PROGRESS_RESET
 })
+
+export const onNetStatusBad = ()=>({
+	type: types.NET_STATUS_BAD
+})
+
+export const onNetStatusGood = ()=>({
+	type: types.NET_STATUS_GOOD
+})
