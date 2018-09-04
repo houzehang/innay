@@ -152,6 +152,10 @@ class Room extends Eventer {
 		}
 	}
 
+	unsubscribe(id) {
+		this.$client.rtcengine.unsubscribe(id)
+	}
+
 	__stream(id) {
 		return { 
 			getId: ()=>id, 
@@ -167,7 +171,7 @@ class Room extends Eventer {
 				}
 			},
 			stop: ()=>{
-				this.$client.rtcengine.unsubscribe(id)
+				this.unsubscribe(id)
 				$(`#student_${id}`).empty()
 			}
 		}

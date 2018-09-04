@@ -438,6 +438,11 @@ class Course extends React.Component {
 		}
 	}
 
+	// 是否处于弱网络状态
+	__in_weak_net() {
+		return this.props.netStatus == 0 && !this.isMaster()
+	}
+
 	__on_signal_message(message) {
 		let data = message.message
 		switch(message.type) {
@@ -620,7 +625,16 @@ class Course extends React.Component {
 		} else {
 			$(`#dancing-head`).empty()
 			$(`#student_${id}`).empty()
-			this.$room.dance(id, $(`#student_${id}`)[0])
+			// 当处于弱网络且不是自己时，直接取消流
+			if (this.__in_weak_net() && id != this.props.account.id) {
+				let student = this.getUser(id)
+				if (student) {
+					student.stream_inited = false
+				}
+				this.$room.unsubscribe(id)
+			} else {
+				this.$room.dance(id, $(`#student_${id}`)[0])
+			}
 		}
 		this.$last_dancing = null
 	}
@@ -677,20 +691,23 @@ class Course extends React.Component {
 					if(student.stream && !student.stream_inited) {
 						console.log("play stream",student.id)
 						// 开启了弱网络优化时
-						if (this.props.netStatus == 0 && !this.isMaster()) {
+						if (this.__in_weak_net()) {
 							if (student.id == this.props.account.id) {
 								student.stream.play('student_'+student.id)
 								student.stream_inited = true
 							}
 						} else {
-							student.stream.play('student_'+student.id)
+							if (student.id != this.$last_dancing) {
+								student.stream.play('student_'+student.id)
+							}
 							student.stream_inited = true
 						}
 					}
 					if (student.stream_inited) {
-						// 开启了弱网络优化时，只保留自己的流
-						if (this.props.netStatus == 0 && !this.isMaster()) {
-							if (student.id != this.props.account.id) {
+						// 开启了弱网络优化时，只保留自己的流和正在上台人的流
+						if (this.__in_weak_net()) {
+							if (student.id != this.props.account.id && 
+								this.$last_dancing != student.id) {
 								student.stream.stop()
 								student.stream_inited = false
 							}

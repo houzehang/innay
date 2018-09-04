@@ -38,12 +38,14 @@ class Entry extends React.Component {
 		detector.on("NET_STATUS_BAD", ()=>{
 			if (!this.$in_status_bad) {
 				this.props.confirm({
-					content: "系统检测到你的网络不太好，为保证您的上课体验，建议您开启弱网络优化？",
+					content: "系统检测到你的网络不太好，为保证您的上课体验，建议您开启弱网络优化。",
 					sure_txt: "开启",
 					cancel_txt: "不开启",
 					sure: ()=>{
-						this.$in_status_bad = true
-						this.props.onNetStatusBad()
+						if (context.detector.inBadStatus) {
+							this.$in_status_bad = true
+							this.props.onNetStatusBad()
+						}
 					}
 				})
 			}
@@ -51,10 +53,12 @@ class Entry extends React.Component {
 		detector.on("NET_STATUS_GOOD", ()=>{
 			if (this.$in_status_bad) {
 				this.props.confirm({
-					content: "系统检测到你的网络恢复了，建议你关闭弱网络优化~",
+					content: "系统检测到你的网络恢复了，建议你关闭弱网络优化。",
 					sure: ()=>{
-						this.$in_status_bad = false
-						this.props.onNetStatusGood()
+						if (!context.detector.inBadStatus) {
+							this.$in_status_bad = false
+							this.props.onNetStatusGood()
+						}
 					}
 				})
 			}
@@ -90,7 +94,17 @@ class Entry extends React.Component {
 					}
 				}></Route>
 				<DialogComponent/>
-				<NetStatus status={this.state.netstatus} warning={this.state.netwarning}/>
+				<NetStatus click={()=>{
+					if (this.$netStatus) {
+						console.log("set net good")
+						this.props.onNetStatusGood()
+					} else {
+						console.log("set net bad")
+						this.props.onNetStatusBad()
+					}
+					this.$netStatus = !this.$netStatus
+					console.log(this.props.room)
+				}} status={this.state.netstatus} warning={this.state.netwarning}/>
 			</div>
 		</Router>
 	}
@@ -98,8 +112,8 @@ class Entry extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		account : state.login.account,
-		dialog  : state.dialog
+		account 	: state.login.account,
+		dialog  	: state.dialog
 	}
 }
 

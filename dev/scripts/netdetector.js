@@ -12,6 +12,7 @@ class NetDetector extends Eventer {
 		this.$max_warn_times 	= 3
 		this.$in_bad_status     = false
 		this.$check_timer		= null
+		this.$check_closed 		= true
 	}
 
 	get good() {
@@ -27,21 +28,27 @@ class NetDetector extends Eventer {
 	}
 
 	check() {
-		if (this.$check_timer) return
 		console.log("call check")
+		this.$check_closed = false
 		let base = "https://lessons.runsnailrun.com/netdetector.jpg"
 		if (!DEBUG) {
 			base = "https://lessons.mw019.com/netdetector.jpg"
 		}
+		this.$check_timer = setTimeout(()=>{
+			this.onAjaxTime(5000)
+			this.check()
+		},5000)
 		let start = new Date().getTime()
 		$.get(`${base}?t=${new Date().getTime()}`,()=>{
 			let delay = new Date().getTime() - start
 			this.onAjaxTime(delay)
+			clearTimeout(this.$check_timer)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
 			},5000)
 		}).fail(()=>{
 			this.onAjaxTime(-1)
+			clearTimeout(this.$check_timer)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
 			},5000)
@@ -51,7 +58,7 @@ class NetDetector extends Eventer {
 	uncheck() {
 		console.log("call uncheck")
 		clearTimeout(this.$check_timer)
-		this.$check_timer = null
+		this.$check_closed = true
 	}
 
 	onSignalTime(delay) {
@@ -71,7 +78,7 @@ class NetDetector extends Eventer {
 	}
 
 	onAjaxTime(delay) {
-		if (!this.$check_timer) return
+		if (this.$check_closed) return
 		delay -= 0
 		if (!delay) return
 		let status
@@ -86,7 +93,12 @@ class NetDetector extends Eventer {
 		} else {
 			status = 4
 		}
+		console.log("set status",status)
 		this.__setStatus(status)
+	}
+
+	get inBadStatus() {
+		return this.$in_bad_status
 	}
 
 	__setStatus(value) {
