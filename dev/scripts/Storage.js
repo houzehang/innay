@@ -4,10 +4,10 @@
  * namespace 为命名空间，每个Session都会取account的userid为命名空间，避免多个Session数据冲突
  */
 class Storage {
-	constructor(namespace = "DYM") {
-		console.log("namespace...",namespace)
+	constructor(namespace = "MINGXI.INC") {
 		this.$namespace = namespace;
 		this.$data      = localStorage.getItem(this.$namespace);
+		console.log("namespace...",namespace,this.$data)
 		if (this.$data) {
 			try {
 				this.$data  = JSON.parse(this.$data);

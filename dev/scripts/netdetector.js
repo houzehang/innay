@@ -41,7 +41,7 @@ class NetDetector extends Eventer {
 				this.check()
 			},5000)
 		}).fail(()=>{
-			this.__setStatus(0)
+			this.onAjaxTime(-1)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
 			},5000)
@@ -71,10 +71,13 @@ class NetDetector extends Eventer {
 	}
 
 	onAjaxTime(delay) {
+		if (!this.$check_timer) return
 		delay -= 0
 		if (!delay) return
 		let status
-		if (delay <= 300) {
+		if (delay == -1) {
+			status = 0
+		} else if (delay <= 300) {
 			status = 1
 		} else if (delay <= 500) {
 			status = 2
@@ -87,7 +90,6 @@ class NetDetector extends Eventer {
 	}
 
 	__setStatus(value) {
-		if (!this.$check_timer) return
 		this.$status = value
 		this.trigger("NET:STATUS", this.$status)
 		net.log({name:"NET:STATUS", status: this.$status})

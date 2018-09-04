@@ -688,10 +688,12 @@ class Course extends React.Component {
 						}
 					}
 					if (student.stream_inited) {
-						// 开启了弱网络优化时
+						// 开启了弱网络优化时，只保留自己的流
 						if (this.props.netStatus == 0 && !this.isMaster()) {
-							student.stream.stop()
-							student.stream_inited = false
+							if (student.id != this.props.account.id) {
+								student.stream.stop()
+								student.stream_inited = false
+							}
 						}
 					}
 					if (!student.stream && student.id == this.$last_dancing) {
