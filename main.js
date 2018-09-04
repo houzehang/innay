@@ -133,6 +133,39 @@ app.on('window-all-closed', () => {
     app.quit();
 });
 
+app.on('ready', function() {
+    if (!TC_DEBUG) {
+        if (process.platform === 'darwin') {
+            const template = [
+                {
+                    label: '明兮大语文',
+                    submenu: [
+                        { label: `当前版本 ${app.getVersion()}` },
+                        { type: "separator" },
+                        { label: "退出", accelerator: "Command+Q", click: function() { app.quit(); }}
+                    ]
+                },
+                {
+                    label: '编辑',
+                    submenu: [
+                        { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                        { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+                        { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" },
+                    ]
+                },
+                {
+                    label: '帮助',
+                    submenu: [
+                        { label: "关于明兮大语文",  click () { require('electron').shell.openExternal('https://mingxi.cn') } }
+                    ]
+                },
+            ]
+            const menu = Menu.buildFromTemplate(template)
+            Menu.setApplicationMenu(menu)
+        }
+    }
+})
+
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException",err);
 });

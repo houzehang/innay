@@ -179,6 +179,13 @@ class Signalize extends Eventer {
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
 				let message = JSON.parse(msg)
 				console.log("receive new message", message)
+				if (message.created_at) {
+					let delay = new Date().getTime() - message.created_at
+					console.log("delay",delay)
+					if (context.detector) {
+						context.detector.onSignalTime(delay)
+					}
+				}
 				this.trigger("NEW_MESSAGE", message)
 				this.__clear_recon_timer()
 				this.__heart_beat()

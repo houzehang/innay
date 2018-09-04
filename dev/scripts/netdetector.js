@@ -30,10 +30,7 @@ class NetDetector extends Eventer {
 	check() {
 		console.log("call check")
 		this.$check_closed = false
-		let base = "https://lessons.runsnailrun.com/netdetector.jpg"
-		if (!DEBUG) {
-			base = "https://lessons.mw019.com/netdetector.jpg"
-		}
+		let base = "https://muwen.mw009.com/netdetector.jpg"
 		this.$check_timer = setTimeout(()=>{
 			this.onAjaxTime(5000)
 			this.check()
@@ -65,11 +62,11 @@ class NetDetector extends Eventer {
 		delay -= 0
 		if (!delay) return
 		let status
-		if (delay <= 100) {
+		if (delay <= 1000) {
 			status = 1
-		} else if (delay <= 300) {
+		} else if (delay <= 2000) {
 			status = 2
-		} else if (delay <= 1000) {
+		} else if (delay <= 4000) {
 			status = 3
 		} else {
 			status = 4
