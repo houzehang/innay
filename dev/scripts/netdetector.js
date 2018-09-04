@@ -27,6 +27,8 @@ class NetDetector extends Eventer {
 	}
 
 	check() {
+		if (this.$check_timer) return
+		console.log("call check")
 		let base = "https://lessons.runsnailrun.com/netdetector.jpg"
 		if (!DEBUG) {
 			base = "https://lessons.mw019.com/netdetector.jpg"
@@ -39,6 +41,7 @@ class NetDetector extends Eventer {
 				this.check()
 			},5000)
 		}).fail(()=>{
+			this.__setStatus(0)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
 			},5000)
@@ -46,7 +49,9 @@ class NetDetector extends Eventer {
 	}
 
 	uncheck() {
+		console.log("call uncheck")
 		clearTimeout(this.$check_timer)
+		this.$check_timer = null
 	}
 
 	onSignalTime(delay) {
@@ -82,6 +87,7 @@ class NetDetector extends Eventer {
 	}
 
 	__setStatus(value) {
+		if (!this.$check_timer) return
 		this.$status = value
 		this.trigger("NET:STATUS", this.$status)
 		net.log({name:"NET:STATUS", status: this.$status})
@@ -90,18 +96,19 @@ class NetDetector extends Eventer {
 		} else {
 			this.$warn_times--
 		}
-		// if (this.$warn_times >= this.$max_warn_times) {
-		// 	if (!this.$in_bad_status) {
-		// 		this.trigger("NET_STATUS_BAD")
-		// 		this.$in_bad_status = true
-		// 	}
-		// } else if (this.$warn_times <= 0) {
-		// 	this.$warn_times = 0
-		// 	if (this.$in_bad_status) {
-		// 		this.trigger("NET_STATUS_GOOD")
-		// 		this.$in_bad_status = false
-		// 	}
-		// }
+		if (this.$warn_times >= this.$max_warn_times) {
+			this.$warn_times = this.$max_warn_times
+			if (!this.$in_bad_status) {
+				this.trigger("NET_STATUS_BAD")
+				this.$in_bad_status = true
+			}
+		} else if (this.$warn_times <= 0) {
+			this.$warn_times = 0
+			if (this.$in_bad_status) {
+				this.trigger("NET_STATUS_GOOD")
+				this.$in_bad_status = false
+			}
+		}
 	}
 
 	unload() {

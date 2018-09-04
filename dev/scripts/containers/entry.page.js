@@ -36,20 +36,28 @@ class Entry extends React.Component {
 			this.setState({ netstatus: level, netwarning: detector.warning })
 		})
 		detector.on("NET_STATUS_BAD", ()=>{
-			this.props.confirm({
-				content: "系统检测到你的网络不太好，是否开启弱网络优化？（开启后就看不到其他小朋友喽~）",
-				sure: ()=>{
-					this.props.onNetStatusBad()
-				}
-			})
+			if (!this.$in_status_bad) {
+				this.props.confirm({
+					content: "系统检测到你的网络不太好，为保证您的上课体验，建议您开启弱网络优化？",
+					sure_txt: "开启",
+					cancel_txt: "不开启",
+					sure: ()=>{
+						this.$in_status_bad = true
+						this.props.onNetStatusBad()
+					}
+				})
+			}
 		})
 		detector.on("NET_STATUS_GOOD", ()=>{
-			this.props.confirm({
-				content: "系统检测到你的网络恢复了，建议你关闭弱网络优化~",
-				sure: ()=>{
-					this.props.onNetStatusGood()
-				}
-			})
+			if (this.$in_status_bad) {
+				this.props.confirm({
+					content: "系统检测到你的网络恢复了，建议你关闭弱网络优化~",
+					sure: ()=>{
+						this.$in_status_bad = false
+						this.props.onNetStatusGood()
+					}
+				})
+			}
 		})
 		setTimeout(()=>{
 			detector.check()

@@ -12,12 +12,14 @@ import {
 	confirm, alert
 } from '../actions'
 const context = require("../context")
+const storage = require("../Storage")
 
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
-		this.$detect_delay = 5000
-		this.$calendarRef  = React.createRef()
+		this.$detect_delay 		= 5000
+		this.$cache_valid_time 	= 60*60*1000
+		this.$calendarRef  		= React.createRef()
 		this.state = { recording: false }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -99,7 +101,7 @@ class Main extends React.Component {
 								this.onStartRoom(room)
 							}}></button>
 							{room.can_download?<button className="download-btn" onClick={()=>{
-								this.onDownload(room, room.can_enter)
+								this.onDownload(room)
 							}}></button>:""}
 						</div>
 					]) : ([
@@ -163,7 +165,7 @@ class Main extends React.Component {
 											this.onStartRoom(room)
 										}}></button>
 										<button className="download-btn" onClick={()=>{
-											this.onDownload(room,room.state!=2)
+											this.onDownload(room)
 										}}></button>
 									</div>
 								)))
@@ -176,15 +178,22 @@ class Main extends React.Component {
 	}
 
 	onStartRoom(data) {
+		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
+		let lastest_download = storage.get(`download_${data.id}`)
+		if (lastest_download) {
+			let delay = new Date().getTime() - lastest_download
+			if (delay <= this.$cache_valid_time) {
+				this.__onStartRoom(data)
+				return
+			}
+		}
 		if (context.detector.offline) {
 			this.props.confirm({
 				content: "您的网络已经断开，建议您检查网络后再开始上课。",
 				sure_txt: "去检查网络",
 				cancel_txt: "坚持上课",
 				cancel: ()=>{
-					setTimeout(()=>{
-						this.__onStartRoom(data)
-					},400)
+					this.__onStartRoom(data)
 				}
 			})
 		} else {
@@ -205,7 +214,7 @@ class Main extends React.Component {
 	__onStartRoom(data) {
 		this.props.onRoomInfo(data)
 		this.props.confirm({
-			content: <div>上课时间：{data.start_time}<br/>确认现在开始上课吗？</div>,
+			content: <div>上课时间：{data.start_time}<br/>准备好开始上课了吗？</div>,
 			sure: ()=>{
 				this.onEnterRoom()
 			}
@@ -222,6 +231,8 @@ class Main extends React.Component {
 		this.props.alert({
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
+				// 存储最后一次下载时间
+				storage.store(`download_${data.id}`,new Date().getTime())
 				if (canenter) {
 					this.__onStartRoom(data)
 				} else {

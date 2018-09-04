@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 require("../../less/download.less")
 const ENV = require("../../../env")
 const {ipcRenderer} 	= $require('electron');
+const context = require("../context")
 
 class Download extends React.Component {
 	constructor(props) {
@@ -11,6 +12,7 @@ class Download extends React.Component {
 	}
 
 	componentDidMount() {
+		context.detector.uncheck()
 		this.$webview.current.addEventListener("dom-ready", ()=>{
 			if (ENV.TC_DEBUG) {
 				this.$webview.current.openDevTools(); 
@@ -24,6 +26,10 @@ class Download extends React.Component {
 				ipcRenderer.send("DOWNLOAD",event.args[0])
 			}
 		})
+	}
+
+	componentWillUnmount() {
+		context.detector.check()
 	}
 
 	render() {
