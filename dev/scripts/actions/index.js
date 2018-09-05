@@ -194,3 +194,11 @@ export const onNetStatusBad = ()=>({
 export const onNetStatusGood = ()=>({
 	type: types.NET_STATUS_GOOD
 })
+
+export const onChangeUserInfo = (user)=>{
+	storage.store("USER_INFO", user)
+	return {
+		type: types.CHANGE_USER_INFO,
+		user
+	}
+}

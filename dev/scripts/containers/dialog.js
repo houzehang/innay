@@ -6,11 +6,10 @@ import { connect } from 'react-redux'
 class Dialog extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {}
+		this.state = {showing: false}
 	}
 
 	componentDidMount() {
-		this.setState({showing: true})
 	}
 
 	componentWillUnmount() {
@@ -20,38 +19,40 @@ class Dialog extends React.Component {
 	hide() {
 		this.setState({showing: false})
 		this.props.dispatchHide()
-		if (this.props.configure.cancel) {
-			setTimeout(()=>{
-				this.props.configure.cancel()
-			},0)
+		if (this.props.data.configure.cancel) {
+			this.props.data.configure.cancel()
 		}
 	}
 
 	sure() {
 		this.hide()
-		if (this.props.configure.sure) {
-			setTimeout(()=>{
-				this.props.configure.sure()
-			},0)
+		if (this.props.data.configure.sure) {
+			this.props.data.configure.sure()
 		}
 	}
 
 	render() {
 		let buttons = []
-		const { type } = this.props
+		console.log("this.props.data",this.props.data)
+		const { type,configure,showing } = this.props.data
 		if (type == "confirm") {
-			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{this.props.configure.cancel_txt||"取消"}</button>)
+			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{configure.cancel_txt||"取消"}</button>)
 		}
-		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{this.props.configure.sure_txt||"确定"}</button>)
-		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")}>
-			<div className={"dialog "+(this.props.configure.classname||"")} style={this.props.configure.styles}>
+		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{configure.sure_txt||"确定"}</button>)
+		if (!this.state.showing && showing) {
+			this.$show_timer = setTimeout(()=>{
+				this.setState({showing: true})
+			},100)
+		}
+		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")} style={{display:showing?"":"none"}}>
+			<div className={"dialog "+(configure.classname||"")} style={configure.styles}>
 				<div className="title">
-					{this.props.configure.title || "提示"}
+					{configure.title || "提示"}
 					<div className="close-btn" onClick={this.hide.bind(this)}></div>
 				</div>
-				<div className={this.props.configure.nobutton?"content nobtn":"content"}>
-					<div className="texts">{this.props.configure.content}</div>
-					{this.props.configure.nobutton?"":<div className="btns">{buttons}</div>}
+				<div className={configure.nobutton?"content nobtn":"content"}>
+					<div className="texts">{configure.content}</div>
+					{configure.nobutton?"":<div className="btns">{buttons}</div>}
 				</div>
 			</div>
 		</div>
@@ -59,16 +60,21 @@ class Dialog extends React.Component {
 }
 
 Dialog.propTypes = {
-	configure: PropTypes.shape({
-		title	: PropTypes.string,
-		content	: PropTypes.any.isRequired,
-		type	: PropTypes.string,
-		sure	: PropTypes.func,
-		cancel	: PropTypes.func,
-		viewport: PropTypes.shape({
-			width : PropTypes.string.isRequired,
-			height: PropTypes.string
-		})
+	data: PropTypes.shape({
+		configure: PropTypes.shape({
+			title		: PropTypes.string,
+			content		: PropTypes.any.isRequired,
+			sure_txt	: PropTypes.string,
+			cancel_txt  : PropTypes.string,
+			sure		: PropTypes.func,
+			cancel		: PropTypes.func,
+			viewport	: PropTypes.shape({
+				width 	: PropTypes.string.isRequired,
+				height	: PropTypes.string
+			})
+		}),
+		type 	: PropTypes.string,
+		showing : PropTypes.bool
 	})
 }
 

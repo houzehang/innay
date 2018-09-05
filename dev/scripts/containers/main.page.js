@@ -4,12 +4,15 @@ import Calendar from '../components/calendar'
 import Download from '../components/download'
 import Course from './course.page'
 import Devices from './devices'
+import SideBar from '../components/sidebar'
+import ViewUser from '../components/viewuser'
+import Helper from '../components/helper'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm, alert
+	confirm, alert, onChangeUserInfo, onEnterTester
 } from '../actions'
 const context = require("../context")
 const storage = require("../Storage")
@@ -71,46 +74,47 @@ class Main extends React.Component {
 		return (
 			<div className="page student-page">
 				<div className="inner">
-					<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
-					<div className="student-icon"></div>
-					{ room ? ([
-						room.left > 0 ? (
-							<div key="0" className="time">距离下次上课还有
-							{
-								room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
-							}
-							{
-								room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
-							}
-							{
-								room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
-							}
+					<div className="student-box">
+						<div className="student-icon"></div>
+						{ room ? ([
+							room.left > 0 ? (
+								<div key="0" className="time">距离下次上课还有
+								{
+									room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
+								}
+								{
+									room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
+								}
+								{
+									room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
+								}
+								</div>
+							) : (
+								<div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
+							),
+							<div key="1" className="lesson-box">
+								<div className="cover">
+									<img src={room.avatar} alt=""/>
+								</div>
+								<div className="info">
+									<div className="name">{room.name}</div>
+									<div className="index">老师：{room.teacher_name}</div>
+								</div>
+								<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={room.can_enter?"":"true"} onClick={()=>{
+									this.onStartRoom(room)
+								}}></button>
+								{room.can_download?<button className="download-btn" onClick={()=>{
+									this.onDownload(room)
+								}}></button>:""}
 							</div>
-						) : (
-							<div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
-						),
-						<div key="1" className="lesson-box">
-							<div className="cover">
-								<img src={room.avatar} alt=""/>
+						]) : ([
+							<div key="0" className="time">接下来没有课程啦～</div>,
+							<div key="1" className="no-lesson">
+								去“明兮大语文”小程序<br/>
+								和其他小朋友一起完成作业吧~
 							</div>
-							<div className="info">
-								<div className="name">{room.name}</div>
-								<div className="index">老师：{room.teacher_name}</div>
-							</div>
-							<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={room.can_enter?"":"true"} onClick={()=>{
-								this.onStartRoom(room)
-							}}></button>
-							{room.can_download?<button className="download-btn" onClick={()=>{
-								this.onDownload(room)
-							}}></button>:""}
-						</div>
-					]) : ([
-						<div key="0" className="time">接下来没有课程啦～</div>,
-						<div key="1" className="no-lesson">
-							去“明兮大语文”小程序<br/>
-							和其他小朋友一起读诗
-						</div>
-					]) }
+						]) }
+					</div>
 				</div>
 			</div>
 		)
@@ -140,7 +144,6 @@ class Main extends React.Component {
 		}} higlighted={this.state.higlighted} ref={this.$calendarRef}/>
 		return (
 			<div className="page calendar-page">
-				<button className="logout-btn" onClick={this.onLogout.bind(this)}>退出</button>
 				<div className="calendar-inner">
 					{calendar}
 					{
@@ -249,13 +252,42 @@ class Main extends React.Component {
 		this.props.onStartCourse()
 	}
 
+	onConfirmToLogout() {
+		this.props.confirm({
+			content: "确认退出当前登录的帐号吗？",
+			sure: ()=>{
+				this.onLogout()
+			}
+		})
+	}
+
 	onLogout() {
 		this.props.onLogout()
+	}
+	
+	__view_user() {
+		this.props.confirm({
+			title: "个人信息",
+			nobutton: true,
+			content: <ViewUser user={this.props.account} onLogout={()=>{
+				this.onConfirmToLogout()
+			}} onChangeUser={(user)=>{
+				this.props.onChangeUserInfo(user)
+			}}/>
+		})
+	}
+
+	__on_helper() {
+		this.props.confirm({
+			title: "问题帮助",
+			nobutton: true,
+			content: <Helper />
+		})
 	}
 
 	render() {
 		let { account } = this.props 
-		let content
+		let content, sidebar = ""
 		if (this.props.started) {
 			content = <Course recording={this.state.recording}/>
 		} else if (this.props.testing) {
@@ -266,9 +298,16 @@ class Main extends React.Component {
 			} else {
 				content = this.__master_page()
 			}
+			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
+				this.props.onEnterTester()
+			}} onViewUser={()=>{
+				this.__view_user()
+			}} onViewHelper={()=>{
+				this.__on_helper()
+			}}/>
 		}
 		return (
-			<div className="full-h">{content}</div>
+			<div className="full-h">{sidebar}{content}</div>
 		)
 	}
 }
@@ -286,13 +325,15 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	onRoomList     : (rooms) => dispatch(onRoomList(rooms)),
-	onRoomInfo	   : (data) => dispatch(onRoomInfo(data)),
-	onCalendarData : (data) => dispatch(onCalendarData(data)),
-	onLogout       : () => dispatch(onLogout()),
-	onStartCourse  : () => dispatch(onStartCourse()),
-	confirm 	   : (data) => dispatch(confirm(data)),
-	alert 	   	   : (data) => dispatch(alert(data))
+	onRoomList     		: (rooms) => dispatch(onRoomList(rooms)),
+	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
+	onCalendarData 		: (data) => dispatch(onCalendarData(data)),
+	onLogout       		: () => dispatch(onLogout()),
+	onStartCourse  		: () => dispatch(onStartCourse()),
+	confirm 	   		: (data) => dispatch(confirm(data)),
+	alert 	   	   		: (data) => dispatch(alert(data)),
+	onEnterTester 		: () => dispatch(onEnterTester()),
+	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user))
 })
   
 export default connect(

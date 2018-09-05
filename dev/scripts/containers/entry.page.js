@@ -70,18 +70,6 @@ class Entry extends React.Component {
 	
 	render() {
 		const { dialog, account } = this.props
-		let DialogComponent = ()=>{
-			if (!dialog.hide) {
-				if (dialog.alert) {
-					const configure = dialog.alert
-					return <Dialog configure={configure} type="alert" open={!dialog.hide}/>
-				} else if (dialog.confirm) {
-					const configure = dialog.confirm
-					return <Dialog configure={configure} type="confirm" open={!dialog.hide}/>
-				}
-			}
-			return ""
-		}
 		return <Router>
 			<div className="full-h">
 				<Route exact path="/" render={
@@ -93,7 +81,7 @@ class Entry extends React.Component {
 						}
 					}
 				}></Route>
-				<DialogComponent/>
+				<Dialog data={dialog}/>
 				<NetStatus click={()=>{
 					if (this.$netStatus) {
 						console.log("set net good")

@@ -1,25 +1,30 @@
 import { SHOW_ALERT, SHOW_CONFIRM, HIDE_DIALOG } from '../constants/ActionTypes'
 
-const dialog = (state = {}, action) => {
+const dialog = (state = {
+	type     : "alert",
+	configure: {
+		content : ""
+	},
+}, action) => {
 	switch (action.type) {
 		case SHOW_ALERT:
 		return {
 			...state,
-			confirm: null,
-			alert: action.configure,
-			hide : false
+			type     : "alert",
+			configure: action.configure,
+			showing  : true
 		}
 		case SHOW_CONFIRM:
 		return {
 			...state,
-			alert  : null,
-			confirm: action.configure,
-			hide   : false
+			type  	  : "confirm",
+			configure : action.configure,
+			showing   : true
 		}
 		case HIDE_DIALOG:
 		return {
 			...state,
-			hide: true
+			showing  : false
 		}
 		default:
 		return state

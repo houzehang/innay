@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT } from '../constants/ActionTypes'
+import { LOGIN_SUCCESS, LOGOUT, CHANGE_USER_INFO } from '../constants/ActionTypes'
 
 const login = (state = {}, action) => {
 	switch (action.type) {
@@ -7,13 +7,16 @@ const login = (state = {}, action) => {
 			...state,
 			account: action.account
 		}
-		break
 		case LOGOUT:
 		return {
 			...state,
 			account: null
 		}
-		break
+		case CHANGE_USER_INFO:
+		return {
+			...state,
+			account: action.user
+		}
 		default:
 		return state
 	}

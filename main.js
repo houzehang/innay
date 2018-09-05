@@ -112,7 +112,8 @@ function createMainWindow() {
     }
     $main.webContents.on('did-finish-load', () => {
         $main.webContents.send('configure', {
-            __dirname, __apppath: app.getAppPath()
+            __dirname, __apppath: app.getAppPath(),
+            version: app.getVersion()
         });
     })
     $main.webContents.on('will-navigate', (ev, url) => {

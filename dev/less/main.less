@@ -262,7 +262,7 @@ html,body {
 						}
 					}
 					.download-btn {
-						background: #8b460e;
+						background: #ff9d1f;
 						&::after {
 							content: "下载课程包";
 						}
@@ -283,104 +283,112 @@ html,body {
 				align-items: center;
 				flex: 1;
 				background: #484f70;
-				.student-icon {
-					width: 8.2rem;
-					height: 3.4rem;
-					background: url(../assets/student-icon.jpg) no-repeat center center;
-				}
-				.time {
-					font-size: 0.26rem;
-					color: #fff;
-					padding: 0.3rem 0;
-					span {
-						font-size: 0.4rem;
-						color: #b87947;
-						margin: 0 0.1rem;
-					}
-				}
-				.no-lesson {
-					width: 7.88rem;
-					background: #fff;
-					padding: 0.16rem;
+				.student-box {
+					background: #3b415f;
+					border-radius: 0.2rem;
+					padding: 0.25rem;
+					display: flex;
+					flex-direction: column;
 					justify-content: center;
 					align-items: center;
-					text-align: center;
-					display: flex;
-					font-size: 0.16rem;
-					line-height: 1.5;
-				}
-				.lesson-box {
-					width: 7.88rem;
-					background: #fff;
-					padding: 0.16rem;
-					display: flex;
-					align-items: center;
-					border-bottom: 1px solid #cccccc;
-					.cover {
-						width: 1.37rem;
-						height: 0.92rem;
-						margin-right: 0.12rem;
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						align-items: center;
-						overflow: hidden;
-						img {
-							width: 100%;
-						}
+					.student-icon {
+						width: 8.2rem;
+						height: 3.4rem;
+						background: url(../assets/student-icon.jpg) no-repeat center center;
 					}
-					.info {
-						flex: 1;
-						.name {
-							font-size: 0.19rem;
-							color: #363636;
-							line-height: 0.21rem;
-							font-weight: bold;
-							margin-bottom: 0.16rem;
-						}
-						.index {
-							font-size: 0.17rem;
-							color: #363636;
-							line-height: 0.19rem;
-							margin-bottom: 0.18rem;
-						}
-					}
-					.start-btn,.record-btn,.download-btn {
-						margin-right: 0.27rem;
-						width: 1.38rem;
-						height: 0.48rem;
-						background: #3882c2;
+					.time {
+						font-size: 0.3rem;
 						color: #fff;
-						font-size: 0.2rem;
-						display: flex;
+						padding: 0.3rem 0;
+						span {
+							color: #ffdf31;
+							margin: 0 0.1rem;
+						}
+					}
+					.no-lesson {
+						width: 7.88rem;
+						background: #fff;
+						padding: 0.16rem;
 						justify-content: center;
 						align-items: center;
-						border-radius: 0.06rem;
-						&::after {
-							content: "开始上课";
-						}
-						&[disabled] {
-							background: #b5b5b5;
-							&::after {
-								content: "已上课";
+						text-align: center;
+						display: flex;
+						font-size: 0.16rem;
+						line-height: 1.5;
+					}
+					.lesson-box {
+						width: 7.88rem;
+						background: #fff;
+						padding: 0.16rem;
+						display: flex;
+						align-items: center;
+						border-bottom: 1px solid #cccccc;
+						.cover {
+							width: 1.37rem;
+							height: 0.92rem;
+							margin-right: 0.12rem;
+							display: flex;
+							flex-direction: column;
+							justify-content: center;
+							align-items: center;
+							overflow: hidden;
+							img {
+								width: 100%;
 							}
 						}
-						&.waiting {
-							&::after {
-								content: "上课时间未到"
+						.info {
+							flex: 1;
+							.name {
+								font-size: 0.19rem;
+								color: #363636;
+								line-height: 0.21rem;
+								font-weight: bold;
+								margin-bottom: 0.16rem;
+							}
+							.index {
+								font-size: 0.17rem;
+								color: #363636;
+								line-height: 0.19rem;
+								margin-bottom: 0.18rem;
 							}
 						}
-					}
-					.record-btn {
-						background: #8b460e;
-						&::after {
-							content: "课程回放";
+						.start-btn,.record-btn,.download-btn {
+							margin-right: 0.27rem;
+							width: 1.38rem;
+							height: 0.48rem;
+							background: #3882c2;
+							color: #fff;
+							font-size: 0.2rem;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							border-radius: 0.06rem;
+							&::after {
+								content: "开始上课";
+							}
+							&[disabled] {
+								background: #b5b5b5;
+								&::after {
+									content: "已上课";
+								}
+							}
+							&.waiting {
+								&::after {
+									content: "上课时间未到"
+								}
+							}
 						}
-					}
-					.download-btn {
-						background: #8b460e;
-						&::after {
-							content: "下载课程包";
+						.record-btn {
+							background: #8b460e;
+							&::after {
+								content: "课程回放";
+							}
+						}
+						.download-btn {
+							background: #ff9d1f;
+							&::after {
+								content: "下载课程包";
+							}
 						}
 					}
 				}

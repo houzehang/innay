@@ -26,6 +26,33 @@ class Network extends Eventer {
 		}
 	}
 
+	upload_file(data) {
+		return Q.Promise((resolve, reject)=>{
+			const formData = new FormData();
+    		formData.append('upload_file',data)
+			$.ajax(this.$base_url + "/uploadfile/index", {
+				headers: { 
+					"Authorization": `Bearer ${this.$token}`
+				},
+				method: "POST",
+				data: formData,
+				processData: false,
+        		contentType: false,
+				success: (response)=>{
+					if (response.data && response.data.url) {
+						resolve(response.data.url)
+					} else {
+						reject()
+					}
+				},
+				error: ()=>{
+					alert("啊哦，文件上传失败~")
+					reject()
+				}
+			})
+		})
+	}
+
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
 		return Q.Promise((resolve, reject)=>{
@@ -153,6 +180,20 @@ class Network extends Eventer {
 	 */
 	beginClass(channel_id) {
 		return this.__request('/room/class_begin',{channel_id},"post")
+	}
+
+	/**
+	 * 修改用户信息
+	 */
+	changeUserInfo(data) {
+		return this.__request('/user/edit_user_info', data, "post")
+	}
+
+	/**
+	 * 获取班级联系人信息
+	 */
+	getContactInfo() {
+		return this.__request('/user/banji_contact')
 	}
 
 	/**

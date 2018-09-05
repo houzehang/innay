@@ -275,6 +275,8 @@ body .sound-outer {
   overflow: hidden;
   display: flex;
   align-items: center;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 body .sound-outer .page-back {
   width: 0.5rem;
@@ -285,14 +287,17 @@ body .sound-outer .page-back {
   left: 0.2rem;
   top: 0.2rem;
 }
+body .sound-outer::-webkit-scrollbar {
+  display: none;
+}
 body .sound-outer .sound-tester {
   background: #fff;
   border-radius: 0.1rem;
   border: 1px solid #e9e9e9;
   position: relative;
   width: 7.08rem;
+  height: 6.17rem;
   margin: 0 auto;
-  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -559,6 +564,196 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
   color: #bababa;
   left: 0.2rem;
   bottom: 0.1rem;
+}
+.sidebar {
+  width: 1.05rem;
+  height: 3.94rem;
+  position: fixed;
+  left: 0.15rem;
+  top: 50%;
+  margin-top: -1.97rem;
+  background: #fff;
+  border-top-right-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.sidebar .center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.sidebar.teacher {
+  height: 2.9rem;
+  margin-top: -1.45rem;
+}
+.sidebar.teacher .device-area {
+  border-bottom: 0;
+}
+.sidebar .avatar-area {
+  width: 0.78rem;
+  height: 1.48rem;
+  border-bottom: 1px solid #dddddd;
+}
+.sidebar .avatar-area:active {
+  opacity: 0.6;
+}
+.sidebar .avatar-area .avatar {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.sidebar .avatar-area .nickname {
+  font-size: 0.16rem;
+  color: #363636;
+  margin-top: 0.1rem;
+  width: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+.sidebar .txt {
+  font-size: 0.16rem;
+  color: #959bb5;
+  margin-top: 0.1rem;
+  text-align: center;
+}
+.sidebar .device-area {
+  width: 0.78rem;
+  height: 1.14rem;
+  border-bottom: 1px solid #dddddd;
+}
+.sidebar .device-area .device-btn {
+  width: 0.39rem;
+  height: 0.34rem;
+  background: url(./d228416cca98321071830dbef615516b.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+.sidebar .device-area:active {
+  opacity: 0.6;
+}
+.sidebar .help-area {
+  flex: 1;
+}
+.sidebar .help-area .help-btn {
+  width: 0.36rem;
+  height: 0.36rem;
+  background: url(./944fa3bc3ac63ebac35ea6e87b1834e9.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+.sidebar .help-area:active {
+  opacity: 0.6;
+}
+.view-user {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: -0.2rem;
+  width: 100%;
+}
+.view-user .avatar {
+  width: 0.84rem;
+  height: 0.84rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+.view-user .avatar input {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+.view-user .nickname {
+  margin-top: 0.14rem;
+  margin-bottom: 0.36rem;
+  width: 1.7rem;
+  height: 0.38rem;
+  border: 1px solid #b8b8b8;
+  border-radius: 0.02rem;
+  padding-left: 0.1rem;
+  font-size: 0.2rem;
+  color: #333333;
+  display: flex;
+  align-items: center;
+}
+.view-user .nickname .edit-btn {
+  width: 0.38rem;
+  height: 0.38rem;
+  background: url(./54d9aa38b3f8b9e41e113b962f26f3f5.png) no-repeat center center;
+  background-size: 0.19rem auto;
+}
+.view-user .nickname .text {
+  flex: 1;
+}
+.view-user .nickname input {
+  width: 1.54rem;
+  border: 0;
+  height: 0.3rem;
+  line-height: 0.3rem;
+  color: #333333;
+  font-size: 0.2rem;
+  outline: none;
+}
+.view-user .logout-btn {
+  position: absolute;
+  font-size: 0.16rem;
+  color: #333333;
+  left: 0.28rem;
+  bottom: 0.18rem;
+  text-decoration: none;
+}
+.view-user .logout-btn:active {
+  opacity: 0.8;
+}
+.view-user .version {
+  font-size: 0.15rem;
+  color: #cacaca;
+  position: absolute;
+  right: 0.28rem;
+  bottom: 0.18rem;
+}
+.helper-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.helper-block .code {
+  margin-top: -0.2rem;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-bottom: 0.1rem;
+}
+.helper-block .code img {
+  width: 100%;
+  height: 100%;
+}
+.helper-block .name {
+  width: 2.1rem;
+  height: 0.48rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #ff9d1f;
+  font-size: 0.2rem;
+  color: #ffffff;
+  margin-bottom: 0.4rem;
+}
+.helper-block .tips {
+  font-size: 0.18rem;
+  color: #b8b8b8;
+  margin-bottom: -0.2rem;
 }
 .netstatus {
   position: fixed;
@@ -965,6 +1160,12 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
     -o-transform: translate(0, -200px);
   }
 }
+* {
+  -webkit-user-select: none;
+}
+input {
+  -webkit-user-select: text;
+}
 body .loading-mask {
   position: fixed;
   width: 100%;
@@ -1021,6 +1222,8 @@ body .mask.dialog-layer .dialog {
   box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.29);
   overflow: hidden;
   height: auto;
+  transform: scale(0);
+  transition: all 200ms 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 body .mask.dialog-layer .dialog .title {
   height: 0.4rem;
@@ -1626,6 +1829,12 @@ template {
 [hidden] {
   display: none;
 }
+* {
+  -webkit-user-select: none;
+}
+input {
+  -webkit-user-select: text;
+}
 body .loading-mask {
   position: fixed;
   width: 100%;
@@ -1682,6 +1891,8 @@ body .mask.dialog-layer .dialog {
   box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.29);
   overflow: hidden;
   height: auto;
+  transform: scale(0);
+  transition: all 200ms 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 body .mask.dialog-layer .dialog .title {
   height: 0.4rem;
@@ -2155,7 +2366,7 @@ body .page.calendar-page .courses .row .record-btn::after {
 }
 html .page.calendar-page .courses .row .download-btn,
 body .page.calendar-page .courses .row .download-btn {
-  background: #8b460e;
+  background: #ff9d1f;
 }
 html .page.calendar-page .courses .row .download-btn::after,
 body .page.calendar-page .courses .row .download-btn::after {
@@ -2178,26 +2389,35 @@ body .page.student-page .inner {
   flex: 1;
   background: #484f70;
 }
-html .page.student-page .inner .student-icon,
-body .page.student-page .inner .student-icon {
+html .page.student-page .inner .student-box,
+body .page.student-page .inner .student-box {
+  background: #3b415f;
+  border-radius: 0.2rem;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+html .page.student-page .inner .student-box .student-icon,
+body .page.student-page .inner .student-box .student-icon {
   width: 8.2rem;
   height: 3.4rem;
   background: url(./15cf0d99d812a8e7c14c2261c6e985b5.jpg) no-repeat center center;
 }
-html .page.student-page .inner .time,
-body .page.student-page .inner .time {
-  font-size: 0.26rem;
+html .page.student-page .inner .student-box .time,
+body .page.student-page .inner .student-box .time {
+  font-size: 0.3rem;
   color: #fff;
   padding: 0.3rem 0;
 }
-html .page.student-page .inner .time span,
-body .page.student-page .inner .time span {
-  font-size: 0.4rem;
-  color: #b87947;
+html .page.student-page .inner .student-box .time span,
+body .page.student-page .inner .student-box .time span {
+  color: #ffdf31;
   margin: 0 0.1rem;
 }
-html .page.student-page .inner .no-lesson,
-body .page.student-page .inner .no-lesson {
+html .page.student-page .inner .student-box .no-lesson,
+body .page.student-page .inner .student-box .no-lesson {
   width: 7.88rem;
   background: #fff;
   padding: 0.16rem;
@@ -2208,8 +2428,8 @@ body .page.student-page .inner .no-lesson {
   font-size: 0.16rem;
   line-height: 1.5;
 }
-html .page.student-page .inner .lesson-box,
-body .page.student-page .inner .lesson-box {
+html .page.student-page .inner .student-box .lesson-box,
+body .page.student-page .inner .student-box .lesson-box {
   width: 7.88rem;
   background: #fff;
   padding: 0.16rem;
@@ -2217,8 +2437,8 @@ body .page.student-page .inner .lesson-box {
   align-items: center;
   border-bottom: 1px solid #cccccc;
 }
-html .page.student-page .inner .lesson-box .cover,
-body .page.student-page .inner .lesson-box .cover {
+html .page.student-page .inner .student-box .lesson-box .cover,
+body .page.student-page .inner .student-box .lesson-box .cover {
   width: 1.37rem;
   height: 0.92rem;
   margin-right: 0.12rem;
@@ -2228,35 +2448,35 @@ body .page.student-page .inner .lesson-box .cover {
   align-items: center;
   overflow: hidden;
 }
-html .page.student-page .inner .lesson-box .cover img,
-body .page.student-page .inner .lesson-box .cover img {
+html .page.student-page .inner .student-box .lesson-box .cover img,
+body .page.student-page .inner .student-box .lesson-box .cover img {
   width: 100%;
 }
-html .page.student-page .inner .lesson-box .info,
-body .page.student-page .inner .lesson-box .info {
+html .page.student-page .inner .student-box .lesson-box .info,
+body .page.student-page .inner .student-box .lesson-box .info {
   flex: 1;
 }
-html .page.student-page .inner .lesson-box .info .name,
-body .page.student-page .inner .lesson-box .info .name {
+html .page.student-page .inner .student-box .lesson-box .info .name,
+body .page.student-page .inner .student-box .lesson-box .info .name {
   font-size: 0.19rem;
   color: #363636;
   line-height: 0.21rem;
   font-weight: bold;
   margin-bottom: 0.16rem;
 }
-html .page.student-page .inner .lesson-box .info .index,
-body .page.student-page .inner .lesson-box .info .index {
+html .page.student-page .inner .student-box .lesson-box .info .index,
+body .page.student-page .inner .student-box .lesson-box .info .index {
   font-size: 0.17rem;
   color: #363636;
   line-height: 0.19rem;
   margin-bottom: 0.18rem;
 }
-html .page.student-page .inner .lesson-box .start-btn,
-body .page.student-page .inner .lesson-box .start-btn,
-html .page.student-page .inner .lesson-box .record-btn,
-body .page.student-page .inner .lesson-box .record-btn,
-html .page.student-page .inner .lesson-box .download-btn,
-body .page.student-page .inner .lesson-box .download-btn {
+html .page.student-page .inner .student-box .lesson-box .start-btn,
+body .page.student-page .inner .student-box .lesson-box .start-btn,
+html .page.student-page .inner .student-box .lesson-box .record-btn,
+body .page.student-page .inner .student-box .lesson-box .record-btn,
+html .page.student-page .inner .student-box .lesson-box .download-btn,
+body .page.student-page .inner .student-box .lesson-box .download-btn {
   margin-right: 0.27rem;
   width: 1.38rem;
   height: 0.48rem;
@@ -2268,52 +2488,52 @@ body .page.student-page .inner .lesson-box .download-btn {
   align-items: center;
   border-radius: 0.06rem;
 }
-html .page.student-page .inner .lesson-box .start-btn::after,
-body .page.student-page .inner .lesson-box .start-btn::after,
-html .page.student-page .inner .lesson-box .record-btn::after,
-body .page.student-page .inner .lesson-box .record-btn::after,
-html .page.student-page .inner .lesson-box .download-btn::after,
-body .page.student-page .inner .lesson-box .download-btn::after {
+html .page.student-page .inner .student-box .lesson-box .start-btn::after,
+body .page.student-page .inner .student-box .lesson-box .start-btn::after,
+html .page.student-page .inner .student-box .lesson-box .record-btn::after,
+body .page.student-page .inner .student-box .lesson-box .record-btn::after,
+html .page.student-page .inner .student-box .lesson-box .download-btn::after,
+body .page.student-page .inner .student-box .lesson-box .download-btn::after {
   content: "\5F00\59CB\4E0A\8BFE";
 }
-html .page.student-page .inner .lesson-box .start-btn[disabled],
-body .page.student-page .inner .lesson-box .start-btn[disabled],
-html .page.student-page .inner .lesson-box .record-btn[disabled],
-body .page.student-page .inner .lesson-box .record-btn[disabled],
-html .page.student-page .inner .lesson-box .download-btn[disabled],
-body .page.student-page .inner .lesson-box .download-btn[disabled] {
+html .page.student-page .inner .student-box .lesson-box .start-btn[disabled],
+body .page.student-page .inner .student-box .lesson-box .start-btn[disabled],
+html .page.student-page .inner .student-box .lesson-box .record-btn[disabled],
+body .page.student-page .inner .student-box .lesson-box .record-btn[disabled],
+html .page.student-page .inner .student-box .lesson-box .download-btn[disabled],
+body .page.student-page .inner .student-box .lesson-box .download-btn[disabled] {
   background: #b5b5b5;
 }
-html .page.student-page .inner .lesson-box .start-btn[disabled]::after,
-body .page.student-page .inner .lesson-box .start-btn[disabled]::after,
-html .page.student-page .inner .lesson-box .record-btn[disabled]::after,
-body .page.student-page .inner .lesson-box .record-btn[disabled]::after,
-html .page.student-page .inner .lesson-box .download-btn[disabled]::after,
-body .page.student-page .inner .lesson-box .download-btn[disabled]::after {
+html .page.student-page .inner .student-box .lesson-box .start-btn[disabled]::after,
+body .page.student-page .inner .student-box .lesson-box .start-btn[disabled]::after,
+html .page.student-page .inner .student-box .lesson-box .record-btn[disabled]::after,
+body .page.student-page .inner .student-box .lesson-box .record-btn[disabled]::after,
+html .page.student-page .inner .student-box .lesson-box .download-btn[disabled]::after,
+body .page.student-page .inner .student-box .lesson-box .download-btn[disabled]::after {
   content: "\5DF2\4E0A\8BFE";
 }
-html .page.student-page .inner .lesson-box .start-btn.waiting::after,
-body .page.student-page .inner .lesson-box .start-btn.waiting::after,
-html .page.student-page .inner .lesson-box .record-btn.waiting::after,
-body .page.student-page .inner .lesson-box .record-btn.waiting::after,
-html .page.student-page .inner .lesson-box .download-btn.waiting::after,
-body .page.student-page .inner .lesson-box .download-btn.waiting::after {
+html .page.student-page .inner .student-box .lesson-box .start-btn.waiting::after,
+body .page.student-page .inner .student-box .lesson-box .start-btn.waiting::after,
+html .page.student-page .inner .student-box .lesson-box .record-btn.waiting::after,
+body .page.student-page .inner .student-box .lesson-box .record-btn.waiting::after,
+html .page.student-page .inner .student-box .lesson-box .download-btn.waiting::after,
+body .page.student-page .inner .student-box .lesson-box .download-btn.waiting::after {
   content: "\4E0A\8BFE\65F6\95F4\672A\5230";
 }
-html .page.student-page .inner .lesson-box .record-btn,
-body .page.student-page .inner .lesson-box .record-btn {
+html .page.student-page .inner .student-box .lesson-box .record-btn,
+body .page.student-page .inner .student-box .lesson-box .record-btn {
   background: #8b460e;
 }
-html .page.student-page .inner .lesson-box .record-btn::after,
-body .page.student-page .inner .lesson-box .record-btn::after {
+html .page.student-page .inner .student-box .lesson-box .record-btn::after,
+body .page.student-page .inner .student-box .lesson-box .record-btn::after {
   content: "\8BFE\7A0B\56DE\653E";
 }
-html .page.student-page .inner .lesson-box .download-btn,
-body .page.student-page .inner .lesson-box .download-btn {
-  background: #8b460e;
+html .page.student-page .inner .student-box .lesson-box .download-btn,
+body .page.student-page .inner .student-box .lesson-box .download-btn {
+  background: #ff9d1f;
 }
-html .page.student-page .inner .lesson-box .download-btn::after,
-body .page.student-page .inner .lesson-box .download-btn::after {
+html .page.student-page .inner .student-box .lesson-box .download-btn::after,
+body .page.student-page .inner .student-box .lesson-box .download-btn::after {
   content: "\4E0B\8F7D\8BFE\7A0B\5305";
 }
 html .page.course-page,
