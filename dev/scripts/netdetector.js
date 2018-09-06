@@ -9,7 +9,8 @@ class NetDetector extends Eventer {
 		// 0 为网络断开，1-4 数字越高网络越差
 		this.$status 			= 1
 		this.$warn_times 		= 0
-		this.$max_warn_times 	= 3
+		this.$max_warn_times 	= 5
+		this.$check_delay 		= 5000
 		this.$in_bad_status     = false
 		this.$check_timer		= null
 		this.$check_closed 		= true
@@ -32,9 +33,9 @@ class NetDetector extends Eventer {
 		this.$check_closed = false
 		let base = "https://muwen.mw009.com/netdetector.jpg"
 		this.$check_timer = setTimeout(()=>{
-			this.onAjaxTime(5000)
+			this.onAjaxTime(this.$check_delay)
 			this.check()
-		},5000)
+		},this.$check_delay)
 		let start = new Date().getTime()
 		$.get(`${base}?t=${new Date().getTime()}`,()=>{
 			let delay = new Date().getTime() - start
@@ -42,13 +43,13 @@ class NetDetector extends Eventer {
 			clearTimeout(this.$check_timer)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
-			},5000)
+			},this.$check_delay)
 		}).fail(()=>{
 			this.onAjaxTime(-1)
 			clearTimeout(this.$check_timer)
 			this.$check_timer = setTimeout(()=>{
 				this.check()
-			},5000)
+			},this.$check_delay)
 		})
 	}
 
@@ -58,19 +59,7 @@ class NetDetector extends Eventer {
 		this.$check_closed = true
 	}
 
-	onSignalTime(delay) {
-		delay -= 0
-		if (!delay) return
-		let status
-		if (delay <= 1000) {
-			status = 1
-		} else if (delay <= 2000) {
-			status = 2
-		} else if (delay <= 4000) {
-			status = 3
-		} else {
-			status = 4
-		}
+	setStatus(status) {
 		this.__setStatus(status)
 	}
 

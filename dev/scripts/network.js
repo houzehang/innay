@@ -111,6 +111,13 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 获取服务器时间
+	 */
+	servcerTime() {
+		return this.__request("/api/time")
+	}
+
+	/**
 	 * 用户登录
 	 * @param {*} data 
 	 */
@@ -204,13 +211,14 @@ class Network extends Eventer {
 		console.log(data)
 		data.user = context.user.id
 		this.$log_queue.push(data)
-		clearTimeout(this.$log_delay)
-		this.$log_delay = setTimeout(()=>{
-			if (this.$log_queue.length > 0) {
-				$.post(`${this.$base_url}/api/h5_log`,{logs:this.$log_queue})
-			}
-			this.$log_queue = []
-		},5000)
+		if (!this.$log_delay) {
+			this.$log_delay = setInterval(()=>{
+				if (this.$log_queue.length > 0) {
+					$.post(`${this.$base_url}/api/h5_log`,{logs:this.$log_queue})
+				}
+				this.$log_queue = []
+			},8000)
+		}
 	}
 }
 

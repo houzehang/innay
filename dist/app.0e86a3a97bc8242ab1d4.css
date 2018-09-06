@@ -2758,6 +2758,11 @@ body .page.course-page .inner .content .operations button {
   align-items: center;
   border-right: 1px solid #3078b6;
 }
+html .page.course-page .inner .content .operations button:hover,
+body .page.course-page .inner .content .operations button:hover {
+  background-color: #207ac7 !important;
+  opacity: 1;
+}
 html .page.course-page .inner .content .operations button:active,
 body .page.course-page .inner .content .operations button:active {
   background-color: #1e6fb4 !important;
@@ -2775,7 +2780,7 @@ body .page.course-page .inner .content .operations button.course-handsup {
 }
 html .page.course-page .inner .content .operations button.course-handsup.off,
 body .page.course-page .inner .content .operations button.course-handsup.off {
-  background-image: url(./2f14103125e4d9abb1e541044b791eca.png);
+  background-image: url(./dbd1f6254e924f9c20a938c49374df30.png);
   background-size: auto 0.38rem;
 }
 html .page.course-page .inner .content .operations button.course-gift,
@@ -2785,7 +2790,7 @@ body .page.course-page .inner .content .operations button.course-gift {
 }
 html .page.course-page .inner .content .operations button.course-gift.off,
 body .page.course-page .inner .content .operations button.course-gift.off {
-  background-image: url(./caf9ede90eafad727f90da569c7c5643.png);
+  background-image: url(./8afa2dda881b5f7ebe056ca5e836635d.png);
   background-size: auto 0.38rem;
 }
 html .page.course-page .inner .content .operations button.course-magic,
@@ -2795,7 +2800,7 @@ body .page.course-page .inner .content .operations button.course-magic {
 }
 html .page.course-page .inner .content .operations button.course-magic.off,
 body .page.course-page .inner .content .operations button.course-magic.off {
-  background-image: url(./29687235e7bd1c04350ac7cd8c45983c.png);
+  background-image: url(./b16d68d02dce7802ecc8fa00f3c4c786.png);
   background-size: auto 0.38rem;
 }
 html .page.course-page .inner .content .operations button.course-muteall,
@@ -2805,7 +2810,7 @@ body .page.course-page .inner .content .operations button.course-muteall {
 }
 html .page.course-page .inner .content .operations button.course-muteall.off,
 body .page.course-page .inner .content .operations button.course-muteall.off {
-  background-image: url(./086ebe439110e7e6d62a69eabe8d9a75.png);
+  background-image: url(./cb61764f937599f786efd0cb14c45c52.png);
   background-size: auto 0.38rem;
 }
 html .page.course-page .inner .content .operations button.course-rank,
@@ -2815,7 +2820,7 @@ body .page.course-page .inner .content .operations button.course-rank {
 }
 html .page.course-page .inner .content .operations button.course-rank.off,
 body .page.course-page .inner .content .operations button.course-rank.off {
-  background-image: url(./96a5b86f1cfbed77ff7fb99bd7477de2.png);
+  background-image: url(./7ebd7009b651dd7b7c0902cf26733c4c.png);
   background-size: auto 0.38rem;
 }
 html .page.course-page .inner .content .operations button.course-clip,
@@ -2869,7 +2874,7 @@ body .page.course-page .inner .entities-area .counter {
   display: flex;
   align-items: center;
   padding-top: 0.08rem;
-  z-index: 101;
+  z-index: 105;
 }
 html .page.course-page .inner .entities-area .counter.icon,
 body .page.course-page .inner .entities-area .counter.icon {

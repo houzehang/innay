@@ -7,11 +7,13 @@ const context = require('./context')
 class Signalize extends Eventer {
 	constructor(inst) {
 		super()
-		this.$inst 		= inst
-		this.$inited    = false
-		this.$is_reconn = false
-		this.$queue 	= []
-		this.$heart_t   = null
+		this.$inst 			= inst
+		this.$inited    	= false
+		this.$is_reconn 	= false
+		this.$queue 		= []
+		this.$heart_t   	= null
+		this.$recon_timer	= null
+		this.$connect_timer = null
 	}
 
 	__destroy_all() {
@@ -73,9 +75,6 @@ class Signalize extends Eventer {
 		clearTimeout(this.$connect_timer)
 		this.trigger("CONNECTED_SIGNAL")
 		this.__heart_beat()
-		if (context.detector) {
-			context.detector.onSignalTime(0)
-		}
 	}
 
 	__heart_beat() {
@@ -179,13 +178,6 @@ class Signalize extends Eventer {
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
 				let message = JSON.parse(msg)
 				console.log("receive new message", message)
-				if (message.created_at) {
-					let delay = new Date().getTime() - message.created_at
-					console.log("delay",delay)
-					if (context.detector) {
-						context.detector.onSignalTime(delay)
-					}
-				}
 				this.trigger("NEW_MESSAGE", message)
 				this.__clear_recon_timer()
 				this.__heart_beat()
@@ -195,11 +187,7 @@ class Signalize extends Eventer {
 				this.__heart_beat()
 				let message = JSON.parse(msg)
 				if (message.sig) {
-					let delay = new Date().getTime() - message.sig
-					if (context.detector) {
-						context.detector.onSignalTime(delay)
-					}
-					console.log("receive heart beat message", msg, delay)
+					console.log("receive heart beat message", msg)
 					return
 				}
 				console.log("receive new peer message", msg)
@@ -210,6 +198,8 @@ class Signalize extends Eventer {
 
 	leave() {
 		clearTimeout(this.$heart_t)
+		clearTimeout(this.$connect_timer)
+		this.__clear_recon_timer()
 		if (this.$channel) {
 			this.$channel.channelLeave(()=>{
 				this.trigger("CHANNEL_LEAVED", this.$channel)
@@ -236,14 +226,8 @@ class Signalize extends Eventer {
 			}
 			this.__clear_recon_timer()
 			this.$recon_timer = setTimeout(()=>{
-				if (context.detector) {
-					context.detector.onSignalTime(2000)
-				}
 				this.trigger("NETWORK_BAD")
 				this.$recon_timer = setTimeout(()=>{
-					if (context.detector) {
-						context.detector.onSignalTime(10000)
-					}
 					this.$queue.push(message)
 					this.__reconnect()
 				}, 8000)

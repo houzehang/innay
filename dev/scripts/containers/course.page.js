@@ -181,6 +181,24 @@ class Course extends React.Component {
 					this.props.onEndCourse()
 				}
 			})
+			this.$room.rtc.on("networkquality", (uid, tx, rx)=>{
+				console.log("网络状态：",uid,tx,rx)
+				if (uid == 0) {
+					let status = Math.max(tx,rx)
+					if (status == 1 || status == 2) {
+						status = 1
+					} else if (status == 3) {
+						status = 2
+					} else if (status == 4) {
+						status = 3
+					} else if (status == 5) {
+						status = 4
+					} else {
+						status = 0
+					}
+					context.detector.setStatus(status)
+				}
+			})
 			let $waiting_timer = null
 			this.$signal.on("RECONNECT_SIGNAL", ()=>{
 				this.props.showLoading("网络不稳定哦，正在重连中~")
@@ -871,13 +889,6 @@ class Course extends React.Component {
 										this.$session.send_message(Const.ENABLE_MAGIC)
 									}
 								}}></button>
-								<button className={this.props.switches.muteall?"course-muteall off":"course-muteall"} onClick={()=>{
-									if (this.props.switches.muteall) {
-										this.$session.send_message(Const.UNMUTE_ALL)
-									} else {
-										this.$session.send_message(Const.MUTE_ALL)
-									}
-								}}></button>
 								<button className="course-clip" onClick={()=>{
 									this.__on_clipshare()
 								}}></button>
@@ -897,6 +908,13 @@ class Course extends React.Component {
 										this.$session.send_message(Const.HIDE_RANKS)
 									} else {
 										this.$session.send_message(Const.SHOW_RANKS)
+									}
+								}}></button>
+								<button className={this.props.switches.muteall?"course-muteall off":"course-muteall"} onClick={()=>{
+									if (this.props.switches.muteall) {
+										this.$session.send_message(Const.UNMUTE_ALL)
+									} else {
+										this.$session.send_message(Const.MUTE_ALL)
 									}
 								}}></button>
 							</div>

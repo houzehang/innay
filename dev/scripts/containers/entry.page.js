@@ -11,9 +11,9 @@ import Main from './main.page'
 import Dialog from './dialog'
 import NetStatus from '../components/netstatus'
 import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
-const history = createHistory()
 const NetDetector = require("../netdetector")
 const context = require("../context")
+import * as types from '../constants/ActionTypes'
 
 class Entry extends React.Component {
 	constructor(props) {
@@ -36,31 +36,39 @@ class Entry extends React.Component {
 			this.setState({ netstatus: level, netwarning: detector.warning })
 		})
 		detector.on("NET_STATUS_BAD", ()=>{
-			if (!this.$in_status_bad) {
-				this.props.confirm({
-					content: "系统检测到你的网络不太好，为保证您的上课体验，建议您开启弱网络优化。",
-					sure_txt: "开启",
-					cancel_txt: "不开启",
-					sure: ()=>{
-						if (context.detector.inBadStatus) {
-							this.$in_status_bad = true
-							this.props.onNetStatusBad()
+			if (!this.props.account) return
+			let account = this.props.account
+			if (account.dentity == types.DENTITY.STUDENT) {
+				if (!this.$in_status_bad) {
+					this.props.confirm({
+						content: "系统检测到你的网络不太好，为保证您的上课体验，建议您开启弱网络优化。",
+						sure_txt: "开启",
+						cancel_txt: "不开启",
+						sure: ()=>{
+							if (context.detector.inBadStatus) {
+								this.$in_status_bad = true
+								this.props.onNetStatusBad()
+							}
 						}
-					}
-				})
+					})
+				}
 			}
 		})
 		detector.on("NET_STATUS_GOOD", ()=>{
-			if (this.$in_status_bad) {
-				this.props.confirm({
-					content: "系统检测到你的网络恢复了，建议你关闭弱网络优化。",
-					sure: ()=>{
-						if (!context.detector.inBadStatus) {
-							this.$in_status_bad = false
-							this.props.onNetStatusGood()
+			if (!this.props.account) return
+			let account = this.props.account
+			if (account.dentity == types.DENTITY.STUDENT) {
+				if (this.$in_status_bad) {
+					this.props.confirm({
+						content: "系统检测到你的网络恢复了，建议你关闭弱网络优化。",
+						sure: ()=>{
+							if (!context.detector.inBadStatus) {
+								this.$in_status_bad = false
+								this.props.onNetStatusGood()
+							}
 						}
-					}
-				})
+					})
+				}
 			}
 		})
 		setTimeout(()=>{
