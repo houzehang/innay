@@ -12,9 +12,10 @@ class ViewUser extends React.Component {
 		if (this.props.user.dentity == types.DENTITY.STUDENT) {
 			isStudent = true
 		}
+		this.$origin_username = isStudent?this.props.user.child_name:this.props.user.nickname
 		this.state = { 
 			editmode	: false, 
-			username	: this.props.user.child_name,
+			username	: this.$origin_username,
 			avatarurl	: isStudent?this.props.user.child_avatar:this.props.user.avatarurl,
 			version 	: "-"
 		}
@@ -29,10 +30,10 @@ class ViewUser extends React.Component {
 
 	__on_change_confirm() {
 		if (!this.state.username) {
-			this.setState({username: this.props.user.child_name, editmode: false})
+			this.setState({username: this.$origin_username, editmode: false})
 			return
 		}
-		if (this.state.username != this.props.user.child_name) {
+		if (this.state.username != this.$origin_username) {
 			if (confirm("是否确定修改昵称？")) {
 				net.changeUserInfo({
 					child_name: this.state.username
@@ -42,7 +43,7 @@ class ViewUser extends React.Component {
 					}
 				})
 			} else {
-				this.setState({username: this.props.user.child_name})
+				this.setState({username: this.$origin_username})
 			}
 		}
 		this.setState({editmode: false})
@@ -56,6 +57,7 @@ class ViewUser extends React.Component {
 		}
 		this.props.user.child_name 		= this.state.username
 		this.props.user.child_avatar  	= this.state.avatarurl
+		this.$origin_username		    = this.state.username
 		this.props.onChangeUser(user)
 	}
 
@@ -79,7 +81,7 @@ class ViewUser extends React.Component {
 			isStudent = true
 		}
 		return (
-			<div className="view-user">
+			<div className={isStudent?"view-user":"view-user teacher"}>
 				<div className="avatar" style={{
 					"backgroundImage":`url(${this.state.avatarurl})`
 				}}>

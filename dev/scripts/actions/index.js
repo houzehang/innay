@@ -165,8 +165,9 @@ export const onCourseTick = ()=>({
 	type: types.COURSE_TICK
 })
 
-export const onEnterTester = ()=>({
-	type: types.ENTER_TESTER
+export const onEnterTester = (page)=>({
+	type: types.ENTER_TESTER,
+	page
 })
 
 export const onExitTester = ()=>({

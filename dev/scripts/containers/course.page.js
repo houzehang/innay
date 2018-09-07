@@ -31,6 +31,7 @@ class Course extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$uuid      = 0
+		this.$stat_arr 	= []
 		this.$session 	= new Session(this)
 		this.$recording = this.props.recording
 		this.state 		= { 
@@ -176,7 +177,7 @@ class Course extends React.Component {
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
 				if (this.$waiting_to_tester) {
-					this.props.onEnterTester()
+					this.props.onEnterTester("course")
 				} else {
 					this.props.onEndCourse()
 				}
@@ -196,7 +197,18 @@ class Course extends React.Component {
 					} else {
 						status = 0
 					}
-					context.detector.setStatus(status)
+					this.$stat_arr.push(status)
+					if (this.$stat_arr.length >= 3) {
+						let sum = 0
+						this.$stat_arr.forEach((status)=>{
+							sum += status
+						})
+						status = sum / this.$stat_arr.length >> 0
+						context.detector.setStatus(status)
+						this.$stat_arr = []
+					} else {
+						context.detector.setStatusOnce(status)
+					}
 				}
 			})
 			let $waiting_timer = null
@@ -974,7 +986,7 @@ const mapDispatchToProps = dispatch => ({
 	onCourseTick 	: () => dispatch(onCourseTick()),
 	confirm 		: (data) => dispatch(confirm(data)),
 	alert 	    	: (data) => dispatch(alert(data)),
-	onEnterTester 	: () => dispatch(onEnterTester()),
+	onEnterTester 	: (page) => dispatch(onEnterTester(page)),
 	showLoading 	: (message) => dispatch(showLoading(message)),
 	hideLoading 	: () => dispatch(hideLoading()),
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),

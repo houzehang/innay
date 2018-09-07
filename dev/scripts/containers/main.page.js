@@ -299,7 +299,7 @@ class Main extends React.Component {
 				content = this.__master_page()
 			}
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
-				this.props.onEnterTester()
+				this.props.onEnterTester("main")
 			}} onViewUser={()=>{
 				this.__view_user()
 			}} onViewHelper={()=>{
@@ -332,7 +332,7 @@ const mapDispatchToProps = dispatch => ({
 	onStartCourse  		: () => dispatch(onStartCourse()),
 	confirm 	   		: (data) => dispatch(confirm(data)),
 	alert 	   	   		: (data) => dispatch(alert(data)),
-	onEnterTester 		: () => dispatch(onEnterTester()),
+	onEnterTester 		: (fromPage) => dispatch(onEnterTester(fromPage)),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user))
 })
   

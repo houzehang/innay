@@ -9,7 +9,7 @@ class NetDetector extends Eventer {
 		// 0 为网络断开，1-4 数字越高网络越差
 		this.$status 			= 1
 		this.$warn_times 		= 0
-		this.$max_warn_times 	= 5
+		this.$max_warn_times 	= 3
 		this.$check_delay 		= 5000
 		this.$in_bad_status     = false
 		this.$check_timer		= null
@@ -61,6 +61,11 @@ class NetDetector extends Eventer {
 
 	setStatus(status) {
 		this.__setStatus(status)
+	}
+
+	setStatusOnce(status) {
+		this.$status = status
+		this.trigger("NET:STATUS", this.$status)
 	}
 
 	onAjaxTime(delay) {

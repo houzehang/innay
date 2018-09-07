@@ -28,7 +28,7 @@ class SideBar extends React.Component {
 					<div className="avatar" style={{
 						"backgroundImage":`url(${isStudent?this.props.user.child_avatar:this.props.user.avatarurl})`
 					}}></div>
-					<div className="nickname">{this.props.user.child_name}</div>
+					<div className="nickname">{isStudent?this.props.user.child_name:this.props.user.nickname}</div>
 				</div>
 				<div className="device-area center" onClick={()=>{
 					this.props.onDeviceTest()

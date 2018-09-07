@@ -279,8 +279,8 @@ body .sound-outer {
   -webkit-overflow-scrolling: touch;
 }
 body .sound-outer .page-back {
-  width: 0.5rem;
-  height: 0.5rem;
+  width: 0.35rem;
+  height: 0.35rem;
   background: url(./a39abc1070254e8df3c832c6bf2aeb40.png) no-repeat center center;
   background-size: 100% auto;
   position: absolute;
@@ -659,6 +659,10 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
   align-items: center;
   margin-top: -0.2rem;
   width: 100%;
+}
+.view-user.teacher .nickname {
+  border: 0;
+  text-align: center;
 }
 .view-user .avatar {
   width: 0.84rem;

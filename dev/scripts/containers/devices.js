@@ -87,6 +87,7 @@ class Devices extends React.Component {
 	}
 
 	componentDidMount() {
+		console.log("frompage",this.props.fromPage)
 	}
 
 	componentWillUnmount() {
@@ -329,13 +330,14 @@ class Devices extends React.Component {
 const mapStateToProps = (state, ownProps) => {
 	return {
 		account : state.login.account,
-		room 	: state.room.info
+		room 	: state.room.info,
+		fromPage: state.main.fromPage
 	}
 }
 
 
 const mapDispatchToProps = dispatch => ({
-	onExitTester : () => dispatch(onExitTester())
+	onExitTester 	: () => dispatch(onExitTester())
 })
 
 export default connect(

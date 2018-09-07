@@ -31,12 +31,15 @@ const main = (state = {}, action) => {
 		return {
 			...state,
 			courseStarted: false,
-			enterTester: true
+			enterTester: true,
+			fromPage : action.page
 		}
 		case EXIT_TESTER:
+		let page = state.fromPage
 		return {
 			...state,
-			enterTester: false
+			enterTester: false,
+			courseStarted : page == "course"
 		}
 		case NET_STATUS_BAD:
 		return {
