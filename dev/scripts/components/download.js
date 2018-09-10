@@ -41,7 +41,7 @@ class Download extends React.Component {
 		}
 		return (
 			<div>
-				<webview ref={this.$webview} className="download-webview" nodeintegration='true' src={`${prefix}/app/downloader.html?lesson=${this.props.name}&t=${new Date().getTime()}`} partition="persist:kecheng-download"></webview>
+				<webview ref={this.$webview} className="download-webview" nodeintegration='true' src={`${prefix}/app/downloader.html?lesson=${this.props.name}&t=${new Date().getTime()}`} partition="persist:kecheng"></webview>
 			</div>
 		)
 	}

@@ -32,6 +32,7 @@ class NetDetector extends Eventer {
 		console.log("call check")
 		this.$check_closed = false
 		let base = "https://muwen.mw009.com/netdetector.jpg"
+		clearTimeout(this.$check_timer)
 		this.$check_timer = setTimeout(()=>{
 			this.onAjaxTime(this.$check_delay)
 			this.check()
