@@ -5,7 +5,7 @@
  * 2. 创建主窗口
  * 3. 添加渲染线程监听器
  */
-const {TC_DEBUG}   = require('./env.js');
+const {TC_DEBUG,TEST}   = require('./env.js');
 const Const        = require('./const.js'); 
 const fs           = require("fs");
 const path         = require("path");
@@ -107,7 +107,7 @@ function createMainWindow() {
     })
     $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
-    if (TC_DEBUG) {
+    if (TC_DEBUG || TEST) {
         $main.webContents.openDevTools();
     }
     $main.webContents.on('did-finish-load', () => {

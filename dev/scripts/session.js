@@ -1,6 +1,5 @@
 const Eventer 	= require("./eventer")
-const DEBUG   	= require("../../env").DEBUG
-const TC_DEBUG 	= require("../../env").TC_DEBUG
+const ENV   	= require("../../env")
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -69,8 +68,10 @@ class Session extends Eventer {
 		// 	_next()
 		// })
 		let prefix
-		if (DEBUG) {
+		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
+		} else if(ENV.TEST) {
+			prefix = "https://kecheng1.runsnailrun.com"
 		} else {
 			prefix = "https://www.muwenyuwen.com"
 		}
@@ -91,7 +92,7 @@ class Session extends Eventer {
 	__bind() {
 		if (this.$webview) {
 			this.$webview.addEventListener("dom-ready", ()=>{
-				if (TC_DEBUG) {
+				if (ENV.TC_DEBUG || ENV.TEST) {
 					this.$webview.openDevTools(); 
 				}
 			});

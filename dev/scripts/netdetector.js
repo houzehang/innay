@@ -1,4 +1,3 @@
-const DEBUG 	= require("../../env").DEBUG
 const Eventer 	= require("./eventer")
 const net  		= require("./network")
 

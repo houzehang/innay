@@ -7,12 +7,15 @@ TOTAL_STEP=4
 echo "step(1/${TOTAL_STEP}) compiling files"
 if [ "$2" = "-debug" ];then
 	echo 'debug mode'
-	echo 'module.exports = {DEBUG : false,TC_DEBUG : true}' > env.js
+	echo 'module.exports = {DEBUG : false,TC_DEBUG : true,TEST : false}' > env.js
 elif [ "$2" = "-xdebug" ];then
 	echo 'xdebug mode'
-	echo 'module.exports = {DEBUG : true,TC_DEBUG : true}' > env.js
+	echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false}' > env.js
+elif [ "$2" = "-test" ];then
+	echo 'test mode'
+	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : true}' > env.js
 else
-	echo 'module.exports = {DEBUG : false,TC_DEBUG : false}' > env.js
+	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : false}' > env.js
 fi
 npm run build; 
 mkdir output
@@ -42,5 +45,5 @@ if [ "$1" = "-win" -o "$1" = "-all" ];then
 fi
 
 echo "step(4/${TOTAL_STEP}) cleaning files"
-echo 'module.exports = {DEBUG : true,TC_DEBUG : true}' > env.js;
+echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false}' > env.js;
 rm -rf ./output

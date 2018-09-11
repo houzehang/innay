@@ -1,11 +1,11 @@
 const Q 		= require('q')
 const Eventer 	= require('./eventer')
 const context 	= require('./context')
-const DEBUG   	= require("../../env").DEBUG
+const ENV   	= require("../../env")
 class Network extends Eventer {
 	constructor() {
 		super()
-		if (DEBUG) {
+		if (ENV.DEBUG || ENV.TEST) {
 			this.$base_url = "https://kecheng1.runsnailrun.com"
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"

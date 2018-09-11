@@ -14,7 +14,7 @@ class Download extends React.Component {
 	componentDidMount() {
 		context.detector.uncheck()
 		this.$webview.current.addEventListener("dom-ready", ()=>{
-			if (ENV.TC_DEBUG) {
+			if (ENV.TC_DEBUG || ENV.TEST) {
 				this.$webview.current.openDevTools(); 
 			}
 			this.$webview.current.send("userinfo", this.props.user)
@@ -36,6 +36,8 @@ class Download extends React.Component {
 		let prefix
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
+		} else if (ENV.TEST) {
+			prefix = "http://kecheng1.runsnailrun.com"
 		} else {
 			prefix = "https://www.muwenyuwen.com"
 		}
