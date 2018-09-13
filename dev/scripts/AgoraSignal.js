@@ -14,6 +14,7 @@ class Signalize extends Eventer {
 		this.$heart_t   	= null
 		this.$recon_timer	= null
 		this.$connect_timer = null
+		this.$user_in_room  = {}
 	}
 
 	__destroy_all() {
@@ -165,14 +166,17 @@ class Signalize extends Eventer {
 				}
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
+				this.$user_in_room[account] = true
 				new_user_joined(account)
 			}
-			channel.onChannelUserList = function(users){
+			channel.onChannelUserList = (users)=>{
 				users.forEach((account)=>{
+					this.$user_in_room[account[0]] = true
 					new_user_joined(account[0])
 				})
 			};
 			channel.onChannelUserLeaved = (account) => {
+				this.$user_in_room[account] = false
 				this.trigger("CHANNEL_USER_LEAVE", account)
 			}
 			channel.onMessageChannelReceive = (account, uid, msg)=>{
@@ -244,11 +248,17 @@ class Signalize extends Eventer {
 				let to = message.to + ""
 				let content = JSON.stringify(message)
 				console.log("发送局部消息",to,content)
-				this.$session.messageInstantSend(to, content, ()=>{
-					console.log("独立消息发送成功，发送给",message.to)
+				if (this.$user_in_room[to]) {
+					this.$session.messageInstantSend(to, content, ()=>{
+						console.log("独立消息发送成功，发送给",message.to)
+						this.__clear_recon_timer()
+						this.$sending_lock = false
+					})
+				} else {
+					console.log("发送对象不在房间，拒绝发送！",to)
 					this.__clear_recon_timer()
 					this.$sending_lock = false
-				})
+				}
 			}
 		} else {
 			this.$queue.push(message)

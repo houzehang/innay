@@ -6,13 +6,13 @@ fi
 TOTAL_STEP=4
 echo "step(1/${TOTAL_STEP}) compiling files"
 if [ "$2" = "-debug" ];then
-	echo 'debug mode'
+	echo 'debug mode:线上包，会显示调试窗口'
 	echo 'module.exports = {DEBUG : false,TC_DEBUG : true,TEST : false}' > env.js
 elif [ "$2" = "-xdebug" ];then
-	echo 'xdebug mode'
+	echo 'xdebug mode:技术连接本地测试包'
 	echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false}' > env.js
 elif [ "$2" = "-test" ];then
-	echo 'test mode'
+	echo 'test mode:连接测试环境，会显示调试窗口'
 	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : true}' > env.js
 else
 	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : false}' > env.js

@@ -9,6 +9,7 @@ DIR=/var/www/downloadfile/software
 
 scp build/*${VERSION}.exe  ${SERVER}:${DIR}
 scp build/*${VERSION}*.zip  ${SERVER}:${DIR}
+scp build/*${VERSION}*.dmg  ${SERVER}:${DIR}
 scp build/*.yml  ${SERVER}:${DIR}
 scp build/*.json ${SERVER}:${DIR}
 
@@ -19,6 +20,7 @@ VERSION=$1
 
 scp build/*${VERSION}.exe  ${SERVER}:${DIR}
 scp build/*${VERSION}*.zip  ${SERVER}:${DIR}
+scp build/*${VERSION}*.dmg  ${SERVER}:${DIR}
 scp build/*.yml  ${SERVER}:${DIR}
 scp build/*.json ${SERVER}:${DIR}
 
