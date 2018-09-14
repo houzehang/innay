@@ -61,7 +61,6 @@ const room = (state = {}, action) => {
 				let item = students[i]
 				if (item.id == action.id) {
 					item.unmuted = !action.mute
-					console.log("set muted!",item.unmuted)
 					if (item.unmuted && !action.recovering) {
 						item.speak++
 					}
@@ -116,6 +115,7 @@ const room = (state = {}, action) => {
 					item.stream_time   = null
 					item.dancing 	   = false
 					item.stream_inited = false
+					item.unmuted 	   = false
 				}
 			}
 			return {
@@ -159,7 +159,6 @@ const room = (state = {}, action) => {
 			for(let i=0,len=students.length;i<len;i++) {
 				let item = students[i]
 				item.unmuted = !action.status
-				console.log("set muted!",item.unmuted)
 			}
 		}
 		switches.muteall = action.status

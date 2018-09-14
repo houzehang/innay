@@ -173,6 +173,15 @@ class Course extends React.Component {
 			})
 			this.$room.on("REMOVE_STREAM", (stream)=>{
 				this.props.onStreamLeave(stream)
+				// 老师监听到有人退出如果还在上台，则发送他下台指令
+				if (this.isMaster()) {
+					let id = stream.getId()
+					if (id) {
+						if (this.$last_dancing == id) {
+							this.$session.send_message(Const.BACK_DANCE, { id })
+						}
+					}
+				}
 			})
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
@@ -381,13 +390,13 @@ class Course extends React.Component {
 				case Const.OPEN_MIC:
 				if (!this.$recording) {
 					this.props.onUserMuted(data.uid, false, message.to=="app")
-					this.$room.stream_audio(data.uid)
+					this.$room.refreshMute()
 				}
 				break
 				case Const.CLOSE_MIC:
 				if (!this.$recording) {
 					this.props.onUserMuted(data.uid, true)
-					this.$room.stream_audio(data.uid)
+					this.$room.refreshMute()
 				}
 				break
 				case Const.ENABLE_MAGIC:
@@ -398,11 +407,11 @@ class Course extends React.Component {
 				break
 				case Const.MUTE_ALL:
 				this.props.onMuteAllSwitch(true)
-				this.$room.stream_audio(this.props.account.id)
+				this.$room.refreshMute()
 				break
 				case Const.UNMUTE_ALL:
 				this.props.onMuteAllSwitch(false)
-				this.$room.stream_audio(this.props.account.id)
+				this.$room.refreshMute()
 				break
 				case Const.SHOW_RANKS:
 				this.props.onRankSwitch(true)
@@ -412,9 +421,11 @@ class Course extends React.Component {
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
+				this.$room.refreshMute()
 				break
 				case Const.BACK_DANCE:
 				this.props.onDancing(data.id, false)
+				this.$room.refreshMute()
 				break
 				case Const.MEMBER_ADD:
 				if (this.$recording) {
@@ -427,15 +438,6 @@ class Course extends React.Component {
 				}
 				break
 				case Const.MEMBER_LEAVE:
-				// if (this.$recording) {
-				// 	data.forEach((id)=>{
-				// 		let stream = this.__build_stream(id)
-				// 		if (stream) {
-				// 			stream.leave()
-				// 			this.props.onStreamLeave(stream)
-				// 		}
-				// 	})
-				// }
 				break
 				case "record_ready":
 				if (this.$record_video) {
@@ -635,7 +637,7 @@ class Course extends React.Component {
 		} else {
 			$(`#student_${id}`).empty()
 			$("#dancing-head").empty()
-			this.$room.dance(id, $("#dancing-head")[0], true)
+			this.$room.cameraTo(id, $("#dancing-head")[0], true)
 		}
 		this.$last_dancing = id
 	}
@@ -663,7 +665,7 @@ class Course extends React.Component {
 				}
 				this.$room.unsubscribe(id)
 			} else {
-				this.$room.dance(id, $(`#student_${id}`)[0])
+				this.$room.cameraTo(id, $(`#student_${id}`)[0])
 			}
 		}
 		this.$last_dancing = null
@@ -821,6 +823,11 @@ class Course extends React.Component {
 					<div className="ph-text">未指定小朋友发言</div>
 					<div className="avatar-head" id="dancing-head"></div>
 					<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
+					{!this.$view_mode?<div className="back-dance-btn" onClick={()=>{
+						if (this.$last_dancing) {
+							this.$session.send_message(Const.BACK_DANCE, { id: this.$last_dancing })
+						}
+					}}></div>:""}
 					<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
 				</div>
 			</div>

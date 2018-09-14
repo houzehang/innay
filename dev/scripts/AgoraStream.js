@@ -104,6 +104,9 @@ class Room extends Eventer {
 	}
 
 	__isMuted(id) {
+		// 如果是老师，则不能静音老师
+		// 如果是学生而且不是自己，则先判断此人是否处于上台状态，如果是上台状态则开启监听声音，
+		// 如果不是上台状态则判断历史静音状态来处理
 		if (this.inst.props.room.teacher_id == id) {
 			return false
 		}
@@ -113,31 +116,35 @@ class Room extends Eventer {
 		for(let i=0,len=this.inst.props.students.length;i<len;i++) {
 			let item = this.inst.props.students[i]
 			if (item.id == id) {
+				if (item.dancing) {
+					return false
+				}
 				return !item.unmuted
 			}
 		}
 		return true
 	}
 
-	stream_audio(id) {
+	__stream_audio(id) {
 		let muted  = this.__isMuted(id)
-		if (id == this.inst.props.account.id) {
-			this.$client.muteLocalAudioStream(muted)
-		} else {
-			// let isMaster = this.inst.props.room.teacher_id == 
-			// this.inst.props.account.id
-			// if (!isMaster) return
-			// this.$client.muteRemoteAudioStream(id, muted)
-			// console.log("set remote audio",id,muted)
-		}
-		if (muted) {
-			console.log("disable audio",id)
-		} else {
-			console.log("enable audio",id)
+		// 如果是自己，则不处理
+		if (id != this.inst.props.account.id) {
+			let result = this.$client.muteRemoteAudioStream(id, muted)
+			console.log("set remote audio",id,muted,result)
 		}
 	}
 
-	dance(id, dom, largeMode) {
+	refreshMute() {
+		// 如果是老师，则不处理
+		if (!this.inst.isMaster()) {
+			console.log("refresh muted",this.inst.props.students)
+			this.inst.props.students.forEach((student)=>{
+				this.__stream_audio(student.id)
+			})
+		}
+	}
+
+	cameraTo(id, dom, largeMode) {
 		if (id == this.inst.props.account.id) {
 			this.$client.setupLocalVideo(dom)
 		} else {
@@ -210,7 +217,7 @@ class Room extends Eventer {
 			console.log("userjoined",id)
 		});
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
-		this.stream_audio(this.inst.props.account.id)
+		this.__stream_audio(this.inst.props.account.id)
 	}
 
 	start() {
