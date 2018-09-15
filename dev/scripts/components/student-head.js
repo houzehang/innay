@@ -72,7 +72,7 @@ class StudentHead extends React.Component {
 											this.props.onClickSpeak(this.props.user)
 										}}></button>
 									):""}
-									{this.props.isTeacher?(
+									{this.props.isTeacher && this.props.user.stream?(
 										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
 											this.props.onClickView(this.props.user)
 										}}></button>

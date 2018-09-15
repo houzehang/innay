@@ -215,6 +215,7 @@ class Room extends Eventer {
 		this.$client.on('userjoined', (id)=>{
 			// var stream = this.$client.streams.get(id);
 			console.log("userjoined",id)
+			this.trigger("ADD_ROOM", id)
 		});
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 		this.__stream_audio(this.inst.props.account.id)

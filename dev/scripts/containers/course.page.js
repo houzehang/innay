@@ -16,7 +16,7 @@ import {
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
-	onUpdateGift, onProgressReset
+	onUpdateGift, onProgressReset, onUserAddRoom
 } from '../actions'
 const net 			= require("../network")
 const Room 			= require("../AgoraStream")
@@ -168,7 +168,6 @@ class Course extends React.Component {
 				if (isSubMaster) {
 					return
 				}
-				console.log("new stream")
 				this.props.onNewStream(stream)
 			})
 			this.$room.on("REMOVE_STREAM", (stream)=>{
@@ -182,6 +181,10 @@ class Course extends React.Component {
 						}
 					}
 				}
+			})
+			this.$room.on("ADD_ROOM", (id)=>{
+				// 新用户加入
+				this.props.onUserAddRoom(id)
 			})
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
@@ -761,14 +764,13 @@ class Course extends React.Component {
 			}
 		},0)
 		let students = (this.props.students||[]).concat()
-		students.forEach((item)=>{
-			if (!item.stream_time) {
-				item.stream_time = new Date().getTime() + 10000000
-			}
-		})
+		// 排序按照进入场景的时间来排序
 		students.sort((prev,next)=>{
-			return next.stream_time < prev.stream_time ? 1 : -1
+			next = next.online_time || new Date().getTime()+1000000
+			prev = prev.online_time || new Date().getTime()+1000000
+			return next < prev ? 1 : -1
 		})
+
 		// students.sort((prev,next)=>{
 		// 	return (next.gift_total||0) > (prev.gift_total||0) ? 1 : -1
 		// })
@@ -780,7 +782,7 @@ class Course extends React.Component {
 			}
 		}
 		let studentHeads = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.stream?student:null} onClickSpeak={(user)=>{
+			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.online?student:null} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -805,7 +807,7 @@ class Course extends React.Component {
 		))
 		let handsupStudents = []
 		students.forEach((student)=>{
-			if (student.stream) {
+			if (student.online) {
 				handsupStudents.push(student)
 			}
 		})
@@ -999,6 +1001,7 @@ const mapDispatchToProps = dispatch => ({
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
 	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
 	onProgressReset : () => dispatch(onProgressReset()),
+	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id))
 })
   
 export default connect(

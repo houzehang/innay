@@ -3258,7 +3258,7 @@ html .page.course-page .inner .entities-area .student-area .student .summary .bt
 body .page.course-page .inner .entities-area .student-area .student .summary .btns {
   height: 0.33rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
   padding: 0.04rem 0.12rem;
 }
