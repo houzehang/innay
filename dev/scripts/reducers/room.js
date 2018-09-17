@@ -144,7 +144,6 @@ const room = (state = {}, action) => {
 					item.online		   = false
 					item.dancing 	   = false
 					item.stream_inited = false
-					item.unmuted 	   = false
 				}
 			}
 			return {

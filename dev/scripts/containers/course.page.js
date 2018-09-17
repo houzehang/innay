@@ -186,6 +186,7 @@ class Course extends React.Component {
 			this.$room.on("ADD_ROOM", (id)=>{
 				// 新用户加入
 				this.props.onUserAddRoom(id)
+				this.$room.refreshMute()
 			})
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
