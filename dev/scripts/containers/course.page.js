@@ -6,7 +6,8 @@ import {
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onNewGift,
-	onHandsupRank, onUserMuted, onMuteAllSwitch, onDancing,
+	onHandsupRank, onUserMuted, onMuteAllSwitch, onSilentSwitch,
+	onDancing,
 	onBeginCourse,
 	onPauseCourse,
 	onResumeCourse,
@@ -938,6 +939,15 @@ class Course extends React.Component {
 										this.$session.send_message(Const.MUTE_ALL)
 									}
 								}}></button>
+								<button className={this.props.switches.silent?"course-silent off":"course-silent"} onClick={()=>{
+									if (this.props.switches.silent) {
+										this.$room.keepSilent(false)
+										this.props.onSilentSwitch(false)
+									} else {
+										this.$room.keepSilent(true)
+										this.props.onSilentSwitch(true)
+									}
+								}}></button>
 							</div>
 						):""}
 					</div>
@@ -984,6 +994,7 @@ const mapDispatchToProps = dispatch => ({
 	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
 	onRankSwitch    : (status) => dispatch(onRankSwitch(status)),
 	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
+	onSilentSwitch  : (status) => dispatch(onSilentSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),

@@ -2817,6 +2817,16 @@ body .page.course-page .inner .content .operations button.course-muteall.off {
   background-image: url(./cb61764f937599f786efd0cb14c45c52.png);
   background-size: auto 0.38rem;
 }
+html .page.course-page .inner .content .operations button.course-silent,
+body .page.course-page .inner .content .operations button.course-silent {
+  background: url(./593b5de0428f68c4814b392a76f9c0aa.png) no-repeat center center;
+  background-size: auto 0.26rem;
+}
+html .page.course-page .inner .content .operations button.course-silent.off,
+body .page.course-page .inner .content .operations button.course-silent.off {
+  background-image: url(./66f78fbdd7f0e48db45283638b98e9aa.png);
+  background-size: auto 0.38rem;
+}
 html .page.course-page .inner .content .operations button.course-rank,
 body .page.course-page .inner .content .operations button.course-rank {
   background: url(./09a51d76b5e63ab4f82c28d2017894ad.png) no-repeat center center;

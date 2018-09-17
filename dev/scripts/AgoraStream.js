@@ -159,6 +159,18 @@ class Room extends Eventer {
 		}
 	}
 
+	/**
+	 * 老师设置静音
+	 * @param {bool} status 
+	 */
+	keepSilent(status) {
+		// 只有老师可以静音
+		if (this.inst.isMaster()) {
+			this.$client.muteAllRemoteAudioStreams(status)
+			console.log("keep silent", status)
+		}
+	}
+
 	unsubscribe(id) {
 		this.$client.rtcengine.unsubscribe(id)
 	}

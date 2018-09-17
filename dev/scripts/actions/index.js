@@ -140,6 +140,11 @@ export const onRankSwitch = (status) => ({
 	status
 })
 
+export const onSilentSwitch = (status) => ({
+	type: types.SILENT_SWITCH,
+	status
+})
+
 export const onHandsupRank = (id, rank) => ({
 	type: types.HANDSUP_RANK,
 	id, rank
