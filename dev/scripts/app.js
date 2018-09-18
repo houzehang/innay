@@ -18,6 +18,10 @@ ipcRenderer.on('configure', (event, data)=>{
 	console.log("configure",data)
 	window.ENV_PATHES = data
 })
+ipcRenderer.on('system-usage', (event, data)=>{
+	console.log("system-usage",data)
+	window.SYSTEM_USAGE = data
+})
 
 const middleware = [ thunk ];
 const store = createStore(

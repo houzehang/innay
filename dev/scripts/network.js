@@ -2,6 +2,7 @@ const Q 		= require('q')
 const Eventer 	= require('./eventer')
 const context 	= require('./context')
 const ENV   	= require("../../env")
+
 class Network extends Eventer {
 	constructor() {
 		super()
@@ -209,12 +210,15 @@ class Network extends Eventer {
 	 */
 	log(data={}) {
 		console.log(data)
-		data.user = context.user.id
 		this.$log_queue.push(data)
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
 				if (this.$log_queue.length > 0) {
-					$.post(`${this.$base_url}/api/h5_log`,{logs:this.$log_queue})
+					$.post(`${this.$base_url}/api/h5_log`,{
+						logs	: this.$log_queue, 
+						user	: context.user.id, 
+						system	: window.SYSTEM_USAGE
+					})
 				}
 				this.$log_queue = []
 			},8000)
