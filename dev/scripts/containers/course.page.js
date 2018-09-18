@@ -6,7 +6,8 @@ import {
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onNewGift,
-	onHandsupRank, onUserMuted, onMuteAllSwitch, onDancing,
+	onHandsupRank, onUserMuted, onMuteAllSwitch, onSilentSwitch,
+	onDancing,
 	onBeginCourse,
 	onPauseCourse,
 	onResumeCourse,
@@ -16,7 +17,7 @@ import {
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
-	onUpdateGift, onProgressReset
+	onUpdateGift, onProgressReset, onUserAddRoom
 } from '../actions'
 const net 			= require("../network")
 const Room 			= require("../AgoraStream")
@@ -168,11 +169,24 @@ class Course extends React.Component {
 				if (isSubMaster) {
 					return
 				}
-				console.log("new stream")
 				this.props.onNewStream(stream)
 			})
 			this.$room.on("REMOVE_STREAM", (stream)=>{
 				this.props.onStreamLeave(stream)
+				// 老师监听到有人退出如果还在上台，则发送他下台指令
+				if (this.isMaster()) {
+					let id = stream.getId()
+					if (id) {
+						if (this.$last_dancing == id) {
+							this.$session.send_message(Const.BACK_DANCE, { id })
+						}
+					}
+				}
+			})
+			this.$room.on("ADD_ROOM", (id)=>{
+				// 新用户加入
+				this.props.onUserAddRoom(id)
+				this.$room.refreshMute()
 			})
 			this.$room.on("LEAVE_ROOM", ()=>{
 				this.$session.destroy()
@@ -381,13 +395,13 @@ class Course extends React.Component {
 				case Const.OPEN_MIC:
 				if (!this.$recording) {
 					this.props.onUserMuted(data.uid, false, message.to=="app")
-					this.$room.stream_audio(data.uid)
+					this.$room.refreshMute()
 				}
 				break
 				case Const.CLOSE_MIC:
 				if (!this.$recording) {
 					this.props.onUserMuted(data.uid, true)
-					this.$room.stream_audio(data.uid)
+					this.$room.refreshMute()
 				}
 				break
 				case Const.ENABLE_MAGIC:
@@ -398,11 +412,11 @@ class Course extends React.Component {
 				break
 				case Const.MUTE_ALL:
 				this.props.onMuteAllSwitch(true)
-				this.$room.stream_audio(this.props.account.id)
+				this.$room.refreshMute()
 				break
 				case Const.UNMUTE_ALL:
 				this.props.onMuteAllSwitch(false)
-				this.$room.stream_audio(this.props.account.id)
+				this.$room.refreshMute()
 				break
 				case Const.SHOW_RANKS:
 				this.props.onRankSwitch(true)
@@ -412,9 +426,11 @@ class Course extends React.Component {
 				break
 				case Const.PUT_DANCE:
 				this.props.onDancing(data.id, true)
+				this.$room.refreshMute()
 				break
 				case Const.BACK_DANCE:
 				this.props.onDancing(data.id, false)
+				this.$room.refreshMute()
 				break
 				case Const.MEMBER_ADD:
 				if (this.$recording) {
@@ -427,15 +443,6 @@ class Course extends React.Component {
 				}
 				break
 				case Const.MEMBER_LEAVE:
-				// if (this.$recording) {
-				// 	data.forEach((id)=>{
-				// 		let stream = this.__build_stream(id)
-				// 		if (stream) {
-				// 			stream.leave()
-				// 			this.props.onStreamLeave(stream)
-				// 		}
-				// 	})
-				// }
 				break
 				case "record_ready":
 				if (this.$record_video) {
@@ -635,7 +642,7 @@ class Course extends React.Component {
 		} else {
 			$(`#student_${id}`).empty()
 			$("#dancing-head").empty()
-			this.$room.dance(id, $("#dancing-head")[0], true)
+			this.$room.cameraTo(id, $("#dancing-head")[0], true)
 		}
 		this.$last_dancing = id
 	}
@@ -663,7 +670,7 @@ class Course extends React.Component {
 				}
 				this.$room.unsubscribe(id)
 			} else {
-				this.$room.dance(id, $(`#student_${id}`)[0])
+				this.$room.cameraTo(id, $(`#student_${id}`)[0])
 			}
 		}
 		this.$last_dancing = null
@@ -759,14 +766,13 @@ class Course extends React.Component {
 			}
 		},0)
 		let students = (this.props.students||[]).concat()
-		students.forEach((item)=>{
-			if (!item.stream_time) {
-				item.stream_time = new Date().getTime() + 10000000
-			}
-		})
+		// 排序按照进入场景的时间来排序
 		students.sort((prev,next)=>{
-			return next.stream_time < prev.stream_time ? 1 : -1
+			next = next.online_time || new Date().getTime()+1000000
+			prev = prev.online_time || new Date().getTime()+1000000
+			return next < prev ? 1 : -1
 		})
+
 		// students.sort((prev,next)=>{
 		// 	return (next.gift_total||0) > (prev.gift_total||0) ? 1 : -1
 		// })
@@ -778,7 +784,7 @@ class Course extends React.Component {
 			}
 		}
 		let studentHeads = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.stream?student:null} onClickSpeak={(user)=>{
+			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.online?student:null} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -803,7 +809,7 @@ class Course extends React.Component {
 		))
 		let handsupStudents = []
 		students.forEach((student)=>{
-			if (student.stream) {
+			if (student.online) {
 				handsupStudents.push(student)
 			}
 		})
@@ -821,6 +827,11 @@ class Course extends React.Component {
 					<div className="ph-text">未指定小朋友发言</div>
 					<div className="avatar-head" id="dancing-head"></div>
 					<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
+					{!this.$view_mode?<div className="back-dance-btn" onClick={()=>{
+						if (this.$last_dancing) {
+							this.$session.send_message(Const.BACK_DANCE, { id: this.$last_dancing })
+						}
+					}}></div>:""}
 					<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
 				</div>
 			</div>
@@ -929,6 +940,15 @@ class Course extends React.Component {
 										this.$session.send_message(Const.MUTE_ALL)
 									}
 								}}></button>
+								<button className={this.props.switches.silent?"course-silent off":"course-silent"} onClick={()=>{
+									if (this.props.switches.silent) {
+										this.$room.keepSilent(false)
+										this.props.onSilentSwitch(false)
+									} else {
+										this.$room.keepSilent(true)
+										this.props.onSilentSwitch(true)
+									}
+								}}></button>
 							</div>
 						):""}
 					</div>
@@ -975,6 +995,7 @@ const mapDispatchToProps = dispatch => ({
 	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
 	onRankSwitch    : (status) => dispatch(onRankSwitch(status)),
 	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
+	onSilentSwitch  : (status) => dispatch(onSilentSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
@@ -992,6 +1013,7 @@ const mapDispatchToProps = dispatch => ({
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
 	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
 	onProgressReset : () => dispatch(onProgressReset()),
+	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id))
 })
   
 export default connect(

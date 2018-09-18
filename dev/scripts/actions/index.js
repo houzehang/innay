@@ -90,6 +90,11 @@ export const onUserMuted = (id, mute=true, recovering=false) => ({
 	id, mute, recovering
 })
 
+export const onUserAddRoom = (id) => ({
+	type: types.USER_ADD_ROOM,
+	id
+})
+
 export const onNewStream = (stream) => ({
 	type: types.NEW_STREAM,
 	stream
@@ -132,6 +137,11 @@ export const onGiftSwitch = (status) => ({
 
 export const onRankSwitch = (status) => ({
 	type: types.RANK_SWITCH,
+	status
+})
+
+export const onSilentSwitch = (status) => ({
+	type: types.SILENT_SWITCH,
 	status
 })
 
