@@ -33,6 +33,7 @@ class Room extends Eventer {
 				this.$client.setVideoProfile(2);
 			}
 		} else {
+			this.$client.muteLocalAudioStream(true)
 			this.$client.enableLocalVideo(false);
 		}
 		this.__resume_devices()
