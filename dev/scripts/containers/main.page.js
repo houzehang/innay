@@ -182,7 +182,7 @@ class Main extends React.Component {
 
 	onStartRoom(data) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let lastest_download = storage.get(`download_${data.id}`)
+		let lastest_download = storage.get(`download_${data.en_name}`)
 		if (lastest_download) {
 			let delay = new Date().getTime() - lastest_download
 			if (delay <= this.$cache_valid_time) {
@@ -235,7 +235,7 @@ class Main extends React.Component {
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
 				// 存储最后一次下载时间
-				storage.store(`download_${data.id}`,new Date().getTime())
+				storage.store(`download_${data.en_name}`,new Date().getTime())
 				if (canenter) {
 					this.__onStartRoom(data)
 				} else {

@@ -2,6 +2,7 @@ const Q 		= require('q')
 const Eventer 	= require('./eventer')
 const context 	= require('./context')
 const ENV   	= require("../../env")
+const remote 	= $require("electron").remote
 
 class Network extends Eventer {
 	constructor() {
@@ -204,6 +205,19 @@ class Network extends Eventer {
 		return this.__request('/user/banji_contact')
 	}
 
+	__get_system_info() {
+		let usedMemory 	= remote.process.getProcessMemoryInfo(),
+			memory 		= remote.process.getSystemMemoryInfo(),
+			cpu 		= remote.process.getCPUUsage()
+
+		let _memory = n=>(Math.round(n/1024*10)/10)+"M"
+		let system  = {
+			um: `${_memory(usedMemory.workingSetSize)}/${_memory(usedMemory.peakWorkingSetSize)}`,
+			tm: `${_memory(memory.free)}/${(Math.round(memory.total/1024/1024*10)/10)+"G"}/${memory.swapFree||0}/${memory.swapTotal||0}`,
+			cpu: `${Math.round(cpu.percentCPUUsage*100)/100}/${cpu.idleWakeupsPerSecond}`
+		}
+		return system
+	}
 	/**
 	 * 发送log数据
 	 * @param {*} data 
@@ -217,7 +231,7 @@ class Network extends Eventer {
 					$.post(`${this.$base_url}/api/h5_log`,{
 						logs	: this.$log_queue, 
 						user	: context.user.id, 
-						system	: window.SYSTEM_USAGE
+						system  : this.__get_system_info()
 					})
 				}
 				this.$log_queue = []

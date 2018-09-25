@@ -115,18 +115,6 @@ function createMainWindow() {
             __dirname, __apppath: app.getAppPath(),
             version: app.getVersion()
         });
-        // 每隔5s发送系统信息
-        setInterval(()=>{
-            let usedMemory 	= process.getProcessMemoryInfo(),
-                memory 		= process.getSystemMemoryInfo(),
-                cpu 		= process.getCPUUsage()
-            let _memory = n=>(Math.round(n/1024*10)/10)+"M"
-            $main.webContents.send('system-usage', {
-                um: `${_memory(usedMemory.workingSetSize)}/${_memory(usedMemory.peakWorkingSetSize)}`,
-                tm: `${_memory(memory.free)}/${(Math.round(memory.total/1024/1024*10)/10)+"G"}/${memory.swapFree||0}/${memory.swapTotal||0}`,
-                cpu: `${Math.round(cpu.percentCPUUsage*100)/100}/${cpu.idleWakeupsPerSecond}`
-            });	
-        }, 5000)
     })
     $main.webContents.on('will-navigate', (ev, url) => {
         ev.preventDefault();
