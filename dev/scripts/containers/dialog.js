@@ -40,9 +40,13 @@ class Dialog extends React.Component {
 		}
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{configure.sure_txt||"确定"}</button>)
 		if (!this.state.showing && showing) {
-			this.$show_timer = setTimeout(()=>{
+			if (configure.noanim) {
 				this.setState({showing: true})
-			},100)
+			} else {
+				this.$show_timer = setTimeout(()=>{
+					this.setState({showing: true})
+				},100)
+			}
 		}
 		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")} style={{display:showing?"":"none"}}>
 			<div className={"dialog "+(configure.classname||"")} style={configure.styles}>

@@ -244,7 +244,8 @@ class Main extends React.Component {
 					})
 				}
 			}} user={this.props.account}/>,
-			nobutton: true
+			nobutton: true,
+			noanim	: true
 		})
 	}
 
