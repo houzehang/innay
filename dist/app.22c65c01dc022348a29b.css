@@ -2882,12 +2882,11 @@ body .page.course-page .inner .entities-area .counter {
   right: 0.14rem;
   width: 2.78rem;
   background: #2d3144;
-  height: 0.5rem;
+  height: 0.3rem;
   font-size: 0.16rem;
   color: #ececec;
   display: flex;
   align-items: center;
-  padding-top: 0.08rem;
   z-index: 105;
 }
 html .page.course-page .inner .entities-area .counter.icon,
@@ -2896,6 +2895,10 @@ body .page.course-page .inner .entities-area .counter.icon {
   width: 0.3rem;
   height: 0.3rem;
   bottom: 0.14rem;
+}
+html .page.course-page .inner .entities-area .counter .process,
+body .page.course-page .inner .entities-area .counter .process {
+  margin-left: 0.2rem;
 }
 html .page.course-page .inner .entities-area .counter .help-btn,
 body .page.course-page .inner .entities-area .counter .help-btn {
@@ -2908,42 +2911,9 @@ body .page.course-page .inner .entities-area .counter .help-btn {
 }
 html .page.course-page .inner .entities-area .counter .couter-g,
 body .page.course-page .inner .entities-area .counter .couter-g {
-  width: 0.66rem;
-  height: 0.34rem;
-  line-height: 0.34rem;
-  text-indent: 0.04rem;
-  background: url(./ae402d5433a21ec9b7a446c187c5e1cd.png) no-repeat left center;
-  background-size: auto 0.34rem;
-  font-size: 0.24rem;
-  color: #323232;
-  letter-spacing: 0.13rem;
-}
-html .page.course-page .inner .entities-area .counter .couter-g.last,
-body .page.course-page .inner .entities-area .counter .couter-g.last {
-  width: 0.48rem;
-}
-html .page.course-page .inner .entities-area .counter .split,
-body .page.course-page .inner .entities-area .counter .split {
-  height: 100%;
-  border-right: 1px solid #4e5474;
-  margin: 0 0.14rem;
-  width: 0;
-  overflow: hidden;
-}
-html .page.course-page .inner .entities-area .counter .time,
-body .page.course-page .inner .entities-area .counter .time {
-  font-size: 0.16rem;
+  height: 0.3rem;
+  line-height: 0.3rem;
   color: #ececec;
-  line-height: 0.18rem;
-  text-align: center;
-}
-html .page.course-page .inner .entities-area .counter .time p,
-body .page.course-page .inner .entities-area .counter .time p {
-  margin: 0;
-}
-html .page.course-page .inner .entities-area .counter .time p:last-child,
-body .page.course-page .inner .entities-area .counter .time p:last-child {
-  margin-top: 0.05rem;
 }
 html .page.course-page .inner .entities-area .teacher-area,
 body .page.course-page .inner .entities-area .teacher-area {
@@ -2955,7 +2925,7 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar {
   width: 100%;
   height: 3.08rem;
   position: relative;
-  margin-bottom: 0.42rem;
+  margin-bottom: 0.22rem;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar:first-child,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar:first-child {

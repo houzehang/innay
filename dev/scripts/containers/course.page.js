@@ -37,7 +37,8 @@ class Course extends React.Component {
 		this.$recording = this.props.recording
 		this.state 		= { 
 			time: new Date().getTime()/1000, 
-			control: !this.props.status.started 
+			control: !this.props.status.started,
+			process: {current:0,total:0}
 		}
 		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER ||
 						  this.$recording
@@ -464,6 +465,9 @@ class Course extends React.Component {
 				case "loadsound":
 				this.__load_sound(data.url)
 				break
+				case "course-process":
+				this.setState({process:data})
+				break
 				default:
 				if (message.type.indexOf("*") == -1) {
 					this.__on_signal_message(message)
@@ -685,8 +689,8 @@ class Course extends React.Component {
 		let seconds  = duration
 		let format   = (num)=>num>9?num:("0"+num)
 		return [
-			<div key="0" className="couter-g">{format(hour)}</div>,
-			<div key="1" className="couter-g">{format(minutes)}</div>,
+			<div key="0" className="couter-g">{format(hour)}:</div>,
+			<div key="1" className="couter-g">{format(minutes)}:</div>,
 			<div key="2" className="couter-g last">{format(seconds)}</div>
 		]
 	}
@@ -959,6 +963,7 @@ class Course extends React.Component {
 							<div className="counter">
 								倒计时：
 								{this.__counter_time_to_str()}
+								<div className="process">课程进度：{this.state.process.current}/{this.state.process.total}</div>
 							</div>
 						):(
 							<div className="counter icon">
