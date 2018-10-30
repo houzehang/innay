@@ -37,7 +37,7 @@ class Download extends React.Component {
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
 		} else if (ENV.TEST) {
-			prefix = "http://kecheng1.runsnailrun.com"
+			prefix = "http://kecheng.runsnailrun.com"
 		} else {
 			prefix = "https://www.muwenyuwen.com"
 		}
