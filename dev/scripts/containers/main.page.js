@@ -100,7 +100,7 @@ class Main extends React.Component {
 									<div className="name">{room.name}</div>
 									<div className="index">老师：{room.teacher_name}</div>
 								</div>
-								<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={room.can_enter?"":"true"} onClick={()=>{
+								<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={!room.can_enter} onClick={()=>{
 									this.onStartRoom(room)
 								}}></button>
 								{room.can_download?<button className="download-btn" onClick={()=>{
@@ -164,7 +164,7 @@ class Main extends React.Component {
 											<div className="index">{room.lesson_name}</div>
 											<div className="date">上课时间：{room.start_time}</div>
 										</div>
-										<button className="start-btn" disabled={room.state==2?"true":""} onClick={()=>{
+										<button className="start-btn" disabled={room.state==2} onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>
 										<button className="download-btn" onClick={()=>{

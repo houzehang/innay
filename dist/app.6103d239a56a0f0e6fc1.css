@@ -1,139 +1,6 @@
-.clearfix:after {
-  content: "";
-  clear: both;
-  display: block;
-  height: 0;
-  overflow: hidden;
-}
-.display-flex,
-.item-display-flex > * {
-  display: -webkit-box;
-  display: flex;
-}
-.flex-direction-column,
-.item-flex-direction-column > * {
-  -webkit-box-orient: vertical;
-  flex-direction: column;
-}
-.flex-direction-row,
-.item-flex-direction-row > * {
-  -webkit-box-orient: horizontal;
-  flex-direction: row;
-}
-.flex-row-align-start,
-.item-flex-row-align-start > * {
-  -webkit-box-pack: start;
-  justify-content: flex-start;
-}
-.flex-row-align-end,
-.item-flex-row-align-end > * {
-  -webkit-box-pack: end;
-  justify-content: flex-end;
-}
-.flex-row-align-center,
-.item-flex-row-align-center > * {
-  -webkit-box-pack: center;
-  justify-content: center;
-}
-.flex-row-align-between,
-.item-flex-row-align-between > * {
-  -webkit-box-pack: justify;
-  justify-content: space-between;
-}
-.flex-row-align-around,
-.item-flex-row-align-around > * {
-  -webkit-box-pack: justify;
-  justify-content: space-around;
-}
-.flex-col-align-start,
-.item-flex-col-align-start > * {
-  -webkit-box-align: start;
-  align-items: flex-start;
-}
-.flex-col-align-end,
-.item-flex-col-align-end > * {
-  -webkit-box-align: end;
-  align-items: flex-end;
-}
-.flex-col-align-center,
-.item-flex-col-align-center > * {
-  -webkit-box-align: center;
-  align-items: center;
-}
-.flex-col-align-baseline,
-.item-flex-col-align-baseline > * {
-  -webkit-box-align: baseline;
-  align-items: baseline;
-}
-.flex-0,
-.item-flex-0 > * {
-  -webkit-box-flex: 0;
-  flex: 0;
-}
-.flex-1,
-.item-flex-1 > * {
-  -webkit-box-flex: 1;
-  flex: 1;
-}
-.download-progress {
-  width: 100%;
-}
-.download-progress .downloader.pad .progress .bar .bar-i {
-  background: #f9d438;
-}
-.download-progress .downloader .progress {
-  margin: 0 auto 10px;
-  width: 100%;
-  height: 40px;
-  display: flex;
-  align-items: center;
-}
-.download-progress .downloader .progress .percent {
-  font-size: 15px;
-  margin-left: 10px;
-  width: 40px;
-}
-.download-progress .downloader .progress .bar {
-  flex: 1;
-  height: 30px;
-  border-radius: 20px;
-  background: #fff;
-  overflow: hidden;
-  background: #d9d9d9;
-}
-.download-progress .downloader .progress .bar .bar-i {
-  border-radius: 20px;
-  background: #3982c1;
-  height: 100%;
-  width: 0%;
-  transition: all 200ms 0s linear;
-}
-.download-progress .downloader .info {
-  font-size: 15px;
-  margin-left: 10px;
-  text-align: center;
-}
-.download-checking {
-  font-size: 16px;
-  color: #666;
-}
-.download-progress .in-room {
-  font-size: 16px;
-  color: #b8b8b8;
-  margin-top: 20px;
-}
-.download-progress .in-room::after {
-  content: "";
-  display: block;
-  width: 16px;
-  height: 10px;
-  margin-left: 10px;
-  background: url(./914d96f5b0df06ef7584f1a19ba4a849.png) no-repeat;
-  background-size: 100%;
-}
-.confirm-student-name span {
-  color: #2f80c5;
-  margin: 0 0.05rem;
+.download-webview {
+  width: 3.58rem;
+  height: 0.65rem;
 }
 .handsup-layer {
   position: absolute;
@@ -785,88 +652,6 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
 .sidebar .help-area:active {
   opacity: 0.6;
 }
-.clearfix:after {
-  content: "";
-  clear: both;
-  display: block;
-  height: 0;
-  overflow: hidden;
-}
-.display-flex,
-.item-display-flex > * {
-  display: -webkit-box;
-  display: flex;
-}
-.flex-direction-column,
-.item-flex-direction-column > * {
-  -webkit-box-orient: vertical;
-  flex-direction: column;
-}
-.flex-direction-row,
-.item-flex-direction-row > * {
-  -webkit-box-orient: horizontal;
-  flex-direction: row;
-}
-.flex-row-align-start,
-.item-flex-row-align-start > * {
-  -webkit-box-pack: start;
-  justify-content: flex-start;
-}
-.flex-row-align-end,
-.item-flex-row-align-end > * {
-  -webkit-box-pack: end;
-  justify-content: flex-end;
-}
-.flex-row-align-center,
-.item-flex-row-align-center > * {
-  -webkit-box-pack: center;
-  justify-content: center;
-}
-.flex-row-align-between,
-.item-flex-row-align-between > * {
-  -webkit-box-pack: justify;
-  justify-content: space-between;
-}
-.flex-row-align-around,
-.item-flex-row-align-around > * {
-  -webkit-box-pack: justify;
-  justify-content: space-around;
-}
-.flex-col-align-start,
-.item-flex-col-align-start > * {
-  -webkit-box-align: start;
-  align-items: flex-start;
-}
-.flex-col-align-end,
-.item-flex-col-align-end > * {
-  -webkit-box-align: end;
-  align-items: flex-end;
-}
-.flex-col-align-center,
-.item-flex-col-align-center > * {
-  -webkit-box-align: center;
-  align-items: center;
-}
-.flex-col-align-baseline,
-.item-flex-col-align-baseline > * {
-  -webkit-box-align: baseline;
-  align-items: baseline;
-}
-.flex-0,
-.item-flex-0 > * {
-  -webkit-box-flex: 0;
-  flex: 0;
-}
-.flex-1,
-.item-flex-1 > * {
-  -webkit-box-flex: 1;
-  flex: 1;
-}
-ul,
-li {
-  margin: 0;
-  padding: 0;
-}
 .view-user {
   display: flex;
   flex-direction: column;
@@ -941,34 +726,6 @@ li {
   position: absolute;
   right: 0.28rem;
   bottom: 0.18rem;
-}
-.view-user .settings {
-  width: 100%;
-  font-size: 20px;
-  padding-bottom: 70px;
-}
-.view-user .settings li {
-  height: 60px;
-  border-bottom: 1px solid #e1e1e1;
-}
-.view-user .settings li::after {
-  content: "";
-  width: 8px;
-  height: 14px;
-  display: block;
-  background: url(./eefb920a5c0525d230c022315ca3cf78.png) no-repeat;
-  background-size: 100%;
-}
-.view-user .settings li input {
-  text-align: right;
-  border: 0 none;
-  padding: 0 10px;
-  outline: 0 none;
-  color: #b2b2b2;
-}
-.view-user .settings li input:focus {
-  color: #333;
-  border: 0 none;
 }
 .helper-block {
   display: flex;
@@ -2614,7 +2371,6 @@ body .page.calendar-page .courses .row .record-btn::after {
 html .page.calendar-page .courses .row .download-btn,
 body .page.calendar-page .courses .row .download-btn {
   background: #ff9d1f;
-  position: relative;
 }
 html .page.calendar-page .courses .row .download-btn::after,
 body .page.calendar-page .courses .row .download-btn::after {
@@ -2943,6 +2699,15 @@ body .page.course-page .inner .controls button.course-next {
 html .page.course-page .inner .controls button.course-next::after,
 body .page.course-page .inner .controls button.course-next::after {
   content: "\5207\8BFE";
+}
+html .page.course-page .inner .controls button.gohome-btn,
+body .page.course-page .inner .controls button.gohome-btn {
+  background: url(./e648b0a2b7909f895e121260d85d7357.png) no-repeat center top;
+  background-size: 100% auto;
+}
+html .page.course-page .inner .controls button.gohome-btn::after,
+body .page.course-page .inner .controls button.gohome-btn::after {
+  content: "\56DE\9996\9875";
 }
 html .page.course-page .inner .controls button.help-btn,
 body .page.course-page .inner .controls button.help-btn {
@@ -3407,7 +3172,7 @@ body .page.course-page .inner .entities-area .student-area .student .avatar-info
 }
 html .page.course-page .inner .entities-area .student-area .student.hover .summary,
 body .page.course-page .inner .entities-area .student-area .student.hover .summary {
-  width: 1.8rem;
+  width: 1.4rem;
   opacity: 1;
 }
 html .page.course-page .inner .entities-area .student-area .student .summary,
@@ -3423,7 +3188,7 @@ body .page.course-page .inner .entities-area .student-area .student .summary {
 }
 html .page.course-page .inner .entities-area .student-area .student .summary .summary-inner,
 body .page.course-page .inner .entities-area .student-area .student .summary .summary-inner {
-  width: 1.8rem;
+  width: 1.4rem;
   height: 100%;
   background: rgba(88, 93, 122, 0.9);
 }
@@ -3484,7 +3249,7 @@ body .page.course-page .inner .entities-area .student-area .student .summary .bt
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0.04rem 0.05rem;
+  padding: 0.04rem 0.12rem;
 }
 html .page.course-page .inner .entities-area .student-area .student .summary .btns.student,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns.student {
@@ -3493,22 +3258,16 @@ body .page.course-page .inner .entities-area .student-area .student .summary .bt
 html .page.course-page .inner .entities-area .student-area .student .summary .btns button,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button {
   height: 0.24rem;
-  width: 0.24rem;
-  border-radius: 50%;
-  margin-right: 0.05rem;
+  width: 0.96rem;
+  border-radius: 0.08rem;
+  margin-right: 0.1rem;
 }
 html .page.course-page .inner .entities-area .student-area .student .summary .btns button:last-child,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button:last-child {
   margin-right: 0;
 }
-html .page.course-page .inner .entities-area .student-area .student .summary .btns button:hover,
-body .page.course-page .inner .entities-area .student-area .student .summary .btns button:hover {
-  background-color: #1e6fb4 !important;
-}
 html .page.course-page .inner .entities-area .student-area .student .summary .btns button.speak-btn,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button.speak-btn {
-  border-radius: 0.24rem;
-  width: 0.44rem;
   background: #3882c2 url(./4cd7d5465af707e8e3b3e196d0de8f4d.png) no-repeat center center;
   background-size: 0.16rem;
 }
@@ -3517,34 +3276,19 @@ body .page.course-page .inner .entities-area .student-area .student .summary .bt
   background-image: url(./da4dc52af3f79898a73446f5f05b0d63.png);
   background-size: 0.12rem;
 }
+html .page.course-page .inner .entities-area .student-area .student .summary .btns button.gift-btn,
+body .page.course-page .inner .entities-area .student-area .student .summary .btns button.gift-btn {
+  background: #3882c2 url(./da96821e3102ac7d45005832a68957e2.png) no-repeat center center;
+  background-size: 0.11rem;
+}
 html .page.course-page .inner .entities-area .student-area .student .summary .btns button.view-btn,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button.view-btn {
-  border-radius: 0.24rem;
-  width: 0.44rem;
   background: #3882c2 url(./985b43e1982739180b696c7a68bbb076.png) no-repeat center center;
   background-size: 0.16rem;
 }
 html .page.course-page .inner .entities-area .student-area .student .summary .btns button.view-btn.on,
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button.view-btn.on {
   background-image: url(./1c3b8535ccde6ec7812c8245e99119da.png);
-}
-html .page.course-page .inner .entities-area .student-area .student .summary .btns button.check-device-btn,
-body .page.course-page .inner .entities-area .student-area .student .summary .btns button.check-device-btn {
-  background: #3882c2 url(./445ee58c6f4f9d1040568ddf5a365e37.png) no-repeat center center;
-  background-size: 0.16rem;
-}
-html .page.course-page .inner .entities-area .student-area .student .summary .btns button.check-device-btn.on,
-body .page.course-page .inner .entities-area .student-area .student .summary .btns button.check-device-btn.on {
-  background-image: url(./b7f1b7d766814c89b0badbc8bf29d9df.png);
-}
-html .page.course-page .inner .entities-area .student-area .student .summary .btns button.carton-btn,
-body .page.course-page .inner .entities-area .student-area .student .summary .btns button.carton-btn {
-  background: #3882c2 url(./157d8a361b4dcc91a855244190a4a469.png) no-repeat center center;
-  background-size: 0.16rem;
-}
-html .page.course-page .inner .entities-area .student-area .student .summary .btns button.carton-btn.on,
-body .page.course-page .inner .entities-area .student-area .student .summary .btns button.carton-btn.on {
-  background-image: url(./66e68b33d092b085e5a21a394912d05e.png);
 }
 html .page.course-page .inner .entities-area .student-area .student.nothing,
 body .page.course-page .inner .entities-area .student-area .student.nothing {
@@ -3556,59 +3300,4 @@ body .page.course-page .inner .entities-area .student-area .student.nothing .ava
 html .page.course-page .inner .entities-area .student-area .student.nothing .avatar-head,
 body .page.course-page .inner .entities-area .student-area .student.nothing .avatar-head {
   display: none;
-}
-.download-btn {
-  position: relative;
-}
-.download-btn .download-tips {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  font-size: 14px;
-  color: #fff;
-}
-.download-btn .download-tips > div {
-  position: absolute;
-  display: none;
-}
-.download-btn .download-tips.hasCache > :first-child {
-  display: block;
-  padding: 4px 6px;
-  background: #67c275;
-  border-radius: 16px;
-  position: absolute;
-  right: -20px;
-  top: -14px;
-}
-.download-btn .download-tips.hasCache > :first-child::after {
-  content: "";
-  position: absolute;
-  left: 35%;
-  bottom: -6px;
-  width: 13px;
-  height: 6px;
-  background: url(./3170c605bb56a6f2d5088d32bc9c9b13.png) no-repeat;
-  background-size: 100%;
-}
-.download-btn .download-tips.hasUpdate > :last-child {
-  border-radius: 12px;
-  padding: 4px 8px;
-  display: block;
-  position: absolute;
-  bottom: -34px;
-  right: 0;
-  width: 188px;
-  background: #ff8a92;
-}
-.download-btn .download-tips.hasUpdate > :last-child::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: 70%;
-  width: 13px;
-  height: 7px;
-  background: url(./eff71005bb18218eaab3b28e53942a46.png) no-repeat;
-  background-size: 100%;
 }

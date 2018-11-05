@@ -59,7 +59,9 @@ class StaticServer {
 			files = fs.readdirSync(dir)
 			files.forEach((file)=>{
 				let curPath = path.join(dir, file)
-				fs.unlinkSync(curPath)
+				if (/\.mp3/.test(curPath)) {
+					fs.unlinkSync(curPath)
+				}
 			})
 		}
 	};

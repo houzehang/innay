@@ -681,7 +681,7 @@ class Course extends React.Component {
 	}
 
 	__counter_time_to_str() {
-		let duration = this.props.status.duration
+		let duration = Math.max(0,this.props.status.duration)
 		let hour 	 = duration / 60 / 60 >> 0
 		duration 	-= hour * 60 * 60
 		let minutes  = duration / 60 >> 0
@@ -883,6 +883,9 @@ class Course extends React.Component {
 								}}></button>
 								<button className="help-btn" onClick={()=>{
 									this.onHelpClick()
+								}}></button>
+								<button className="gohome-btn" onClick={()=>{
+									this.$session.send_message("appfirstpage")
 								}}></button>
 								<div className="switch-btn" onClick={()=>{
 									if (this.state.control) {
