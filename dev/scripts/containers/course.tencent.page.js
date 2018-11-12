@@ -120,8 +120,6 @@ class Course extends React.Component {
 					case Const.CLOSE_MIC:
 					case Const.OPEN_RACE:
 					case Const.CLOSE_RACE:
-					case Const.OPEN_GIFT:
-					case Const.CLOSE_GIFT:
 					this.__on_signal_message(message)
 					break
 					break
@@ -187,12 +185,6 @@ class Course extends React.Component {
 			case Const.CLOSE_MIC:
 			this.props.onUserMuted(data.uid, true)
 			this.$room.stream_audio(data.uid)
-			break
-			case Const.OPEN_GIFT:
-			this.props.onGiftSwitch(true)
-			break
-			case Const.CLOSE_GIFT:
-			this.props.onGiftSwitch(false)
 			break
 			case "racerank":
 			this.props.onHandsupRank(data.uid, data.rank)

@@ -492,8 +492,6 @@ class Course extends React.Component {
 			break
 			case Const.OPEN_MIC:
 			case Const.CLOSE_MIC:
-			case Const.OPEN_GIFT:
-			case Const.CLOSE_GIFT:
 			case Const.PUT_DANCE:
 			case Const.BACK_DANCE:
 			this.$session.send_message(null, null, message)
@@ -508,9 +506,6 @@ class Course extends React.Component {
 			break
 			case "racerank":
 			this.props.onHandsupRank(data.uid, data.rank)
-			break
-			case Const.START_TEST:
-			case Const.STOP_TEST:
 			break
 			case Const.NEXT_PAGE:
 			this.$playing = false
