@@ -5,6 +5,7 @@ const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plug
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 module.exports = {
+  devtool: 'cheap-source-map',
   entry: {
     app : './dev/scripts/app.js',
     version : './dev/scripts/version.js'

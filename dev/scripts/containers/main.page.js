@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
 import Download from '../components/download'
 import Course from './course.page'
+import CourseRecord from './course.record'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
@@ -170,6 +171,11 @@ class Main extends React.Component {
 										<button className="download-btn" onClick={()=>{
 											this.onDownload(room)
 										}}></button>
+										{
+											room.state==2?<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
+												this.onRecordRoom(room)
+											}}></button>:''
+										}										
 									</div>
 								)))
 							}
@@ -214,30 +220,63 @@ class Main extends React.Component {
 		}
 	}
 
-	__onStartRoom(data) {
+	__onStartRoom(data,isRecord) {
 		this.props.onRoomInfo(data)
-		this.props.confirm({
-			content: <div>上课时间：{data.start_time}<br/>准备好开始上课了吗？</div>,
-			sure: ()=>{
-				this.onEnterRoom()
-			}
-		})
+		if(isRecord){
+			this.onEnterRoom()	
+		}else{
+			this.props.confirm({
+				content: <div>上课时间：{data.start_time}<br/>准备好开始上课了吗？</div>,
+				sure: ()=>{
+					this.onEnterRoom()
+				}
+			})
+		}
 	}
 
 	onRecordRoom(data) {
 		this.setState({ recording: true })
-		this.props.onRoomInfo(data)
-		this.onEnterRoom()
+		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
+		let lastest_download = storage.get(`download_${data.en_name}`)
+		if (lastest_download) {
+			let delay = new Date().getTime() - lastest_download
+			if (delay <= this.$cache_valid_time) {
+				this.__onStartRoom(data,true)
+				return
+			}
+		}
+		if (context.detector.offline) {
+			this.props.confirm({
+				content: "您的网络已经断开，建议您检查网络后再开始上课。",
+				sure_txt: "去检查网络",
+				cancel_txt: "坚持上课",
+				cancel: ()=>{
+					this.__onStartRoom(data,true)
+				}
+			})
+		} else {
+			this.props.confirm({
+				content: "为保证上课体验，建议您先下载课程包再开始上课。",
+				sure_txt: "去下载",
+				cancel_txt: "直接上课",
+				sure: ()=>{
+					this.onDownload(data, true)
+				},
+				cancel: ()=>{
+					
+				}
+			})
+		}
 	}
 
-	onDownload(data, canenter) {
+	onDownload(data, canenter,isRecord) {
 		this.props.alert({
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
 				// 存储最后一次下载时间
 				storage.store(`download_${data.en_name}`,new Date().getTime())
 				if (canenter) {
-					this.__onStartRoom(data)
+					this.__onStartRoom(data,isRecord)
 				} else {
 					this.props.alert({
 						content: "下载完成。"
@@ -290,7 +329,7 @@ class Main extends React.Component {
 		let { account } = this.props 
 		let content, sidebar = ""
 		if (this.props.started) {
-			content = <Course recording={this.state.recording}/>
+			content = this.state.recording ? <CourseRecord/>:<Course/>
 		} else if (this.props.testing) {
 			content = <Devices />
 		} else {
