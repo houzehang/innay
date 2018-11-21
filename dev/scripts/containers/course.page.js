@@ -34,18 +34,15 @@ class Course extends React.Component {
 		this.$uuid      = 0
 		this.$stat_arr 	= []
 		this.$session 	= new Session(this)
-		this.$recording = this.props.recording
 		this.state 		= { 
+			no_confirm_mask: false,
 			time: new Date().getTime()/1000, 
 			control: !this.props.status.started,
 			process: {current:0,total:0}
 		}
-		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER ||
-						  this.$recording
-		if (!this.$recording) {
-			this.$room 		= new Room(this)
-			this.$signal	= new Signalize(this)
-		}
+		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER
+		this.$room 		= new Room(this)
+		this.$signal	= new Signalize(this)
 		this.$audios_files = {}
 		ipcRenderer.on("DOWNLOADED", (event, url, file)=>{
 			net.log({name:"DOWNLOADED",url,file})
@@ -161,152 +158,127 @@ class Course extends React.Component {
 				this.__send_init_room()
 			},1000)
 		})
-		if (!this.$recording) {
-			this.$room.init()
-			this.$room.on("NEW_STREAM", (stream)=>{
-				// 判断是不是主班老师
+		this.$room.init()
+		this.$room.on("NEW_STREAM", (stream)=>{
+			// 判断是不是主班老师
+			let id = stream.getId()
+			let isSubMaster = this.isSubMaster(id)
+			if (isSubMaster) {
+				return
+			}
+			this.props.onNewStream(stream)
+		})
+		this.$room.on("REMOVE_STREAM", (stream)=>{
+			this.props.onStreamLeave(stream)
+			// 老师监听到有人退出如果还在上台，则发送他下台指令
+			if (this.isMaster()) {
 				let id = stream.getId()
-				let isSubMaster = this.isSubMaster(id)
-				if (isSubMaster) {
-					return
-				}
-				this.props.onNewStream(stream)
-			})
-			this.$room.on("REMOVE_STREAM", (stream)=>{
-				this.props.onStreamLeave(stream)
-				// 老师监听到有人退出如果还在上台，则发送他下台指令
-				if (this.isMaster()) {
-					let id = stream.getId()
-					if (id) {
-						if (this.$last_dancing == id) {
-							this.$session.send_message(Const.BACK_DANCE, { id })
-						}
+				if (id) {
+					if (this.$last_dancing == id) {
+						this.$session.send_message(Const.BACK_DANCE, { id })
 					}
 				}
-			})
-			this.$room.on("ADD_ROOM", (id)=>{
-				// 新用户加入
-				this.props.onUserAddRoom(id)
-				this.$room.refreshMute()
-			})
-			this.$room.on("LEAVE_ROOM", ()=>{
-				this.$session.destroy()
-				if (this.$waiting_to_tester) {
-					this.props.onEnterTester("course")
+			}
+		})
+		this.$room.on("ADD_ROOM", (id)=>{
+			// 新用户加入
+			this.props.onUserAddRoom(id)
+			this.$room.refreshMute()
+		})
+		this.$room.on("LEAVE_ROOM", ()=>{
+			this.$session.destroy()
+			if (this.$waiting_to_tester) {
+				this.props.onEnterTester("course")
+			} else {
+				this.props.onEndCourse()
+			}
+		})
+		this.$room.rtc.on("networkquality", (uid, tx, rx)=>{
+			console.log("网络状态：",uid,tx,rx)
+			if (uid == 0) {
+				let status = Math.max(tx,rx)
+				if (status == 1 || status == 2) {
+					status = 1
+				} else if (status == 3) {
+					status = 2
+				} else if (status == 4) {
+					status = 3
+				} else if (status == 5) {
+					status = 4
 				} else {
-					this.props.onEndCourse()
+					status = 0
 				}
-			})
-			this.$room.rtc.on("networkquality", (uid, tx, rx)=>{
-				console.log("网络状态：",uid,tx,rx)
-				if (uid == 0) {
-					let status = Math.max(tx,rx)
-					if (status == 1 || status == 2) {
-						status = 1
-					} else if (status == 3) {
-						status = 2
-					} else if (status == 4) {
-						status = 3
-					} else if (status == 5) {
-						status = 4
-					} else {
-						status = 0
-					}
-					this.$stat_arr.push(status)
-					if (this.$stat_arr.length >= 3) {
-						let sum = 0
-						this.$stat_arr.forEach((status)=>{
-							sum += status
-						})
-						status = sum / this.$stat_arr.length >> 0
-						context.detector.setStatus(status)
-						this.$stat_arr = []
-					} else {
-						context.detector.setStatusOnce(status)
-					}
+				this.$stat_arr.push(status)
+				if (this.$stat_arr.length >= 3) {
+					let sum = 0
+					this.$stat_arr.forEach((status)=>{
+						sum += status
+					})
+					status = sum / this.$stat_arr.length >> 0
+					context.detector.setStatus(status)
+					this.$stat_arr = []
+				} else {
+					context.detector.setStatusOnce(status)
 				}
-			})
-			let $waiting_timer = null
-			this.$signal.on("RECONNECT_SIGNAL", ()=>{
-				this.props.showLoading("网络不稳定哦，正在重连中~")
-			})
-			this.$signal.on("CONNECT_SIGNAL", ()=>{
-				this.props.showLoading("正在连线其他人，稍等一下~")
-				$waiting_timer = setTimeout(()=>{
-					this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
-				},6000)
-			})
-			this.$signal.on("HIDE_LOADING", ()=>{
-				this.props.hideLoading()
-				clearTimeout($waiting_timer)
-			})
-			this.$signal.on("NETWORK_BAD", ()=>{
-				this.props.showLoading("网络状态不佳，稍等一下~")
-			})
-			this.$signal.on("CONNECTED_SIGNAL", ()=>{
-				this.props.hideLoading()
-				clearTimeout($waiting_timer)
-				this.$session.send_message("signal_connected")
-			})
-			this.$signal.on("RECONNECTED_SIGNAL", ()=>{
-				// 重新连接上，拉取最新消息
-				this.$session.send_message("signal_reconnected")
-			})
-			this.$signal.on("CONNECT_SIGNAL_ERROR", ()=>{
+			}
+		})
+		let $waiting_timer = null
+		this.$signal.on("RECONNECT_SIGNAL", ()=>{
+			this.props.showLoading("网络不稳定哦，正在重连中~")
+		})
+		this.$signal.on("CONNECT_SIGNAL", ()=>{
+			this.props.showLoading("正在连线其他人，稍等一下~")
+			$waiting_timer = setTimeout(()=>{
 				this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
-				clearTimeout($waiting_timer)
+			},6000)
+		})
+		this.$signal.on("HIDE_LOADING", ()=>{
+			this.props.hideLoading()
+			clearTimeout($waiting_timer)
+		})
+		this.$signal.on("NETWORK_BAD", ()=>{
+			this.props.showLoading("网络状态不佳，稍等一下~")
+		})
+		this.$signal.on("CONNECTED_SIGNAL", ()=>{
+			this.props.hideLoading()
+			clearTimeout($waiting_timer)
+			this.$session.send_message("signal_connected")
+		})
+		this.$signal.on("RECONNECTED_SIGNAL", ()=>{
+			// 重新连接上，拉取最新消息
+			this.$session.send_message("signal_reconnected")
+		})
+		this.$signal.on("CONNECT_SIGNAL_ERROR", ()=>{
+			this.props.showLoading("当前网络环境不太好哦，耐心等一等吧~")
+			clearTimeout($waiting_timer)
+		})
+		this.$signal.on("CONNECT_KICKED", ()=>{
+			this.props.showLoading("有人登录了你的帐号哦~")
+			clearTimeout($waiting_timer)
+		})
+		this.$signal.on("CHANNEL_NEW_USER", (user)=>{
+			this.$session.send_message(Const.MEMBER_ADD, {}, {
+				userinfos  : [user]
 			})
-			this.$signal.on("CONNECT_KICKED", ()=>{
-				this.props.showLoading("有人登录了你的帐号哦~")
-				clearTimeout($waiting_timer)
+			console.log("channel new user...",user)
+		})
+		this.$signal.on("CHANNEL_USER_LEAVE", (id)=>{
+			this.$session.send_message(Const.MEMBER_LEAVE, {
+			}, {
+				userinfos  : [id]
 			})
-			this.$signal.on("CHANNEL_NEW_USER", (user)=>{
-				this.$session.send_message(Const.MEMBER_ADD, {}, {
-					userinfos  : [user]
-				})
-				console.log("channel new user...",user)
-			})
-			this.$signal.on("CHANNEL_USER_LEAVE", (id)=>{
-				this.$session.send_message(Const.MEMBER_LEAVE, {
-				}, {
-					userinfos  : [id]
-				})
-			})
-			this.$signal.on("NEW_MESSAGE", (message)=>{
-				console.log("receive new from app",message)
-				this.__on_signal_message(message)
-			})
-		} else {
-			// 向服务器拉取录播的视频流
-			let data = {
-				23 : {
-					url: "https://kecheng-server.oss-cn-beijing.aliyuncs.com/1022_3452c367ea4c44fcab114d7a60524de5.f0.mp4",
-					created_at: 1529754515000
-				},
-				26 : {
-					url: "https://kecheng-server.oss-cn-beijing.aliyuncs.com/1022_3452c367ea4c44fcab114d7a60524de5.f0.mp4",
-					created_at: 1529754515000
-				}
-			}
-			this.$record_video_data = data
-			for(let id in data) {
-				let isMaster = this.isMaster(id)
-				if (isMaster) {
-					let stream = this.__build_stream(id)
-					this.props.onNewStream(stream)
-					break
-				}
-			}
-		}
+		})
+		this.$signal.on("NEW_MESSAGE", (message)=>{
+			console.log("receive new from app",message)
+			this.__on_signal_message(message)
+		})
 		this.$session.on("NEW_MESSAGE", (message)=>{
 			this.__on_session_message(message)
 		})
 		net.getRoomInfo(this.props.room.channel_id).then((result)=>{
 			this.props.onRoomMoreInfo(result)
-			if (!this.$recording) {
-				this.$room.start()
-				this.$signal.join()
-			}
+			this.$room.start()
+			this.$signal.join()
 			this.__send_init_room()
 		})
 		this.$session.init("#course-content")
@@ -335,41 +307,9 @@ class Course extends React.Component {
 			channel_id: this.props.room.channel_id,
 			token: net.token
 		}, {
-			recording  : this.$recording,
 			master_ids : masters,
 			userinfos  : userinfos
 		})
-	}
-
-	__build_stream(id) {
-		let data = this.$record_video_data[id]
-		if (!data) return
-		return { 
-			getId: ()=>id, 
-			play: (dom)=>{
-				if (data.showing) return
-				data.showing = true
-				dom = $(`#${dom}`)
-				$(`<div id="record_${id}"><video id="video_${id}" src='${data.url}'></video></div>`).css({
-					"width":"100%","height":"100%"
-				}).appendTo(dom)
-				let isMaster = this.isMaster(id),
-					video    = $(`#video_${id}`)
-				if (isMaster) {
-					video.on("timeupdate", ()=>{
-						let time = video[0].currentTime * 1000 >> 0
-						time = data.created_at - 0 + time
-						this.$session.send_message("recordtimeupdate", {time})
-					})
-					this.$record_video = video
-					if (this.$record_ready) {
-						video[0].play()
-					}
-				} else {
-					video[0].play()
-				}
-			}
-		}
 	}
 
 	__tick() {
@@ -394,16 +334,12 @@ class Course extends React.Component {
 				case "starttest":
 				break
 				case Const.OPEN_MIC:
-				if (!this.$recording) {
-					this.props.onUserMuted(data.uid, false, message.to=="app")
-					this.$room.refreshMute()
-				}
+				this.props.onUserMuted(data.uid, false, message.to=="app")
+				this.$room.refreshMute()
 				break
 				case Const.CLOSE_MIC:
-				if (!this.$recording) {
-					this.props.onUserMuted(data.uid, true)
-					this.$room.refreshMute()
-				}
+				this.props.onUserMuted(data.uid, true)
+				this.$room.refreshMute()
 				break
 				case Const.ENABLE_MAGIC:
 				this.props.onMagicSwitch(true)
@@ -433,23 +369,9 @@ class Course extends React.Component {
 				this.props.onDancing(data.id, false)
 				this.$room.refreshMute()
 				break
-				case Const.MEMBER_ADD:
-				if (this.$recording) {
-					data.forEach((item)=>{
-						let stream = this.__build_stream(item.id)
-						if (stream) {
-							this.props.onNewStream(stream)
-						}
-					})
-				}
-				break
-				case Const.MEMBER_LEAVE:
-				break
-				case "record_ready":
-				if (this.$record_video) {
-					this.$record_video[0].play()
-				}
-				this.$record_ready = true
+				case Const.START_COURSE:
+				this.setState({control: false})
+				this.props.onBeginCourse()
 				break
 				case "playsound":
 				let url = data.url, needevent = data.needevent
@@ -635,19 +557,9 @@ class Course extends React.Component {
 			this.__back_from_dancing(this.$last_dancing)
 		}
 		console.log("do put message",id)
-		if (this.$recording) {
-			$(`#record_${id}`).css({
-				position: "fixed",
-				left	: $("#dancing-head").offset().left,
-				top 	: $("#dancing-head").offset().top,
-				width	: $("#dancing-head").width(),
-				height	: $("#dancing-head").height()
-			})
-		} else {
-			$(`#student_${id}`).empty()
-			$("#dancing-head").empty()
-			this.$room.cameraTo(id, $("#dancing-head")[0], true)
-		}
+		$(`#student_${id}`).empty()
+		$("#dancing-head").empty()
+		this.$room.cameraTo(id, $("#dancing-head")[0], true)
 		this.$last_dancing = id
 	}
 
@@ -655,29 +567,31 @@ class Course extends React.Component {
 		if (!this.$last_dancing || this.$last_dancing != id) {
 			return
 		}
-		if (this.$recording) {
-			$(`#record_${id}`).css({
-				position: "static",
-				left	: 0,
-				top 	: 0,
-				width	: "100%",
-				height	: "100%"
-			})
-		} else {
-			$(`#dancing-head`).empty()
-			$(`#student_${id}`).empty()
-			// 当处于弱网络且不是自己时，直接取消流
-			if (this.__in_weak_net() && id != this.props.account.id) {
-				let student = this.getUser(id)
-				if (student) {
-					student.stream_inited = false
-				}
-				this.$room.unsubscribe(id)
-			} else {
-				this.$room.cameraTo(id, $(`#student_${id}`)[0])
+		$(`#dancing-head`).empty()
+		$(`#student_${id}`).empty()
+		// 当处于弱网络且不是自己时，直接取消流
+		if (this.__in_weak_net() && id != this.props.account.id) {
+			let student = this.getUser(id)
+			if (student) {
+				student.stream_inited = false
 			}
+			this.$room.unsubscribe(id)
+		} else {
+			this.$room.cameraTo(id, $(`#student_${id}`)[0])
 		}
 		this.$last_dancing = null
+	}
+
+	__on_start_course() {
+		this.props.confirm({
+			content : "真的真的要上课吗？？",
+			sure: ()=>{
+				this.setState({control: false})
+				this.$session.send_message(Const.START_COURSE)
+				net.beginClass(this.props.room.channel_id)
+				this.props.onBeginCourse()
+			}
+		})
 	}
 
 	__counter_time_to_str() {
@@ -788,7 +702,7 @@ class Course extends React.Component {
 			}
 		}
 		let studentHeads = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student.online?student:null} onClickSpeak={(user)=>{
+			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -859,28 +773,25 @@ class Course extends React.Component {
 								<div className="spliter"></div>
 								{!this.props.status.started?(
 									<button className="course-start" onClick={()=>{
-										this.setState({control: false})
-										this.$session.send_message(Const.START_COURSE)
-										net.beginClass(this.props.room.channel_id)
-										this.props.onBeginCourse()
+										this.__on_start_course()
 									}}></button>
 								):(
-									<button className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
-										if (this.props.status.paused) {
-											this.props.onResumeCourse()
-											console.log("send message coursepause")
-											this.$session.send_message(Const.COURSE_RESUME)
-										} else {
-											this.props.onPauseCourse()
-											this.$session.send_message(Const.COURSE_PAUSE)
-										}
-									}}></button>
+									[
+										<button key="control-1" className={this.props.status.paused?"course-pause paused":"course-pause"} onClick={()=>{
+											if (this.props.status.paused) {
+												this.props.onResumeCourse()
+												console.log("send message coursepause")
+												this.$session.send_message(Const.COURSE_RESUME)
+											} else {
+												this.props.onPauseCourse()
+												this.$session.send_message(Const.COURSE_PAUSE)
+											}
+										}}></button>,
+										<button key="control-2" className="course-end" onClick={()=>{
+											this.preLeaveCourse()
+										}}></button>
+									]
 								)}
-								<button className="course-end" onClick={()=>{
-									this.preLeaveCourse()
-								}}></button>
-								<button className="course-next" onClick={()=>{
-								}}></button>
 								<button className="help-btn" onClick={()=>{
 									this.onHelpClick()
 								}}></button>
@@ -956,6 +867,14 @@ class Course extends React.Component {
 										this.props.onSilentSwitch(true)
 									}
 								}}></button>
+								{!this.props.status.started && !this.state.no_confirm_mask ? <div className="course-confirm-mask">
+									<div className="course-not-begin-btn c-btn" onClick={()=>{
+										this.setState({ no_confirm_mask : true })
+									}}>我是磨课，不上课</div>
+									<div className="course-begin-btn c-btn" onClick={()=>{
+										this.__on_start_course()
+									}}>我要开始上课！！</div>
+								</div> : ""}
 							</div>
 						):""}
 					</div>
@@ -964,9 +883,11 @@ class Course extends React.Component {
 						{this.$view_mode?StudentView:TeacherView}
 						{!this.$view_mode?(
 							<div className="counter">
-								倒计时：
-								{this.__counter_time_to_str()}
-								<div className="process">课程进度：{this.state.process.current}/{this.state.process.total}</div>
+								<div className="counter">
+									倒计时：
+									{this.__counter_time_to_str()}
+									<div className="process">课程进度：{this.state.process.current}/{this.state.process.total}</div>
+								</div>
 							</div>
 						):(
 							<div className="counter icon">
