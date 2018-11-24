@@ -22,6 +22,16 @@ mac:
   category: public.app-category.tools
   icon: icns/mac-icon.icns
 
+# nsis:
+#   oneClick: false
+#   allowToChangeInstallationDirectory: true
+#   installerIcon: icns/win-icon.ico
+#   uninstallerIcon: icns/win-icon.ico
+#   installerHeaderIcon: icns/win-icon.ico
+#   license: license.txt
+#   createDesktopShortcut: true
+#   createStartMenuShortcut: true
+
 win:
   asar: true
   asarUnpack: 
@@ -32,7 +42,6 @@ win:
     arch:
       - ia32
   icon: icns/win-icon.ico
-
 
 publish:
   - provider: generic
