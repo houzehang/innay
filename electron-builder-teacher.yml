@@ -3,7 +3,7 @@ copyright: youshi inc.
 productName: 明兮大语文
 
 directories:
-  output: build
+  output: build/teacher
   app: output
 
 dmg:
@@ -45,4 +45,4 @@ win:
 
 publish:
   - provider: generic
-    url: http://file.mw019.com/software
+    url: http://file.mw019.com/software/teacher
