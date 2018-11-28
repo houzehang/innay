@@ -20,8 +20,6 @@ class Room extends Eventer {
 		this.$client.setParameters('{"che.audio.live_for_comm":true}');
 		this.$client.setParameters('{"che.audio.enable.agc":false}');
 		this.$client.setParameters('{"che.video.moreFecSchemeEnable":true}');
-		this.$client.setParameters('{"che.video.lowBitRateStreamParameter":{"width":192,"height":192,"frameRate":15,"bitRate":100}}');
-		this.$client.setVideoQualityParameters(true)
 		this.$client.enableDualStreamMode(true);
 		if (!this.inst.isSubMaster(this.inst.props.account.id)) {
 			this.$client.enableVideo();
