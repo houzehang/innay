@@ -7,8 +7,6 @@
  */
 const {TC_DEBUG,TEST}   = require('./env.js');
 const Const        = require('./const.js'); 
-const fs           = require("fs");
-const path         = require("path");
 const StaticServ   = require("./staticserv")
 // 初始化主框架
 const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
@@ -85,7 +83,6 @@ autoUpdater.on('update-downloaded', () => {
         autoUpdater.quitAndInstall();  
     },3000)
 });
-
 app.on('ready', function()  {
     createUpdateWindow();
     autoUpdater.checkForUpdates();
@@ -100,12 +97,13 @@ function createMainWindow() {
         frame: true,
         autoHideMenuBar: true,
         webPreferences : {
-            webSecurity: true,
+            webSecurity: false,
             javascript: true,
             plugins: true
         }
     })
-    $main.webContents.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36 KCPC');
+    let userAgent = $main.webContents.getUserAgent()
+    $main.webContents.setUserAgent(userAgent+' KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
     if (TC_DEBUG || TEST) {
         $main.webContents.openDevTools();

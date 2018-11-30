@@ -84,19 +84,6 @@ class Context {
 		this.$audio_device_id = audio_device_id
 	}
 
-	render(id, data) {
-		let target   = $("#"+id)
-		let template = $.templates("#"+id);
-		let html	 = $(template.render(data));
-		let dom 	 = $(`[tmplid=tmpl_${id}]`)
-		html.attr("tmplid", "tmpl_"+id)
-		if (dom.length > 0) {
-			dom.replaceWith(html)
-		} else {
-			target.after(html);
-		}
-	}
-
 	send_to_main(params) {
 		console.log("send_to_main",ipcRenderer,params)
 		ipcRenderer.send(...params);
