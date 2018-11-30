@@ -50,6 +50,7 @@ class Course extends React.Component {
         this.$audios_files = {}
         this.$data = {usersStream:{},students:[],studentsHash:{},teachersHash:{},teachers:[],teacher:{}};
 		this.$session.send_message('record-init');
+		console.warn('初始化')
 		this.$record_video_data = {};
         ipcRenderer.on("DOWNLOADED", (event, url, file)=>{
 			net.log({name:"DOWNLOADED",url,file})
@@ -284,6 +285,11 @@ class Course extends React.Component {
 		} else {
             this.$room.init();
             this.$room.on('record-init',({message})=>{
+				try{
+					message = JSON.parse(message);
+				}catch(e){
+					message = message || [];
+				}
 				const data = {};
 				const {$data} = this;
 				const {students,studentsHash,teachers,teachersHash,usersStream} = $data;
@@ -304,6 +310,7 @@ class Course extends React.Component {
 					}
 					 data[id] = user;
 				});
+				this.setState({usersStream});
 				this.syncVideoTime();
             });		
 		}
@@ -358,6 +365,7 @@ class Course extends React.Component {
 	}
 
 	__build_stream(id,data) {
+		console.warn('创建视频',id,data)
 		const {$data} = this;
 		const {usersStream} = $data;
 		if (this.$record_video_data[id] || !usersStream[id] || usersStream[id].stream) return;
@@ -371,7 +379,7 @@ class Course extends React.Component {
 					"width":"100%","height":"100%"
 				}).appendTo(dom)
 				let isMaster = this.isMaster(id),
-                    video    = $(`#video_${id}`)
+					video    = $(`#video_${id}`)
 				if (isMaster) {
 					video.on("timeupdate", ()=>{
 						let time = video[0].currentTime * 1000 >> 0
@@ -380,7 +388,7 @@ class Course extends React.Component {
                     })
                     this.$record_video = video
                     //this.startHistoryLog();
-					if (this.$record_ready) {
+					if (this.$record_ready) {						
 						video[0].play();
 					}
 				} 
@@ -794,7 +802,7 @@ class Course extends React.Component {
 			if (teacher.stream && !teacher.stream_inited) {
 				teacher.stream_inited = true
 				teacher.stream.play('master-head');
-            }
+			}
             Object.values(usersStream).forEach(({id,stream})=>{
                 if(stream && !stream.stream_inited){
                     stream.stream_inited = true;
@@ -825,6 +833,8 @@ class Course extends React.Component {
 		// })
 		for(let i=0,len=students.length;i<len;i++) {
 			let item = students[i]
+			item.handsup = item.handsup || 0;
+			item.speak = item.speak || 0;
 			if (item.dancing && item.stream) {
 				dancing = item
 				break

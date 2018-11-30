@@ -25,6 +25,7 @@ class Main extends React.Component {
 		this.$cache_valid_time 	= 60*60*1000
 		this.$calendarRef  		= React.createRef()
 		this.state = { recording: false }
+		this.recordsRoom = {};
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -38,6 +39,10 @@ class Main extends React.Component {
 	componentDidMount() {
 		let { account } = this.props  
 		if (account.dentity == types.DENTITY.STUDENT) {
+			net.lessonsByHistory().then(res=>{
+				const {data} = res.list;
+				this.recordsRoom = (data[data.length-1]);
+			});
 			net.lessonsByDate().then((res)=>{
 				// 计算剩余时间
 				let room = res.rooms[0]
@@ -72,6 +77,7 @@ class Main extends React.Component {
 		if (this.props.rooms && this.props.rooms.length > 0) {
 			room = this.props.rooms[0]
 		}
+		console.warn(this.props.rooms)
 		return (
 			<div className="page student-page">
 				<div className="inner">
@@ -107,6 +113,11 @@ class Main extends React.Component {
 								{room.can_download?<button className="download-btn" onClick={()=>{
 									this.onDownload(room)
 								}}></button>:""}
+								{
+									<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
+										this.onRecordRoom(this.recordsRoom)
+									}}></button>
+								}										
 							</div>
 						]) : ([
 							<div key="0" className="time">接下来没有课程啦～</div>,
@@ -172,7 +183,7 @@ class Main extends React.Component {
 											this.onDownload(room)
 										}}></button>
 										{
-											room.state==2?<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
+											room.state==2 || new Date(room.start_time).getTime() < Date.now() ?<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
 												this.onRecordRoom(room)
 											}}></button>:''
 										}										
@@ -255,17 +266,7 @@ class Main extends React.Component {
 				}
 			})
 		} else {
-			this.props.confirm({
-				content: "为保证上课体验，建议您先下载课程包再开始上课。",
-				sure_txt: "去下载",
-				cancel_txt: "直接上课",
-				sure: ()=>{
-					this.onDownload(data, true)
-				},
-				cancel: ()=>{
-					
-				}
-			})
+			this.onDownload(data, true);			
 		}
 	}
 

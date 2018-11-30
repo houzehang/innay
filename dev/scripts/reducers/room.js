@@ -154,6 +154,7 @@ const room = (state = {}, action) => {
 		case HANDSUP_SWITCH:
 		switches = {...state.switches}
 		switches.handsup = action.status
+		state.students = state.students || [];
 		students = [...state.students]
 		if (students) {
 			for(let i=0,len=students.length;i<len;i++) {

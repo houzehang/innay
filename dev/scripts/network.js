@@ -8,7 +8,7 @@ class Network extends Eventer {
 	constructor() {
 		super()
 		if (ENV.DEBUG || ENV.TEST) {
-			this.$base_url = "https://kecheng.runsnailrun.com"
+			this.$base_url = "https://kecheng1.runsnailrun.com"
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"
 		}
@@ -143,6 +143,15 @@ class Network extends Eventer {
 	lessonsByDate(date) {
 		return this.__request("/room/lesson_list", {
 			date
+		})
+	}
+	/**
+	 * 获取历史课程
+	 */
+	lessonsByHistory(){
+		return this.__request("/room/my_lesson_list", {
+			client:'pc',
+			type:'haved'
 		})
 	}
 
