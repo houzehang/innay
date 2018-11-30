@@ -285,11 +285,6 @@ class Course extends React.Component {
 		} else {
             this.$room.init();
             this.$room.on('record-init',({message})=>{
-				try{
-					message = JSON.parse(message);
-				}catch(e){
-					message = message || [];
-				}
 				const data = {};
 				const {$data} = this;
 				const {students,studentsHash,teachers,teachersHash,usersStream} = $data;
