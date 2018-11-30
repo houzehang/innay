@@ -12,6 +12,7 @@ class Network extends Eventer {
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"
 		}
+		this.$base_url = "https://www.muwenyuwen.com"
 		this.$log_queue = []
 		this.__restore_token()
 	}
