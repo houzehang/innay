@@ -4,18 +4,25 @@ if [ -d ./output ];then
 	rm -rf ./output
 fi
 TOTAL_STEP=4
+TEACHER=false
+CONFIG_FILE=./electron-builder-student.yml
+if [ "$2" = "-teacher" ];then
+	TEACHER=true
+	CONFIG_FILE=./electron-builder-teacher.yml
+fi
+
 echo "step(1/${TOTAL_STEP}) compiling files"
-if [ "$2" = "-debug" ];then
+if [ "$3" = "-debug" ];then
 	echo 'debug mode:线上包，会显示调试窗口'
-	echo 'module.exports = {DEBUG : false,TC_DEBUG : true,TEST : false}' > env.js
-elif [ "$2" = "-xdebug" ];then
+	echo "module.exports = {DEBUG : false,TC_DEBUG : true,TEST : false,TEACHER: ${TEACHER}}" > env.js
+elif [ "$3" = "-xdebug" ];then
 	echo 'xdebug mode:技术连接本地测试包'
-	echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false}' > env.js
-elif [ "$2" = "-test" ];then
+	echo "module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER: ${TEACHER}}" > env.js
+elif [ "$3" = "-test" ];then
 	echo 'test mode:连接测试环境，会显示调试窗口'
-	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : true}' > env.js
+	echo "module.exports = {DEBUG : false,TC_DEBUG : false,TEST : true,TEACHER: ${TEACHER}}" > env.js
 else
-	echo 'module.exports = {DEBUG : false,TC_DEBUG : false,TEST : false}' > env.js
+	echo "module.exports = {DEBUG : false,TC_DEBUG : false,TEST : false,TEACHER: ${TEACHER}}" > env.js
 fi
 npm run build; 
 mkdir output
@@ -35,15 +42,15 @@ if [ "$1" = "-mac" -o "$1" = "-all" ];then
 	cp -r libs/AgoraSDK/native-mac output/dist/libs/AgoraSDK
 	rm -rf output/dist/libs/AgoraSDK/native-win
 	echo "packaging for mac platform"
-	./node_modules/.bin/build --mac -p always
+	./node_modules/.bin/build --config $CONFIG_FILE --mac -p always
 fi
 if [ "$1" = "-win" -o "$1" = "-all" ];then
 	cp -r libs/AgoraSDK/native-win output/dist/libs/AgoraSDK
 	rm -rf output/dist/libs/AgoraSDK/native-mac
 	echo "packaging for windows platform"
-	./node_modules/.bin/build --win -p always
+	./node_modules/.bin/build --config $CONFIG_FILE --win -p always
 fi
 
 echo "step(4/${TOTAL_STEP}) cleaning files"
-echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false}' > env.js;
+echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : true}' > env.js;
 rm -rf ./output

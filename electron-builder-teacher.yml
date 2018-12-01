@@ -3,7 +3,7 @@ copyright: youshi inc.
 productName: 明兮大语文
 
 directories:
-  output: build
+  output: build/teacher
   app: output
 
 dmg:
@@ -22,6 +22,16 @@ mac:
   category: public.app-category.tools
   icon: icns/mac-icon.icns
 
+# nsis:
+#   oneClick: false
+#   allowToChangeInstallationDirectory: true
+#   installerIcon: icns/win-icon.ico
+#   uninstallerIcon: icns/win-icon.ico
+#   installerHeaderIcon: icns/win-icon.ico
+#   license: license.txt
+#   createDesktopShortcut: true
+#   createStartMenuShortcut: true
+
 win:
   asar: true
   asarUnpack: 
@@ -33,7 +43,6 @@ win:
       - ia32
   icon: icns/win-icon.ico
 
-
 publish:
   - provider: generic
-    url: http://file.mw019.com/software
+    url: http://file.mw019.com/software/teacher

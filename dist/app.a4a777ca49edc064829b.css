@@ -21,7 +21,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.2rem;
+  font-size: 0.20rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -2759,9 +2759,45 @@ body .page.course-page .inner .content .pausing img {
 }
 html .page.course-page .inner .content .operations,
 body .page.course-page .inner .content .operations {
+  position: relative;
   height: 0.77rem;
   background: #3882c2;
   display: flex;
+}
+html .page.course-page .inner .content .operations .course-confirm-mask,
+body .page.course-page .inner .content .operations .course-confirm-mask {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+html .page.course-page .inner .content .operations .course-confirm-mask .c-btn,
+body .page.course-page .inner .content .operations .course-confirm-mask .c-btn {
+  height: 0.3rem;
+  border-radius: 0.3rem;
+  background: #fff;
+  color: #666;
+  font-size: 0.14rem;
+  text-align: center;
+  line-height: 0.3rem;
+  padding: 0 0.2rem;
+}
+html .page.course-page .inner .content .operations .course-confirm-mask .c-btn:active,
+body .page.course-page .inner .content .operations .course-confirm-mask .c-btn:active {
+  opacity: 0.8;
+}
+html .page.course-page .inner .content .operations .course-confirm-mask .c-btn.course-begin-btn,
+body .page.course-page .inner .content .operations .course-confirm-mask .c-btn.course-begin-btn {
+  font-weight: bold;
+  background: #ff2a2a;
+  margin-left: 0.4rem;
+  color: #fff;
 }
 html .page.course-page .inner .content .operations button,
 body .page.course-page .inner .content .operations button {
@@ -3172,7 +3208,7 @@ body .page.course-page .inner .entities-area .student-area .student .avatar-info
 }
 html .page.course-page .inner .entities-area .student-area .student.hover .summary,
 body .page.course-page .inner .entities-area .student-area .student.hover .summary {
-  width: 1.4rem;
+  width: 2rem;
   opacity: 1;
 }
 html .page.course-page .inner .entities-area .student-area .student .summary,
@@ -3188,7 +3224,7 @@ body .page.course-page .inner .entities-area .student-area .student .summary {
 }
 html .page.course-page .inner .entities-area .student-area .student .summary .summary-inner,
 body .page.course-page .inner .entities-area .student-area .student .summary .summary-inner {
-  width: 1.4rem;
+  width: 2rem;
   height: 100%;
   background: rgba(88, 93, 122, 0.9);
 }
@@ -3290,14 +3326,13 @@ html .page.course-page .inner .entities-area .student-area .student .summary .bt
 body .page.course-page .inner .entities-area .student-area .student .summary .btns button.view-btn.on {
   background-image: url(./1c3b8535ccde6ec7812c8245e99119da.png);
 }
+html .page.course-page .inner .entities-area .student-area .student .summary .btns button.warn-btn,
+body .page.course-page .inner .entities-area .student-area .student .summary .btns button.warn-btn {
+  background: #3882c2 url(./187d92c16c4f02e17317f7dcc5c26e3b.png) no-repeat center center;
+  background-size: 0.16rem;
+}
 html .page.course-page .inner .entities-area .student-area .student.nothing,
 body .page.course-page .inner .entities-area .student-area .student.nothing {
   background: #e7e7e7 url(./731b0fc79025c25bd5d12cecd9653d17.png) no-repeat center center;
   background-size: 0.38rem auto;
-}
-html .page.course-page .inner .entities-area .student-area .student.nothing .avatar-info,
-body .page.course-page .inner .entities-area .student-area .student.nothing .avatar-info,
-html .page.course-page .inner .entities-area .student-area .student.nothing .avatar-head,
-body .page.course-page .inner .entities-area .student-area .student.nothing .avatar-head {
-  display: none;
 }
