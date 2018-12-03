@@ -330,6 +330,7 @@ class Main extends React.Component {
 		let { account } = this.props 
 		let content, sidebar = ""
 		if (this.props.started) {
+			//如果是回放加载回放组件
 			content = this.state.recording ? <CourseRecord/>:<Course/>
 		} else if (this.props.testing) {
 			content = <Devices />

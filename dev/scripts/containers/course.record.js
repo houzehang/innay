@@ -47,8 +47,10 @@ class Course extends React.Component {
 						  this.$recording
 		this.$room 		= new Room(this)
         this.$signal	= new Signalize(this)
-        this.$audios_files = {}
+		this.$audios_files = {}
+		//保存用户信息及视频信息的对象，关于回放部分的数据都存在在这里
         this.$data = {usersStream:{},students:[],studentsHash:{},teachersHash:{},teachers:[],teacher:{}};
+		//通知课件进行回放初始化
 		this.$session.send_message('record-init');
 		console.warn('初始化')
 		this.$record_video_data = {};
@@ -283,29 +285,41 @@ class Course extends React.Component {
 				this.__on_signal_message(message)
 			})
 		} else {
-            this.$room.init();
+			this.$room.init();
+			//添加回放初始化事件，该事件由课件发出
+			//课件加载到用户信息后通知客户端进行初始化
             this.$room.on('record-init',({message})=>{
 				const data = {};
 				const {$data} = this;
 				const {students,studentsHash,teachers,teachersHash,usersStream} = $data;
+				//遍历课件发送来的用户列表
 				message.forEach(user=>{
 					 const { id } = user;
+					 //设置用户视频URL
 					 user.url = user.hr_url || user.hf_url;
+					 //判断用户身份
 					 user.isMaster = user.dentity == 2;
+					 //强制设置用户为在线状态
 					 user.online = true;
+					 //保存用户信息
 					 usersStream[id] = user;
 					 if (!user.isMaster) {
+						 //保存学生信息
 						 user.child_avatar = user.avatarurl;
 						 studentsHash[id] = user;
 						 students.push(user)
 					 } else {
+						 //保存老师信息
 						 teachersHash[id] = user;
 						 teachers.push(user);
+						 //创建视频流
 						 this.__build_stream(id,user);
 					}
 					 data[id] = user;
 				});
+				//更新用户流
 				this.setState({usersStream});
+				//执行视频时间同步
 				this.syncVideoTime();
             });		
 		}
@@ -360,6 +374,7 @@ class Course extends React.Component {
 	}
 
 	__build_stream(id,data) {
+		//根据ID及数据创建视频
 		console.warn('创建视频',id,data)
 		const {$data} = this;
 		const {usersStream} = $data;
@@ -393,37 +408,50 @@ class Course extends React.Component {
         return stream;
 	}
 	syncVideoTime(){
+		//获取当前回放视频
 		let video = this.$record_video;
+		//视频播放时间获取函数
 		const videoTime = ()=>{
 			if(!video){
 				video = this.$record_video ? this.$record_video[0] : false;
 			}
 			if(video){
+				//视频播放结束则离开教室
 				if(video.currentTime >= video.duration){
 					console.warn('视频播放结束');
 					this.leaveCourse();
 					return; 
 				}
+				//将当前视频的播放状态发送给课件
 				this.$session.send_message('record-sync-video',{paused:video.paused,currentTime:video.currentTime,duration:video.duration})
 			}
+			//每100毫秒获取一次视频时间
 			setTimeout(() => {
 				videoTime();
 			}, 100);
 		};
+		//执行视频时间获取函数
 		videoTime();
 	}
 	recordUpdateMember({from,type,userinfos=[]},m){
+		//回放更新用户信息
+		//获取当前的学生列表
 		const {students} = this.state;
 		let teacherVideo;
 		let currentTime;
+		//遍历当前动作传递来的用户信息列表
 		userinfos.forEach(user=>{
 			if(user.isMaster){
+				//如果是老师则创建老师回放视频
 				user.stream  = this.__build_stream(user.id,user);
 				this.$record_video_data[user.id] = user;
 				return;
 			}
+			//更新用户在线状态，加入即在线
 			user.online = type === Const.MEMBER_ADD ;
+			//判断用户是否存在 
 			let userExists = false;
+			//遍历学生列表
 			for(let i = 0; i < students.length; i++){
 				if(students[i].id == user.id){
 					students[i] = user;
@@ -431,25 +459,37 @@ class Course extends React.Component {
 					break;
 				}
 			}
+				//如果用户不存在
 			if(!userExists){
+				//获取老师视频
 				teacherVideo = document.querySelector(`#video_${from}`);
+				//获取当前的播放时间
 				currentTime = teacherVideo ? (teacherVideo.currentTime - user.playTime)|| 0.1 : 0.1;
+				//创建学生视频
 				user.stream = this.__build_stream(user.id,user,currentTime);
+				//设置学生头像
 				user.child_avatar = user.child_avatar || user.avatarurl;
+				//记录学生信息
 				this.$record_video_data[user.id] = user;
 				students.push(user);
 			}
 		});
+		//更新学生列表
 		this.setState({students});
+		//延迟播放视频
 		setTimeout(() => {
+			//遍历学生
 			students.forEach(({id,online})=>{
+				//获取视频
 				const video = document.querySelector(`#video_${id}`);
 				console.warn(`播放ID${id} 播放状态${online} 媒体标签${video}`,);
 				if(video){
 					if(online){
+						//如果当前视频未播放且老师视频已播放，强制当前视频播放时间与老师同步
 						if(!video.currentTime && currentTime){
 							video.currentTime = currentTime;
 						}
+						//播放视频
 						video.play();
 					}
 				}
@@ -457,11 +497,14 @@ class Course extends React.Component {
 		}, 0);
 	}
 	recordUpdateDance({message,type}){
+		//学生上台下台动作
 		const {id} = message;
 		const {students} = this.state;
 		students.forEach(user=>{
+			//更新上台状态
 			user.dancing = user.id == id && type === Const.PUT_DANCE;
 		});
+		//更新学生状态
 		this.setState({students});
 		console.warn(students,'上下台',type)
 	}
