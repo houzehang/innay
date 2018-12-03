@@ -20,11 +20,8 @@ class StudentHead extends React.Component {
 	render() {
 		this.__bind()
 		let hasUser = this.props.user
-		if (this.props.tencent) {
-			hasUser = this.props.user.stream
-		}
 		return hasUser ? (
-					<div className={this.state.hover?"student hover":"student"} key={this.props.user.id+""} onMouseOver={()=>{
+					<div className={(this.state.hover?"student hover":"student")+(this.props.user.online?"":" nothing")} key={this.props.user.id+""} onMouseOver={()=>{
 						if (this.props.isTeacher) {
 							this.setState({ hover:true })
 						}
@@ -34,15 +31,12 @@ class StudentHead extends React.Component {
 						}
 					}}>
 						<div onDoubleClick={()=>{
-							this.props.onClickGift(this.props.user)
-						}} className="avatar-head" id={"student_"+this.props.user.id} style={{
+							if (this.props.user.online) {
+								this.props.onClickGift(this.props.user)
+							}
+						}} className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
 							backgroundImage : `url(${this.props.user.child_avatar})`
-						}}>
-							{this.props.tencent?(
-								<div id={"player_"+this.props.user.id}>
-									<video id={"video"+this.props.user.id} autoPlay={true} playsInline={true}/>
-								</div>
-							):""}
+						} : null}>
 						</div>
 						<div className="avatar-info">
 							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
@@ -67,7 +61,7 @@ class StudentHead extends React.Component {
 									</div>
 								</div>
 								<div className={this.props.isTeacher?"btns":"btns student"}>
-									{this.props.isTeacher?(
+									{this.props.isTeacher && this.props.user.online?(
 										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
 											this.props.onClickSpeak(this.props.user)
 										}}></button>
@@ -77,6 +71,8 @@ class StudentHead extends React.Component {
 											this.props.onClickView(this.props.user)
 										}}></button>
 									):""}
+									<button className="warn-btn" onClick={()=>{
+									}}></button>
 								</div>
 							</div>
 						</div>

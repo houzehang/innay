@@ -575,9 +575,41 @@ html,body {
 						}
 					}
 					.operations {
+						position: relative;
 						height: 0.77rem;
 						background: #3882c2;
 						display: flex;
+						.course-confirm-mask {
+							position: absolute;
+							z-index: 2;
+							left: 0;
+							top: 0;
+							width: 100%;
+							height: 100%;
+							background: rgba(0, 0, 0, 0.7);
+							display: flex;
+							justify-content: center;
+							align-items: center;
+							.c-btn {
+								height: 0.3rem;
+								border-radius: 0.3rem;
+								background: #fff;
+								color: #666;
+								font-size: 0.14rem;
+								text-align: center;
+								line-height: 0.3rem;
+								padding: 0 0.2rem;
+								&:active {
+									opacity: 0.8;
+								}
+								&.course-begin-btn {
+									font-weight: bold;
+									background: #ff2a2a;
+									margin-left: 0.4rem;
+									color: #fff;
+								}
+							}
+						}
 						button {
 							width: 0.85rem;
 							display: flex;
@@ -925,7 +957,7 @@ html,body {
 							}
 							&.hover {
 								.summary {
-									width: 1.4rem;
+									width: 2rem;
 									opacity: 1;
 								}
 							}
@@ -939,7 +971,7 @@ html,body {
 								transition: all 300ms 0s ease-in-out;
 								opacity: 0;
 								.summary-inner {
-									width: 1.4rem;
+									width: 2rem;
 									height: 100%;
 									background: rgba(88, 93, 122, 0.9);
 								}
@@ -1020,15 +1052,16 @@ html,body {
 												background-image: url(../assets/course-student-view-on.png);
 											}
 										}
+										&.warn-btn {
+											background:#3882c2 url(../assets/course-student-warning.png) no-repeat center center;
+											background-size: 0.16rem;
+										}
 									}
 								}
 							}
 							&.nothing {
 								background: #e7e7e7 url(../assets/course-student-ph.png) no-repeat center center;
 								background-size: 0.38rem auto;
-								.avatar-info,.avatar-head {
-									display: none;
-								}
 							}
 						}
 					}
