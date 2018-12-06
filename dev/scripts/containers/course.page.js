@@ -331,8 +331,6 @@ class Course extends React.Component {
 			switch(message.type) {
 				case Const.JS_READY :
 				break
-				case "starttest":
-				break
 				case Const.OPEN_MIC:
 				this.props.onUserMuted(data.uid, false, message.to=="app")
 				this.$room.refreshMute()
@@ -602,18 +600,6 @@ class Course extends React.Component {
 			<div key="1" className="couter-g">{format(minutes)}:</div>,
 			<div key="2" className="couter-g last">{format(seconds)}</div>
 		]
-	}
-
-	setVideoDevices(devices) {
-		this.$video_devices = devices
-	}
-
-	setAudioDevices(devices) {
-		this.$audio_devices = devices
-	}
-
-	setSpeakerDevices(devices) {
-		this.$speaker_devices = devices
 	}
 
 	onHelpClick() {

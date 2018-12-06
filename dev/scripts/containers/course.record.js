@@ -533,7 +533,7 @@ class Course extends React.Component {
 		</div>
 		return (
 			<div className="page course-page">
-				<button className="page-back" onClick={()=>{
+				<button className="record-back" onClick={()=>{
 					this.leaveCourse()
 				}}></button>
 				<div className="inner">
