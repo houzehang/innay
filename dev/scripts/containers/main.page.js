@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
 import Download from '../components/download'
-import Course from './course.page'
+import CourseForTecher from './course.teacher-page.js'
+import CourseForStudent from './course.student-page.js'
 import CourseRecord from './course.record'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
@@ -328,7 +329,8 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			content = this.state.recording ? <CourseRecord/>:<Course/>
+			let coursePage = this.props.account.dentity === types.DENTITY.MASTER ? <CourseForTecher/> :<CourseForStudent/>
+			content = this.state.recording ? <CourseRecord/> : coursePage;
 		} else if (this.props.testing) {
 			content = <Devices />
 		} else {
