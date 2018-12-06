@@ -683,7 +683,7 @@ class Course extends React.Component {
 			}
 		}
 		let studentHeads = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={!this.$view_mode} user={student} onClickSpeak={(user)=>{
+			<StudentHead key={student.id} isTeacher={false} user={student} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -726,11 +726,6 @@ class Course extends React.Component {
 					<div className="ph-text">未指定小朋友发言</div>
 					<div className="avatar-head" id="dancing-head"></div>
 					<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
-					{!this.$view_mode?<div className="back-dance-btn" onClick={()=>{
-						if (this.$last_dancing) {
-							this.$session.send_message(Const.BACK_DANCE, { id: this.$last_dancing })
-						}
-					}}></div>:""}
 					<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
 				</div>
 			</div>
@@ -789,94 +784,15 @@ class Course extends React.Component {
 					):""}
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
-						{this.props.switches.handsup&&!this.$view_mode?<HandsUp users={handsupStudents} onClickClose={()=>{
-							this.$session.send_message(Const.CLOSE_RACE)
-						}}/>:""}
-						{!this.$view_mode?(
-							<div className="operations">
-								<button className={this.props.switches.handsup?"course-handsup":"course-handsup off"} onClick={()=>{
-									if (this.props.switches.handsup) {
-										this.$session.send_message(Const.CLOSE_RACE)
-									} else {
-										this.$session.send_message(Const.OPEN_RACE)
-									}
-								}}></button>
-								<button className="course-gift" onClick={()=>{
-									this.__send_gift_to_all()
-								}}></button>
-								<button className={this.props.switches.magic?"course-magic":"course-magic off"} onClick={()=>{
-									if (this.props.switches.magic) {
-										this.$session.send_message(Const.DISABLE_MAGIC)
-									} else {
-										this.$session.send_message(Const.ENABLE_MAGIC)
-									}
-								}}></button>
-								<button className="course-clip" onClick={()=>{
-									this.__on_clipshare()
-								}}></button>
-								<button className="course-prevpage" onClick={()=>{
-									this.props.onMagicSwitch(false)
-									this.$session.send_message("appprevpage")
-								}}></button>
-								<button className="course-clear" onClick={()=>{
-									this.$session.send_message("appclearall")
-								}}></button>
-								<button className="course-nextpage" onClick={()=>{
-									this.props.onMagicSwitch(false)
-									this.$session.send_message("appnextpage")
-								}}></button>
-								<button className={this.props.switches.rank?"course-rank":"course-rank off"} onClick={()=>{
-									if (this.props.switches.rank) {
-										this.$session.send_message(Const.HIDE_RANKS)
-									} else {
-										this.$session.send_message(Const.SHOW_RANKS)
-									}
-								}}></button>
-								<button className={this.props.switches.muteall?"course-muteall off":"course-muteall"} onClick={()=>{
-									if (this.props.switches.muteall) {
-										this.$session.send_message(Const.UNMUTE_ALL)
-									} else {
-										this.$session.send_message(Const.MUTE_ALL)
-									}
-								}}></button>
-								<button className={this.props.switches.silent?"course-silent off":"course-silent"} onClick={()=>{
-									if (this.props.switches.silent) {
-										this.$room.keepSilent(false)
-										this.props.onSilentSwitch(false)
-									} else {
-										this.$room.keepSilent(true)
-										this.props.onSilentSwitch(true)
-									}
-								}}></button>
-								{!this.props.status.started && !this.state.no_confirm_mask ? <div className="course-confirm-mask">
-									<div className="course-not-begin-btn c-btn" onClick={()=>{
-										this.setState({ no_confirm_mask : true })
-									}}>我是磨课，不上课</div>
-									<div className="course-begin-btn c-btn" onClick={()=>{
-										this.__on_start_course()
-									}}>我要开始上课！！</div>
-								</div> : ""}
-							</div>
-						):""}
 					</div>
 					<div className="entities-area">
-						{this.$view_mode?TeacherView:StudentView}
-						{this.$view_mode?StudentView:TeacherView}
-						{!this.$view_mode?(
-							<div className="counter">
-								<div className="counter">
-									倒计时：
-									{this.__counter_time_to_str()}
-									<div className="process">课程进度：{this.state.process.current}/{this.state.process.total}</div>
-								</div>
-							</div>
-						):(
-							<div className="counter icon">
-								<button className="help-btn" onClick={()=>{
-									this.onHelpClick()
-								}}></button>
-							</div>
-						)}
+						{TeacherView}
+						{StudentView}
+						<div className="counter icon">
+							<button className="help-btn" onClick={()=>{
+								this.onHelpClick()
+							}}></button>
+						</div>
 					</div>
 				</div>
 			</div>

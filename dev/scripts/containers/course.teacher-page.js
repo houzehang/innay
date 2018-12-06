@@ -40,7 +40,6 @@ class Course extends React.Component {
 			control: !this.props.status.started,
 			process: {current:0,total:0}
 		}
-		this.$view_mode = this.props.account.dentity != types.DENTITY.MASTER
 		this.$room 		= new Room(this)
 		this.$signal	= new Signalize(this)
 		this.$audios_files = {}
