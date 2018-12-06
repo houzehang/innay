@@ -167,6 +167,16 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 录播时获取房间数据
+	 * @param {*} channel_id 
+	 */
+	getRoomInfoForRecord(channel_id) {
+		return this.__request("/room/record_room_info", {
+			channel_id
+		}, "post")
+	}
+
+	/**
 	 * 获取礼物列表
 	 */
 	getGiftsList() {

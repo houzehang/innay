@@ -13,7 +13,7 @@ const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm, alert, onChangeUserInfo, onEnterTester
+	confirm, alert, hide, onChangeUserInfo, onEnterTester
 } from '../actions'
 const context = require("../context")
 const storage = require("../Storage")
@@ -113,11 +113,6 @@ class Main extends React.Component {
 								{room.can_download?<button className="download-btn" onClick={()=>{
 									this.onDownload(room)
 								}}></button>:""}
-								{
-									<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
-										this.onRecordRoom(this.recordsRoom)
-									}}></button>
-								}										
 							</div>
 						]) : ([
 							<div key="0" className="time">接下来没有课程啦～</div>,
@@ -179,14 +174,11 @@ class Main extends React.Component {
 										<button className="start-btn" disabled={room.state==2} onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>
-										<button className="download-btn" onClick={()=>{
+										{room.button_hf?<button className="record-btn" onClick={()=>{
+											this.onRecordRoom(room)
+										}}></button>:<button className="download-btn" onClick={()=>{
 											this.onDownload(room)
-										}}></button>
-										{
-											room.state==2 || new Date(room.start_time).getTime() < Date.now() ?<button className={room.can_enter?"record-btn":"record-btn waiting"} onClick={()=>{
-												this.onRecordRoom(room)
-											}}></button>:''
-										}										
+										}}></button>}									
 									</div>
 								)))
 							}
@@ -234,7 +226,10 @@ class Main extends React.Component {
 	__onStartRoom(data,isRecord) {
 		this.props.onRoomInfo(data)
 		if(isRecord){
-			this.onEnterRoom()	
+			this.props.hide()
+			setTimeout(()=>{
+				this.onEnterRoom()	
+			},500)
 		}else{
 			this.props.confirm({
 				content: <div>上课时间：{data.start_time}<br/>准备好开始上课了吗？</div>,
@@ -246,6 +241,7 @@ class Main extends React.Component {
 	}
 
 	onRecordRoom(data) {
+		console.log("onRecordRoom",data)
 		this.setState({ recording: true })
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let lastest_download = storage.get(`download_${data.en_name}`)
@@ -266,11 +262,12 @@ class Main extends React.Component {
 				}
 			})
 		} else {
-			this.onDownload(data, true);			
+			this.onDownload(data, true, true);			
 		}
 	}
 
 	onDownload(data, canenter,isRecord) {
+		console.log("download",data)
 		this.props.alert({
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
@@ -373,6 +370,7 @@ const mapDispatchToProps = dispatch => ({
 	onStartCourse  		: () => dispatch(onStartCourse()),
 	confirm 	   		: (data) => dispatch(confirm(data)),
 	alert 	   	   		: (data) => dispatch(alert(data)),
+	hide 				: () => dispatch(hide()),
 	onEnterTester 		: (fromPage) => dispatch(onEnterTester(fromPage)),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user))
 })
