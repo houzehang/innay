@@ -66,36 +66,6 @@ html,body {
 		justify-content: center;
 		flex-direction: column;
 		align-items: center;
-		.gift-layer {
-			.dialog {
-				width: 7.3rem;
-				height: 2.84rem;
-				.gifts {
-					margin-top: 0.5rem;
-					width: 100%;
-					display: flex;
-					justify-content: space-around;
-					.gift-item {
-						width: 1.02rem;
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						align-items: center;
-						font-size: 0.22rem;
-						color: #8b460e;
-						.gift-icon {
-							height: 1.2rem;
-							img {
-								width: 100%;
-							}
-						}
-					}
-				}
-			}
-		}
-		&.next {
-			transform: translateX(-100%);
-		}
 		.logout-btn {
 			position: absolute;
 			z-index: 10;
@@ -409,23 +379,220 @@ html,body {
 			background: #2d3144;
 			flex-direction: column;
 			overflow: hidden;
-			.inner {
-				position: relative;
-				width: 12.72rem;
-				margin: 0.1rem 0.15rem;
-				display: flex;
-				flex: 1;
-				justify-content: space-between;
+			.student-area {
+				.student {
+					width: 0.88rem;
+					height: 0.88rem;
+					position: relative;
+					margin-bottom: 0.19rem;
+					.avatar-head {
+						width: 100%;
+						height: 100%;
+						overflow: hidden;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						background-size: cover;
+						background-repeat: no-repeat;
+						background-position: center center;
+						div,video {
+							background: #000;
+							width: 100%;
+							height: 100%;
+						}
+					}
+					.avatar-handsup {
+						position: absolute;
+						left: 0;
+						top: 0;
+						background: rgba(0,0,0,0.5) url(../assets/course-student-headsup.png) no-repeat left 0.05rem center;
+						background-size: 0.15rem auto;
+						height: 0.18rem;
+						font-size: 0.16rem;
+						line-height: 0.18rem;
+						color: #fff;
+						padding: 0.05rem 0.05rem 0.05rem 0.23rem;
+					}
+					.avatar-info {
+						z-index: 3;
+						position: relative;
+						width: 100%;
+						background: #565b72;
+						height: 0.16rem;
+						line-height: 0.18rem;
+						font-size: 0.12rem;
+						text-overflow: ellipsis;
+						color: #fff;
+						display: flex;
+						align-items: center;
+						user-select: none;
+						.avatar-rank {
+							padding-left: 0.08rem;
+							width: 0.11rem;
+							height: 0.16rem;
+							background: url(../assets/progress-arrow.png) no-repeat center center;
+							background-size: 100% auto;
+							position: absolute;
+							top: -0.16rem;
+							right: 0;
+							line-height: 0.16rem;
+							font-size: 0.12rem;
+							color: #ffffff;
+						}
+						.avatar-bar {
+							width: 0%;
+							position: absolute;
+							height: 100%;
+							background: #ffc029;
+							left: 0;
+							top: 0;
+							transition: all 200ms 0s ease-in-out;
+							&.full {
+								background: #00af43;
+							}
+						}
+						.avatar-name {
+							position: relative;
+							z-index: 2;
+							white-space: nowrap;
+							overflow: hidden;
+							text-overflow: ellipsis;
+							margin-left: 0.06rem;
+							flex: 1;
+						}
+						.avatar-stars {
+							background: url(../assets/gift-icon.png) no-repeat left center;
+							background-size: auto 0.11rem;
+							padding-left: 0.15rem;
+							margin-right: 0.06rem;
+							height: 0.16rem;
+							font-size: 0.12rem;
+							color:#ffffff;
+							position: relative;
+							z-index: 2;
+						}
+					}
+					&.hover {
+						.summary {
+							width: 2rem;
+							opacity: 1;
+						}
+					}
+					.summary {
+						width: 0;
+						height: 1.04rem;
+						overflow: hidden;
+						position: absolute;
+						left: 1.1rem;
+						top: 0;
+						transition: all 300ms 0s ease-in-out;
+						opacity: 0;
+						.summary-inner {
+							width: 2rem;
+							height: 100%;
+							background: rgba(88, 93, 122, 0.9);
+						}
+						.items {
+							height: 0.58rem;
+							border-bottom: 1px solid #666e93;
+							display: flex;
+							align-items: center;
+							justify-content: space-around;
+							.item {
+								text-align: center;
+								.icon {
+									width: 0.18rem;
+									height: 0.18rem;
+									margin-bottom: 0.03rem;
+									background-size: auto 0.18rem;
+									background-repeat: no-repeat;
+									background-position: center center;
+								}
+								.num {
+									font-size: 0.12rem;
+									color: #ffffff;
+									line-height: 0.14rem;
+								}
+								&.handsup {
+									.icon { background-image: url(../assets/course-summary-handsup.png) }
+								}
+								&.speak {
+									.icon { background-image: url(../assets/course-summary-speak.png) }
+								}
+								&.gift-1 {
+									.icon { background-image: url(../assets/course-summary-1.png) }
+								}
+								&.gift-2 {
+									.icon { background-image: url(../assets/course-summary-2.png) }
+								}
+								&.gift-3 {
+									.icon { background-image: url(../assets/course-summary-3.png) }
+								}
+								&.gift-4 {
+									.icon { background-image: url(../assets/course-summary-4.png) }
+								}
+							}
+						}
+						.btns {
+							height: 0.33rem;
+							display: flex;
+							justify-content: space-around;
+							align-items: center;
+							padding: 0.04rem 0.12rem;
+							&.student {
+								justify-content: center;
+							}
+							button {
+								height: 0.24rem;
+								width: 0.96rem;
+								border-radius: 0.08rem;
+								margin-right: 0.1rem;
+								&:last-child {
+									margin-right: 0;
+								}
+								&.speak-btn {
+									background:#3882c2 url(../assets/course-sound-off.png) no-repeat center center;
+									background-size: 0.16rem;
+									&.on {
+										background-image: url(../assets/course-sound-on.png);
+										background-size: 0.12rem;
+									}
+								}
+								&.gift-btn {
+									background:#3882c2 url(../assets/course-gift-student.png) no-repeat center center;
+									background-size: 0.11rem;
+								}
+								&.view-btn {
+									background:#3882c2 url(../assets/course-student-view.png) no-repeat center center;
+									background-size: 0.16rem;
+									&.on {
+										background-image: url(../assets/course-student-view-on.png);
+									}
+								}
+								&.warn-btn {
+									background:#3882c2 url(../assets/course-student-warning.png) no-repeat center center;
+									background-size: 0.16rem;
+								}
+							}
+						}
+					}
+					&.nothing {
+						background: #e7e7e7 url(../assets/course-student-ph.png) no-repeat center center;
+						background-size: 0.38rem auto;
+					}
+				}
+			}
+			&.teacher {
 				.controls-wrapper {
 					position: relative;
 					width: 0.09rem;
-					z-index: 100;
+					z-index: 208;
 				}
 				.controls {
 					position: absolute;
 					left: -0.15rem;
 					top: 0;
-					z-index: 2;
+					z-index: 207;
 					margin-right: 0.15rem;
 					height: 100%;
 					background: #484f70;
@@ -554,10 +721,263 @@ html,body {
 						}
 					}
 				}
+				.operations {
+					position: relative;
+					background: #3882c2;
+					width: 0.8rem;
+					height: 100%;
+					display: flex;
+					flex-direction: column;
+					button {
+						width: 0.8rem;
+						flex: 1;
+						position: relative;
+						justify-content: center;
+						align-items: center;
+						&:hover {
+							background-color: #207ac7 !important;
+							opacity: 1;
+						}
+						&:active {
+							background-color: #1e6fb4 !important;
+							opacity: 1;
+						}
+						&.course-clear {
+							background: url(../assets/course-clear.png) no-repeat center center;
+							background-size: 0.26rem 0.26rem;
+						}
+						&.course-handsup {
+							background: url(../assets/course-handsup.png) no-repeat center center;
+							background-size: 0.22rem 0.26rem;
+							&.off {
+								background-image: url(../assets/course-handsup-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-gift {
+							background: url(../assets/course-gift.png) no-repeat center center;
+							background-size: 0.26rem 0.26rem;
+							&.off {
+								background-image: url(../assets/course-gift-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-magic {
+							background: url(../assets/course-magic.png) no-repeat center center;
+							background-size: 0.26rem 0.26rem;
+							&.off {
+								background-image: url(../assets/course-magic-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-muteall {
+							background: url(../assets/course-muteall.png) no-repeat center center;
+							background-size: auto 0.26rem;
+							&.off {
+								background-image: url(../assets/course-muteall-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-silent {
+							background: url(../assets/course-silent.png) no-repeat center center;
+							background-size: auto 0.26rem;
+							&.off {
+								background-image: url(../assets/course-silent-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-rank {
+							background: url(../assets/course-rank.png) no-repeat center center;
+							background-size: auto 0.26rem;
+							&.off {
+								background-image: url(../assets/course-rank-off.png);
+								background-size: auto 0.38rem;
+							}
+						}
+						&.course-clip {
+							background: url(../assets/course-clip.png) no-repeat center center;
+							background-size: 0.26rem 0.26rem;
+						}
+						&.course-nextpage {
+							background: url(../assets/course-nextpage.png) no-repeat center center;
+							background-size: auto 0.26rem;
+						}
+						&.course-prevpage {
+							background: url(../assets/course-prevpage.png) no-repeat center center;
+							background-size: auto 0.26rem;
+						}
+						&.course-nextstep {
+							background: url(../assets/course-nextstep.png) no-repeat center center;
+							background-size: auto 0.26rem;
+						}
+						&.course-prevstep {
+							background: url(../assets/course-prevstep.png) no-repeat center center;
+							background-size: auto 0.26rem;
+						}
+					}
+				}
+				.course-confirm-mask {
+					position: absolute;
+					z-index: 2;
+					left: 0;
+					bottom:0.4rem;
+					width: 100%;
+					height: 1.5rem;
+					display: flex;
+					justify-content: center;
+					.course-confirm-dialog {
+						position: relative;
+						margin-right: 0.88rem;
+						background: rgba(0, 0, 0, 0.7);
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-radius: 0.2rem;
+						width: 4rem;
+						.c-btn {
+							height: 0.3rem;
+							border-radius: 0.3rem;
+							background: #fff;
+							color: #666;
+							font-size: 0.14rem;
+							text-align: center;
+							line-height: 0.3rem;
+							padding: 0 0.2rem;
+							margin-top: 0.6rem;
+							&:active {
+								opacity: 0.8;
+							}
+							&.course-begin-btn {
+								font-weight: bold;
+								background: #ff2a2a;
+								margin-left: 0.4rem;
+								color: #fff;
+							}
+						}
+						.course-start-time-tip {
+							width: 100%;
+							text-align: center;
+							line-height: 0.5rem;
+							position: absolute;
+							top:0.24rem;
+							color: #fff;
+							font-size: 0.18rem;
+						}
+					}
+				}
+				.student-area {
+					z-index: 206;
+					height: 0.88rem;
+					margin-bottom: 0.26rem;
+					display: flex;
+					.student {
+						margin-right: 0.15rem;
+						.summary {
+							z-index: 10;
+							left: 0.88rem;
+						}
+					}
+					.dancing-container {
+						position: relative;
+						video {
+							object-fit: cover;
+						}
+						margin-right: 0.15rem;
+						width:2rem;
+						height: 1.88rem;
+						background: black;
+						.dancing-student {
+							video {
+								object-fit: cover;
+							}
+						}
+						.avatar-info-student {
+							position: absolute;
+							width: 100%;
+							height: 0.3rem;
+							line-height: 0.3rem;
+							font-size: 0.14rem;
+							color: #fff;
+							background: rgba(0, 0, 0, 0.5);
+							bottom: 0;
+							left: 0;
+							text-indent: 0.14rem;
+						}
+						.back-dance-btn {
+							position: absolute;
+							width: 0.3rem;
+							height: 0.3rem;
+							right: 0;
+							top: 0;
+							background: rgba(255, 0, 0, 0.5) url(../assets/close-white.png) no-repeat center center;
+							background-size: 0.15rem 0.15rem;
+							z-index: 2;
+							&:active {
+								background-color: rgba(255, 0, 0, 0.8);
+							}
+						}
+					}
+				}
+				.course-content-area {
+					flex: 1;
+					width: 100%;
+					display: flex;
+					.course-content {
+						margin: 0;
+					}
+				}
+				.content {
+					margin-right: 0.15rem;
+				}
+			}
+			&.student {
+				.student-area {
+					position: relative;
+					z-index: 102;
+					width: 1.1rem;
+					margin-left: 0.15rem;
+				}
+				.course-content {
+					margin: 0 0.15rem 0 0;
+				}
+				.counter {
+					&.icon {
+						background: none !important;
+						width: 0.3rem !important;
+						height: 0.3rem !important;
+						bottom: 0.18rem !important;
+						right: 4.44rem !important;
+					}
+				}
+				.inner {
+					.entities-area {
+						.teacher-area {
+							width: 3.34rem;
+							.avatars {
+								.avatar {
+									height: 3.34rem;
+									&:first-child {
+										height: 3.34rem;
+									}
+									&.nothing {
+										background-position: center top 0.5rem;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			.inner {
+				position: relative;
+				width: 12.72rem;
+				margin: 0.1rem 0.15rem;
+				display: flex;
+				flex: 1;
+				justify-content: space-between;
 				.content {
 					position: relative;
 					flex:1;
-					margin: 0 0.15rem 0 0;
 					display: flex;
 					flex-direction: column;
 					.course-content {
@@ -584,134 +1004,9 @@ html,body {
 							height: 1.19rem;
 						}
 					}
-					.operations {
-						position: relative;
-						height: 0.77rem;
-						background: #3882c2;
-						display: flex;
-						.course-confirm-mask {
-							position: absolute;
-							z-index: 2;
-							left: 0;
-							top: 0;
-							width: 100%;
-							height: 100%;
-							background: rgba(0, 0, 0, 0.7);
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							.c-btn {
-								height: 0.3rem;
-								border-radius: 0.3rem;
-								background: #fff;
-								color: #666;
-								font-size: 0.14rem;
-								text-align: center;
-								line-height: 0.3rem;
-								padding: 0 0.2rem;
-								&:active {
-									opacity: 0.8;
-								}
-								&.course-begin-btn {
-									font-weight: bold;
-									background: #ff2a2a;
-									margin-left: 0.4rem;
-									color: #fff;
-								}
-							}
-						}
-						button {
-							width: 0.85rem;
-							display: flex;
-							justify-content: center;
-							align-items: center;
-							border-right: 1px solid #3078b6;
-							&:hover {
-								background-color: #207ac7 !important;
-								opacity: 1;
-							}
-							&:active {
-								background-color: #1e6fb4 !important;
-								opacity: 1;
-							}
-							&.course-clear {
-								background: url(../assets/course-clear.png) no-repeat center center;
-								background-size: 0.26rem 0.26rem;
-							}
-							&.course-handsup {
-								background: url(../assets/course-handsup.png) no-repeat center center;
-								background-size: 0.22rem 0.26rem;
-								&.off {
-									background-image: url(../assets/course-handsup-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-gift {
-								background: url(../assets/course-gift.png) no-repeat center center;
-								background-size: 0.26rem 0.26rem;
-								&.off {
-									background-image: url(../assets/course-gift-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-magic {
-								background: url(../assets/course-magic.png) no-repeat center center;
-								background-size: 0.26rem 0.26rem;
-								&.off {
-									background-image: url(../assets/course-magic-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-muteall {
-								background: url(../assets/course-muteall.png) no-repeat center center;
-								background-size: auto 0.26rem;
-								&.off {
-									background-image: url(../assets/course-muteall-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-silent {
-								background: url(../assets/course-silent.png) no-repeat center center;
-								background-size: auto 0.26rem;
-								&.off {
-									background-image: url(../assets/course-silent-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-rank {
-								background: url(../assets/course-rank.png) no-repeat center center;
-								background-size: auto 0.26rem;
-								&.off {
-									background-image: url(../assets/course-rank-off.png);
-									background-size: auto 0.38rem;
-								}
-							}
-							&.course-clip {
-								background: url(../assets/course-clip.png) no-repeat center center;
-								background-size: 0.26rem 0.26rem;
-							}
-							&.course-nextpage {
-								background: url(../assets/course-nextpage.png) no-repeat center center;
-								background-size: auto 0.26rem;
-							}
-							&.course-prevpage {
-								background: url(../assets/course-prevpage.png) no-repeat center center;
-								background-size: auto 0.26rem;
-							}
-							&.course-nextstep {
-								background: url(../assets/course-nextstep.png) no-repeat center center;
-								background-size: auto 0.26rem;
-							}
-							&.course-prevstep {
-								background: url(../assets/course-prevstep.png) no-repeat center center;
-								background-size: auto 0.26rem;
-							}
-						}
-					}
 				}
 				.entities-area {
 					position: relative;
-					width: 4.03rem;
 					display: flex;
 					justify-content: space-between;
 					&::-webkit-scrollbar {
@@ -723,7 +1018,7 @@ html,body {
 						position: fixed;
 						bottom: 0;
 						right: 0.14rem;
-						width: 2.78rem;
+						width: 3.84rem;
 						background: #2d3144;
 						height: 0.3rem;
 						font-size: 0.16rem;
@@ -731,12 +1026,6 @@ html,body {
 						display: flex;
 						align-items: center;
 						z-index: 105;
-						&.icon {
-							background: none;
-							width: 0.3rem;
-							height: 0.3rem;
-							bottom: 0.14rem;
-						}
 						.process {
 							margin-left: 0.2rem;
 						}
@@ -761,7 +1050,7 @@ html,body {
 					}
 					.teacher-area {
 						position: relative;
-						width: 2.78rem;
+						width: 3.84rem;
 						&.role-student {
 							.avatars {
 								.avatar:last-child {
@@ -773,9 +1062,8 @@ html,body {
 						.avatars {
 							.avatar {
 								width: 100%;
-								height: 3.08rem;
+								height: 3.2rem;
 								position: relative;
-								margin-bottom: 0.22rem;
 								&:first-child {
 									height: 3.84rem;
 									margin-bottom: 0.14rem;
@@ -797,6 +1085,17 @@ html,body {
 										height: 100%;
 									}
 								}
+								.avatar-head-frame {
+									position: absolute;
+									top: 50%;
+									width: 3.84rem*0.4;
+									height: 3.84rem*0.4*1.25;
+									left: 50%;  
+									margin-left: -3.84rem*0.4/2;  
+									margin-top: -3.84rem*0.4*1.25/2;
+									text-align: center;
+									border:1px dashed #ff1111;
+								}
 								.avatar-info {
 									position: absolute;
 									width: 100%;
@@ -816,19 +1115,6 @@ html,body {
 									text-align: center;
 									display: none;
 								}
-								.back-dance-btn {
-									position: absolute;
-									width: 0.3rem;
-									height: 0.3rem;
-									right: 0;
-									top: 0;
-									background: rgba(255, 0, 0, 0.5) url(../assets/close-white.png) no-repeat center center;
-									background-size: 0.15rem 0.15rem;
-									z-index: 2;
-									&:active {
-										background-color: rgba(255, 0, 0, 0.8);
-									}
-								}
 								.draft-text {
 									display: none;
 								}
@@ -837,8 +1123,8 @@ html,body {
 										background: #fff;
 										display: block;
 										position: absolute;
-										width: 2.38rem;
-										height: 2.18rem;
+										width: 3.44rem;
+										height: 2.28rem;
 										overflow: scroll;
 										left: 0;
 										top: 0;
@@ -867,7 +1153,7 @@ html,body {
 									}
 								}
 								&.nothing {
-									background: #e7e7e7 url(../assets/course-ph.png) no-repeat center top 0.38rem;
+									background: #e7e7e7 url(../assets/course-ph.png) no-repeat center center;
 									background-size: 1.45rem auto;
 									.avatar-info,.avatar-head,.back-dance-btn {
 										display: none;
@@ -879,212 +1165,6 @@ html,body {
 										display: block;
 									}
 								}
-							}
-						}
-					}
-					.student-area {
-						position: relative;
-						z-index: 102;
-						width: 1.1rem;
-						.student {
-							width: 100%;
-							height: 0.88rem;
-							position: relative;
-							margin-bottom: 0.19rem;
-							.avatar-head {
-								width: 100%;
-								height: 100%;
-								overflow: hidden;
-								display: flex;
-								justify-content: center;
-								align-items: center;
-								background-size: cover;
-								background-repeat: no-repeat;
-								background-position: center center;
-								div,video {
-									background: #000;
-									width: 100%;
-									height: 100%;
-								}
-							}
-							.avatar-handsup {
-								position: absolute;
-								left: 0;
-								top: 0;
-								background: rgba(0,0,0,0.5) url(../assets/course-student-headsup.png) no-repeat left 0.05rem center;
-								background-size: 0.15rem auto;
-								height: 0.18rem;
-								font-size: 0.16rem;
-								line-height: 0.18rem;
-								color: #fff;
-								padding: 0.05rem 0.05rem 0.05rem 0.23rem;
-							}
-							.avatar-info {
-								z-index: 3;
-								position: relative;
-								width: 100%;
-								background: #565b72;
-								height: 0.16rem;
-								line-height: 0.18rem;
-								font-size: 0.12rem;
-								text-overflow: ellipsis;
-								color: #fff;
-								display: flex;
-								align-items: center;
-								user-select: none;
-								.avatar-rank {
-									padding-left: 0.08rem;
-									width: 0.11rem;
-									height: 0.16rem;
-									background: url(../assets/progress-arrow.png) no-repeat center center;
-									background-size: 100% auto;
-									position: absolute;
-									top: -0.16rem;
-									right: 0;
-									line-height: 0.16rem;
-									font-size: 0.12rem;
-									color: #ffffff;
-								}
-								.avatar-bar {
-									width: 0%;
-									position: absolute;
-									height: 100%;
-									background: #ffc029;
-									left: 0;
-									top: 0;
-									transition: all 200ms 0s ease-in-out;
-									&.full {
-										background: #00af43;
-									}
-								}
-								.avatar-name {
-									position: relative;
-									z-index: 2;
-									white-space: nowrap;
-									overflow: hidden;
-									text-overflow: ellipsis;
-									margin-left: 0.06rem;
-									flex: 1;
-								}
-								.avatar-stars {
-									background: url(../assets/gift-icon.png) no-repeat left center;
-									background-size: auto 0.11rem;
-									padding-left: 0.15rem;
-									margin-right: 0.06rem;
-									height: 0.16rem;
-									font-size: 0.12rem;
-									color:#ffffff;
-									position: relative;
-									z-index: 2;
-								}
-							}
-							&.hover {
-								.summary {
-									width: 2rem;
-									opacity: 1;
-								}
-							}
-							.summary {
-								width: 0;
-								height: 1.04rem;
-								overflow: hidden;
-								position: absolute;
-								left: 1.1rem;
-								top: 0;
-								transition: all 300ms 0s ease-in-out;
-								opacity: 0;
-								.summary-inner {
-									width: 2rem;
-									height: 100%;
-									background: rgba(88, 93, 122, 0.9);
-								}
-								.items {
-									height: 0.58rem;
-									border-bottom: 1px solid #666e93;
-									display: flex;
-									align-items: center;
-									justify-content: space-around;
-									.item {
-										text-align: center;
-										.icon {
-											width: 0.18rem;
-											height: 0.18rem;
-											margin-bottom: 0.03rem;
-											background-size: auto 0.18rem;
-											background-repeat: no-repeat;
-											background-position: center center;
-										}
-										.num {
-											font-size: 0.12rem;
-											color: #ffffff;
-											line-height: 0.14rem;
-										}
-										&.handsup {
-											.icon { background-image: url(../assets/course-summary-handsup.png) }
-										}
-										&.speak {
-											.icon { background-image: url(../assets/course-summary-speak.png) }
-										}
-										&.gift-1 {
-											.icon { background-image: url(../assets/course-summary-1.png) }
-										}
-										&.gift-2 {
-											.icon { background-image: url(../assets/course-summary-2.png) }
-										}
-										&.gift-3 {
-											.icon { background-image: url(../assets/course-summary-3.png) }
-										}
-										&.gift-4 {
-											.icon { background-image: url(../assets/course-summary-4.png) }
-										}
-									}
-								}
-								.btns {
-									height: 0.33rem;
-									display: flex;
-									justify-content: space-around;
-									align-items: center;
-									padding: 0.04rem 0.12rem;
-									&.student {
-										justify-content: center;
-									}
-									button {
-										height: 0.24rem;
-										width: 0.96rem;
-										border-radius: 0.08rem;
-										margin-right: 0.1rem;
-										&:last-child {
-											margin-right: 0;
-										}
-										&.speak-btn {
-											background:#3882c2 url(../assets/course-sound-off.png) no-repeat center center;
-											background-size: 0.16rem;
-											&.on {
-												background-image: url(../assets/course-sound-on.png);
-												background-size: 0.12rem;
-											}
-										}
-										&.gift-btn {
-											background:#3882c2 url(../assets/course-gift-student.png) no-repeat center center;
-											background-size: 0.11rem;
-										}
-										&.view-btn {
-											background:#3882c2 url(../assets/course-student-view.png) no-repeat center center;
-											background-size: 0.16rem;
-											&.on {
-												background-image: url(../assets/course-student-view-on.png);
-											}
-										}
-										&.warn-btn {
-											background:#3882c2 url(../assets/course-student-warning.png) no-repeat center center;
-											background-size: 0.16rem;
-										}
-									}
-								}
-							}
-							&.nothing {
-								background: #e7e7e7 url(../assets/course-student-ph.png) no-repeat center center;
-								background-size: 0.38rem auto;
 							}
 						}
 					}

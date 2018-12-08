@@ -36,7 +36,6 @@ class Room extends Eventer {
 			this.$client.enableLocalVideo(false);
 		}
 		this.__resume_devices()
-		this.__init()
 		console.log("Agora Version",this.$client.getVersion())
 	}
 
@@ -84,23 +83,6 @@ class Room extends Eventer {
 
 	get rtc() {
 		return this.$client
-	}
-
-	__init() {
-		return Q.Promise((resolve, reject)=>{
-			if (this.$inited) {
-				resolve()
-			} else {
-				let video_devices = this.$client.getVideoDevices()
-				this.inst.setVideoDevices(video_devices)
-				let audio_devices = this.$client.getAudioRecordingDevices()
-				this.inst.setAudioDevices(audio_devices)
-				let speaker_devices = this.$client.getAudioPlaybackDevices()
-				this.inst.setSpeakerDevices(speaker_devices)
-				this.$inited = true
-				resolve()
-			}
-		})
 	}
 
 	__isMuted(id) {
@@ -234,12 +216,10 @@ class Room extends Eventer {
 	}
 
 	start() {
-		this.__init().then(()=>{
-			this.$client.joinChannel(this.inst.props.room.channel_token, this.inst.props.room.channel_id, '', this.inst.props.account.id);
-			this.$client.on('joinedchannel', () => {
-				this.__start_stream()
-			});
-		},()=>{}).done()
+		this.$client.joinChannel(this.inst.props.room.channel_token, this.inst.props.room.channel_id, '', this.inst.props.account.id);
+		this.$client.on('joinedchannel', () => {
+			this.__start_stream()
+		});
 	}
 
 	leave() {

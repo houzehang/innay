@@ -734,7 +734,7 @@ class Course extends React.Component {
 			{studentHeads}
 		</div>
 		return (
-			<div className="page course-page">
+			<div className="page course-page student">
 				<div className="inner">
 					{!this.$view_mode?(
 						<div className="controls-wrapper">

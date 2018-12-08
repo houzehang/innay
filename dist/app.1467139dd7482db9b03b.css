@@ -21,7 +21,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.20rem;
+  font-size: 0.2rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -277,15 +277,6 @@ body .sound-outer {
   align-items: center;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
-}
-body .sound-outer .page-back {
-  width: 0.35rem;
-  height: 0.35rem;
-  background: url(./a39abc1070254e8df3c832c6bf2aeb40.png) no-repeat center center;
-  background-size: 100% auto;
-  position: absolute;
-  left: 0.2rem;
-  top: 0.2rem;
 }
 body .sound-outer::-webkit-scrollbar {
   display: none;
@@ -2092,6 +2083,17 @@ html button:active,
 body button:active {
   opacity: 0.6;
 }
+html .record-back,
+body .record-back {
+  width: 0.35rem;
+  height: 0.35rem;
+  background: url(./a39abc1070254e8df3c832c6bf2aeb40.png) no-repeat center center;
+  background-size: 100% auto;
+  position: absolute;
+  left: 0.2rem;
+  top: 0.2rem;
+  z-index: 20;
+}
 html .page,
 body .page {
   width: 100%;
@@ -2960,10 +2962,19 @@ body .page.course-page .inner .entities-area .counter .couter-g {
   line-height: 0.3rem;
   color: #ececec;
 }
+html .page.course-page .inner .entities-area .avatar-head video,
+body .page.course-page .inner .entities-area .avatar-head video {
+  object-fit: cover;
+}
 html .page.course-page .inner .entities-area .teacher-area,
 body .page.course-page .inner .entities-area .teacher-area {
   position: relative;
   width: 2.78rem;
+}
+html .page.course-page .inner .entities-area .teacher-area.role-student .avatars .avatar:last-child,
+body .page.course-page .inner .entities-area .teacher-area.role-student .avatars .avatar:last-child {
+  margin-bottom: 0;
+  height: 3.5rem;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar {
@@ -3333,6 +3344,444 @@ body .page.course-page .inner .entities-area .student-area .student .summary .bt
 }
 html .page.course-page .inner .entities-area .student-area .student.nothing,
 body .page.course-page .inner .entities-area .student-area .student.nothing {
+  background: #e7e7e7 url(./731b0fc79025c25bd5d12cecd9653d17.png) no-repeat center center;
+  background-size: 0.38rem auto;
+}
+html .page.course-page .inner .entities-top-area,
+body .page.course-page .inner .entities-top-area {
+  position: relative;
+  width: 4.03rem;
+  display: flex;
+  justify-content: space-between;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+html .page.course-page .inner .entities-top-area::-webkit-scrollbar,
+body .page.course-page .inner .entities-top-area::-webkit-scrollbar {
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .counter,
+body .page.course-page .inner .entities-top-area .counter {
+  position: fixed;
+  bottom: 0;
+  right: 0.14rem;
+  width: 2.78rem;
+  background: #2d3144;
+  height: 0.3rem;
+  font-size: 0.16rem;
+  color: #ececec;
+  display: flex;
+  align-items: center;
+  z-index: 105;
+}
+html .page.course-page .inner .entities-top-area .counter.icon,
+body .page.course-page .inner .entities-top-area .counter.icon {
+  background: none;
+  width: 0.3rem;
+  height: 0.3rem;
+  bottom: 0.14rem;
+}
+html .page.course-page .inner .entities-top-area .counter .process,
+body .page.course-page .inner .entities-top-area .counter .process {
+  margin-left: 0.2rem;
+}
+html .page.course-page .inner .entities-top-area .counter .help-btn,
+body .page.course-page .inner .entities-top-area .counter .help-btn {
+  background: #fff url(./de3f23051b065b56e566f4e3e5f4792c.png) no-repeat center center;
+  background-size: 0.2rem auto;
+  width: 0.3rem !important;
+  height: 0.3rem !important;
+  border-radius: 50%;
+  line-height: 0;
+}
+html .page.course-page .inner .entities-top-area .counter .couter-g,
+body .page.course-page .inner .entities-top-area .counter .couter-g {
+  height: 0.3rem;
+  line-height: 0.3rem;
+  color: #ececec;
+}
+html .page.course-page .inner .entities-top-area .avatar-head video,
+body .page.course-page .inner .entities-top-area .avatar-head video {
+  object-fit: cover;
+}
+html .page.course-page .inner .entities-top-area .teacher-area,
+body .page.course-page .inner .entities-top-area .teacher-area {
+  position: relative;
+  width: 2.78rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area.role-student .avatars .avatar:last-child,
+body .page.course-page .inner .entities-top-area .teacher-area.role-student .avatars .avatar:last-child {
+  margin-bottom: 0;
+  height: 3.5rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar {
+  width: 100%;
+  height: 3.08rem;
+  position: relative;
+  margin-bottom: 0.22rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar:first-child,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar:first-child {
+  height: 3.84rem;
+  margin-bottom: 0.14rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head div,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head div,
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head video,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-head video {
+  background: #000;
+  width: 100%;
+  height: 100%;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-info,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .avatar-info {
+  position: absolute;
+  width: 100%;
+  height: 0.5rem;
+  line-height: 0.5rem;
+  font-size: 0.18rem;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  bottom: 0;
+  left: 0;
+  text-indent: 0.14rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .ph-text,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .ph-text {
+  font-size: 0.2rem;
+  color: #c2c2c2;
+  padding-top: 2.4rem;
+  text-align: center;
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .back-dance-btn,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .back-dance-btn {
+  position: absolute;
+  width: 0.3rem;
+  height: 0.3rem;
+  right: 0;
+  top: 0;
+  background: rgba(255, 0, 0, 0.5) url(./7ecf28f875afc60a22097dd02dac0e87.png) no-repeat center center;
+  background-size: 0.15rem 0.15rem;
+  z-index: 2;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .back-dance-btn:active,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .back-dance-btn:active {
+  background-color: rgba(255, 0, 0, 0.8);
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .draft-text,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar .draft-text {
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text {
+  background: #fff;
+  display: block;
+  position: absolute;
+  width: 2.38rem;
+  height: 2.18rem;
+  overflow: scroll;
+  left: 0;
+  top: 0;
+  padding: 0.2rem;
+  padding-top: 0.7rem;
+  font-size: 0.2rem;
+  color: #666666;
+  line-height: 1.5;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text::before,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text::before {
+  content: "";
+  position: absolute;
+  background: url(./e91b894a56a117a1d68f3264d6d0cd80.png) no-repeat center center;
+  background-size: 100% auto;
+  width: 1.14rem;
+  height: 0.36rem;
+  left: 50%;
+  top: 0.2rem;
+  margin-left: -0.57rem;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text .none,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .draft-text .none {
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .back-dance-btn,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.draft .back-dance-btn {
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing {
+  background: #e7e7e7 url(./8a6807b7bc8662c49c02741496dab778.png) no-repeat center top 0.38rem;
+  background-size: 1.45rem auto;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .avatar-info,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .avatar-info,
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .avatar-head,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .avatar-head,
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .back-dance-btn,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .back-dance-btn {
+  display: none;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .ph-text,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .ph-text {
+  display: block;
+}
+html .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .draft,
+body .page.course-page .inner .entities-top-area .teacher-area .avatars .avatar.nothing .draft {
+  display: block;
+}
+html .page.course-page .inner .entities-top-area .student-area,
+body .page.course-page .inner .entities-top-area .student-area {
+  position: relative;
+  z-index: 102;
+  width: 1.1rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student,
+body .page.course-page .inner .entities-top-area .student-area .student {
+  width: 100%;
+  height: 0.88rem;
+  position: relative;
+  margin-bottom: 0.19rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-head,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-head {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-head div,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-head div,
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-head video,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-head video {
+  background: #000;
+  width: 100%;
+  height: 100%;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-handsup,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-handsup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.5) url(./552ac2ca11e2c1b6b1d47d288d18e611.png) no-repeat left 0.05rem center;
+  background-size: 0.15rem auto;
+  height: 0.18rem;
+  font-size: 0.16rem;
+  line-height: 0.18rem;
+  color: #fff;
+  padding: 0.05rem 0.05rem 0.05rem 0.23rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info {
+  z-index: 3;
+  position: relative;
+  width: 100%;
+  background: #565b72;
+  height: 0.16rem;
+  line-height: 0.18rem;
+  font-size: 0.12rem;
+  text-overflow: ellipsis;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-rank,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-rank {
+  padding-left: 0.08rem;
+  width: 0.11rem;
+  height: 0.16rem;
+  background: url(./63e4c3bfce9c7d42c9ed06206994ca8c.png) no-repeat center center;
+  background-size: 100% auto;
+  position: absolute;
+  top: -0.16rem;
+  right: 0;
+  line-height: 0.16rem;
+  font-size: 0.12rem;
+  color: #ffffff;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-bar,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-bar {
+  width: 0%;
+  position: absolute;
+  height: 100%;
+  background: #ffc029;
+  left: 0;
+  top: 0;
+  transition: all 200ms 0s ease-in-out;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-bar.full,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-bar.full {
+  background: #00af43;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-name,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-name {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.06rem;
+  flex: 1;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-stars,
+body .page.course-page .inner .entities-top-area .student-area .student .avatar-info .avatar-stars {
+  background: url(./3b4bb4939b57d754174b8d1be912530f.png) no-repeat left center;
+  background-size: auto 0.11rem;
+  padding-left: 0.15rem;
+  margin-right: 0.06rem;
+  height: 0.16rem;
+  font-size: 0.12rem;
+  color: #ffffff;
+  position: relative;
+  z-index: 2;
+}
+html .page.course-page .inner .entities-top-area .student-area .student.hover .summary,
+body .page.course-page .inner .entities-top-area .student-area .student.hover .summary {
+  width: 2rem;
+  opacity: 1;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary,
+body .page.course-page .inner .entities-top-area .student-area .student .summary {
+  width: 0;
+  height: 1.04rem;
+  overflow: hidden;
+  position: absolute;
+  left: 1.1rem;
+  top: 0;
+  transition: all 300ms 0s ease-in-out;
+  opacity: 0;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .summary-inner,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .summary-inner {
+  width: 2rem;
+  height: 100%;
+  background: rgba(88, 93, 122, 0.9);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items {
+  height: 0.58rem;
+  border-bottom: 1px solid #666e93;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item {
+  text-align: center;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item .icon {
+  width: 0.18rem;
+  height: 0.18rem;
+  margin-bottom: 0.03rem;
+  background-size: auto 0.18rem;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item .num,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item .num {
+  font-size: 0.12rem;
+  color: #ffffff;
+  line-height: 0.14rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.handsup .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.handsup .icon {
+  background-image: url(./3f0774fafa1214eaf1f81b0ee8b89b84.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.speak .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.speak .icon {
+  background-image: url(./5000c473e07538643c5a0244e54eaef2.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-1 .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-1 .icon {
+  background-image: url(./098768cd4059123cf3ea4c99eedeb47f.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-2 .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-2 .icon {
+  background-image: url(./4173001241b8a5c3a5fbcd5162914d36.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-3 .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-3 .icon {
+  background-image: url(./8b62c2a54469bfca6c36db5a702a03dc.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-4 .icon,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .items .item.gift-4 .icon {
+  background-image: url(./a54065c93ceb74416feb505e2f400d49.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns {
+  height: 0.33rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.04rem 0.12rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns.student,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns.student {
+  justify-content: center;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button {
+  height: 0.24rem;
+  width: 0.96rem;
+  border-radius: 0.08rem;
+  margin-right: 0.1rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button:last-child,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button:last-child {
+  margin-right: 0;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.speak-btn,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.speak-btn {
+  background: #3882c2 url(./4cd7d5465af707e8e3b3e196d0de8f4d.png) no-repeat center center;
+  background-size: 0.16rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.speak-btn.on,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.speak-btn.on {
+  background-image: url(./da4dc52af3f79898a73446f5f05b0d63.png);
+  background-size: 0.12rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.gift-btn,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.gift-btn {
+  background: #3882c2 url(./da96821e3102ac7d45005832a68957e2.png) no-repeat center center;
+  background-size: 0.11rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.view-btn,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.view-btn {
+  background: #3882c2 url(./985b43e1982739180b696c7a68bbb076.png) no-repeat center center;
+  background-size: 0.16rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.view-btn.on,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.view-btn.on {
+  background-image: url(./1c3b8535ccde6ec7812c8245e99119da.png);
+}
+html .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.warn-btn,
+body .page.course-page .inner .entities-top-area .student-area .student .summary .btns button.warn-btn {
+  background: #3882c2 url(./187d92c16c4f02e17317f7dcc5c26e3b.png) no-repeat center center;
+  background-size: 0.16rem;
+}
+html .page.course-page .inner .entities-top-area .student-area .student.nothing,
+body .page.course-page .inner .entities-top-area .student-area .student.nothing {
   background: #e7e7e7 url(./731b0fc79025c25bd5d12cecd9653d17.png) no-repeat center center;
   background-size: 0.38rem auto;
 }
