@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, COURSE_STARTING_TICK,  MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -11,12 +11,20 @@ const room = (state = {}, action) => {
 			avatarurl: data.teacher_avatar,
 			id: data.teacher_id
 		}
+
+		let curTime = Date.now();
+
+		let parsed = data.start_time.split(/[-: ]/)
+		let date = new Date(parsed[0], parsed[1] - 1, parsed[2] || 1, parsed[3] || 0, parsed[4] || 0, parsed[5] || 0);
+		let waiting = date.getTime() - Date.now();
 		let storedData = storage.get("STATUS_"+data.channel_id)
 		if (storedData) {
 			status = storedData
 		} else {
-			status = { duration: action.data.duration, id: data.channel_id }
+			status = { duration: action.data.duration, waiting:waiting, id: data.channel_id }
 		}
+		status = status || {}
+		status.waiting = waiting;
 		return {
 			...state,
 			info: action.data,
@@ -287,6 +295,14 @@ const room = (state = {}, action) => {
 		} else {
 			return state
 		}
+		case COURSE_STARTING_TICK:
+		status = {...state.status}
+		status.waiting -= 1000;			
+		return {
+			...state,
+			status
+		}
+
 		case GIFT_UPDATE:
 		students = [...state.students]
 		let gifts = action.data

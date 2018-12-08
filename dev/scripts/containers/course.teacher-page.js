@@ -12,6 +12,7 @@ import {
 	onPauseCourse,
 	onResumeCourse,
 	onCourseTick,
+	onCourseStartingTick,
 	confirm, alert,
 	onEnterTester,
 	onMagicSwitch,
@@ -316,6 +317,8 @@ class Course extends React.Component {
 	__tick() {
 		this.$tick_timer = setInterval(() => {
 			this.props.onCourseTick()
+			this.props.onCourseStartingTick()
+			console.log(this.props.status.waiting);
 		}, 1000)
 		this.$music_timer = setInterval(() => {
 			if (this.$playing) {
@@ -603,6 +606,22 @@ class Course extends React.Component {
 		]
 	}
 
+	__counter_starting_time_to_str(){
+		let waiting = this.props.status.waiting;
+		let left = waiting - this.state.time_diff
+		let days, hours, minutes, seconds;
+		if (left > 0) {
+			days = left / 1000 / 60 / 60 / 24 >> 0
+			left -= days * 1000 * 60 * 60 * 24
+			hours = left / 1000 / 60 / 60 >> 0
+			minutes = (left - hours * 60 * 60 * 1000) / 1000 / 60 >> 0
+			seconds = (left % (1000 * 60)) / 1000 >> 0;
+			seconds = days > 0 ? `` : `${seconds}秒`;
+			days 	= days > 0 ? `${days}天`: ``;
+			return `距离开始上课还有${days}${hours}小时${minutes}分钟${seconds}`;
+		}
+	}
+
 	onHelpClick() {
 		this.props.confirm({
 			title: "设备检测",
@@ -613,11 +632,6 @@ class Course extends React.Component {
 				this.leaveCourse()
 			}
 		})
-	}
-
-	strToDate(str) {
-		let parsed = str.split(/[-: ]/)
-		return new Date(parsed[0], parsed[1] - 1, parsed[2] || 1, parsed[3] || 0, parsed[4] || 0, parsed[5] || 0)
 	}
 
 	render() {
@@ -691,7 +705,6 @@ class Course extends React.Component {
 		}
 
 		if (dancingIndex !== undefined) {
-			console.log('YOUSHI=====dancingIndex', dancingIndex);
 			[].splice.call(students, dancingIndex, 1);
 		}
 
@@ -765,17 +778,7 @@ class Course extends React.Component {
 		</div>
 
 		//上课时间
-		let date = this.strToDate(this.props.room.start_time);
-		let left = date.getTime() - (Date.now() + this.state.time_diff);
-		let days, hours, minutes, tipStrStarting;
-		if (left > 0) {
-			days = left / 1000 / 60 / 60 / 24 >> 0
-			left -= days * 1000 * 60 * 60 * 24
-			hours = left / 1000 / 60 / 60 >> 0
-			minutes = (left - hours * 60 * 60 * 1000) / 1000 / 60 >> 0
-			tipStrStarting = `距离开始上课还有${days}天${hours}小时${minutes}分钟`
-		}
-
+		let tipStrStarting = this.__counter_starting_time_to_str();
 		return (
 			<div className="page course-page teacher">
 				<div className="inner">
@@ -828,7 +831,7 @@ class Course extends React.Component {
 						{this.props.switches.handsup ? <HandsUp users={handsupStudents} onClickClose={() => {
 							this.$session.send_message(Const.CLOSE_RACE)
 						}} /> : ""}
-						{tipStrStarting != undefined && !this.props.status.started && !this.state.no_confirm_mask ?
+						{!!tipStrStarting && !this.props.status.started && !this.state.no_confirm_mask ?
 						<div className="course-confirm-mask">	
 							<div className="course-confirm-dialog">
 								<div className="course-start-time-tip">
@@ -948,6 +951,7 @@ const mapDispatchToProps = dispatch => ({
 	onPauseCourse: () => dispatch(onPauseCourse()),
 	onResumeCourse: () => dispatch(onResumeCourse()),
 	onCourseTick: () => dispatch(onCourseTick()),
+	onCourseStartingTick: () => dispatch(onCourseStartingTick()),
 	confirm: (data) => dispatch(confirm(data)),
 	alert: (data) => dispatch(alert(data)),
 	onEnterTester: (page) => dispatch(onEnterTester(page)),

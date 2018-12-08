@@ -175,6 +175,10 @@ export const onCourseTick = ()=>({
 	type: types.COURSE_TICK
 })
 
+export const onCourseStartingTick = ()=>({
+	type: types.COURSE_STARTING_TICK
+})
+
 export const onEnterTester = (page)=>({
 	type: types.ENTER_TESTER,
 	page
