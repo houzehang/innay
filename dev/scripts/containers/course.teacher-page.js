@@ -718,7 +718,7 @@ class Course extends React.Component {
 					this.$session.send_message(Const.PUT_DANCE, { id: user.id })
 				}
 			}}/>
-		))
+		})
 		let handsupStudents = []
 		students.forEach((student)=>{
 			if (student.online) {
