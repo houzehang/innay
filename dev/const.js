@@ -1,1 +1,1 @@
-module.exports = require('../const')
+module.exports = require('../config/const')

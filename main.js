@@ -6,10 +6,11 @@
  * 3. 添加渲染线程监听器
  */
 const {TC_DEBUG,TEST}   = require('./env.js');
-const Const        = require('./const.js'); 
+const Const        = require('./config/const.js'); 
+const Hotkey       = require('./config/hotkey.js'); 
 const StaticServ   = require("./staticserv")
 // 初始化主框架
-const {session,app,BrowserWindow,ipcMain,Menu} = require('electron');
+const {session,app,BrowserWindow,ipcMain,Menu,globalShortcut} = require('electron');
 const log = require('electron-log');
 const {autoUpdater} = require("electron-updater");
 
@@ -17,7 +18,30 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
-let updateWindow, loaded;
+let updateWindow, loaded, mainWindowHotkeyListener;
+        
+//register hotkey for mainwindow
+mainWindowHotkeyListener = {
+    mainWindow : null,
+    send :function(key){
+        if(!this.mainWindow)return;
+        this.mainWindow.webContents && this.mainWindow.webContents.send('hotkey', key);
+    },
+    register :function(){
+        for(let _keyName in Hotkey){
+            globalShortcut.register(Hotkey[_keyName].code, () => {
+                this.send(_keyName);
+            })
+        }
+    },
+    unregister :function(){
+        for(let _keyName in Hotkey){
+            if (Hotkey[_keyName].windowFocusNeeded) {
+                globalShortcut.unregister(Hotkey[_keyName].code); 
+            }
+        }
+    }
+}
 
 function sendStatusToWindow(status, data) {
     if (!loaded) {
@@ -113,6 +137,7 @@ function createMainWindow() {
             __dirname, __apppath: app.getAppPath(),
             version: app.getVersion()
         });
+        mainWindowHotkeyListener.mainWindow = $main;
     })
     $main.webContents.on('will-navigate', (ev, url) => {
         ev.preventDefault();
@@ -164,6 +189,14 @@ app.on('ready', function() {
         }
     }
 })
+
+app.on('browser-window-focus', function(){
+    mainWindowHotkeyListener.register();
+});
+
+app.on('browser-window-blur', function(){
+    mainWindowHotkeyListener.unregister();
+});
 
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException",err);

@@ -25,6 +25,7 @@ const Room = require("../AgoraStream")
 const Signalize = require('../AgoraSignal')
 const Session = require('../session')
 const Const = require('../../const')
+const Hotkey = require('../../hotkey')
 const { ipcRenderer } = $require('electron');
 const context = require('../context')
 import * as types from '../constants/ActionTypes'
@@ -48,7 +49,11 @@ class Course extends React.Component {
 		ipcRenderer.on("DOWNLOADED", (event, url, file) => {
 			net.log({ name: "DOWNLOADED", url, file })
 			this.$audios_files[url] = file
-		})
+		});
+
+		ipcRenderer.on('hotkey', (event, hotkeyName) => {
+			this.onHotKey(hotkeyName);
+		});
 	}
 
 	get uuid() {
@@ -606,7 +611,7 @@ class Course extends React.Component {
 		]
 	}
 
-	__counter_starting_time_to_str(){
+	__counter_starting_time_to_str() {
 		let waiting = this.props.status.waiting;
 		let left = waiting - this.state.time_diff
 		let days, hours, minutes, seconds;
@@ -617,7 +622,7 @@ class Course extends React.Component {
 			minutes = (left - hours * 60 * 60 * 1000) / 1000 / 60 >> 0
 			seconds = (left % (1000 * 60)) / 1000 >> 0;
 			seconds = days > 0 ? `` : `${seconds}秒`;
-			days 	= days > 0 ? `${days}天`: ``;
+			days = days > 0 ? `${days}天` : ``;
 			return `距离开始上课还有${days}${hours}小时${minutes}分钟${seconds}`;
 		}
 	}
@@ -632,6 +637,38 @@ class Course extends React.Component {
 				this.leaveCourse()
 			}
 		})
+	}
+
+	onHotKey(hotkeyName) {
+		switch (Hotkey[hotkeyName]) {
+			case Hotkey.KEY_C:
+				this.__on_clipshare();
+				break;
+			case Hotkey.KEY_M:
+				if (this.props.switches.magic) {
+					this.$session.send_message(Const.DISABLE_MAGIC)
+				} else {
+					this.$session.send_message(Const.ENABLE_MAGIC)
+				}
+				break;
+			case Hotkey.KEY_LEFT:
+				this.props.onMagicSwitch(false)
+				this.$session.send_message("appnextpage")
+				break;
+			case Hotkey.KEY_RIGHT:
+				this.props.onMagicSwitch(false)
+				this.$session.send_message("appprevpage")
+				break;
+			case Hotkey.KEY_RIGHT:
+				this.props.onMagicSwitch(false)
+				this.$session.send_message("appnextpage")
+				break;
+			case Hotkey.KEY_G:
+				this.__send_gift_to_all()
+				break;
+			default:
+				break;
+		}
 	}
 
 	render() {
@@ -724,16 +761,16 @@ class Course extends React.Component {
 				if (this.isMaster()) {
 					this.__send_gift(user)
 				}
-			}} onClickView={(user)=>{
+			}} onClickView={(user) => {
 				if (user.dancing) {
 					this.$session.send_message(Const.BACK_DANCE, { id: user.id })
 				} else {
 					this.$session.send_message(Const.PUT_DANCE, { id: user.id })
 				}
-			}}/>
+			}} />
 		})
 		let handsupStudents = []
-		students.forEach((student)=>{
+		students.forEach((student) => {
 			if (student.online) {
 				handsupStudents.push(student)
 			}
@@ -760,16 +797,16 @@ class Course extends React.Component {
 
 		dancing && [].splice.call(studentHeads, 3, 0,
 			<div className='dancing-container' key="dancing" style={{
-				"marginLeft" : studentHeads.length < 3 ? ((1.03 * (3-studentHeads.length))+"rem") : 0
+				"marginLeft": studentHeads.length < 3 ? ((1.03 * (3 - studentHeads.length)) + "rem") : 0
 			}}>
 				<div className='dancing-student' id="dancing-head" key='dancing-student' >
 				</div>
 				<div className="avatar-info-student">学生：{dancing.child_name}</div>
 				<div className="back-dance-btn" onClick={() => {
-						if (this.$last_dancing) {
-							this.$session.send_message(Const.BACK_DANCE, { id: this.$last_dancing })
-						}
-					}}></div>
+					if (this.$last_dancing) {
+						this.$session.send_message(Const.BACK_DANCE, { id: this.$last_dancing })
+					}
+				}}></div>
 			</div>
 		);
 
@@ -832,77 +869,77 @@ class Course extends React.Component {
 							this.$session.send_message(Const.CLOSE_RACE)
 						}} /> : ""}
 						{!!tipStrStarting && !this.props.status.started && !this.state.no_confirm_mask ?
-						<div className="course-confirm-mask">	
-							<div className="course-confirm-dialog">
-								<div className="course-start-time-tip">
-									{tipStrStarting}
+							<div className="course-confirm-mask">
+								<div className="course-confirm-dialog">
+									<div className="course-start-time-tip">
+										{tipStrStarting}
+									</div>
+									<div className="course-not-begin-btn c-btn" onClick={() => {
+										this.setState({ no_confirm_mask: true })
+									}}>我是磨课，不上课</div>
+									<div className="course-begin-btn c-btn" onClick={() => {
+										this.__on_start_course()
+									}}>我要开始上课！！</div>
 								</div>
-								<div className="course-not-begin-btn c-btn" onClick={() => {
-									this.setState({ no_confirm_mask: true })
-								}}>我是磨课，不上课</div>
-								<div className="course-begin-btn c-btn" onClick={() => {
-									this.__on_start_course()
-								}}>我要开始上课！！</div>
-							</div>
-						</div> : ""}
+							</div> : ""}
 						<div className="course-content-area">
 							<div className="course-content kc-canvas-area" id="course-content"></div>
 							<div className="operations">
-							<button className={this.props.switches.handsup ? "course-handsup" : "course-handsup off"} onClick={() => {
-								if (this.props.switches.handsup) {
-									this.$session.send_message(Const.CLOSE_RACE)
-								} else {
-									this.$session.send_message(Const.OPEN_RACE)
-								}
-							}}></button>
-							<button className="course-gift" onClick={() => {
-								this.__send_gift_to_all()
-							}}></button>
-							<button className={this.props.switches.magic ? "course-magic" : "course-magic off"} onClick={() => {
-								if (this.props.switches.magic) {
-									this.$session.send_message(Const.DISABLE_MAGIC)
-								} else {
-									this.$session.send_message(Const.ENABLE_MAGIC)
-								}
-							}}></button>
-							<button className="course-clip" onClick={() => {
-								this.__on_clipshare()
-							}}></button>
-							<button className="course-prevpage" onClick={() => {
-								this.props.onMagicSwitch(false)
-								this.$session.send_message("appprevpage")
-							}}></button>
-							<button className="course-clear" onClick={() => {
-								this.$session.send_message("appclearall")
-							}}></button>
-							<button className="course-nextpage" onClick={() => {
-								this.props.onMagicSwitch(false)
-								this.$session.send_message("appnextpage")
-							}}></button>
-							<button className={this.props.switches.rank ? "course-rank" : "course-rank off"} onClick={() => {
-								if (this.props.switches.rank) {
-									this.$session.send_message(Const.HIDE_RANKS)
-								} else {
-									this.$session.send_message(Const.SHOW_RANKS)
-								}
-							}}></button>
-							<button className={this.props.switches.muteall ? "course-muteall off" : "course-muteall"} onClick={() => {
-								if (this.props.switches.muteall) {
-									this.$session.send_message(Const.UNMUTE_ALL)
-								} else {
-									this.$session.send_message(Const.MUTE_ALL)
-								}
-							}}></button>
-							<button className={this.props.switches.silent ? "course-silent off" : "course-silent"} onClick={() => {
-								if (this.props.switches.silent) {
-									this.$room.keepSilent(false)
-									this.props.onSilentSwitch(false)
-								} else {
-									this.$room.keepSilent(true)
-									this.props.onSilentSwitch(true)
-								}
-							}}></button>
-						</div>
+								<button className={this.props.switches.handsup ? "course-handsup" : "course-handsup off"} onClick={() => {
+									if (this.props.switches.handsup) {
+										this.$session.send_message(Const.CLOSE_RACE)
+									} else {
+										this.$session.send_message(Const.OPEN_RACE)
+									}
+								}}></button>
+								<button className="course-gift" onClick={() => {
+									this.__send_gift_to_all()
+								}}></button>
+								<button className={this.props.switches.magic ? "course-magic" : "course-magic off"} onClick={() => {
+									if (this.props.switches.magic) {
+										this.$session.send_message(Const.DISABLE_MAGIC)
+									} else {
+										this.$session.send_message(Const.ENABLE_MAGIC)
+									}
+								}}></button>
+								<button className="course-clip" onClick={() => {
+									this.__on_clipshare()
+								}}></button>
+								<button className="course-prevpage" onClick={() => {
+									this.props.onMagicSwitch(false)
+									this.$session.send_message("appprevpage")
+								}}></button>
+								<button className="course-clear" onClick={() => {
+									this.$session.send_message("appclearall")
+								}}></button>
+								<button className="course-nextpage" onClick={() => {
+									this.props.onMagicSwitch(false)
+									this.$session.send_message("appnextpage")
+								}}></button>
+								<button className={this.props.switches.rank ? "course-rank" : "course-rank off"} onClick={() => {
+									if (this.props.switches.rank) {
+										this.$session.send_message(Const.HIDE_RANKS)
+									} else {
+										this.$session.send_message(Const.SHOW_RANKS)
+									}
+								}}></button>
+								<button className={this.props.switches.muteall ? "course-muteall off" : "course-muteall"} onClick={() => {
+									if (this.props.switches.muteall) {
+										this.$session.send_message(Const.UNMUTE_ALL)
+									} else {
+										this.$session.send_message(Const.MUTE_ALL)
+									}
+								}}></button>
+								<button className={this.props.switches.silent ? "course-silent off" : "course-silent"} onClick={() => {
+									if (this.props.switches.silent) {
+										this.$room.keepSilent(false)
+										this.props.onSilentSwitch(false)
+									} else {
+										this.$room.keepSilent(true)
+										this.props.onSilentSwitch(true)
+									}
+								}}></button>
+							</div>
 						</div>
 					</div>
 					<div className="entities-area">
