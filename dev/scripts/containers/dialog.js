@@ -2,11 +2,17 @@ import React from 'react';
 import { hide } from '../actions'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+const { ipcRenderer } = $require('electron');
+const Hotkey = require('../../hotkey')
 
 class Dialog extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {showing: false}
+		
+		ipcRenderer.on('hotkey', (event, hotkeyName) => {
+			this.onHotKey(hotkeyName);
+		});
 	}
 
 	componentDidMount() {
@@ -60,6 +66,21 @@ class Dialog extends React.Component {
 				</div>
 			</div>
 		</div>
+	}
+
+	onHotKey(hotkeyName) {
+		if (!this.state.showing) return;
+
+		switch (Hotkey[hotkeyName]) {
+			case Hotkey.KEY_ENTER:
+				this.sure();
+				break;
+			case Hotkey.KEY_ESC:
+				this.hide();
+				break;
+			default:
+				break;
+		}
 	}
 }
 

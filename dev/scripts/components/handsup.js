@@ -1,11 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 require("../../less/handsup.less")
+const { ipcRenderer } = $require('electron');
+const Hotkey = require('../../hotkey')
 
 class Handsup extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { show:false }
+		
+		ipcRenderer.on('hotkey', (event, hotkeyName) => {
+			this.onHotKey(hotkeyName);
+		});
 	}
 
 	componentDidMount() {
@@ -34,6 +40,17 @@ class Handsup extends React.Component {
 				}}>关闭举手</div>
 			</div>
 		)
+	}
+
+	onHotKey(hotkeyName) {
+		switch (Hotkey[hotkeyName]) {
+			case Hotkey.KEY_ENTER:
+			case Hotkey.KEY_ESC:
+				this.props.onClickClose()
+				break;
+			default:
+				break;
+		}
 	}
 }
 
