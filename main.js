@@ -5,7 +5,7 @@
  * 2. 创建主窗口
  * 3. 添加渲染线程监听器
  */
-const {TC_DEBUG,TEST}   = require('./env.js');
+const {TC_DEBUG,TEST,TEACHER}   = require('./env.js');
 const Const        = require('./config/const.js'); 
 const Hotkey       = require('./config/hotkey.js'); 
 const StaticServ   = require("./staticserv")
@@ -137,7 +137,9 @@ function createMainWindow() {
             __dirname, __apppath: app.getAppPath(),
             version: app.getVersion()
         });
-        mainWindowHotkeyListener.mainWindow = $main;
+        if (TEACHER) {
+            mainWindowHotkeyListener.mainWindow = $main;
+        }
     })
     $main.webContents.on('will-navigate', (ev, url) => {
         ev.preventDefault();
@@ -191,11 +193,15 @@ app.on('ready', function() {
 })
 
 app.on('browser-window-focus', function(){
-    mainWindowHotkeyListener.register();
+    if (TEACHER) {
+        mainWindowHotkeyListener.register();
+    }
 });
 
 app.on('browser-window-blur', function(){
-    mainWindowHotkeyListener.unregister();
+    if (TEACHER) {
+        mainWindowHotkeyListener.unregister();
+    }
 });
 
 process.on('uncaughtException', function (err) {
