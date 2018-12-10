@@ -69,7 +69,7 @@ class Dialog extends React.Component {
 	}
 
 	onHotKey(hotkeyName) {
-		if (!this.state.showing) return;
+		if (!this.props.showing) return;
 
 		switch (Hotkey[hotkeyName]) {
 			case Hotkey.KEY_ENTER:
@@ -103,6 +103,12 @@ Dialog.propTypes = {
 	})
 }
 
+const mapStateToProps = (state, ownProps) => {
+	return {
+		showing : state.dialog.showing
+	}
+}
+
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
 		dispatchHide: () => {
@@ -112,6 +118,6 @@ const mapDispatchToProps = (dispatch, ownProps) => {
 }
 
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(Dialog)

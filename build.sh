@@ -29,7 +29,7 @@ mkdir output
 echo "step(2/${TOTAL_STEP}) copy files"
 cp -r dist output
 cp -r installers output
-cp const.js output
+cp -r config output
 cp env.js output
 cp main.js output
 cp staticserv.js output

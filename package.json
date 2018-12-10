@@ -7,9 +7,12 @@
     "start": "electron .",
     "watch": "nodemon --watch . --watch config ./boot.js",
     "build": "webpack --config webpack.prod.config.js",
-    "package-win": "bash build.sh -win",
-    "package-mac": "bash build.sh -mac",
-    "package-all": "bash build.sh -all",
+    "package-win-teacher": "bash build.sh -win -teacher",
+    "package-mac-teacher": "bash build.sh -mac -teacher",
+    "package-win-student": "bash build.sh -win -student",
+    "package-mac-student": "bash build.sh -mac -student",
+    "package-all-teacher": "bash build.sh -all -teacher",
+    "package-all-student": "bash build.sh -all -student",
     "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
   },
   "devDependencies": {
