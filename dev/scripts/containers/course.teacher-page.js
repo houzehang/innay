@@ -322,7 +322,8 @@ class Course extends React.Component {
 	__tick() {
 		this.$tick_timer = setInterval(() => {
 			this.props.onCourseTick()
-			if (this.props.status.waiting - this.state.time_diff > 0) {
+			if (this.props.status.waiting - this.state.time_diff >= -1000 && 
+				!this.props.status.started) {
 				this.props.onCourseStartingTick()
 			}
 		}, 1000)
@@ -622,7 +623,7 @@ class Course extends React.Component {
 			hours = left / 1000 / 60 / 60 >> 0
 			minutes = (left - hours * 60 * 60 * 1000) / 1000 / 60 >> 0
 			seconds = (left % (1000 * 60)) / 1000 >> 0;
-			seconds = days > 0 ? `` : `${seconds}秒`;
+			seconds = days > 100 ? `` : `${seconds}秒`;
 			days = days > 0 ? `${days}天` : ``;
 			return `距离开始上课还有${days}${hours}小时${minutes}分钟${seconds}`;
 		}
