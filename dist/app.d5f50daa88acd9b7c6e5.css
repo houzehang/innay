@@ -3182,7 +3182,7 @@ html .page.course-page.student .student-area,
 body .page.course-page.student .student-area {
   position: relative;
   z-index: 102;
-  width: 1.1rem;
+  width: 0.88rem;
   margin-left: 0.15rem;
 }
 html .page.course-page.student .course-content,
@@ -3195,7 +3195,7 @@ body .page.course-page.student .counter.icon {
   width: 0.3rem !important;
   height: 0.3rem !important;
   bottom: 0.18rem !important;
-  right: 4.44rem !important;
+  right: 4.2rem !important;
 }
 html .page.course-page.student .inner .entities-area .teacher-area,
 body .page.course-page.student .inner .entities-area .teacher-area {
@@ -3304,6 +3304,7 @@ body .page.course-page .inner .entities-area .counter .couter-g {
 }
 html .page.course-page .inner .entities-area .avatar-head video,
 body .page.course-page .inner .entities-area .avatar-head video {
+  background: #000;
   object-fit: cover;
 }
 html .page.course-page .inner .entities-area .teacher-area,
