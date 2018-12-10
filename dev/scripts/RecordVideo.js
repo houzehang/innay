@@ -62,6 +62,7 @@ class RecordVideo extends Eventer {
 		}
 		if (!this.$data) {
 			this.$waiting = true
+			this.trigger("nores")
 		} else {
 			this.__render()
 		}
@@ -115,6 +116,12 @@ class RecordVideo extends Eventer {
 		}
 		this.$waiting = false
 	}
+
+	destroy() {
+		if (this.$video) {
+			this.$video.remove()
+		}
+	}
 }
 
 class RecordVideoManager extends Eventer {
@@ -164,8 +171,10 @@ class RecordVideoManager extends Eventer {
 				'http://muwen5.mw009.com',
 				'http://muwen6.mw009.com'
 			]
-			user.hf_url = user.hf_url.replace(base, urls[index%urls.length])
-			this.$data[user.id] = user
+			if (user.hf_url) {
+				user.hf_url = user.hf_url.replace(base, urls[index%urls.length])
+				this.$data[user.id] = user
+			}
 		})
 		for(let key in this.$list) {
 			let video = this.$list[key]
@@ -190,22 +199,26 @@ class RecordVideoManager extends Eventer {
 		if (param) {
 			this.$busy = true
 			let stream = param[0]
-			stream.on('canplay', ()=>{
+			let goon = ()=>{
 				stream.off('canplay')
 				stream.off('error')
+				stream.off('nores')
 				this.$busy = false
 				this.play()
+			} 
+			stream.on('canplay', ()=>{
+				goon()
 				if (this.__is_master(stream.getId())) {
 					// 如果是老师则记录开始播放时刻
 					this.$starttime = new Date().getTime()
 				}
 			})
 			stream.on('error', ()=>{
-				stream.off('canplay')
-				stream.off('error')
+				goon()
 				this.$queue.push(param)
-				this.$busy = false
-				this.play()
+			})
+			stream.on('nores', ()=>{
+				goon()
 			})
 			stream.play(param[1],param[2])
 		}
@@ -215,12 +228,20 @@ class RecordVideoManager extends Eventer {
 		if (this.$list[id]) {
 			return this.$list[id]
 		} else {
-			let video = new RecordVideo(id, this.$data[id])
-			this.$list[id] = video
-			video.on("timeupdate", ()=>{
-				this.__timeupdate(id, video.currentTime)
-			})
-			return video
+			if (this.$data[id]) {
+				let video = new RecordVideo(id, this.$data[id])
+				this.$list[id] = video
+				video.on("timeupdate", ()=>{
+					this.__timeupdate(id, video.currentTime)
+				})
+				return video
+			}
+		}
+	}
+
+	destroy() {
+		for(let key in this.$list) {
+			this.$list[key].destroy()
 		}
 	}
 }
