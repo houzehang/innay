@@ -322,8 +322,9 @@ class Course extends React.Component {
 	__tick() {
 		this.$tick_timer = setInterval(() => {
 			this.props.onCourseTick()
-			this.props.onCourseStartingTick()
-			console.log(this.props.status.waiting);
+			if (this.props.status.waiting - this.state.time_diff > 0) {
+				this.props.onCourseStartingTick()
+			}
 		}, 1000)
 		this.$music_timer = setInterval(() => {
 			if (this.$playing) {
