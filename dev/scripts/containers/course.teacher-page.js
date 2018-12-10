@@ -883,42 +883,42 @@ class Course extends React.Component {
 						<div className="course-content-area">
 							<div className="course-content kc-canvas-area" id="course-content"></div>
 							<div className="operations">
-								<button className={this.props.switches.handsup ? "course-handsup" : "course-handsup off"} onClick={() => {
-									if (this.props.switches.handsup) {
-										this.$session.send_message(Const.CLOSE_RACE)
-									} else {
-										this.$session.send_message(Const.OPEN_RACE)
-									}
-								}}></button>
-								<button className="course-gift" onClick={() => {
-									this.__send_gift_to_all()
-								}}></button>
-								<button className={this.props.switches.magic ? "course-magic" : "course-magic off"} onClick={() => {
-									if (this.props.switches.magic) {
-										this.$session.send_message(Const.DISABLE_MAGIC)
-									} else {
-										this.$session.send_message(Const.ENABLE_MAGIC)
-									}
-								}}></button>
-								<button className="course-clip" onClick={() => {
-									this.__on_clipshare()
-								}}></button>
-								<button className="course-prevpage" onClick={() => {
-									this.props.onMagicSwitch(false)
-									this.$session.send_message("appprevpage")
-								}}></button>
 								<button className="course-clear" onClick={() => {
 									this.$session.send_message("appclearall")
-								}}></button>
-								<button className="course-nextpage" onClick={() => {
-									this.props.onMagicSwitch(false)
-									this.$session.send_message("appnextpage")
 								}}></button>
 								<button className={this.props.switches.rank ? "course-rank" : "course-rank off"} onClick={() => {
 									if (this.props.switches.rank) {
 										this.$session.send_message(Const.HIDE_RANKS)
 									} else {
 										this.$session.send_message(Const.SHOW_RANKS)
+									}
+								}}></button>
+								<button className="course-clip" onClick={() => {
+									this.__on_clipshare()
+								}}><span>C</span></button>
+								<button className="course-prevpage" onClick={() => {
+									this.props.onMagicSwitch(false)
+									this.$session.send_message("appprevpage")
+								}}><span>&lt;</span></button>
+								<button className={this.props.switches.magic ? "course-magic" : "course-magic off"} onClick={() => {
+									if (this.props.switches.magic) {
+										this.$session.send_message(Const.DISABLE_MAGIC)
+									} else {
+										this.$session.send_message(Const.ENABLE_MAGIC)
+									}
+								}}><span>M</span></button>
+								<button className="course-nextpage" onClick={() => {
+									this.props.onMagicSwitch(false)
+									this.$session.send_message("appnextpage")
+								}}><span>&gt;</span></button>
+								<button className="course-gift" onClick={() => {
+									this.__send_gift_to_all()
+								}}><span>G</span></button>
+								<button className={this.props.switches.handsup ? "course-handsup" : "course-handsup off"} onClick={() => {
+									if (this.props.switches.handsup) {
+										this.$session.send_message(Const.CLOSE_RACE)
+									} else {
+										this.$session.send_message(Const.OPEN_RACE)
 									}
 								}}></button>
 								<button className={this.props.switches.muteall ? "course-muteall off" : "course-muteall"} onClick={() => {
