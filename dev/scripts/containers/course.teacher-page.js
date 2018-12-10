@@ -323,6 +323,7 @@ class Course extends React.Component {
 		this.$tick_timer = setInterval(() => {
 			this.props.onCourseTick()
 			if (this.props.status.waiting - this.state.time_diff >= -1000 && 
+				this.props.status.waiting - this.state.time_diff <= 1000 * 60 * 30 && 
 				!this.props.status.started) {
 				this.props.onCourseStartingTick()
 			}
@@ -617,7 +618,7 @@ class Course extends React.Component {
 		let waiting = this.props.status.waiting;
 		let left = waiting - this.state.time_diff
 		let days, hours, minutes, seconds;
-		if (left > 0) {
+		if (left < 1000 * 60 * 30 && left > 0) {
 			days = left / 1000 / 60 / 60 / 24 >> 0
 			left -= days * 1000 * 60 * 60 * 24
 			hours = left / 1000 / 60 / 60 >> 0
@@ -899,7 +900,7 @@ class Course extends React.Component {
 								<button className="course-prevpage" onClick={() => {
 									this.props.onMagicSwitch(false)
 									this.$session.send_message("appprevpage")
-								}}><span>&lt;</span></button>
+								}}><span>◀</span></button>
 								<button className={this.props.switches.magic ? "course-magic" : "course-magic off"} onClick={() => {
 									if (this.props.switches.magic) {
 										this.$session.send_message(Const.DISABLE_MAGIC)
@@ -910,7 +911,7 @@ class Course extends React.Component {
 								<button className="course-nextpage" onClick={() => {
 									this.props.onMagicSwitch(false)
 									this.$session.send_message("appnextpage")
-								}}><span>&gt;</span></button>
+								}}><span>▶</span></button>
 								<button className="course-gift" onClick={() => {
 									this.__send_gift_to_all()
 								}}><span>G</span></button>
