@@ -124,6 +124,7 @@ class Course extends React.Component {
 	}
 
 	componentWillUnmount() {
+		this.$session.destroy()
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
 		$(`#dancing-head`).empty()
@@ -132,6 +133,7 @@ class Course extends React.Component {
 		$(window).off("resize")
 		this.props.hideLoading()
 		context.detector.check()
+		this.$record_video.destroy()
 	}
 
 	componentDidMount() {
@@ -365,6 +367,7 @@ class Course extends React.Component {
 			top 	: $("#dancing-head").offset().top,
 			width	: $("#dancing-head").width(),
 			height	: $("#dancing-head").height(),
+			"background-color" : "#000",
 			overflow: "hidden"
 		})
 		this.$last_dancing = id
@@ -380,7 +383,8 @@ class Course extends React.Component {
 			top 	: 0,
 			width	: "100%",
 			height	: "100%",
-			overflow: "auto"
+			overflow: "auto",
+			"background-color" : "transparent"
 		})
 		this.$last_dancing = null
 	}
@@ -448,7 +452,6 @@ class Course extends React.Component {
 						}
 					}
 					if (!student.stream && student.id == this.$last_dancing) {
-						this.$room.rtc.rtcengine.unsubscribe(this.$last_dancing)
 						this.$last_dancing = null
 					}
 				})
