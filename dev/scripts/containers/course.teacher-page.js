@@ -653,10 +653,6 @@ class Course extends React.Component {
 				break;
 			case Hotkey.KEY_LEFT:
 				this.props.onMagicSwitch(false)
-				this.$session.send_message("appnextpage")
-				break;
-			case Hotkey.KEY_RIGHT:
-				this.props.onMagicSwitch(false)
 				this.$session.send_message("appprevpage")
 				break;
 			case Hotkey.KEY_RIGHT:
