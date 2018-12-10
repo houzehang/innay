@@ -745,9 +745,8 @@ html,body {
 							border: 1px solid #fff;
 							color: #fff;
 							font-size: 0.12rem;
-							display: flex;
-							justify-content: center;
-							align-items: center;
+							text-align: center;
+							line-height: 0.18rem;
 						}
 						&:hover {
 							background-color: #207ac7 !important;
@@ -894,17 +893,14 @@ html,body {
 					}
 					.dancing-container {
 						position: relative;
-						video {
-							object-fit: cover;
-						}
 						margin-right: 0.15rem;
 						width:2rem;
 						height: 1.88rem;
 						background: black;
 						.dancing-student {
-							video {
-								object-fit: cover;
-							}
+							width: 100%;
+							height: 100%;
+							overflow: hidden;
 						}
 						.avatar-info-student {
 							position: absolute;
