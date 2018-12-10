@@ -30,11 +30,7 @@ class StudentHead extends React.Component {
 							this.setState({ hover:false })
 						}
 					}}>
-						<div onDoubleClick={()=>{
-							if (this.props.user.online) {
-								this.props.onClickGift(this.props.user)
-							}
-						}} className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
+						<div className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
 							backgroundImage : `url(${this.props.user.child_avatar})`
 						} : null}>
 						</div>
@@ -46,29 +42,22 @@ class StudentHead extends React.Component {
 						</div>
 						<div className="summary">
 							<div className="summary-inner">
-								<div className="items">
-									<div className="item handsup">
-										<div className="icon"></div>
-										<div className="num">{this.props.user.handsup}</div>
-									</div>
-									<div className="item speak">
-										<div className="icon"></div>
-										<div className="num">{this.props.user.speak}</div>
-									</div>
-									<div className="item gift-2">
-										<div className="icon"></div>
-										<div className="num">{this.props.user.gift_total || 0}</div>
-									</div>
-								</div>
 								<div className={this.props.isTeacher?"btns":"btns student"}>
+									{this.props.isTeacher && this.props.user.stream?(
+										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
+											this.props.onClickView(this.props.user)
+										}}></button>
+									):""}
 									{this.props.isTeacher && this.props.user.online?(
 										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
 											this.props.onClickSpeak(this.props.user)
 										}}></button>
 									):""}
-									{this.props.isTeacher && this.props.user.stream?(
-										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
-											this.props.onClickView(this.props.user)
+									{this.props.isTeacher && this.props.user.online?(
+										<button className="gift-btn" onClick={()=>{
+											if (this.props.user.online) {
+												this.props.onClickGift(this.props.user)
+											}
 										}}></button>
 									):""}
 									<button className="warn-btn" onClick={()=>{
