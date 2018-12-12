@@ -1,22 +1,37 @@
 const Eventer = require("./eventer")
 
 class RecordVideo extends Eventer {
-	constructor(id, data) {
+	constructor(id, data, speed = 1) {
 		super()
 		this.$id		= id
 		this.$waiting 	= false
 		this.$playing 	= false
 		this.$seek_to   = null
-		this.$offset    = 0
+		this.$speed 	= speed
+		this.$seeking   = false
 		if (data) {
 			this.$data  = data
 		}
 	}
 
 	seekTo(time) {
-		this.$seek_to = time - this.$offset
+		this.$seek_to = time
+		if (this.$video && !this.$seeking) {
+			let current_time = this.currentTime
+			if (current_time > time) {
+				// 当前进度超前
+				this.$video[0].currentTime = time
+			} else {
+				this.$video[0].playbackRate = this.$speed * 2
+				this.$seeking = true
+			}
+		}
+	}
+
+	set speed(speed) {
+		this.$speed = speed
 		if (this.$video) {
-			this.$video[0].playbackRate = 2
+			this.$video[0].playbackRate = this.$speed
 		}
 	}
 
@@ -40,10 +55,6 @@ class RecordVideo extends Eventer {
 		}
 	}
 
-	get realtime() {
-		return this.currentTime + this.$offset
-	}
-
 	get playing() {
 		return this.$playing
 	}
@@ -52,14 +63,12 @@ class RecordVideo extends Eventer {
 		return this.$id
 	}
 
-	play(dom, offset) {
-		if (offset) {
-			this.$offset = offset
-		}
+	play(dom) {
 		if (this.$playing) return
 		if (dom) {
 			this.$holder = "#"+dom
 		}
+		console.log("Play video",this.$id,this.$data)
 		if (!this.$data) {
 			this.$waiting = true
 			this.trigger("nores")
@@ -80,9 +89,10 @@ class RecordVideo extends Eventer {
 		if (this.$seek_to) {
 			if (time >= this.$seek_to) {
 				if (this.$video) {
-					this.$video[0].playbackRate = 1
+					this.$video[0].playbackRate = this.$speed
 				}
 				this.$seek_to = null
+				this.$seeking = false
 			}
 		}
 		this.trigger("timeupdate")
@@ -90,18 +100,19 @@ class RecordVideo extends Eventer {
 
 	__render() {
 		if (!this.$dom) {
+			this.$dom = $(`<div id="record_${this.$id}"></div>`)
 			// 预加载视频资源
 			let video = $("<video/>")
 			video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
 			video.on("canplay", ()=>{
-				if (this.$video) return
 				this.trigger("canplay")
 				video.off()
 				video.on("timeupdate", ()=>{
 					this.__timeupdate()
 				})
-				this.$dom = $(`<div id="record_${this.$id}"></div>`).append(video)
+				this.$dom.append(video)
 				$(this.$holder).append(this.$dom)
+				video[0].playbackRate = this.$speed
 				video[0].play()
 				this.$video 	= video
 				this.$playing 	= true
@@ -118,8 +129,8 @@ class RecordVideo extends Eventer {
 	}
 
 	destroy() {
-		if (this.$video) {
-			this.$video.remove()
+		if (this.$dom) {
+			this.$dom.remove()
 		}
 	}
 }
@@ -131,31 +142,48 @@ class RecordVideoManager extends Eventer {
 		this.$queue 	= []
 		this.$list 		= {}
 		this.$data 		= {}
-		this.$starttime = 0
+		this.$speed     = 1
 	}
 
 	__timeupdate(id, time) {
 		// 如果是主列表，则判断列表中的视频是否需要同步
 		this.trigger("timeupdate",{id,time,data:this.$data[id]})
-		if (this.__is_master(id)) {
-			for(let key in this.$list) {
-				let video = this.$list[key]
-				if (!video.playing || this.__is_master(key)) {
-					continue
-				}
-				if (video.realtime > time) {
-					video.pause()
-				} else if (video.realtime < time-1) {
-					video.seekTo(time)
-				} else {
-					video.play()
-				}
-			}
-		}
 	}
 
 	__is_master(id) {
 		return this.$master == id
+	}
+
+	playVideo(id) {
+		let video = this.$list[id]
+		if (video) {
+			video.play()
+		}
+	}
+
+	pauseVideo(id) {
+		let video = this.$list[id]
+		if (video) {
+			video.pause()
+		}
+	}
+
+	seekTo(id, time) {
+		let video = this.$list[id]
+		if (video) {
+			video.seekTo(time)
+		}
+	}
+
+	set speed(speed) {
+		if (this.$speed == speed) {
+			return
+		}
+		this.$speed = speed
+		for(let key in this.$list) {
+			let video = this.$list[key]
+			video.speed = this.$speed
+		}
 	}
 
 	set data(data) {
@@ -186,11 +214,7 @@ class RecordVideoManager extends Eventer {
 
 	play(stream, dom) {
 		if (stream) {
-			if (this.$starttime) {
-				this.$queue.push([stream,dom,(new Date().getTime() - this.$starttime) / 1000])
-			} else {
-				this.$queue.push([stream,dom,0])
-			}
+			this.$queue.push([stream,dom])
 		}
 		if (this.$busy) {
 			return
@@ -208,10 +232,6 @@ class RecordVideoManager extends Eventer {
 			} 
 			stream.on('canplay', ()=>{
 				goon()
-				if (this.__is_master(stream.getId())) {
-					// 如果是老师则记录开始播放时刻
-					this.$starttime = new Date().getTime()
-				}
 			})
 			stream.on('error', ()=>{
 				goon()
@@ -220,7 +240,7 @@ class RecordVideoManager extends Eventer {
 			stream.on('nores', ()=>{
 				goon()
 			})
-			stream.play(param[1],param[2])
+			stream.play(param[1])
 		}
 	}
 
@@ -229,7 +249,7 @@ class RecordVideoManager extends Eventer {
 			return this.$list[id]
 		} else {
 			if (this.$data[id]) {
-				let video = new RecordVideo(id, this.$data[id])
+				let video = new RecordVideo(id, this.$data[id], this.$speed)
 				this.$list[id] = video
 				video.on("timeupdate", ()=>{
 					this.__timeupdate(id, video.currentTime)

@@ -125,6 +125,7 @@ class Course extends React.Component {
 
 	componentWillUnmount() {
 		this.$session.destroy()
+		this.$record_video.destroy()
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
 		$(`#dancing-head`).empty()
@@ -133,7 +134,6 @@ class Course extends React.Component {
 		$(window).off("resize")
 		this.props.hideLoading()
 		context.detector.check()
-		this.$record_video.destroy()
 	}
 
 	componentDidMount() {
@@ -206,17 +206,19 @@ class Course extends React.Component {
 	__set_record_data(data) {
 		this.$record_video.data = data
 		data.users.forEach((user)=>{
-			let stream = this.$record_video.create(user.id)
-			if (stream) {
-				this.props.onNewStream(stream)
+			if (this.isMaster(user.id)) {
+				let stream = this.$record_video.create(user.id)
+				if (stream) {
+					this.props.onNewStream(stream)
+				}
 			}
 		})
 		this.$record_video.on("timeupdate", (event)=>{
+			let master = false, time = event.time * 1000 >> 0
 			if (event.id == data.room.master_teacher) {
-				let time = event.time * 1000 >> 0
-				time = data.room.hf_start_time - 0 + time
-				this.$session.send_message("recordtimeupdate", {time})
+				master = true
 			}
+			this.$session.send_message("recordtimeupdate", {id:event.id,time,master})
 		})
 	}
 
@@ -272,6 +274,18 @@ class Course extends React.Component {
 				this.__load_sound(data.url)
 				break
 				case "course-process":
+				break
+				case "record-play":
+				this.$record_video.playVideo(data.id)
+				break
+				case "record-pause":
+				this.$record_video.pauseVideo(data.id)
+				break
+				case "record-seek":
+				this.$record_video.seekTo(data.id, data.time)
+				break
+				case "record-speed":
+				this.$record_video.speed = data.speed
 				break
 				default:
 				if (message.type.indexOf("*") == -1) {
@@ -383,7 +397,6 @@ class Course extends React.Component {
 			top 	: 0,
 			width	: "100%",
 			height	: "100%",
-			overflow: "auto",
 			"background-color" : "transparent"
 		})
 		this.$last_dancing = null

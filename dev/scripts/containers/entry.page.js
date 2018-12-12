@@ -89,7 +89,7 @@ class Entry extends React.Component {
 						}
 					}
 				}></Route>
-				<Dialog data={dialog}/>
+				{dialog.showing ? <Dialog data={dialog}/> : ""}
 				<NetStatus click={()=>{
 					if (this.$netStatus) {
 						console.log("set net good")

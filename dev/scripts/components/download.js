@@ -26,10 +26,13 @@ class Download extends React.Component {
 				ipcRenderer.send("DOWNLOAD",event.args[0])
 			}
 		})
+		console.log("download mount");
 	}
 
 	componentWillUnmount() {
 		context.detector.check()
+		this.$webview.current.loadURL("_blank")
+		console.log("download unmount");
 	}
 
 	render() {

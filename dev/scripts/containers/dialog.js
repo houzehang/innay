@@ -8,22 +8,13 @@ const Hotkey = require('../../hotkey')
 class Dialog extends React.Component {
 	constructor(props) {
 		super(props)
-		this.state = {showing: false}
-		
 		ipcRenderer.on('hotkey', (event, hotkeyName) => {
 			this.onHotKey(hotkeyName);
 		});
 	}
 
-	componentDidMount() {
-	}
-
-	componentWillUnmount() {
-		clearTimeout(this.$show_timer)
-	}
 
 	hide() {
-		this.setState({showing: false})
 		this.props.dispatchHide()
 		if (this.props.data.configure.cancel) {
 			this.props.data.configure.cancel()
@@ -40,21 +31,12 @@ class Dialog extends React.Component {
 	render() {
 		let buttons = []
 		console.log("this.props.data",this.props.data)
-		const { type,configure,showing } = this.props.data
+		const { type,configure } = this.props.data
 		if (type == "confirm") {
 			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{configure.cancel_txt||"取消"}</button>)
 		}
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{configure.sure_txt||"确定"}</button>)
-		if (!this.state.showing && showing) {
-			if (configure.noanim) {
-				this.setState({showing: true})
-			} else {
-				this.$show_timer = setTimeout(()=>{
-					this.setState({showing: true})
-				},100)
-			}
-		}
-		return <div className={"mask dialog-layer " + (this.state.showing?"show":"")} style={{display:showing?"":"none"}}>
+		return <div className="mask dialog-layer show">
 			<div className={"dialog "+(configure.classname||"")} style={configure.styles}>
 				<div className="title">
 					{configure.title || "提示"}
