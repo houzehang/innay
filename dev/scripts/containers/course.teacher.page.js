@@ -52,7 +52,9 @@ class Course extends React.Component {
 		});
 
 		ipcRenderer.on('hotkey', (event, hotkeyName) => {
-			this.onHotKey(hotkeyName);
+			if (this.onHotKey && typeof this.onHotKey === 'function') {
+				this.onHotKey(hotkeyName);
+			}
 		});
 	}
 
@@ -151,6 +153,7 @@ class Course extends React.Component {
 		$(window).off("resize")
 		this.props.hideLoading()
 		context.detector.check()
+		this.onHotKey = null;
 	}
 
 	componentDidMount() {

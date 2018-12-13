@@ -7,6 +7,7 @@ import {
 } from '../actions'
 const net = require("../network")
 const context = require("../context")
+const { ipcRenderer } = $require('electron');
 
 class Login extends React.Component {
 	constructor(props) {
@@ -44,6 +45,14 @@ class Login extends React.Component {
 		}).done()
 	}
 
+	inputOnBlur(){
+		ipcRenderer.send('on-hotkey');
+	}
+	
+	inputOnFocus(){
+		ipcRenderer.send('off-hotkey');
+	}
+
 	render() {
 		return (
 			<div className="full-h">
@@ -54,14 +63,18 @@ class Login extends React.Component {
 							<div className="input-box">
 								<input type="number" onChange={(event)=>{
 									this.handleChange("mobile", event)
-								}} name="mobile" value={this.state.mobile} placeholder="请输入手机号"/>
+								}} name="mobile" value={this.state.mobile} placeholder="请输入手机号"
+								onBlur={this.inputOnBlur}
+       							onFocus={this.inputOnFocus}/>
 							</div>
 						</div>
 						<div className="input-control">
 							<div className="input-box">
 								<input type="password" onChange={(event)=>{
 									this.handleChange("password", event)
-								}}  name="password" value={this.state.password} placeholder="请输入密码"/>
+								}}  name="password" value={this.state.password} placeholder="请输入密码"
+								onBlur={this.inputOnBlur}
+       							onFocus={this.inputOnFocus}/>
 							</div>
 						</div>
 						<button className="login-btn" onClick={()=>{

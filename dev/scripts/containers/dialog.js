@@ -9,7 +9,9 @@ class Dialog extends React.Component {
 	constructor(props) {
 		super(props)
 		ipcRenderer.on('hotkey', (event, hotkeyName) => {
-			this.onHotKey(hotkeyName);
+			if (this.onHotKey && typeof this.onHotKey === 'function') {
+				this.onHotKey(hotkeyName);
+			}
 		});
 	}
 
@@ -63,6 +65,10 @@ class Dialog extends React.Component {
 			default:
 				break;
 		}
+	}
+
+	componentWillUnmount(){
+		this.onHotKey = null;
 	}
 }
 

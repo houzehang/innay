@@ -10,7 +10,9 @@ class Handsup extends React.Component {
 		this.state = { show:false }
 		
 		ipcRenderer.on('hotkey', (event, hotkeyName) => {
-			this.onHotKey(hotkeyName);
+			if (this.onHotKey && typeof this.onHotKey === 'function') {
+				this.onHotKey(hotkeyName);
+			}
 		});
 	}
 
@@ -51,6 +53,10 @@ class Handsup extends React.Component {
 			default:
 				break;
 		}
+	}
+
+	componentWillUnmount(){
+		this.onHotKey = null;
 	}
 }
 

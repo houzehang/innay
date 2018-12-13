@@ -207,3 +207,11 @@ app.on('browser-window-blur', function(){
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException",err);
 });
+
+ipcMain.on('off-hotkey',function(){
+    TEACHER && mainWindowHotkeyListener.unregister();
+});
+
+ipcMain.on('on-hotkey',function(){
+    TEACHER && mainWindowHotkeyListener.register();
+});
