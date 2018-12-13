@@ -68,7 +68,6 @@ class RecordVideo extends Eventer {
 		if (dom) {
 			this.$holder = "#"+dom
 		}
-		console.log("Play video",this.$id,this.$data)
 		if (!this.$data) {
 			this.$waiting = true
 			this.trigger("nores")
@@ -98,6 +97,10 @@ class RecordVideo extends Eventer {
 		this.trigger("timeupdate")
 	}
 
+	__durationupdate(duration) {
+		this.trigger("durationupdate", {duration})
+	}
+
 	__render() {
 		if (!this.$dom) {
 			this.$dom = $(`<div id="record_${this.$id}"></div>`)
@@ -117,6 +120,9 @@ class RecordVideo extends Eventer {
 				this.$video 	= video
 				this.$playing 	= true
 			})
+			video.on("durationchange", ()=>{
+				this.__durationupdate(video[0].duration)
+			})
 			video.on("error", ()=>{
 				console.log("on load video error",video)
 				this.trigger("error")
@@ -129,6 +135,10 @@ class RecordVideo extends Eventer {
 	}
 
 	destroy() {
+		if (this.$video) {
+			this.$video[0].pause()
+			this.$video.remove()
+		}
 		if (this.$dom) {
 			this.$dom.remove()
 		}
@@ -148,6 +158,11 @@ class RecordVideoManager extends Eventer {
 	__timeupdate(id, time) {
 		// 如果是主列表，则判断列表中的视频是否需要同步
 		this.trigger("timeupdate",{id,time,data:this.$data[id]})
+	}
+
+	__durationupdate(id, time) {
+		// 如果是主列表，则判断列表中的视频是否需要同步
+		this.trigger("durationupdate",{id,time,data:this.$data[id]})
 	}
 
 	__is_master(id) {
@@ -253,6 +268,9 @@ class RecordVideoManager extends Eventer {
 				this.$list[id] = video
 				video.on("timeupdate", ()=>{
 					this.__timeupdate(id, video.currentTime)
+				})
+				video.on("durationupdate", (data)=>{
+					this.__durationupdate(id, data.duration)
 				})
 				return video
 			}

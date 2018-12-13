@@ -159,6 +159,11 @@ export const onBeginCourse = ()=>({
 	type: types.COURSE_BEGIN
 })
 
+export const onCourseRecording = (status)=>({
+	type: types.COURSE_RECORDING,
+	status
+})
+
 export const onEndCourse = ()=>({
 	type: types.COURSE_END
 })

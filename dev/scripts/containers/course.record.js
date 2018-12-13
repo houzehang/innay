@@ -16,7 +16,8 @@ import {
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
-	onUpdateGift, onProgressReset, onUserAddRoom
+	onUpdateGift, onProgressReset, onUserAddRoom,
+	onCourseRecording
 } from '../actions'
 const net 			= require("../network")
 const Session   	= require('../session')
@@ -125,7 +126,6 @@ class Course extends React.Component {
 
 	componentWillUnmount() {
 		this.$session.destroy()
-		this.$record_video.destroy()
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
 		$(`#dancing-head`).empty()
@@ -220,6 +220,12 @@ class Course extends React.Component {
 			}
 			this.$session.send_message("recordtimeupdate", {id:event.id,time,master})
 		})
+		this.$record_video.on("durationupdate", (event)=>{
+			console.log("duration update",event)
+			if (event.id == data.room.master_teacher) {
+				this.$session.send_message("recorddurationupdate", {id:event.id,time:event.time})
+			}
+		})
 	}
 
 	__on_session_message(message) {
@@ -282,7 +288,9 @@ class Course extends React.Component {
 				this.$record_video.pauseVideo(data.id)
 				break
 				case "record-seek":
-				this.$record_video.seekTo(data.id, data.time)
+				data.forEach((video)=>{
+					this.$record_video.seekTo(video.id, video.time)
+				})
 				break
 				case "record-speed":
 				this.$record_video.speed = data.speed
@@ -355,12 +363,9 @@ class Course extends React.Component {
 	}
 
 	leaveCourse() {
+		this.$record_video.destroy()
 		this.$session.destroy()
-		if (this.$waiting_to_tester) {
-			this.props.onEnterTester("course")
-		} else {
-			this.props.onEndCourse()
-		}
+		this.props.onCourseRecording(false)
 	}
 
 	preLeaveCourse() {
@@ -415,18 +420,6 @@ class Course extends React.Component {
 			<div key="1" className="couter-g">{format(minutes)}:</div>,
 			<div key="2" className="couter-g last">{format(seconds)}</div>
 		]
-	}
-
-	onHelpClick() {
-		this.props.confirm({
-			title: "设备检测",
-			content : "即将进行设备检测，是否暂时退出教室？",
-			sure: ()=>{
-				this.props.showLoading("正在退出房间...")
-				this.$waiting_to_tester = true
-				this.leaveCourse()
-			}
-		})
 	}
 
 	render() {
@@ -562,11 +555,6 @@ class Course extends React.Component {
 					<div className="entities-area">
 						{TeacherView}
 						{StudentView}
-						<div className="counter icon">
-							<button className="help-btn" onClick={()=>{
-								this.onHelpClick()
-							}}></button>
-						</div>
 					</div>
 				</div>
 			</div>
@@ -588,32 +576,33 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	onRoomMoreInfo	: (data) => dispatch(onRoomMoreInfo(data)),
-	onNewStream		: (data) => dispatch(onNewStream(data)),
-	onStreamLeave	: (data) => dispatch(onStreamLeave(data)),
-	onHandsupSwitch : (status) => dispatch(onHandsupSwitch(status)),
-	onMagicSwitch   : (status) => dispatch(onMagicSwitch(status)),
-	onRankSwitch    : (status) => dispatch(onRankSwitch(status)),
-	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
-	onSilentSwitch  : (status) => dispatch(onSilentSwitch(status)),
-	onNewGift    	: (data) => dispatch(onNewGift(data)),
-	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
-	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
-	onDancing 		: (id, status) => dispatch(onDancing(id, status)),
-	onEndCourse 	: () => dispatch(onEndCourse()),
-	onBeginCourse 	: () => dispatch(onBeginCourse()),
-	onPauseCourse 	: () => dispatch(onPauseCourse()),
-	onResumeCourse 	: () => dispatch(onResumeCourse()),
-	onCourseTick 	: () => dispatch(onCourseTick()),
-	confirm 		: (data) => dispatch(confirm(data)),
-	alert 	    	: (data) => dispatch(alert(data)),
-	onEnterTester 	: (page) => dispatch(onEnterTester(page)),
-	showLoading 	: (message) => dispatch(showLoading(message)),
-	hideLoading 	: () => dispatch(hideLoading()),
-	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
-	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
-	onProgressReset : () => dispatch(onProgressReset()),
-	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id))
+	onRoomMoreInfo		: (data) => dispatch(onRoomMoreInfo(data)),
+	onNewStream			: (data) => dispatch(onNewStream(data)),
+	onStreamLeave		: (data) => dispatch(onStreamLeave(data)),
+	onHandsupSwitch 	: (status) => dispatch(onHandsupSwitch(status)),
+	onMagicSwitch   	: (status) => dispatch(onMagicSwitch(status)),
+	onRankSwitch    	: (status) => dispatch(onRankSwitch(status)),
+	onMuteAllSwitch 	: (status) => dispatch(onMuteAllSwitch(status)),
+	onSilentSwitch  	: (status) => dispatch(onSilentSwitch(status)),
+	onNewGift    		: (data) => dispatch(onNewGift(data)),
+	onHandsupRank   	: (id, rank) => dispatch(onHandsupRank(id, rank)),
+	onUserMuted 		: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
+	onDancing 			: (id, status) => dispatch(onDancing(id, status)),
+	onEndCourse 		: () => dispatch(onEndCourse()),
+	onBeginCourse 		: () => dispatch(onBeginCourse()),
+	onPauseCourse 		: () => dispatch(onPauseCourse()),
+	onResumeCourse 		: () => dispatch(onResumeCourse()),
+	onCourseTick 		: () => dispatch(onCourseTick()),
+	confirm 			: (data) => dispatch(confirm(data)),
+	alert 	    		: (data) => dispatch(alert(data)),
+	onEnterTester 		: (page) => dispatch(onEnterTester(page)),
+	showLoading 		: (message) => dispatch(showLoading(message)),
+	hideLoading 		: () => dispatch(hideLoading()),
+	onUpdateGift 		: (data) => dispatch(onUpdateGift(data)),
+	onProgressUpdate	: (id, percent) => dispatch(onProgressUpdate(id, percent)),
+	onProgressReset 	: () => dispatch(onProgressReset()),
+	onUserAddRoom 		: (id) => dispatch(onUserAddRoom(id)),
+	onCourseRecording   : (status) => dispatch(onCourseRecording(status))
 })
   
 export default connect(

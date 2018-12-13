@@ -14,7 +14,8 @@ const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,
+	onCourseRecording
 } from '../actions'
 const context = require("../context")
 const storage = require("../Storage")
@@ -25,7 +26,7 @@ class Main extends React.Component {
 		this.$detect_delay 		= 5000
 		this.$cache_valid_time 	= 60*60*1000
 		this.$calendarRef  		= React.createRef()
-		this.state = { recording: false }
+		this.state 				= {}
 		this.recordsRoom = {};
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -229,7 +230,7 @@ class Main extends React.Component {
 		if(isRecord){
 			this.props.hide()
 			setTimeout(()=>{
-				this.onEnterRoom()	
+				this.onEnterRoom(true)	
 			},500)
 		}else{
 			this.props.confirm({
@@ -242,8 +243,6 @@ class Main extends React.Component {
 	}
 
 	onRecordRoom(data) {
-		console.log("onRecordRoom",data)
-		this.setState({ recording: true })
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let lastest_download = storage.get(`download_${data.en_name}`)
 		if (lastest_download) {
@@ -287,8 +286,12 @@ class Main extends React.Component {
 		})
 	}
 
-	onEnterRoom() {
-		this.props.onStartCourse()
+	onEnterRoom(isRecord) {
+		if (isRecord) {
+			this.props.onCourseRecording(true)
+		} else {
+			this.props.onStartCourse()
+		}
 	}
 
 	onConfirmToLogout() {
@@ -329,8 +332,9 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			let coursePage = this.props.account.dentity === types.DENTITY.MASTER ? <CourseForTeacher/> :<CourseForStudent/>
-			content = this.state.recording ? <CourseRecord/> : coursePage;
+			content = this.props.account.dentity === types.DENTITY.MASTER ? <CourseForTeacher/> :<CourseForStudent/>
+		} else if (this.props.recording) {
+			content = <CourseRecord/>;
 		} else if (this.props.testing) {
 			content = <Devices />
 		} else {
@@ -355,13 +359,14 @@ class Main extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		account : state.login.account,
-		rooms 	: state.main.rooms,
-		room 	: state.room.info,
-		gifts 	: state.room.gifts,
-		calendar: state.main.calendar,
-		started : state.main.courseStarted,
-		testing : state.main.enterTester
+		account 	: state.login.account,
+		rooms 		: state.main.rooms,
+		room 		: state.room.info,
+		gifts 		: state.room.gifts,
+		calendar	: state.main.calendar,
+		started 	: state.main.courseStarted,
+		recording	: state.main.recording,
+		testing 	: state.main.enterTester
 	}
 }
 
@@ -375,7 +380,8 @@ const mapDispatchToProps = dispatch => ({
 	alert 	   	   		: (data) => dispatch(alert(data)),
 	hide 				: () => dispatch(hide()),
 	onEnterTester 		: (fromPage) => dispatch(onEnterTester(fromPage)),
-	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user))
+	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
+	onCourseRecording   : (status) => dispatch(onCourseRecording(status))
 })
   
 export default connect(
