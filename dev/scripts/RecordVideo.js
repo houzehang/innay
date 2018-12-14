@@ -17,14 +17,9 @@ class RecordVideo extends Eventer {
 	seekTo(time) {
 		this.$seek_to = time
 		if (this.$video && !this.$seeking) {
-			let current_time = this.currentTime
-			if (current_time > time) {
-				// 当前进度超前
-				this.$video[0].currentTime = time
-			} else {
-				this.$video[0].playbackRate = this.$speed * 2
-				this.$seeking = true
-			}
+			// 当前进度超前
+			this.$video[0].currentTime = time
+			this.$seeking = true
 		}
 	}
 
@@ -83,6 +78,7 @@ class RecordVideo extends Eventer {
 	}
 
 	pause() {
+		console.log("call video pause..",this.$playing)
 		if (this.$playing) {
 			this.$playing = false
 			this.$video[0].pause()
@@ -93,9 +89,6 @@ class RecordVideo extends Eventer {
 		let time = this.currentTime
 		if (this.$seek_to) {
 			if (time >= this.$seek_to) {
-				if (this.$video) {
-					this.$video[0].playbackRate = this.$speed
-				}
 				this.$seek_to = null
 				this.$seeking = false
 			}
@@ -119,12 +112,17 @@ class RecordVideo extends Eventer {
 				video.on("timeupdate", ()=>{
 					this.__timeupdate()
 				})
+				video.on("play", ()=>{
+					this.$playing = true
+				})
+				video.on("pause", ()=>{
+					this.$playing = false
+				})
 				this.$dom.append(video)
 				$(this.$holder).append(this.$dom)
 				video[0].playbackRate = this.$speed
 				video[0].play()
-				this.$video 	= video
-				this.$playing 	= true
+				this.$video = video
 			})
 			video.on("durationchange", ()=>{
 				this.__durationupdate(video[0].duration)
@@ -199,7 +197,14 @@ class RecordVideoManager extends Eventer {
 	jumpTo(id, time) {
 		let video = this.$list[id]
 		if (video) {
-			video.jumpTo(time)
+			if (time < 0) {
+				console.log("call pause...",id,time)
+				video.pause()
+			} else {
+				console.log("call play...",id,time)
+				video.jumpTo(time)
+				video.play()
+			}
 		}
 	}
 

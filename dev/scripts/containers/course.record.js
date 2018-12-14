@@ -300,6 +300,9 @@ class Course extends React.Component {
 				case "record-speed":
 				this.$record_video.speed = data.speed
 				break
+				case "record-backdance":
+				this.__back_from_dancing(this.$last_dancing)
+				break
 				default:
 				if (message.type.indexOf("*") == -1) {
 					this.__on_signal_message(message)
