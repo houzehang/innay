@@ -175,7 +175,11 @@ class Signalize extends Eventer {
 					new_user_joined(account[0])
 				})
 			};
+			channel.onChannelLeaved = ()=>{
+				console.log("channel leaved...")
+			}
 			channel.onChannelUserLeaved = (account) => {
+				console.log("channel user leaved...")
 				this.$user_in_room[account] = false
 				this.trigger("CHANNEL_USER_LEAVE", account)
 			}
@@ -205,12 +209,7 @@ class Signalize extends Eventer {
 		clearTimeout(this.$connect_timer)
 		this.__clear_recon_timer()
 		if (this.$channel) {
-			this.$channel.channelLeave(()=>{
-				this.trigger("CHANNEL_LEAVED", this.$channel)
-				this.$channel = null
-			})
-		} else {
-			this.trigger("CHANNEL_LEAVED", this.$channel)
+			this.$channel.channelLeave()
 		}
 		if (this.$session) {
 			this.$session.logout()

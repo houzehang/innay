@@ -468,8 +468,8 @@ class Course extends React.Component {
 	}
 
 	leaveCourse() {
-		this.$room.leave()
 		this.$signal.leave()
+		this.$room.leave()
 	}
 
 	preLeaveCourse(leaveOnly) {

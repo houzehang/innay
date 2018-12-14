@@ -227,7 +227,7 @@ class Room extends Eventer {
 			this.$client.videoSourceLeave();
 			this.$client.videoSourceRelease();
 			this.$client.leaveChannel();
-			this.$client.on('leavechannel', (...args) => {
+			this.$client.on('leavechannel', () => {
 				this.$client.removeAllListeners();
 				this.trigger("LEAVE_ROOM", this.$client)
 			});
