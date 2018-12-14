@@ -780,6 +780,9 @@ class Course extends React.Component {
 
 		let TeacherView = <div className="teacher-area">
 			<div className="avatars">
+				<div className={this.state.draft ? "avatar draft" : "avatar nothing"}>
+					<div className={this.state.draft ? "draft-text" : "draft-text none"} dangerouslySetInnerHTML={{ __html: this.state.draft }}></div>
+				</div>
 				<div className="avatar">
 					<div className="avatar-head" id="master-head" style={{
 						"backgroundImage": this.props.teacher.stream ? "" : `url(${this.props.teacher.avatarurl})`
@@ -789,9 +792,6 @@ class Course extends React.Component {
 					<div className="avatar-head-frame">
 
 					</div>
-				</div>
-				<div className={this.state.draft ? "avatar draft" : "avatar nothing"}>
-					<div className={this.state.draft ? "draft-text" : "draft-text none"} dangerouslySetInnerHTML={{ __html: this.state.draft }}></div>
 				</div>
 			</div>
 		</div>

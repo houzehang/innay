@@ -3124,6 +3124,14 @@ html .page.course-page.teacher .content,
 body .page.course-page.teacher .content {
   margin-right: 0.15rem;
 }
+html .page.course-page.teacher .inner .entities-area .teacher-area .avatars .avatar:first-child,
+body .page.course-page.teacher .inner .entities-area .teacher-area .avatars .avatar:first-child {
+  height: 3.2rem;
+}
+html .page.course-page.teacher .inner .entities-area .teacher-area .avatars .avatar:last-child,
+body .page.course-page.teacher .inner .entities-area .teacher-area .avatars .avatar:last-child {
+  height: 3.84rem;
+}
 html .page.course-page.student .student-area,
 body .page.course-page.student .student-area {
   position: relative;
