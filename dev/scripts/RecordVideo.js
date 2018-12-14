@@ -28,6 +28,12 @@ class RecordVideo extends Eventer {
 		}
 	}
 
+	jumpTo(time) {
+		if (this.$video) {
+			this.$video[0].currentTime = time
+		}
+	}
+
 	set speed(speed) {
 		this.$speed = speed
 		if (this.$video) {
@@ -187,6 +193,13 @@ class RecordVideoManager extends Eventer {
 		let video = this.$list[id]
 		if (video) {
 			video.seekTo(time)
+		}
+	}
+
+	jumpTo(id, time) {
+		let video = this.$list[id]
+		if (video) {
+			video.jumpTo(time)
 		}
 	}
 

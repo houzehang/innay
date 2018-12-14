@@ -292,6 +292,11 @@ class Course extends React.Component {
 					this.$record_video.seekTo(video.id, video.time)
 				})
 				break
+				case "record-jump":
+				data.forEach((video)=>{
+					this.$record_video.jumpTo(video.id, video.time)
+				})
+				break
 				case "record-speed":
 				this.$record_video.speed = data.speed
 				break
