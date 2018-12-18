@@ -23,11 +23,18 @@ let updateWindow, loaded, mainWindowHotkeyListener;
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
     mainWindow : null,
-    send :function(key){
+    tick: function(){
+        // 处理从输入框激活状态直接切出,
+        // app不响应`browser-window-blur`的问题
+        setInterval(()=>{
+            this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
+        },2000);
+    },
+    send: function(key){
         if(!this.mainWindow)return;
         this.mainWindow.webContents && this.mainWindow.webContents.send('hotkey', key);
     },
-    register :function(){
+    register: function(){
         for(let _keyName in Hotkey){
             globalShortcut.register(Hotkey[_keyName].code, () => {
                 this.send(_keyName);
@@ -40,7 +47,8 @@ mainWindowHotkeyListener = {
                 globalShortcut.unregister(Hotkey[_keyName].code); 
             }
         }
-    }
+    },
+
 }
 
 function sendStatusToWindow(status, data) {
@@ -139,6 +147,7 @@ function createMainWindow() {
         });
         if (TEACHER) {
             mainWindowHotkeyListener.mainWindow = $main;
+            mainWindowHotkeyListener.tick();
         }
     })
     $main.webContents.on('will-navigate', (ev, url) => {

@@ -23,9 +23,10 @@ class Login extends React.Component {
 		if (TEACHER) {
 			this.props.showLoading("正在获取身份配置...")
 			net.getLoginDentities().then((res)=>{
-				if (res && res.data && res.data.dentities) {
-					this.setState({dentity_list: res.data.dentities});
+				if (res && res.dentities) {
+					this.setState({dentity_list: res.dentities});
 				}
+				this.props.hideLoading()
 			},()=>{
 				this.props.hideLoading()
 			}).done()
