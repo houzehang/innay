@@ -22,7 +22,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.20rem;
+  font-size: 0.2rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -2190,6 +2190,28 @@ html .page.login-page .login-box .login-btn[disabled],
 body .page.login-page .login-box .login-btn[disabled] {
   opacity: 0.6;
 }
+html .page.login-page .login-box.with-dentity,
+body .page.login-page .login-box.with-dentity {
+  height: 4.1rem;
+}
+html .page.login-page .login-box .login-dentity,
+body .page.login-page .login-box .login-dentity {
+  width: 3rem;
+}
+html .page.login-page .login-box .login-radio,
+body .page.login-page .login-box .login-radio {
+  width: 3.16rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 0.22rem;
+}
+html .page.login-page .login-box .login-radio label,
+body .page.login-page .login-box .login-radio label {
+  width: 0.6rem;
+  display: flex;
+  justify-content: flex-start;
+}
 html .page.calendar-page,
 body .page.calendar-page {
   background: #2d3144;
@@ -2667,29 +2689,29 @@ body .page.course-page .student-area .student .summary .btns button.view-btn {
   width: 0.82rem;
   background: #3882c2 url(./985b43e1982739180b696c7a68bbb076.png) no-repeat center center;
   background-size: 0.16rem;
-  margin-bottom: 0.1rem;
-  margin-top: 0.16rem;
+  margin-top: 0;
 }
 html .page.course-page .student-area .student .summary .btns button.view-btn.on,
 body .page.course-page .student-area .student .summary .btns button.view-btn.on {
   background-image: url(./1c3b8535ccde6ec7812c8245e99119da.png);
 }
+html .page.course-page .student-area .student .summary .btns button.gift-btn,
+body .page.course-page .student-area .student .summary .btns button.gift-btn {
+  width: 0.82rem;
+  background: #3882c2 url(./da96821e3102ac7d45005832a68957e2.png) no-repeat center center;
+  background-size: 0.14rem;
+  margin-top: 0;
+}
 html .page.course-page .student-area .student .summary .btns button.speak-btn,
 body .page.course-page .student-area .student .summary .btns button.speak-btn {
   background: #3882c2 url(./4cd7d5465af707e8e3b3e196d0de8f4d.png) no-repeat center center;
   background-size: 0.16rem;
-  margin-right: 0.05rem;
+  margin-right: 0.15rem;
 }
 html .page.course-page .student-area .student .summary .btns button.speak-btn.on,
 body .page.course-page .student-area .student .summary .btns button.speak-btn.on {
   background-image: url(./da4dc52af3f79898a73446f5f05b0d63.png);
   background-size: 0.12rem;
-}
-html .page.course-page .student-area .student .summary .btns button.gift-btn,
-body .page.course-page .student-area .student .summary .btns button.gift-btn {
-  background: #3882c2 url(./da96821e3102ac7d45005832a68957e2.png) no-repeat center center;
-  background-size: 0.11rem;
-  margin-right: 0.05rem;
 }
 html .page.course-page .student-area .student .summary .btns button.warn-btn,
 body .page.course-page .student-area .student .summary .btns button.warn-btn {
