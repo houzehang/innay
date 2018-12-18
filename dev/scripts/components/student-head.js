@@ -49,15 +49,15 @@ class StudentHead extends React.Component {
 										}}></button>
 									):""}
 									{this.props.isTeacher && this.props.user.online?(
-										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
-											this.props.onClickSpeak(this.props.user)
-										}}></button>
-									):""}
-									{this.props.isTeacher && this.props.user.online?(
 										<button className="gift-btn" onClick={()=>{
 											if (this.props.user.online) {
 												this.props.onClickGift(this.props.user)
 											}
+										}}></button>
+									):""}
+									{this.props.isTeacher && this.props.user.online?(
+										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
+											this.props.onClickSpeak(this.props.user)
 										}}></button>
 									):""}
 									<button className="warn-btn" onClick={()=>{

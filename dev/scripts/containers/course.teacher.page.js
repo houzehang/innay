@@ -674,7 +674,7 @@ class Course extends React.Component {
 	}
 
 	render() {
-		let dancing, dancingIndex
+		let dancing;
 		setTimeout(() => {
 			let teacher = this.props.teacher
 			if (teacher.stream && !teacher.stream_inited) {
@@ -737,14 +737,9 @@ class Course extends React.Component {
 		for (let i = 0, len = students.length; i < len; i++) {
 			let item = students[i]
 			if (item.dancing && item.stream) {
-				dancingIndex = i;
 				dancing = item
 				break
 			}
-		}
-
-		if (dancingIndex !== undefined) {
-			[].splice.call(students, dancingIndex, 1);
 		}
 
 		let studentHeads = students.map((student, seatIndex) => {
