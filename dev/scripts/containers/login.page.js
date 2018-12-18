@@ -41,7 +41,7 @@ class Login extends React.Component {
 		let mobile 		= this.state.mobile
 		let password 	= this.state.password
 		let dentity 	= this.state.dentity
-		console.log('YOUSHI================= dentity',dentity);
+
 		if (!mobile || !password) {
 			this.props.alert({
 				content: "请输入手机号或密码！"
