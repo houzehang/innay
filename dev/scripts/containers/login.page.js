@@ -16,15 +16,15 @@ class Login extends React.Component {
 		this.state = {  
 			mobile: "", 
 			password: "",
-			dentity: TEACHER ? 2 : 1
+			dentity: TEACHER ? 2 : 1,
+			dentity_list: [{id: 2,name: '教师'},{id: 3,name: '班主任'}]
 		}
-		this.$dentity_list = [{id: 2,name: '教师'},{id: 3,name: '班主任'}];
 
 		if (TEACHER) {
 			this.props.showLoading("正在获取身份配置...")
 			net.getLoginDentities().then((res)=>{
 				if (res && res.data && res.data.dentities) {
-					this.$dentity_list = res.data.dentities;
+					this.setState({dentity_list: res.data.dentities});
 				}
 			},()=>{
 				this.props.hideLoading()
@@ -78,7 +78,7 @@ class Login extends React.Component {
 						<div className="title">登录</div>
 						{this.state.dentity == 1 ? '' :
 							<div className="input-box login-radio">
-								{this.$dentity_list.map((element,index) => {
+								{this.state.dentity_list.map((element,index) => {
 									return <label key={`dentity-element${element.id}`}><input type="radio" name="dentity" value={element.id} checked={this.state.dentity == element.id?'checked':false} onChange={(event)=>{
 										this.handleChange("dentity", event)
 									}}/>&nbsp;{element.name}</label>
