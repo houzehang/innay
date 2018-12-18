@@ -128,6 +128,15 @@ class Network extends Eventer {
 		return this.__request("/user/login", data, "post")
 	}
 
+
+	/**
+	 * 获取登录身份配置
+	 * @param {*} data 
+	 */
+	getLoginDentities (data) {
+		return this.__request("/api/dentities", data, "post")
+	}
+
 	/**
 	 * 获取课程安排
 	 * @param {*} date 

@@ -8,12 +8,27 @@ import {
 const net = require("../network")
 const context = require("../context")
 const { ipcRenderer } = $require('electron');
+const {TEACHER}   = require('./../../../env.js');
 
 class Login extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {  
-			mobile: "", password: ""
+			mobile: "", 
+			password: "",
+			dentity: TEACHER ? 2 : 1
+		}
+		this.$dentity_list = [{id: 2,name: '教师'},{id: 3,name: '班主任'}];
+
+		if (TEACHER) {
+			this.props.showLoading("正在获取身份配置...")
+			net.getLoginDentities().then((res)=>{
+				if (res && res.data && res.data.dentities) {
+					this.$dentity_list = res.data.dentities;
+				}
+			},()=>{
+				this.props.hideLoading()
+			}).done()
 		}
 	}
 
@@ -25,6 +40,8 @@ class Login extends React.Component {
 	onLogin() {
 		let mobile 		= this.state.mobile
 		let password 	= this.state.password
+		let dentity 	= this.state.dentity
+		console.log('YOUSHI================= dentity',dentity);
 		if (!mobile || !password) {
 			this.props.alert({
 				content: "请输入手机号或密码！"
@@ -33,7 +50,7 @@ class Login extends React.Component {
 		}
 		this.props.showLoading("正在登录...")
 		net.login({
-			mobile, password
+			mobile, password, dentity
 		}).then((res)=>{
 			net.token 		= res.token
 			net.sigtoken 	= res.signaling_token
@@ -57,8 +74,17 @@ class Login extends React.Component {
 		return (
 			<div className="full-h">
 				<div className="page login-page">
-					<div className="login-box">
+					<div className={'login-box'+(this.state.dentity == 1 ? '' : ' with-dentity')} >
 						<div className="title">登录</div>
+						{this.state.dentity == 1 ? '' :
+							<div className="input-box login-radio">
+								{this.$dentity_list.map((element,index) => {
+									return <label key={`dentity-element${element.id}`}><input type="radio" name="dentity" value={element.id} checked={this.state.dentity == element.id?'checked':false} onChange={(event)=>{
+										this.handleChange("dentity", event)
+									}}/>&nbsp;{element.name}</label>
+								})}
+							</div>
+						}
 						<div className="input-control">
 							<div className="input-box">
 								<input type="number" onChange={(event)=>{
