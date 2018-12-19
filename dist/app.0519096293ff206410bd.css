@@ -22,7 +22,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.2rem;
+  font-size: 0.20rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -3079,21 +3079,25 @@ html .page.course-page.teacher .student-area,
 body .page.course-page.teacher .student-area {
   z-index: 206;
   height: 0.88rem;
-  margin-bottom: 0.26rem;
+  margin-bottom: 0.22rem;
   display: flex;
 }
 html .page.course-page.teacher .student-area .student,
 body .page.course-page.teacher .student-area .student {
-  margin-right: 0.15rem;
+  margin-right: 0.06rem;
 }
 html .page.course-page.teacher .student-area .student .summary,
 body .page.course-page.teacher .student-area .student .summary {
   z-index: 10;
 }
+html .page.course-page.teacher .student-area .student:last-child,
+body .page.course-page.teacher .student-area .student:last-child {
+  margin-right: 0;
+}
 html .page.course-page.teacher .student-area .dancing-container,
 body .page.course-page.teacher .student-area .dancing-container {
   position: relative;
-  margin-right: 0.15rem;
+  margin-right: 0.06rem;
   width: 2rem;
   height: 1.88rem;
   background: black;
@@ -3145,9 +3149,11 @@ body .page.course-page.teacher .course-content-area .course-content {
 html .page.course-page.teacher .content,
 body .page.course-page.teacher .content {
   margin-right: 0.15rem;
+  overflow: hidden;
 }
 html .page.course-page.teacher .inner .entities-area,
 body .page.course-page.teacher .inner .entities-area {
+  width: 3.84rem;
   overflow: hidden;
 }
 html .page.course-page.teacher .inner .entities-area .teacher-area,

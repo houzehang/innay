@@ -861,17 +861,20 @@ html,body {
 				.student-area {
 					z-index: 206;
 					height: 0.88rem;
-					margin-bottom: 0.26rem;
+					margin-bottom: 0.22rem;
 					display: flex;
 					.student {
-						margin-right: 0.15rem;
+						margin-right: 0.06rem;
 						.summary {
 							z-index: 10;
+						}
+						&:last-child {
+							margin-right: 0;
 						}
 					}
 					.dancing-container {
 						position: relative;
-						margin-right: 0.15rem;
+						margin-right: 0.06rem;
 						width:2rem;
 						height: 1.88rem;
 						background: black;
@@ -917,9 +920,11 @@ html,body {
 				}
 				.content {
 					margin-right: 0.15rem;
+					overflow: hidden;
 				}
 				.inner {
 					.entities-area {
+						width: 3.84rem;
 						overflow: hidden;
 						.teacher-area {
 							padding-bottom: 0.2rem;
