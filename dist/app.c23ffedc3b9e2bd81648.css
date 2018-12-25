@@ -282,6 +282,15 @@ body .sound-outer {
 body .sound-outer::-webkit-scrollbar {
   display: none;
 }
+body .sound-outer .page-back {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  background: url(./9dc51a0897ebb855184d7f26f6065e23.png) no-repeat center top;
+  background-size: 100% auto;
+  width: 0.42rem;
+  height: 0.42rem;
+}
 body .sound-outer .sound-tester {
   background: #fff;
   border-radius: 0.1rem;

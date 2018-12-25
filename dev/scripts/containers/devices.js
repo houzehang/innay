@@ -4,11 +4,12 @@ require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
-const path		= $require("path")
-const Const 	= require("../../const")
-const DEBUG 	= require("../../../env").DEBUG
-const Storage 	= require("../Storage")
-const $ 		= require("jquery")
+const path				= $require("path")
+const Const 			= require("../../const")
+const DEBUG 			= require("../../../env").DEBUG
+const Storage 			= require("../Storage")
+const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
+const $ 				= require("jquery")
 import { 
 	onExitTester
 } from '../actions'
@@ -236,6 +237,7 @@ class Devices extends React.Component {
 			} else {
 				filepath = path.join(window.ENV_PATHES.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
 			}
+			console.log("filepath",filepath)
 			this.$client.startAudioPlaybackDeviceTest(filepath);
 		},0)
 		return (
