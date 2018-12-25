@@ -9,7 +9,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
-    vendor: [ 'react', 'react-dom' ],
+    vendor: [ 'react', 'react-dom', 'jquery' ],
     app : './dev/scripts/app.js',
     version : './dev/scripts/version.js'
   },
@@ -82,12 +82,7 @@ module.exports = {
     }),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
-        './libs/flexible.js',
-        './libs/AgoraSDK/webgl-utils.js',
-        './libs/AgoraSDK/AgoraRender.js',
-        './libs/AgoraSDK/AgoraSdk.js',
-        './libs/AgoraSDK/AgoraSig-1.2.1.3.js',
-        './libs/jquery-3.3.1.min.js'
+        './libs/flexible.js'
       ],
       publicPath: false,
       append: false,

@@ -1,8 +1,7 @@
 const Const   = require('../const')
-const net 	  = require('./network')
 const Q 	  = require('q')
 const Eventer = require('./eventer')
-const context = require('./context')
+const Signal  = require('../agora/AgoraSig-1.4.0')
 
 class Signalize extends Eventer {
 	constructor(inst) {
@@ -201,7 +200,7 @@ class Signalize extends Eventer {
 				console.log("receive new peer message", msg)
 				this.trigger("NEW_MESSAGE", message)
 			}
-		},()=>{})
+		},()=>{}).done()
 	}
 
 	leave() {

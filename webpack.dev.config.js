@@ -69,12 +69,7 @@ module.exports = {
     }),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
-        'http://localhost:3030/libs/flexible.js',
-        'http://localhost:3030/libs/AgoraSDK/webgl-utils.js',
-        'http://localhost:3030/libs/AgoraSDK/AgoraRender.js',
-        'http://localhost:3030/libs/AgoraSDK/AgoraSdk.js',
-        'http://localhost:3030/libs/AgoraSDK/AgoraSig-1.2.1.3.sc.js',
-        'http://localhost:3030/libs/jquery-3.3.1.min.js'
+        'http://localhost:3030/libs/flexible.js'
       ],
       publicPath: false,
       append: false,

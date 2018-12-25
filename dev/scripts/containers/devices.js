@@ -8,6 +8,7 @@ const path		= $require("path")
 const Const 	= require("../../const")
 const DEBUG 	= require("../../../env").DEBUG
 const Storage 	= require("../Storage")
+const $ 		= require("jquery")
 import { 
 	onExitTester
 } from '../actions'

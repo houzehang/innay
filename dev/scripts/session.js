@@ -1,5 +1,6 @@
 const Eventer 	= require("./eventer")
 const ENV   	= require("../../env")
+const $ 		= require("jquery")
 
 class Session extends Eventer {
 	constructor(inst) {

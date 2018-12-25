@@ -1,6 +1,6 @@
 const Eventer 	= require("./eventer")
 const net  		= require("./network")
-
+const $ 		= require("jquery")
 class NetDetector extends Eventer {
 	constructor() {
 		super()
@@ -9,7 +9,7 @@ class NetDetector extends Eventer {
 		this.$status 			= 1
 		this.$warn_times 		= 0
 		this.$max_warn_times 	= 3
-		this.$check_delay 		= 5000
+		this.$check_delay 		= 30000
 		this.$in_bad_status     = false
 		this.$check_timer		= null
 		this.$check_closed 		= true

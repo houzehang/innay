@@ -1,3 +1,4 @@
+const $ = require("jquery")
 class Loading {
 	constructor() {
 		this.$inited = false

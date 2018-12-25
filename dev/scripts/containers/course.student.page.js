@@ -24,8 +24,9 @@ const Room 			= require("../AgoraStream")
 const Signalize		= require('../AgoraSignal')
 const Session   	= require('../session')
 const Const   		= require('../../const')
-const {ipcRenderer} 	= $require('electron');
+const {ipcRenderer} = $require('electron');
 const context 		= require('../context')
+const $ 			= require("jquery")
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {

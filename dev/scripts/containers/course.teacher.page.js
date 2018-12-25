@@ -28,6 +28,7 @@ const Const = require('../../const')
 const Hotkey = require('../../hotkey')
 const { ipcRenderer } = $require('electron');
 const context = require('../context')
+const $ = require("jquery")
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
@@ -731,9 +732,6 @@ class Course extends React.Component {
 			return next < prev ? 1 : -1
 		})
 
-		// students.sort((prev,next)=>{
-		// 	return (next.gift_total||0) > (prev.gift_total||0) ? 1 : -1
-		// })
 		for (let i = 0, len = students.length; i < len; i++) {
 			let item = students[i]
 			if (item.dancing && item.stream) {
@@ -784,13 +782,10 @@ class Course extends React.Component {
 					}}>
 					</div>
 					<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
-					<div className="avatar-head-frame">
-
-					</div>
+					<div className="avatar-head-frame"></div>
 				</div>
 			</div>
 		</div>
-
 
 		dancing && [].splice.call(studentHeads, 3, 0,
 			<div className='dancing-container' key="dancing" style={{

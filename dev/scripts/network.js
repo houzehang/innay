@@ -3,7 +3,7 @@ const Eventer 	= require('./eventer')
 const context 	= require('./context')
 const ENV   	= require("../../env")
 const remote 	= $require("electron").remote
-
+const $ 		= require("jquery")
 class Network extends Eventer {
 	constructor() {
 		super()

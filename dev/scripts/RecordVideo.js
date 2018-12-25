@@ -1,5 +1,5 @@
-const Eventer = require("./eventer")
-
+const Eventer 	= require("./eventer")
+const $ 		= require("jquery")
 class RecordVideo extends Eventer {
 	constructor(id, data, speed = 1) {
 		super()

@@ -25,6 +25,7 @@ const Const   		= require('../../const')
 const {ipcRenderer} = $require('electron');
 const context 		= require('../context')
 const RecordVideo   = require('../RecordVideo')
+const $ 			= require("jquery")
 const fs 			= $require('fs')
 class Course extends React.Component {
 	constructor(props) {

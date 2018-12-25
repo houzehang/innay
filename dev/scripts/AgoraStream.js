@@ -1,8 +1,9 @@
-const Const 	= require("../const")
-const Q 		= require("q")
-const Eventer   = require('./eventer')
-const Storage 	= require('./Storage')
-
+const Const 			= require("../const")
+const Q 				= require("q")
+const Eventer   		= require('./eventer')
+const Storage 			= require('./Storage')
+const AgoraRtcEngine 	= require('../agora/AgoraSdk')
+const $ 				= require("jquery")
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -130,6 +131,7 @@ class Room extends Eventer {
 		if (id == this.inst.props.account.id) {
 			this.$client.setupLocalVideo(dom)
 		} else {
+			this.$client.rtcengine.unsubscribe(id)
 			this.$client.subscribe(id, dom)
 			let setStreamResult
 			if (largeMode) {
