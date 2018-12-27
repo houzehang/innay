@@ -3346,6 +3346,7 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
+  background-color: #000;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-head div,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-head div,
