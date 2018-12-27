@@ -860,7 +860,7 @@ class Course extends React.Component {
 						{this.props.switches.handsup ? <HandsUp users={handsupStudents} onClickClose={() => {
 							this.$session.send_message(Const.CLOSE_RACE)
 						}} /> : ""}
-						{!!tipStrStarting && !this.props.status.started && !this.state.no_confirm_mask ?
+						{!!tipStrStarting && !this.props.status.started && !this.state.no_confirm_mask && this.isChairMaster() ?
 							<div className="course-confirm-mask">
 								<div className="course-confirm-dialog">
 									<div className="course-start-time-tip">
