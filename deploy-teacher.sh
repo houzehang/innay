@@ -4,7 +4,7 @@ if [ ! $1 ];then
 	exit 1;
 fi
 echo "upload to server."
-SERVER=root@39.106.221.44
+SERVER=root@101.200.53.74
 VERSION=$1
 
 DIR=/var/www/downloadfile/software/teacher
