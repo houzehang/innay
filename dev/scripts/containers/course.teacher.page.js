@@ -787,9 +787,9 @@ class Course extends React.Component {
 			</div>
 		</div>
 
-		dancing && [].splice.call(studentHeads, 3, 0,
+		dancing && [].splice.call(studentHeads, 4, 0,
 			<div className='dancing-container' key="dancing" style={{
-				"marginLeft": studentHeads.length < 3 ? ((1.03 * (3 - studentHeads.length)) + "rem") : 0
+				"marginRight": studentHeads.length < 4 ? ((0.9 * (4 - studentHeads.length)) + "rem") : 0
 			}}>
 				<div className='dancing-student' id="dancing-head" key='dancing-student' >
 				</div>
