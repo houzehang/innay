@@ -631,6 +631,8 @@ class Course extends React.Component {
 			seconds = days > 0 ? `` : `${seconds}秒`;
 			days = days > 0 ? `${days}天` : ``;
 			return `距离开始上课还有${days}${hours}小时${minutes}分钟${seconds}`;
+		}else if(left <= 0){
+			return `距离开始上课还有0小时0分钟0秒`;
 		}
 	}
 
@@ -787,9 +789,9 @@ class Course extends React.Component {
 			</div>
 		</div>
 
-		dancing && [].splice.call(studentHeads, 4, 0,
+		dancing && [].splice.call(studentHeads, 3, 0,
 			<div className='dancing-container' key="dancing" style={{
-				"marginRight": studentHeads.length < 4 ? ((0.9 * (4 - studentHeads.length)) + "rem") : 0
+				"marginRight": studentHeads.length < 3 ? ((0.9 * (3 - studentHeads.length)) + "rem") : 0
 			}}>
 				<div className='dancing-student' id="dancing-head" key='dancing-student' >
 				</div>
