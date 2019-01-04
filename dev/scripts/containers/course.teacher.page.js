@@ -632,7 +632,7 @@ class Course extends React.Component {
 			days = days > 0 ? `${days}天` : ``;
 			return `距离开始上课还有${days}${hours}小时${minutes}分钟${seconds}`;
 		}else if(left <= 0){
-			return `距离开始上课还有0小时0分钟0秒`;
+			return `上课时间已经过啦，快点开始上课吧！`;
 		}
 	}
 
