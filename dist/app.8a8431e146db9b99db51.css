@@ -3090,10 +3090,11 @@ body .page.course-page.teacher .student-area {
   height: 0.88rem;
   margin-bottom: 0.22rem;
   display: flex;
+  flex-direction: row-reverse;
 }
 html .page.course-page.teacher .student-area .student,
 body .page.course-page.teacher .student-area .student {
-  margin-right: 0.06rem;
+  margin-left: 0.06rem;
 }
 html .page.course-page.teacher .student-area .student .summary,
 body .page.course-page.teacher .student-area .student .summary {
@@ -3106,7 +3107,7 @@ body .page.course-page.teacher .student-area .student:last-child {
 html .page.course-page.teacher .student-area .dancing-container,
 body .page.course-page.teacher .student-area .dancing-container {
   position: relative;
-  margin-right: 0.06rem;
+  margin-left: 0.06rem;
   width: 2rem;
   height: 1.88rem;
   background: black;
@@ -3364,7 +3365,7 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
   height: 1.92rem;
   left: 50%;
   margin-left: -0.768rem;
-  margin-top: -0.96rem;
+  margin-top: -1.16rem;
   text-align: center;
   border: 1px dashed #ff1111;
 }
