@@ -77,6 +77,7 @@ class Session extends Eventer {
 		} else {
 			prefix = "https://www.muwenyuwen.com"
 		}
+		prefix = "http://localhost:3000"
 
 		let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng"></webview>`);
 		this.$webview = webview[0];
