@@ -216,8 +216,8 @@ class Network extends Eventer {
 	/**
 	 * 开始上课
 	 */
-	beginClass(channel_id) {
-		return this.__request('/room/class_begin',{channel_id},"post")
+	beginClass(channel_id, user_ids) {
+		return this.__request('/room/class_begin',{channel_id, user_ids},"post")
 	}
 
 	/**
