@@ -18,7 +18,7 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
-let updateWindow, loaded, mainWindowHotkeyListener;
+let updateWindow, loaded, mainWindowHotkeyListener, rationalMaximize = true, screenSize, mianWindowSize = {width: 1300, height:790};
         
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
@@ -123,7 +123,14 @@ app.on('ready', function()  {
 function createMainWindow() {
     process.env.APP_PATH = app.getAppPath();
     console.log("app path",process.env.APP_PATH)
-    let $main = new BrowserWindow({width: 1300, height: 790, 
+
+    if (screenSize && rationalMaximize) {
+        let maxRatio = Math.min(screenSize.width / mianWindowSize.width,screenSize.height / mianWindowSize.height);
+        mianWindowSize.width *= maxRatio;
+        mianWindowSize.height *= maxRatio;
+    }
+    
+    let $main = new BrowserWindow({width: mianWindowSize.width|0, height: mianWindowSize.height|0, 
         resizable: TC_DEBUG,
         center: true,
         frame: true,
@@ -199,6 +206,8 @@ app.on('ready', function() {
             Menu.setApplicationMenu(menu)
         }
     }
+    
+    screenSize = require('electron').screen.getPrimaryDisplay().size;
 })
 
 app.on('browser-window-focus', function(){
