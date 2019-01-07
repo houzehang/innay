@@ -75,8 +75,8 @@ class Login extends React.Component {
 		return (
 			<div className="full-h">
 				<div className="page login-page">
-					{/* <div className={'login-box'+(this.state.dentity == 1 ? '' : ' with-dentity')} > */}
-					<div className={'login-box'} >
+					{/* <div className={'login-box'} > */}
+					<div className={'login-box'+(this.state.dentity == 1 ? '' : ' with-dentity')} >
 						<div className="title">登录</div>
 						{this.state.dentity == 1 ? '' :
 							<div className="input-box login-radio">
