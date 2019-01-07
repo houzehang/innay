@@ -18,7 +18,7 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
-let updateWindow, loaded, mainWindowHotkeyListener, rationalMaximize = true, screenSize, mianWindowSize = {width: 1300, height:790};
+let updateWindow, loaded, mainWindowHotkeyListener, rationalMaximize = false, screenSize, mianWindowSize = {width: 1300, height:790};
         
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
