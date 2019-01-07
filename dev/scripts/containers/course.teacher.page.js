@@ -597,9 +597,15 @@ class Course extends React.Component {
 			sure: () => {
 				this.setState({ control: false })
 				this.$session.send_message(Const.START_COURSE)
-				let user_ids = [];
+				let user_ids = '';
 				this.props.students.map((student)=>{
-					student && user_ids.push(student.id);
+					if(student){
+						if(user_ids == ''){
+							user_ids += student.id;
+						}else{
+							user_ids += (','+student.id);
+						}
+					}
 				});
 				net.beginClass(this.props.room.channel_id, user_ids)
 				this.props.onBeginCourse()
