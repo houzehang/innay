@@ -21,6 +21,7 @@ class Signalize extends Eventer {
 			this.$session.onLoginFailed = 
 			this.$session.onLogout = 
 			this.$session.onError  = null
+			this.$session.logout && this.$session.logout()
 		}
 		if (this.$channel) {
 			this.$channel.onChannelJoined = 
@@ -35,7 +36,6 @@ class Signalize extends Eventer {
 		clearTimeout(this.$connect_timer)
 		clearTimeout(this.$heart_t)
 		this.$channel = null
-		this.$session.logout()
 	}
 
 	__reconnect() {
@@ -210,9 +210,7 @@ class Signalize extends Eventer {
 		if (this.$channel) {
 			this.$channel.channelLeave()
 		}
-		if (this.$session) {
-			this.$session.logout()
-		}
+		this.__destroy_all()
 	}
 
 	__clear_recon_timer() {
