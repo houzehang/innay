@@ -80,7 +80,7 @@ class Network extends Eventer {
 					if (res.responseJSON) {
 						alert(res.responseJSON.message)
 					}
-					if (res.status == 401 || res.status == 400) {
+					if (res.status == 401) {
 						//登录
 						this.trigger("LOGOUT_NEEDED")
 						reject()
