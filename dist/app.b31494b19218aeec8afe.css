@@ -2201,7 +2201,7 @@ body .page.login-page .login-box .login-btn[disabled] {
 }
 html .page.login-page .login-box.with-dentity,
 body .page.login-page .login-box.with-dentity {
-  height: 4.1rem;
+  height: 3.6rem;
 }
 html .page.login-page .login-box .login-dentity,
 body .page.login-page .login-box .login-dentity {
@@ -2217,7 +2217,7 @@ body .page.login-page .login-box .login-radio {
 }
 html .page.login-page .login-box .login-radio label,
 body .page.login-page .login-box .login-radio label {
-  width: 0.6rem;
+  margin-right: 0.2rem;
   display: flex;
   justify-content: flex-start;
 }

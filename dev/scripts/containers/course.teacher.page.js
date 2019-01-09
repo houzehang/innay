@@ -144,6 +144,9 @@ class Course extends React.Component {
 	}
 
 	componentWillUnmount() {
+		this.$signal.leave()
+		this.$room.leave()
+		this.$session.destroy()
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
 		clearTimeout(this.$back_timer)
@@ -196,12 +199,6 @@ class Course extends React.Component {
 			this.$room.refreshMute()
 		})
 		this.$room.on("LEAVE_ROOM", () => {
-			this.$session.destroy()
-			if (this.$waiting_to_tester) {
-				this.props.onEnterTester("course")
-			} else {
-				this.props.onEndCourse()
-			}
 		})
 		this.$room.rtc.on("networkquality", (uid, tx, rx) => {
 			console.log("网络状态：", uid, tx, rx)
@@ -469,8 +466,11 @@ class Course extends React.Component {
 	}
 
 	leaveCourse() {
-		this.$signal.leave()
-		this.$room.leave()
+		if (this.$waiting_to_tester) {
+			this.props.onEnterTester("course")
+		} else {
+			this.props.onEndCourse()
+		}
 	}
 
 	preLeaveCourse(leaveOnly) {
@@ -597,7 +597,17 @@ class Course extends React.Component {
 			sure: () => {
 				this.setState({ control: false })
 				this.$session.send_message(Const.START_COURSE)
-				net.beginClass(this.props.room.channel_id)
+				let user_ids = '';
+				this.props.students.map((student)=>{
+					if(student){
+						if(user_ids == ''){
+							user_ids += student.id;
+						}else{
+							user_ids += (','+student.id);
+						}
+					}
+				});
+				net.beginClass(this.props.room.channel_id, user_ids)
 				this.props.onBeginCourse()
 			}
 		})

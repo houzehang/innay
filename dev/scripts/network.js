@@ -80,7 +80,7 @@ class Network extends Eventer {
 					if (res.responseJSON) {
 						alert(res.responseJSON.message)
 					}
-					if (res.status == 401 || res.status == 400) {
+					if (res.status == 401) {
 						//登录
 						this.trigger("LOGOUT_NEEDED")
 						reject()
@@ -216,8 +216,8 @@ class Network extends Eventer {
 	/**
 	 * 开始上课
 	 */
-	beginClass(channel_id) {
-		return this.__request('/room/class_begin',{channel_id},"post")
+	beginClass(channel_id, user_ids) {
+		return this.__request('/room/class_begin',{channel_id, user_ids},"post")
 	}
 
 	/**
