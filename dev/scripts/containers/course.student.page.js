@@ -49,6 +49,10 @@ class Course extends React.Component {
 			net.log({name:"DOWNLOADED",url,file})
 			this.$audios_files[url] = file
 		})
+		
+		if (context && context.detector) {
+			context.detector.waring_threshold = 2;
+		}
 	}
 
 	get uuid() {

@@ -57,6 +57,10 @@ class Course extends React.Component {
 				this.onHotKey(hotkeyName);
 			}
 		});
+		
+		if (context && context.detector) {
+			context.detector.waring_threshold = 2;
+		}
 	}
 
 	get uuid() {

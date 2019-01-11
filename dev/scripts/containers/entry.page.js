@@ -31,6 +31,7 @@ class Entry extends React.Component {
 	__start_detector() {
 		let detector = new NetDetector
 		context.detector = detector
+		context.detector.waring_threshold = 3;
 		detector.on("NET:STATUS", (level)=>{
 			console.log("net status", level)
 			this.setState({ netstatus: level, netwarning: detector.warning })

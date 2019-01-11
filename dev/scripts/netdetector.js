@@ -13,6 +13,15 @@ class NetDetector extends Eventer {
 		this.$in_bad_status     = false
 		this.$check_timer		= null
 		this.$check_closed 		= true
+		this.$waring_threshold  = 2
+	}
+
+	get waring_threshold(){
+		return this.$waring_threshold;
+	}
+
+	set waring_threshold(threshold){
+		this.$waring_threshold = threshold;
 	}
 
 	get good() {
@@ -24,7 +33,7 @@ class NetDetector extends Eventer {
 	}
 
 	get warning() {
-		return this.$status == 0 || this.$status > 2
+		return this.$status == 0 || this.$status > this.$waring_threshold
 	}
 
 	check() {
