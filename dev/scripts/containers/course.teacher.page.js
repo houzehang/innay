@@ -798,6 +798,7 @@ class Course extends React.Component {
 					}}>
 					</div>
 					<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
+					<div className="logo-frame"></div>
 					<div className="avatar-head-frame"></div>
 				</div>
 			</div>

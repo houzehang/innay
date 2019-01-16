@@ -22,6 +22,7 @@ class Room extends Eventer {
 		this.$client.setParameters('{"che.audio.enable.agc":false}');
 		this.$client.setParameters('{"che.video.moreFecSchemeEnable":true}');
 		this.$client.enableDualStreamMode(true);
+		this.$client.setLocalVideoMirrorMode(2);
 		if (!this.inst.isSubMaster(this.inst.props.account.id)) {
 			this.$client.enableVideo();
 			this.$client.enableLocalVideo(true);
