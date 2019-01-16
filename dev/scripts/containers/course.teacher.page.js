@@ -533,7 +533,7 @@ class Course extends React.Component {
 		let ids = []
 		if (!user) {
 			this.props.students.forEach((student) => {
-				if (student.stream) {
+				if (student.online) {
 					ids.push(student.id)
 				}
 			})
@@ -603,7 +603,7 @@ class Course extends React.Component {
 				this.$session.send_message(Const.START_COURSE)
 				let user_ids = '';
 				this.props.students.map((student)=>{
-					if(student){
+					if(student && student.online){
 						if(user_ids == ''){
 							user_ids += student.id;
 						}else{
