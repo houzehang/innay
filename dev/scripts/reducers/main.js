@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING } from '../constants/ActionTypes'
 
 const main = (state = {}, action) => {
 	switch (action.type) {
@@ -33,6 +33,16 @@ const main = (state = {}, action) => {
 			courseStarted: false,
 			enterTester: true,
 			fromPage : action.page
+		}
+		case ENTER_MY_COURSES:
+		return {
+			...state,
+			enterMyCourses: true,
+		}
+		case EXIT_MY_COURSES:
+		return {
+			...state,
+			enterMyCourses: false,
 		}
 		case EXIT_TESTER:
 		let page = state.fromPage

@@ -1,11 +1,11 @@
 @import url(base.less);
 .sidebar {
 	width: 1.05rem;
-	height: 3.94rem;
+	height: 5.09rem;
 	position: fixed;
 	left: 0.15rem;
 	top: 50%;
-	margin-top: -3.94/2rem;
+	margin-top: -5.09/2rem;
 	background: #fff;
 	border-top-right-radius: 0.2rem;
 	border-bottom-right-radius: 0.2rem;
@@ -58,6 +58,17 @@
 		color: #959bb5;
 		margin-top: 0.1rem;
 		text-align: center;
+	}
+	.mycourses-area {
+		width: 0.78rem;
+		height: 1.14rem;
+		border-bottom: 1px solid #dddddd;
+		.mycourses-btn {
+			.view-base("stu_icon_mycourse.png");
+		}
+		&:active {
+			opacity: 0.6;
+		}
 	}
 	.device-area {
 		width: 0.78rem;

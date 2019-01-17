@@ -189,6 +189,16 @@ export const onEnterTester = (page)=>({
 	page
 })
 
+export const onEnterMyCourses = (page)=>({
+	type: types.ENTER_MY_COURSES,
+	page
+})
+
+export const onExitMyCourses = (page)=>({
+	type: types.EXIT_MY_COURSES,
+	page
+})
+
 export const onExitTester = ()=>({
 	type: types.EXIT_TESTER
 })

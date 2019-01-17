@@ -8,8 +8,8 @@ class Network extends Eventer {
 	constructor() {
 		super()
 		if (ENV.DEBUG || ENV.TEST) {
-			// this.$base_url = "https://kecheng1.runsnailrun.com"
-			this.$base_url = "https://admintest.youshiyuwen.cn"
+			this.$base_url = "https://kecheng1.runsnailrun.com"
+			// this.$base_url = "https://admintest.youshiyuwen.cn"
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"
 		}
@@ -138,6 +138,13 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 首页-下次课程信息
+	 */
+	getClassLessonFirst() {
+		return this.__request('/room/class_lesson_first')
+	}
+
+	/**
 	 * 获取课程安排
 	 * @param {*} date 
 	 */
@@ -233,6 +240,7 @@ class Network extends Eventer {
 	getContactInfo() {
 		return this.__request('/user/banji_contact')
 	}
+
 
 	__get_system_info() {
 		let usedMemory 	= remote.process.getProcessMemoryInfo(),

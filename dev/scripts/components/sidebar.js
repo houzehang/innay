@@ -30,6 +30,12 @@ class SideBar extends React.Component {
 					}}></div>
 					<div className="nickname">{isStudent?this.props.user.child_name:this.props.user.nickname}</div>
 				</div>
+				{isStudent?<div className="mycourses-area center" onClick={()=>{
+					this.props.onEnterMyCourses()
+				}}>
+					<div className="mycourses-btn"></div>
+					<div className="txt">我的课程</div>
+				</div>:""}
 				<div className="device-area center" onClick={()=>{
 					this.props.onDeviceTest()
 				}}>
@@ -56,6 +62,7 @@ SideBar.propTypes = {
 	onDeviceTest	: PropTypes.func.isRequired,
 	onViewUser		: PropTypes.func.isRequired,
 	onViewHelper	: PropTypes.func.isRequired,
+	onEnterMyCourses: PropTypes.func.isRequired,
 }
 
 export default SideBar
