@@ -14,9 +14,10 @@ const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,
 	onCourseRecording
 } from '../actions'
+import { setTimeout } from 'core-js';
 const context = require("../context")
 const storage = require("../Storage")
 
@@ -28,7 +29,9 @@ class Main extends React.Component {
 		this.$calendarRef  		= React.createRef()
 		this.state 				= {
 			comming_page_selected : true
-        }
+		}
+		this.$page_comming		= 1;
+		this.$page_done 		= 1;
 		this.recordsRoom = {};
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -40,74 +43,48 @@ class Main extends React.Component {
 		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
 	}
 
-	componentDidMount() {
-		let { account } = this.props  
-		if (account.dentity == types.DENTITY.STUDENT) {
-			net.lessonsByHistory().then(res=>{
-				const {data} = res.list;
-				this.recordsRoom = (data[data.length-1]);
-			});
-			// net.lessonsByDate().then((res)=>{
-			// 	// 计算剩余时间
-			// 	let room = res.rooms[0]
-			// 	if (room) {
-			// 		let date = this.strToDate(room.start_time)
-			// 		let left = date.getTime() - new Date().getTime()
-			// 		room.left = left
-			// 		// if (left <= 5 * 60 * 1000) {
-			// 		room.can_enter = true
-			// 		// }
-			// 		// if (left <= 60 * 60 * 1000) {
-			// 		room.can_download = true
-			// 		// }
-			// 		if (left > 0) {
-			// 			let days  	= left / 1000 / 60 / 60 / 24 >> 0
-			// 			left       -= days * 1000 * 60 * 60 * 24
-			// 			let hours 	= left / 1000 / 60 / 60 >> 0
-			// 			let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
-			// 			room.days   = days
-			// 			room.hours  = hours
-			// 			room.minutes= minutes
-			// 		}
-			// 	}
-			// 	this.props.onRoomList(res.rooms)
-			// })
-			net.getClassLessonFirst().then((res)=>{
-				console.log('roominfo == ',res);
-				// 计算剩余时间
-				let room = res.rooms[0]
-				if (room) {
-					let date = this.strToDate(room.start_time)
-					let left = date.getTime() - new Date().getTime()
-					room.left = left
-					// if (left <= 5 * 60 * 1000) {
-					room.can_enter = true
-					// }
-					// if (left <= 60 * 60 * 1000) {
-					room.can_download = true
-					// }
-					if (left > 0) {
-						let days  	= left / 1000 / 60 / 60 / 24 >> 0
-						left       -= days * 1000 * 60 * 60 * 24
-						let hours 	= left / 1000 / 60 / 60 >> 0
-						let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
-						room.days   = days
-						room.hours  = hours
-						room.minutes= minutes
-					}
+	componentDidMount() {  
+		net.lessonsByHistory().then(res=>{
+			const {data} = res.list;
+			this.recordsRoom = (data[data.length-1]);
+		});
+		net.getLessonComming().then((res)=>{
+			console.log('roominfo == ',res);
+			// 计算剩余时间
+			let room = res.room;
+			if (room) {
+				let date = this.strToDate(room.start_time)
+				let left = date.getTime() - new Date().getTime()
+				room.left = left
+				// if (left <= 5 * 60 * 1000) {
+				room.can_enter = true
+				// }
+				// if (left <= 60 * 60 * 1000) {
+				room.can_download = true
+				// }
+				if (left > 0) {
+					let days  	= left / 1000 / 60 / 60 / 24 >> 0
+					left       -= days * 1000 * 60 * 60 * 24
+					let hours 	= left / 1000 / 60 / 60 >> 0
+					let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
+					room.days   = days
+					room.hours  = hours
+					room.minutes= minutes
 				}
-				this.props.onRoomList(res.rooms)
-			})
-		}
+			}
+			console.log('onLessonComing333');
+			this.props.onLessonComming(room)
+		})
 		context.user = this.props.account
 	}
 
 	__student_page() {
-		let room 
-		if (this.props.rooms && this.props.rooms.length > 0) {
-			room = this.props.rooms[0]
-		}
-		console.warn(this.props.rooms)
+		let room = this.props.commingRoom;
+		// if (this.props.rooms && this.props.rooms.length > 0) {
+		// 	room = this.props.rooms[0]
+		// }
+		// console.warn(this.props.rooms)
+		console.log('comming room ',room);
 		return (
 			<div className="page student-page">
 				<div className="inner">
@@ -121,10 +98,10 @@ class Main extends React.Component {
                                     </div>
                                     <div className="info">
                                         <div className="name"><span>{room.name}</span></div>
-                                        <div className="desc">课时简介：你知道我们身体上都有什么洞吗？这些洞的作用是什么呢，跟着老师看一下吧！</div>
+                                        <div className="desc">课时简介：{room.content||'暂无'}</div>
                                         {/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-                                        <div className="tag"><div className="tag-kind">少儿文学</div><span className="tag-effect">学习能力提升：求知欲、想象力、表达力</span></div>
-                                        <div className="date"><span>01-09 19:30</span></div>
+                                        <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{room.ability}</span></div>
+                                        <div className="date"><span>{room.class_date} {room.class_time}</span></div>
                                     </div>
                                     <div className="btns-panel">
 										{room.can_enter?<button className="start-btn" onClick={()=>{
@@ -168,7 +145,10 @@ class Main extends React.Component {
     }
     
     __my_courses(){
-		let room = this.props.rooms[0];
+		console.log('this.props.commingRooms = ',this.props.commingRooms);
+		console.log('this.props.doneRooms = ',this.props.doneRooms);
+		let _commingRooms = []
+		let _doneRooms 	  = []
         return (
 			<div className="page student-page">
 				<div className="inner">
@@ -183,13 +163,22 @@ class Main extends React.Component {
 										this.setState({
 											comming_page_selected:true
 										});
+										this.__query_courses();
+										setTimeout(()=>{
+											this.__query_courses();
+										},0);
 									}}>
 										<span>要上课程</span>
 									</div>
 									<div className="switch-bar-right" onClick={()=>{
+										console.log('switch-bar-right clicked1');
 										this.setState({
 											comming_page_selected:false
 										});
+										console.log('switch-bar-right clicked2');
+										setTimeout(()=>{
+											this.__query_courses();
+										},0);
 									}}>
 										<span>已上课程</span>
 									</div>
@@ -200,18 +189,20 @@ class Main extends React.Component {
 								</div>
 							</div>
 							{this.state.comming_page_selected ? <div className="courses-comming-area">
-								<div className="lesson-box-panel">
-									<div className="date-tip"><div className="date-icon"></div><span>01.09 周三</span></div>
-									<div key="1" className="lesson-box">
+								{(this.props.commingRooms||[]).forEach((room,index)=>{
+									console.log('kkkkkkkkk',room);
+									_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_"+index}>
+									<div className="date-tip"><div className="date-icon"></div><span>{room.class_date} {room.week_day}</span></div>
+									<div className="lesson-box">
 										<div className="cover">
 											<img src={room.avatar} alt=""/>
 										</div>
 										<div className="info">
-											<div className="name"><span>10.我们身体里的洞</span></div>
-											<div className="desc">课时简介：你知道我们身体上都有什么洞吗？这些洞的作用是什么呢，跟着老师看一下吧！</div>
+											<div className="name"><span>{room.name}</span></div>
+											<div className="desc">课时简介：{room.content}</div>
 											{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-											<div className="tag"><div className="tag-kind">少儿文学</div><span className="tag-effect">学习能力提升：求知欲、想象力、表达力</span></div>
-											<div className="date"><span>01-09 19:30</span></div>
+											<div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{room.ability}</span></div>
+											<div className="date"><span>{room.between_time}</span></div>
 										</div>
 										<div className="btns-panel">
 											{room.can_enter?<button className="start-btn" onClick={()=>{
@@ -225,135 +216,28 @@ class Main extends React.Component {
 											
 										</div>
 									</div>
-								</div>	
+								</div>);
+									
+								})}
+								{_commingRooms}
 							</div>: <div className="courses-done-area">
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								<div className="lesson-done-box-panel">
-									<div className="box-panel-top">
-										<span className="lesson-name">多变的色彩女王</span>
-										<span className="lesson-level">（一年级Level2）</span>
-									</div>
-									<div className="box-panel-center">
-										<span className="lesson-time">01-02 19:30</span>
-									</div>
-									<div className="box-panel-bottom">
-										<span className="lesson-state abnormal">旷课</span>
-										<div className="star-icon"></div>
-										<span className="star-count">22</span>
-									</div>
-								</div>
-								
+								{(this.props.doneRooms||[]).forEach((room,index)=>{
+									_doneRooms.push(<div className="lesson-done-box-panel" key={"done_room_"+index}>
+										<div className="box-panel-top">
+											<span className="lesson-name">{room.name}</span>
+											<span className="lesson-level">（{room.lesson_name}）</span>
+										</div>
+										<div className="box-panel-center">
+											<span className="lesson-time">{room.class_date} {room.class_time}</span>
+										</div>
+										<div className="box-panel-bottom">
+											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':'旷课'}</span>
+											<div className="star-icon"></div>
+											<span className="star-count">{room.star}</span>
+										</div>
+									</div>)
+								})}
+								{_doneRooms}
 							</div> }
                         </div>
 					</div>
@@ -560,19 +444,57 @@ class Main extends React.Component {
 		})
 	}
 
+	__query_courses(more){
+		console.log('this.state.comming_page_selected',this.state.comming_page_selected,this.$page_done);
+		if (this.state.comming_page_selected) {
+			if (more || this.$page_comming == 1) {
+				console.log('youshi======__query_courses1');
+				net.getLessonListComming({page:this.$page_comming}).then(res=>{
+					console.log('youshi======__query_courses1 res = ',res);
+					if (res && res.list) {
+						this.$page_comming = Number(res.list.current_page) + 1;
+						console.log('youshi====getLessonListComming,res =',res);
+						let latest = (this.props.commingRooms||[]).concat(res.list.data||[]);
+						console.log('latest 1 = ',latest);
+						this.props.onLessonsComming(latest);
+					}
+				});
+			}
+		}else{
+			if (more || this.$page_done == 1) {
+				console.log('youshi======__query_courses2');
+				return net.getLessonListDone({page:this.$page_done}).then(res=>{
+					console.log('youshi======__query_courses2 res = ',res);
+					if (res && res.list) {
+						this.$page_done = Number(res.list.current_page) + 1;
+						console.log('youshi====getLessonListDone,res =',res);
+						let latest = (this.props.doneRooms||[]).concat(res.list.data||[]);
+						console.log('latest 2 = ',latest);
+						this.props.onLessonsDone(latest);
+					}
+				});
+			}
+		}
+	}
+
 	render() {
 		let { account } = this.props 
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
+			console.log(444);
 			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent/> : <CourseForTeacher/>
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
+			console.log(333);
 		} else if (this.props.testing) {
+			console.log(222);
 			content = <Devices />
         } else if (this.props.mycourses){
+			console.log(111);
             content = this.__my_courses();
 		} else {
+			console.log(555);
 			content = this.__student_page()
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
@@ -581,7 +503,8 @@ class Main extends React.Component {
 			}} onViewHelper={()=>{
 				this.__on_helper()
 			}} onEnterMyCourses={()=>{
-				this.props.onEnterMyCourses()
+				this.props.onEnterMyCourses();
+				this.__query_courses();
 			}}/>
 		}
 		return (
@@ -600,7 +523,10 @@ const mapStateToProps = (state, ownProps) => {
 		started 	: state.main.courseStarted,
 		recording	: state.main.recording,
         testing 	: state.main.enterTester,
-        mycourses   : state.main.enterMyCourses,
+		mycourses   : state.main.enterMyCourses,
+		commingRoom : state.main.commingRoom,
+		commingRooms: state.main.commingRooms,
+		doneRooms   : state.main.doneRooms
 	}
 }
 
@@ -617,7 +543,10 @@ const mapDispatchToProps = dispatch => ({
     onEnterMyCourses    : ()=>dispatch(onEnterMyCourses()),
     onExitMyCourses    : ()=>dispatch(onExitMyCourses()),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
-	onCourseRecording   : (status) => dispatch(onCourseRecording(status))
+	onCourseRecording   : (status) => dispatch(onCourseRecording(status)),
+	onLessonComming     : (room) => dispatch(onLessonComming(room)),
+	onLessonsComming    : (rooms) => dispatch(onLessonsComming(rooms)),
+	onLessonsDone       : (rooms) => dispatch(onLessonsDone(rooms)),
 })
   
 export default connect(

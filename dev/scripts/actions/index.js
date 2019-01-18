@@ -232,3 +232,24 @@ export const onChangeUserInfo = (user)=>{
 		user
 	}
 }
+
+export const onLessonComming = (commingRoom)=>{
+	return {
+		type: types.LESSON_COMMING,
+		commingRoom
+	}
+}
+
+export const onLessonsComming = (commingRooms)=>{
+	return {
+		type: types.LESSONS_COMMING,
+		commingRooms
+	}
+}
+
+export const onLessonsDone = (doneRooms)=>{
+	return {
+		type: types.LESSONS_DONE,
+		doneRooms
+	}
+}

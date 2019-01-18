@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING, LESSON_COMMING, LESSONS_COMMING, LESSONS_DONE} from '../constants/ActionTypes'
 
 const main = (state = {}, action) => {
 	switch (action.type) {
@@ -65,6 +65,24 @@ const main = (state = {}, action) => {
 		return {
 			...state,
 			recording: action.status
+		}
+		case LESSON_COMMING:
+		console.log('lesson comming 222');
+		return {
+			...state,
+			commingRoom: action.commingRoom
+		}
+		case LESSONS_COMMING:
+		console.log('LESSONS_COMMING action.commingRooms',action.commingRooms);
+		return {
+			...state,
+			commingRooms: action.commingRooms
+		}
+		case LESSONS_DONE:
+		console.log('LESSONS_DONE action.doneRooms',action.doneRooms);
+		return {
+			...state,
+			doneRooms: action.doneRooms
 		}
 		default:
 		return state
