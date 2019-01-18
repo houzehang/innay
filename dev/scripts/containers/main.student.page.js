@@ -14,7 +14,7 @@ const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,
 	onCourseRecording
 } from '../actions'
 import { setTimeout } from 'core-js';
@@ -33,6 +33,8 @@ class Main extends React.Component {
 		this.$page_comming		= 1;
 		this.$page_done 		= 1;
 		this.recordsRoom = {};
+		this.$no_morelessons_comming = false;
+		this.$no_morelessons_done = false;
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -56,12 +58,6 @@ class Main extends React.Component {
 				let date = this.strToDate(room.start_time)
 				let left = date.getTime() - new Date().getTime()
 				room.left = left
-				// if (left <= 5 * 60 * 1000) {
-				room.can_enter = true
-				// }
-				// if (left <= 60 * 60 * 1000) {
-				room.can_download = true
-				// }
 				if (left > 0) {
 					let days  	= left / 1000 / 60 / 60 / 24 >> 0
 					left       -= days * 1000 * 60 * 60 * 24
@@ -72,7 +68,6 @@ class Main extends React.Component {
 					room.minutes= minutes
 				}
 			}
-			console.log('onLessonComing333');
 			this.props.onLessonComming(room)
 		})
 		context.user = this.props.account
@@ -80,10 +75,10 @@ class Main extends React.Component {
 
 	__student_page() {
 		let room = this.props.commingRoom;
-		// if (this.props.rooms && this.props.rooms.length > 0) {
-		// 	room = this.props.rooms[0]
-		// }
-		// console.warn(this.props.rooms)
+		if (room) {
+			room.can_enter = true
+			room.can_download = true
+		}
 		console.log('comming room ',room);
 		return (
 			<div className="page student-page">
@@ -149,8 +144,16 @@ class Main extends React.Component {
 		console.log('this.props.doneRooms = ',this.props.doneRooms);
 		let _commingRooms = []
 		let _doneRooms 	  = []
+
+		setTimeout(()=>{
+			this.contentNode = document.getElementById('courses-comming-area');
+			console.log('youshi===contentNode1',this.contentNode);
+			console.log('youshi===contentNode2',document.getElementById('courses-done-area'));
+			document.getElementById('courses-comming-area') && document.getElementById('courses-comming-area').addEventListener('scroll', this.onScrollHandle.bind(this));
+			document.getElementById('courses-done-area') && document.getElementById('courses-done-area').addEventListener('scroll', this.onScrollHandle.bind(this));
+		},10);
         return (
-			<div className="page student-page">
+			<div className="page student-page" >
 				<div className="inner">
 					<div className="student-box">
                         <div className="my-courses">
@@ -185,12 +188,16 @@ class Main extends React.Component {
 								</div>
 								<div className="course-according">
 									<span className="label">课时消耗情况：</span>
-									<span className="value">5/88</span>
+									<span className="value">{this.state.comming_page_selected ? this.props.totalComming: this.props.totalDone}</span>
 								</div>
 							</div>
-							{this.state.comming_page_selected ? <div className="courses-comming-area">
+							{this.state.comming_page_selected ? <div className="courses-comming-area" id="courses-comming-area">
 								{(this.props.commingRooms||[]).forEach((room,index)=>{
 									console.log('kkkkkkkkk',room);
+									if (index == 0) {
+										room.can_download = true;
+										room.can_enter = true;
+									}
 									_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_"+index}>
 									<div className="date-tip"><div className="date-icon"></div><span>{room.class_date} {room.week_day}</span></div>
 									<div className="lesson-box">
@@ -220,7 +227,7 @@ class Main extends React.Component {
 									
 								})}
 								{_commingRooms}
-							</div>: <div className="courses-done-area">
+							</div>: <div className="courses-done-area"  id="courses-done-area">
 								{(this.props.doneRooms||[]).forEach((room,index)=>{
 									_doneRooms.push(<div className="lesson-done-box-panel" key={"done_room_"+index}>
 										<div className="box-panel-top">
@@ -384,7 +391,6 @@ class Main extends React.Component {
 	}
 
 	onDownload(data, canenter,isRecord) {
-		console.log("download",data)
 		this.props.alert({
 			title: "下载课程包",
 			content: <Download name={data.en_name} complete={()=>{
@@ -445,32 +451,35 @@ class Main extends React.Component {
 	}
 
 	__query_courses(more){
-		console.log('this.state.comming_page_selected',this.state.comming_page_selected,this.$page_done);
 		if (this.state.comming_page_selected) {
+			if (this.$no_morelessons_comming || this.$querying_comming_lessons) return;
 			if (more || this.$page_comming == 1) {
-				console.log('youshi======__query_courses1');
+				this.$querying_comming_lessons = true;
 				net.getLessonListComming({page:this.$page_comming}).then(res=>{
-					console.log('youshi======__query_courses1 res = ',res);
-					if (res && res.list) {
+					this.$querying_comming_lessons = false;
+					if (res && res.list && res.list.data && res.list.data.length > 0) {
 						this.$page_comming = Number(res.list.current_page) + 1;
-						console.log('youshi====getLessonListComming,res =',res);
 						let latest = (this.props.commingRooms||[]).concat(res.list.data||[]);
-						console.log('latest 1 = ',latest);
 						this.props.onLessonsComming(latest);
+						res.total && res.total != '' && this.props.onLessonsTotalComming(res.total);
+					}else{
+						this.$no_morelessons_comming = true;
 					}
 				});
 			}
 		}else{
+			if (this.$no_morelessons_done || this.$querying_done_lessons) return;
 			if (more || this.$page_done == 1) {
-				console.log('youshi======__query_courses2');
+				this.$querying_done_lessons = true;
 				return net.getLessonListDone({page:this.$page_done}).then(res=>{
-					console.log('youshi======__query_courses2 res = ',res);
-					if (res && res.list) {
+					this.$querying_done_lessons = false;
+					if (res && res.list && res.list.data && res.list.data.length > 0) {
 						this.$page_done = Number(res.list.current_page) + 1;
-						console.log('youshi====getLessonListDone,res =',res);
 						let latest = (this.props.doneRooms||[]).concat(res.list.data||[]);
-						console.log('latest 2 = ',latest);
 						this.props.onLessonsDone(latest);
+						res.total && res.total != '' && this.props.onLessonsTotalDone(res.total);
+					}else{
+						this.$no_morelessons_done = true;
 					}
 				});
 			}
@@ -482,19 +491,14 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			console.log(444);
 			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent/> : <CourseForTeacher/>
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
-			console.log(333);
 		} else if (this.props.testing) {
-			console.log(222);
 			content = <Devices />
         } else if (this.props.mycourses){
-			console.log(111);
             content = this.__my_courses();
 		} else {
-			console.log(555);
 			content = this.__student_page()
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
@@ -511,6 +515,15 @@ class Main extends React.Component {
 			<div className="full-h">{sidebar}{content}</div>
 		)
 	}
+	onScrollHandle(event) {
+		const clientHeight = event.target.clientHeight
+		const scrollHeight = event.target.scrollHeight
+		const scrollTop = event.target.scrollTop
+		const isBottom = (clientHeight + scrollTop === scrollHeight)
+		if (isBottom) {
+			this.__query_courses(true);
+		}
+	}
 }
 
 const mapStateToProps = (state, ownProps) => {
@@ -526,7 +539,9 @@ const mapStateToProps = (state, ownProps) => {
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
 		commingRooms: state.main.commingRooms,
-		doneRooms   : state.main.doneRooms
+		doneRooms   : state.main.doneRooms,
+		totalComming: state.main.totalComming,
+		totalDone: state.main.totalDone,
 	}
 }
 
@@ -547,6 +562,8 @@ const mapDispatchToProps = dispatch => ({
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
 	onLessonsComming    : (rooms) => dispatch(onLessonsComming(rooms)),
 	onLessonsDone       : (rooms) => dispatch(onLessonsDone(rooms)),
+	onLessonsTotalComming: (rooms) => dispatch(onLessonsTotalComming(rooms)),
+	onLessonsTotalDone   : (rooms) => dispatch(onLessonsTotalDone(rooms)),
 })
   
 export default connect(

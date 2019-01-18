@@ -253,3 +253,17 @@ export const onLessonsDone = (doneRooms)=>{
 		doneRooms
 	}
 }
+
+export const onLessonsTotalComming = (totalComming)=>{
+	return {
+		type: types.LESSONS_TOTAL_COMMING,
+		totalComming
+	}
+}
+
+export const onLessonsTotalDone = (totalDone)=>{
+	return {
+		type: types.LESSONS_TOTAL_DONE,
+		totalDone
+	}
+}

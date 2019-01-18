@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING, LESSON_COMMING, LESSONS_COMMING, LESSONS_DONE} from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING, LESSON_COMMING, LESSONS_COMMING, LESSONS_DONE, LESSONS_TOTAL_COMMING,LESSONS_TOTAL_DONE} from '../constants/ActionTypes'
 
 const main = (state = {}, action) => {
 	switch (action.type) {
@@ -83,6 +83,16 @@ const main = (state = {}, action) => {
 		return {
 			...state,
 			doneRooms: action.doneRooms
+		}
+		case LESSONS_TOTAL_COMMING:
+		return {
+			...state,
+			totalComming: action.totalComming
+		}
+		case LESSONS_TOTAL_DONE:
+		return {
+			...state,
+			totalDone: action.totalDone
 		}
 		default:
 		return state
