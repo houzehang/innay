@@ -478,30 +478,53 @@ class Course extends React.Component {
 	}
 
 	preLeaveCourse(leaveOnly) {
-		if (leaveOnly) {
-			this.props.confirm({
-				content: "确定要临时退出房间吗？",
-				sure: () => {
-					this.props.showLoading("正在退出房间...")
-					this.leaveCourse()
+		function __endCourse(){
+			this.props.showLoading("正在退出房间...")
+			// 发送关闭房间请求
+			net.closeRoom(this.props.room.channel_id).then((res) => {
+				if (res.status) {
+					this.$session.send_message(Const.STOP_COURSE)
+					this.$signal.send({
+						type: "closeroom",
+						from: this.props.account.id,
+						to: "all"
+					})
 				}
 			})
+		}
+		function __leaveCourse(){
+			this.props.showLoading("正在退出房间...")
+			this.leaveCourse()
+		}
+		if (leaveOnly) {
+			let warningInfo;
+			if (this.props.status.duration && this.props.status.duration > 45 * 60) {
+				this.props.confirm({
+					content: warningInfo || "请确认是否要结束课程",
+					sure_txt: "结束课程",
+					cancel_txt: "确认离开",
+					sure: ()=>{
+						__endCourse.bind(this)();
+					},
+					cancel: ()=>{
+						console.log('__leaveCourse11');
+						__leaveCourse.bind(this)();
+					}
+				})
+
+			}else{
+				this.props.confirm({
+					content: warningInfo || "确定要临时退出房间吗？",
+					sure: () => {
+						__leaveCourse()
+					}
+				})
+			}
 		} else {
 			this.props.confirm({
 				content: "确定要结束本次课程吗？",
 				sure: () => {
-					this.props.showLoading("正在退出房间...")
-					// 发送关闭房间请求
-					net.closeRoom(this.props.room.channel_id).then((res) => {
-						if (res.status) {
-							this.$session.send_message(Const.STOP_COURSE)
-							this.$signal.send({
-								type: "closeroom",
-								from: this.props.account.id,
-								to: "all"
-							})
-						}
-					})
+					__endCourse()
 				}
 			})
 		}

@@ -5,46 +5,52 @@
  * 2. 创建主窗口
  * 3. 添加渲染线程监听器
  */
-const {TC_DEBUG,TEST,TEACHER}   = require('./env.js');
-const Const        = require('./config/const.js'); 
-const Hotkey       = require('./config/hotkey.js'); 
-const StaticServ   = require("./staticserv")
+const { TC_DEBUG, TEST, TEACHER } = require('./env.js');
+const Const = require('./config/const.js');
+const Hotkey = require('./config/hotkey.js');
+const StaticServ = require("./staticserv")
 // 初始化主框架
-const {session,app,BrowserWindow,ipcMain,Menu,globalShortcut} = require('electron');
+const { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
 const log = require('electron-log');
-const {autoUpdater} = require("electron-updater");
+const { autoUpdater } = require("electron-updater");
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
-let updateWindow, loaded, mainWindowHotkeyListener, rationalMaximize = false, screenSize, mianWindowSize = {width: 1300, height:790};
-        
+let updateWindow,
+    loaded,
+    mainWindowHotkeyListener,
+    rationalMaximize = false,
+    screenSize,
+    closeWarning,
+    mianWindowSize = { width: 1300, height: 790 };
+
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
-    mainWindow : null,
-    tick: function(){
+    mainWindow: null,
+    tick: function () {
         // 处理从输入框激活状态直接切出,
         // app不响应`browser-window-blur`的问题
-        setInterval(()=>{
+        setInterval(() => {
             this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
-        },2000);
+        }, 2000);
     },
-    send: function(key){
-        if(!this.mainWindow)return;
+    send: function (key) {
+        if (!this.mainWindow) return;
         this.mainWindow.webContents && this.mainWindow.webContents.send('hotkey', key);
     },
-    register: function(){
-        for(let _keyName in Hotkey){
+    register: function () {
+        for (let _keyName in Hotkey) {
             globalShortcut.register(Hotkey[_keyName].code, () => {
                 this.send(_keyName);
             })
         }
     },
-    unregister :function(){
-        for(let _keyName in Hotkey){
+    unregister: function () {
+        for (let _keyName in Hotkey) {
             if (Hotkey[_keyName].windowFocusNeeded) {
-                globalShortcut.unregister(Hotkey[_keyName].code); 
+                globalShortcut.unregister(Hotkey[_keyName].code);
             }
         }
     },
@@ -56,25 +62,26 @@ function sendStatusToWindow(status, data) {
         updateWindow.webContents.on('did-finish-load', () => {
             loaded = true
             if (updateWindow) {
-                log.info("send message",status);
+                log.info("send message", status);
                 updateWindow.webContents.send('message', status, data);
             }
         })
     } else {
         if (updateWindow) {
-            log.info("send message",status);
+            log.info("send message", status);
             updateWindow.webContents.send('message', status, data);
         }
     }
 }
 
 function createUpdateWindow() {
-    updateWindow = new BrowserWindow({width: 600, height: 300, 
+    updateWindow = new BrowserWindow({
+        width: 600, height: 300,
         resizable: false,
         center: true,
         frame: false,
         autoHideMenuBar: true,
-        webPreferences : {
+        webPreferences: {
             webSecurity: true,
             javascript: true,
             plugins: true
@@ -101,48 +108,49 @@ autoUpdater.on('update-not-available', () => {
 })
 autoUpdater.on('error', (err) => {
     sendStatusToWindow(Const.UPDATE.ERROR);
-    setTimeout(()=>{
+    setTimeout(() => {
         createMainWindow()
         updateWindow.close()
-    },2000)
+    }, 2000)
 })
 autoUpdater.on('download-progress', (progress) => {
     sendStatusToWindow(Const.UPDATE.DOWNLOADING, progress);
 })
 autoUpdater.on('update-downloaded', () => {
     sendStatusToWindow(Const.UPDATE.DOWNLOADED);
-    setTimeout(()=>{
-        autoUpdater.quitAndInstall();  
-    },3000)
+    setTimeout(() => {
+        autoUpdater.quitAndInstall();
+    }, 3000)
 });
-app.on('ready', function()  {
+app.on('ready', function () {
     createUpdateWindow();
     autoUpdater.checkForUpdates();
 });
 
 function createMainWindow() {
     process.env.APP_PATH = app.getAppPath();
-    console.log("app path",process.env.APP_PATH)
+    console.log("app path", process.env.APP_PATH)
 
     if (screenSize && rationalMaximize) {
-        let maxRatio = Math.min(screenSize.width / mianWindowSize.width,screenSize.height / mianWindowSize.height);
+        let maxRatio = Math.min(screenSize.width / mianWindowSize.width, screenSize.height / mianWindowSize.height);
         mianWindowSize.width *= maxRatio;
         mianWindowSize.height *= maxRatio;
     }
-    
-    let $main = new BrowserWindow({width: mianWindowSize.width|0, height: mianWindowSize.height|0, 
+
+    let $main = new BrowserWindow({
+        width: mianWindowSize.width | 0, height: mianWindowSize.height | 0,
         resizable: TC_DEBUG,
         center: true,
         frame: true,
         autoHideMenuBar: true,
-        webPreferences : {
+        webPreferences: {
             webSecurity: false,
             javascript: true,
             plugins: true
         }
     })
     let userAgent = $main.webContents.getUserAgent()
-    $main.webContents.setUserAgent(userAgent+' KCPC');
+    $main.webContents.setUserAgent(userAgent + ' KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
     if (TC_DEBUG || TEST) {
         $main.webContents.openDevTools();
@@ -163,8 +171,22 @@ function createMainWindow() {
     $main.on('closed', function (event) {
         mainWindow = null
     })
-    $main.on('crashed', function(event) {
-        log.error("main window crashed",event);
+    $main.on('close', function (event) {
+        if (closeWarning) {
+            dialog.showMessageBox(null, {
+                type: 'question',
+                buttons: ['取消', '确认'],
+                title: '',
+                message: closeWarning.toString()
+            }, function (code) {
+                if (code == 0) {
+                    event.preventDefault();
+                }
+            });
+        }
+    })
+    $main.on('crashed', function (event) {
+        log.error("main window crashed", event);
         createMainWindow()
         $main.destroy()
     })
@@ -175,7 +197,7 @@ app.on('window-all-closed', () => {
     app.quit();
 });
 
-app.on('ready', function() {
+app.on('ready', function () {
     if (!TC_DEBUG) {
         if (process.platform === 'darwin') {
             const template = [
@@ -184,7 +206,7 @@ app.on('ready', function() {
                     submenu: [
                         { label: `当前版本 ${app.getVersion()}` },
                         { type: "separator" },
-                        { label: "退出", accelerator: "Command+Q", click: function() { app.quit(); }}
+                        { label: "退出", accelerator: "Command+Q", click: function () { app.quit(); } }
                     ]
                 },
                 {
@@ -198,7 +220,7 @@ app.on('ready', function() {
                 {
                     label: '帮助',
                     submenu: [
-                        { label: "关于明兮大语文",  click () { require('electron').shell.openExternal('https://mingxi.cn') } }
+                        { label: "关于明兮大语文", click() { require('electron').shell.openExternal('https://mingxi.cn') } }
                     ]
                 },
             ]
@@ -206,30 +228,38 @@ app.on('ready', function() {
             Menu.setApplicationMenu(menu)
         }
     }
-    
+
     screenSize = require('electron').screen.getPrimaryDisplay().size;
 })
 
-app.on('browser-window-focus', function(){
+app.on('browser-window-focus', function () {
     if (TEACHER) {
         mainWindowHotkeyListener.register();
     }
 });
 
-app.on('browser-window-blur', function(){
+app.on('browser-window-blur', function () {
     if (TEACHER) {
         mainWindowHotkeyListener.unregister();
     }
 });
 
 process.on('uncaughtException', function (err) {
-    log.error("uncaughtException",err);
+    log.error("uncaughtException", err);
 });
 
-ipcMain.on('off-hotkey',function(){
+ipcMain.on('off-hotkey', function () {
     TEACHER && mainWindowHotkeyListener.unregister();
 });
 
-ipcMain.on('on-hotkey',function(){
+ipcMain.on('on-hotkey', function () {
     TEACHER && mainWindowHotkeyListener.register();
+});
+
+ipcMain.on('on-closewarning', function (warningMsg) {
+    TEACHER && (closeWarning = warningMsg);
+});
+
+ipcMain.on('off-closewarning', function () {
+    TEACHER && (closeWarning = warningMsg);
 });
