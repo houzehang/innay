@@ -143,6 +143,7 @@ class Signalize extends Eventer {
 				this.__connect_error()
 			}
 			let new_user_joined = (account)=>{
+				console.log('zlog-new_user_joined,account',account);
 				// 获取用户信息
 				let userinfo 
 				if (account == this.$inst.props.teacher.id) {
@@ -160,15 +161,18 @@ class Signalize extends Eventer {
 						}
 					}
 				}
+				console.log('zlog-new_user_joined,account',userinfo);
 				if (userinfo) {
 					this.trigger("CHANNEL_NEW_USER", userinfo)
 				}
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
+				console.log('zelog-onChannelUserJoined',account, uid);
 				this.$user_in_room[account] = true
 				new_user_joined(account)
 			}
 			channel.onChannelUserList = (users)=>{
+				console.log('zelog-onChannelUserList',users);
 				users.forEach((account)=>{
 					this.$user_in_room[account[0]] = true
 					new_user_joined(account[0])

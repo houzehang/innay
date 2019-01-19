@@ -268,6 +268,7 @@ class Course extends React.Component {
 			clearTimeout($waiting_timer)
 		})
 		this.$signal.on("CHANNEL_NEW_USER", (user) => {
+			console.log('zelog-CHANNEL_NEW_USER',user);
 			this.$session.send_message(Const.MEMBER_ADD, {}, {
 				userinfos: [user]
 			})
