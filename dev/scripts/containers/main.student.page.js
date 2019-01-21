@@ -32,7 +32,6 @@ class Main extends React.Component {
 		}
 		this.$page_comming		= 1;
 		this.$page_done 		= 1;
-		this.recordsRoom = {};
 		this.$no_morelessons_comming = false;
 		this.$no_morelessons_done = false;
 		net.on("LOGOUT_NEEDED", ()=>{
@@ -69,10 +68,6 @@ class Main extends React.Component {
 	}
 
 	componentDidMount() {  
-		net.lessonsByHistory().then(res=>{
-			const {data} = res.list;
-			this.recordsRoom = (data[data.length-1]);
-		});
 		this.__get_lesson_comming();
 		context.user = this.props.account
 	}
@@ -497,7 +492,10 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent/> : <CourseForTeacher/>
+			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent onLeaveRoom={()=>{
+				console.log('121log student leave room');
+				this.__get_lesson_comming();
+			}}/> : <CourseForTeacher/>
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
 		} else if (this.props.testing) {

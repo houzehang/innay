@@ -40,37 +40,6 @@ class Main extends React.Component {
 
 	componentDidMount() {
 		let { account } = this.props  
-		if (account.dentity == types.DENTITY.STUDENT) {
-			net.lessonsByHistory().then(res=>{
-				const {data} = res.list;
-				this.recordsRoom = (data[data.length-1]);
-			});
-			net.lessonsByDate().then((res)=>{
-				// 计算剩余时间
-				let room = res.rooms[0]
-				if (room) {
-					let date = this.strToDate(room.start_time)
-					let left = date.getTime() - new Date().getTime()
-					room.left = left
-					// if (left <= 5 * 60 * 1000) {
-					room.can_enter = true
-					// }
-					// if (left <= 60 * 60 * 1000) {
-					room.can_download = true
-					// }
-					if (left > 0) {
-						let days  	= left / 1000 / 60 / 60 / 24 >> 0
-						left       -= days * 1000 * 60 * 60 * 24
-						let hours 	= left / 1000 / 60 / 60 >> 0
-						let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
-						room.days   = days
-						room.hours  = hours
-						room.minutes= minutes
-					}
-				}
-				this.props.onRoomList(res.rooms)
-			})
-		}
 		context.user = this.props.account
 	}
 
