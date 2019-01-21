@@ -516,7 +516,7 @@ class Course extends React.Component {
 				this.props.confirm({
 					content: warningInfo || "确定要临时退出房间吗？",
 					sure: () => {
-						__leaveCourse()
+						__leaveCourse.bind(this)();
 					}
 				})
 			}
@@ -524,7 +524,7 @@ class Course extends React.Component {
 			this.props.confirm({
 				content: "确定要结束本次课程吗？",
 				sure: () => {
-					__endCourse()
+					__endCourse.bind(this)();
 				}
 			})
 		}

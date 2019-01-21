@@ -45,11 +45,7 @@ class Main extends React.Component {
 		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
 	}
 
-	componentDidMount() {  
-		net.lessonsByHistory().then(res=>{
-			const {data} = res.list;
-			this.recordsRoom = (data[data.length-1]);
-		});
+	__get_lesson_comming(){
 		net.getLessonComming().then((res)=>{
 			console.log('roominfo == ',res);
 			// 计算剩余时间
@@ -70,6 +66,14 @@ class Main extends React.Component {
 			}
 			this.props.onLessonComming(room)
 		})
+	}
+
+	componentDidMount() {  
+		net.lessonsByHistory().then(res=>{
+			const {data} = res.list;
+			this.recordsRoom = (data[data.length-1]);
+		});
+		this.__get_lesson_comming();
 		context.user = this.props.account
 	}
 
@@ -160,6 +164,7 @@ class Main extends React.Component {
 							<div className="nav-area">
 								<div className="btn-exit" onClick={()=>{
 									this.props.onExitMyCourses()
+									this.__get_lesson_comming();
 								}}></div>
 								<div className={this.state.comming_page_selected ? "switch-bar" : "switch-bar first-selected"} >
 									<div className="switch-bar-left" onClick={()=>{
@@ -186,10 +191,11 @@ class Main extends React.Component {
 										<span>已上课程</span>
 									</div>
 								</div>
-								<div className="course-according">
+								{this.props.totalDone && this.props.totalDone.length > 0 ? <div className="course-according">
 									<span className="label">课时消耗情况：</span>
 									<span className="value">{this.state.comming_page_selected ? this.props.totalComming: this.props.totalDone}</span>
-								</div>
+								</div>:""}
+								
 							</div>
 							{this.state.comming_page_selected ? <div className="courses-comming-area" id="courses-comming-area">
 								{(this.props.commingRooms||[]).forEach((room,index)=>{
@@ -238,7 +244,7 @@ class Main extends React.Component {
 											<span className="lesson-time">{room.class_date} {room.class_time}</span>
 										</div>
 										<div className="box-panel-bottom">
-											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':'旷课'}</span>
+											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':'未到课'}</span>
 											<div className="star-icon"></div>
 											<span className="star-count">{room.star}</span>
 										</div>
@@ -461,7 +467,7 @@ class Main extends React.Component {
 						this.$page_comming = Number(res.list.current_page) + 1;
 						let latest = (this.props.commingRooms||[]).concat(res.list.data||[]);
 						this.props.onLessonsComming(latest);
-						res.total && res.total != '' && this.props.onLessonsTotalComming(res.total);
+						res.total && res.total.length > 0 && this.props.onLessonsTotalComming(res.total);
 					}else{
 						this.$no_morelessons_comming = true;
 					}
@@ -477,7 +483,7 @@ class Main extends React.Component {
 						this.$page_done = Number(res.list.current_page) + 1;
 						let latest = (this.props.doneRooms||[]).concat(res.list.data||[]);
 						this.props.onLessonsDone(latest);
-						res.total && res.total != '' && this.props.onLessonsTotalDone(res.total);
+						res.total && res.total.length > 0 && this.props.onLessonsTotalDone(res.total);
 					}else{
 						this.$no_morelessons_done = true;
 					}
@@ -541,7 +547,7 @@ const mapStateToProps = (state, ownProps) => {
 		commingRooms: state.main.commingRooms,
 		doneRooms   : state.main.doneRooms,
 		totalComming: state.main.totalComming,
-		totalDone: state.main.totalDone,
+		totalDone	: state.main.totalDone,
 	}
 }
 
