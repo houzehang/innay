@@ -97,16 +97,16 @@ class Main extends React.Component {
                                         <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{room.ability}</span></div>
                                         <div className="date"><span>{room.class_date} {room.class_time}</span></div>
                                     </div>
+									
                                     <div className="btns-panel">
-										{room.can_enter?<button className="start-btn" onClick={()=>{
+										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										{room.can_enter && room.can_download?<button className="download-btn" onClick={()=>{
+										{room.class_state == 'normal' ? <button className="download-btn" onClick={()=>{
 											this.onDownload(room)
-										}}></button>:""}
-										{!room.can_enter?<button className="waiting-btn"  onClick={()=>{
-										}}></button>: ""}
-                                    </div>
+										}}></button> : "" } 
+										{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+									</div>
                                 </div>,
                                 
                                 room.left > 0 ? (
@@ -194,7 +194,6 @@ class Main extends React.Component {
 							</div>
 							{this.state.comming_page_selected ? <div className="courses-comming-area" id="courses-comming-area">
 								{(this.props.commingRooms||[]).forEach((room,index)=>{
-									console.log('kkkkkkkkk',room);
 									if (index == 0) {
 										room.can_download = true;
 										room.can_enter = true;
@@ -213,14 +212,15 @@ class Main extends React.Component {
 											<div className="date"><span>{room.between_time}</span></div>
 										</div>
 										<div className="btns-panel">
-											{room.can_enter?<button className="start-btn" onClick={()=>{
+											{room.can_enter && room.class_state == 'normal' ?<button className="start-btn" onClick={()=>{
 												this.onStartRoom(room)
 											}}></button>:""}
-											{room.can_enter && room.can_download?<button className="download-btn" onClick={()=>{
+											{room.can_enter && room.can_download  && room.class_state == 'normal'  ?<button className="download-btn" onClick={()=>{
 												this.onDownload(room)
 											}}></button>:""}
-											{!room.can_enter?<button className="waiting-btn"  onClick={()=>{
+											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
 											}}></button>: ""}
+											{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
 											
 										</div>
 									</div>
@@ -239,7 +239,7 @@ class Main extends React.Component {
 											<span className="lesson-time">{room.class_date} {room.class_time}</span>
 										</div>
 										<div className="box-panel-bottom">
-											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':'未到课'}</span>
+											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':(room.class_state=='leave'?"请假":"未到课") }</span>
 											<div className="star-icon"></div>
 											<span className="star-count">{room.star}</span>
 										</div>
@@ -268,52 +268,6 @@ class Main extends React.Component {
 			let dates = res.dates
 			this.$calendarRef.current.setHighlighted(dates)
 		}).done()
-	}
-
-	__master_page() {
-		let calendar = <Calendar onPickDate={(data)=>{
-			this.__on_pick_date(data)
-		}} onChangeMonth={(data)=>{
-			this.__on_change_month(data)
-		}} higlighted={this.state.higlighted} ref={this.$calendarRef}/>
-		return (
-			<div className="page calendar-page">
-				<div className="calendar-inner">
-					{calendar}
-					{
-						this.props.rooms ? 
-						<div className="courses">
-							<div className="title">
-								<div className="label">今日课程</div>
-							</div>
-							{
-								this.props.rooms.length == 0 ? <div className="nothing">今日没有课哦~</div> :
-								(this.props.rooms.map((room,index)=>(
-									<div className="row" key={index}>
-										<div className="cover">
-											<img src={room.avatar} alt=""/>
-										</div>
-										<div className="info">
-											<div className="name">{room.name}</div>
-											<div className="index">{room.lesson_name}</div>
-											<div className="date">上课时间：{room.start_time}</div>
-										</div>
-										<button className="start-btn" disabled={room.state==2} onClick={()=>{
-											this.onStartRoom(room)
-										}}></button>
-										{room.button_hf?<button className="record-btn" onClick={()=>{
-											this.onRecordRoom(room)
-										}}></button>:<button className="download-btn" onClick={()=>{
-											this.onDownload(room)
-										}}></button>}									
-									</div>
-								)))
-							}
-						</div>:""
-					}
-				</div>
-			</div>
-		)
 	}
 
 	onStartRoom(data) {
@@ -493,7 +447,6 @@ class Main extends React.Component {
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent onLeaveRoom={()=>{
-				console.log('121log student leave room');
 				this.__get_lesson_comming();
 			}}/> : <CourseForTeacher/>
 		} else if (this.props.recording) {
