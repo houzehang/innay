@@ -2214,6 +2214,7 @@ body .page.login-page .login-box .login-radio {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 0.22rem;
+  font-size: 0.16rem;
 }
 html .page.login-page .login-box .login-radio label,
 body .page.login-page .login-box .login-radio label {
