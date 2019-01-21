@@ -2518,6 +2518,11 @@ body .page.student-page .inner .student-box .main-page .lesson-box .info .desc {
   align-items: flex-start;
   line-height: 0.26rem;
   vertical-align: top;
+  overflow: scroll;
+}
+html .page.student-page .inner .student-box .main-page .lesson-box .info .desc::-webkit-scrollbar,
+body .page.student-page .inner .student-box .main-page .lesson-box .info .desc::-webkit-scrollbar {
+  display: none;
 }
 html .page.student-page .inner .student-box .main-page .lesson-box .info .desc span,
 body .page.student-page .inner .student-box .main-page .lesson-box .info .desc span {
@@ -2653,6 +2658,13 @@ html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .
 body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .waiting-btn::after {
   content: "\7B49\5F85\4E0A\8BFE";
 }
+html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .leave-flag,
+body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .leave-flag {
+  width: 1.3rem;
+  height: 1.02rem;
+  background: url(./b05a892dc793ab88509726c04c5c90a1.png) no-repeat center center;
+  background-size: 100% 100%;
+}
 html .page.student-page .inner .student-box .my-courses,
 body .page.student-page .inner .student-box .my-courses {
   display: flex;
@@ -2754,6 +2766,12 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area {
   height: 5.24rem;
   overflow: scroll;
 }
+html .page.student-page .inner .student-box .my-courses .courses-comming-area.empty-area,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area.empty-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 html .page.student-page .inner .student-box .my-courses .courses-comming-area::-webkit-scrollbar,
 body .page.student-page .inner .student-box .my-courses .courses-comming-area::-webkit-scrollbar {
   display: none;
@@ -2853,6 +2871,11 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .l
   align-items: flex-start;
   line-height: 0.26rem;
   vertical-align: top;
+  overflow: scroll;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .info .desc::-webkit-scrollbar,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .info .desc::-webkit-scrollbar {
+  display: none;
 }
 html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .info .desc span,
 body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .info .desc span {
@@ -2989,22 +3012,65 @@ html .page.student-page .inner .student-box .my-courses .courses-comming-area .l
 body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .btns-panel .waiting-btn::after {
   content: "\7B49\5F85\4E0A\8BFE";
 }
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .btns-panel .leave-flag,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box .btns-panel .leave-flag {
+  width: 1.3rem;
+  height: 1.02rem;
+  background: url(./b05a892dc793ab88509726c04c5c90a1.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .empty,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 3.41rem;
+  height: 2.34rem;
+  align-content: space-around;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .empty .icon,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .empty .icon {
+  width: 1.54rem;
+  height: 1.07rem;
+  background: url(./76b3ce17af5e80ca15adfd0ed3f75dbe.png) no-repeat center center;
+  background-size: 100% 100%;
+  margin-top: -0.5rem;
+  margin-bottom: 0.3rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .empty span,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .empty span {
+  color: #fff;
+  font-size: 0.24rem;
+  line-height: 0.24rem;
+  content: "\63A5\4E0B\6765\6CA1\6709\8BFE\7A0B\4E86~";
+}
 html .page.student-page .inner .student-box .my-courses .courses-done-area,
 body .page.student-page .inner .student-box .my-courses .courses-done-area {
-  width: 8.7rem;
   height: 5.24rem;
+  width: 8.7rem;
+  position: relative;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container {
+  width: 100%;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
   overflow: scroll;
   justify-content: space-between;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area::-webkit-scrollbar,
-body .page.student-page .inner .student-box .my-courses .courses-done-area::-webkit-scrollbar {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container.empty-container,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container.empty-container {
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container::-webkit-scrollbar,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container::-webkit-scrollbar {
   display: none;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel {
   display: flex;
   align-items: flex-start;
   flex-direction: column;
@@ -3016,8 +3082,8 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .less
   margin-bottom: 0.21rem;
   position: relative;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top {
   height: 0.24rem;
   margin-left: 0.29rem;
   margin-bottom: 0.24rem;
@@ -3026,16 +3092,18 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .less
   font-weight: bold;
   overflow: hidden;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top .lesson-name,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top .lesson-name {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top .lesson-name,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top .lesson-name {
   font-size: 0.24rem;
+  line-height: 0.24rem;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top .lesson-level,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-top .lesson-level {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top .lesson-level,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-top .lesson-level {
   font-size: 0.18rem;
+  line-height: 0.18rem;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-center,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-center {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-center,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-center {
   height: 0.16rem;
   margin-left: 0.29rem;
   color: #333333;
@@ -3044,12 +3112,12 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .less
   align-items: center;
   font-weight: 0.16rem;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-center .lesson-time,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-center .lesson-time {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-center .lesson-time,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-center .lesson-time {
   font-size: 0.18rem;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom {
   display: flex;
   position: absolute;
   bottom: 0;
@@ -3060,19 +3128,19 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .less
   height: 0.38rem;
   align-items: center;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .lesson-state,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .lesson-state {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state {
   margin-left: 0.29rem;
   width: 3.14rem;
   font-size: 0.18rem;
   color: #787878;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .lesson-state.abnormal,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .lesson-state.abnormal {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state.abnormal,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state.abnormal {
   color: #ff2d2d;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .star-icon,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .star-icon {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .star-icon,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .star-icon {
   display: inline;
   width: 0.22rem;
   height: 0.23rem;
@@ -3080,10 +3148,36 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .less
   background-size: 100% 100%;
   margin-right: 0.1rem;
 }
-html .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .star-count,
-body .page.student-page .inner .student-box .my-courses .courses-done-area .lesson-done-box-panel .box-panel-bottom .star-count {
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .star-count,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .star-count {
   color: #feb425;
   font-size: 0.22rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 3.41rem;
+  height: 2.34rem;
+  align-content: space-around;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty .icon,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty .icon {
+  width: 1.74rem;
+  height: 1.12rem;
+  background: url(./d3a0cf9df39d29b07ac57b4d2c784145.png) no-repeat center center;
+  background-size: 100% 100%;
+  margin-top: -0.5rem;
+  margin-bottom: 0.3rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty span,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty span {
+  color: #fff;
+  font-size: 0.24rem;
+  line-height: 0.24rem;
+  content: "\5DF2\4E0A\7684\8BFE\7A0B\4F1A\5728\8FD9\91CC\663E\793A\54E6~";
 }
 html .page.course-page,
 body .page.course-page {
