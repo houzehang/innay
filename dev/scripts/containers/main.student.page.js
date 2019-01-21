@@ -145,9 +145,6 @@ class Main extends React.Component {
 		let _doneRooms 	  = []
 
 		setTimeout(()=>{
-			this.contentNode = document.getElementById('courses-comming-area');
-			console.log('youshi===contentNode1',this.contentNode);
-			console.log('youshi===contentNode2',document.getElementById('courses-done-area'));
 			document.getElementById('courses-comming-area') && document.getElementById('courses-comming-area').addEventListener('scroll', this.onScrollHandle.bind(this));
 			document.getElementById('courses-done-area') && document.getElementById('courses-done-area').addEventListener('scroll', this.onScrollHandle.bind(this));
 		},10);
