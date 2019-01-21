@@ -497,24 +497,22 @@ class Course extends React.Component {
 			this.leaveCourse()
 		}
 		if (leaveOnly) {
-			let warningInfo;
 			if (this.props.status.duration && this.props.status.duration > 45 * 60) {
 				this.props.confirm({
-					content: warningInfo || "请确认是否要结束课程",
+					content: "请确认是否要结束课程",
 					sure_txt: "结束课程",
 					cancel_txt: "确认离开",
 					sure: ()=>{
 						__endCourse.bind(this)();
 					},
 					cancel: ()=>{
-						console.log('__leaveCourse11');
 						__leaveCourse.bind(this)();
 					}
 				})
 
 			}else{
 				this.props.confirm({
-					content: warningInfo || "确定要临时退出房间吗？",
+					content: "确定要临时退出房间吗？",
 					sure: () => {
 						__leaveCourse.bind(this)();
 					}
