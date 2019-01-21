@@ -189,13 +189,12 @@ class Main extends React.Component {
 								</div>:""}
 								
 							</div>
-							{this.state.comming_page_selected ? <div className="courses-comming-area" id="courses-comming-area">
-								{(this.props.commingRooms||[]).forEach((room,index)=>{
-									if (index == 0) {
-										room.can_download = true;
-										room.can_enter = true;
-									}
-									_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_"+index}>
+							{(this.props.commingRooms||[]).forEach((room,index)=>{
+								if (index == 0) {
+									room.can_download = true;
+									room.can_enter = true;
+								}
+								_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_"+index}>
 									<div className="date-tip"><div className="date-icon"></div><span>{room.class_date} {room.week_day}</span></div>
 									<div className="lesson-box">
 										<div className="cover">
@@ -222,9 +221,13 @@ class Main extends React.Component {
 										</div>
 									</div>
 								</div>);
-									
-								})}
-								{_commingRooms}
+								
+							})}
+							{this.state.comming_page_selected ? <div className={_commingRooms.length > 0 ? "courses-comming-area" : "courses-comming-area empty-area"} id="courses-comming-area">
+								{_commingRooms.length > 0 ?_commingRooms : <div className="empty">
+										<div className="icon"></div>
+										<span>接下来没有课程了~</span>
+									</div>}
 							</div>: <div className="courses-done-area"  id="courses-done-area">
 								{(this.props.doneRooms||[]).forEach((room,index)=>{
 									_doneRooms.push(<div className="lesson-done-box-panel" key={"done_room_"+index}>
@@ -242,7 +245,12 @@ class Main extends React.Component {
 										</div>
 									</div>)
 								})}
-								{_doneRooms}
+								<div className={_doneRooms.length > 0 ? "container" : "container empty-container"}>
+									{_doneRooms.length > 0 ?_doneRooms : <div className="empty">
+										<div className="icon"></div>
+										<span>已上的课程会在这里显示哦~</span>
+									</div>}
+								</div>
 							</div> }
                         </div>
 					</div>

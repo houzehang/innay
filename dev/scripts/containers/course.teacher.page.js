@@ -37,11 +37,12 @@ class Course extends React.Component {
 		this.$uuid = 0
 		this.$stat_arr = []
 		this.$session = new Session(this)
+
 		this.state = {
 			no_confirm_mask: false,
 			time: new Date().getTime() / 1000,
 			time_diff: 0,
-			control: !this.props.status.started,
+			control: this.props.room.state == 0,
 			process: { current: 0, total: 0 }
 		}
 		this.$room = new Room(this)
@@ -165,6 +166,12 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
+		//已经上课
+		if (this.props.room.state == 1) {
+			this.props.onBeginCourse();
+			this.setState({ control: false })
+		}
+		
 		context.detector.uncheck()
 		this.$reload_timer = null
 		$(window).on("resize", () => {
@@ -497,7 +504,7 @@ class Course extends React.Component {
 			this.leaveCourse()
 		}
 		if (leaveOnly) {
-			if (this.props.status.duration && this.props.status.duration > 45 * 60) {
+			if (this.props.status.started && (!this.props.status.duration || this.props.status.duration <= 2500) ) {
 				this.props.confirm({
 					content: "请确认是否要结束课程",
 					sure_txt: "结束课程",

@@ -572,6 +572,11 @@ html,body {
 							width: 8.51rem;
 							height: 5.24rem;
 							overflow: scroll;
+							&.empty-area{
+								display: flex;
+								justify-content: center;
+								align-items: center;
+							}
 							&::-webkit-scrollbar {
 								display: none;
 							}
@@ -769,87 +774,135 @@ html,body {
 									}
 								}
 							}
+							.empty{
+								display: flex;
+								flex-direction: column;
+								justify-content: center;
+								align-items: center;
+								width: 3.41rem;
+								height: 2.34rem;
+								align-content: space-around;
+								.icon{
+									.view-base('stu_empty_comming.png');
+									margin-top: -0.5rem;
+									margin-bottom: 0.3rem;
+								}
+								span{
+									color: #fff;
+									font-size: 0.24rem;
+									line-height: 0.24rem;
+									content: "接下来没有课程了~"
+								}
+							}
 						}
 
 						.courses-done-area{
-							width: 8.7rem;
 							height: 5.24rem;
-							display: flex;
-							justify-content: center;
-							flex-wrap: wrap;
-							overflow: scroll;
-							justify-content: space-between;
-							&::-webkit-scrollbar {
-								display: none;
-							}
-							.lesson-done-box-panel{
-								display: flex;
-								align-items: flex-start;
-								flex-direction: column;
-								width: 4.26rem;
-								height: 1.56rem;
-								background: #fff;
-								border-radius: 0.2rem;
-								border-bottom: 1px solid #cccccc;
-								margin-bottom: 0.21rem;
-								position: relative;
-								.box-panel-top{
-									height: 0.24rem;
-									margin-left: 0.29rem;
-									margin-bottom: 0.24rem;
-									margin-top: 0.3rem;
-									color: #333333;
-									font-weight: bold;
-									overflow: hidden;
-									.lesson-name{
-										font-size: 0.24rem;
-										line-height: 0.24rem;
-									}
-									.lesson-level{
-										font-size: 0.18rem;
-										line-height: 0.18rem;
-									}
-								}
-								.box-panel-center{
-									height: 0.16rem;
-									margin-left: 0.29rem;
-									color: #333333;
-									display: flex;
+							width: 8.7rem;
+							position: relative;
+							.container{
+								&.empty-container{
+									height: 100%;
 									justify-content: center;
 									align-items: center;
-									font-weight: 0.16rem;
-									.lesson-time{
-										font-size: 0.18rem;
-									}
 								}
-								.box-panel-bottom{
+								width: 100%;
+								display: flex;
+								flex-wrap: wrap;
+								overflow: scroll;
+								justify-content: space-between;
+								&::-webkit-scrollbar {
+									display: none;
+								}
+								.lesson-done-box-panel{
 									display: flex;
-									position: absolute;
-									bottom: 0;
-									width: 100%;
-									border-bottom-left-radius: inherit;
-									border-bottom-right-radius: inherit;
-									background: #f2f2f2;
-									height: 0.38rem;
-									align-items: center;
-									.lesson-state{
+									align-items: flex-start;
+									flex-direction: column;
+									width: 4.26rem;
+									height: 1.56rem;
+									background: #fff;
+									border-radius: 0.2rem;
+									border-bottom: 1px solid #cccccc;
+									margin-bottom: 0.21rem;
+									position: relative;
+									.box-panel-top{
+										height: 0.24rem;
 										margin-left: 0.29rem;
-										width: 3.14rem;
-										font-size: 0.18rem;
-										color:#787878;
-										// font-weight: bold;
-										&.abnormal{
-											color: #ff2d2d;
+										margin-bottom: 0.24rem;
+										margin-top: 0.3rem;
+										color: #333333;
+										font-weight: bold;
+										overflow: hidden;
+										.lesson-name{
+											font-size: 0.24rem;
+											line-height: 0.24rem;
+										}
+										.lesson-level{
+											font-size: 0.18rem;
+											line-height: 0.18rem;
 										}
 									}
-									.star-icon{
-										display: inline;
-										.view-base('stu_star.png');
-										margin-right: 0.1rem;
+									.box-panel-center{
+										height: 0.16rem;
+										margin-left: 0.29rem;
+										color: #333333;
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										font-weight: 0.16rem;
+										.lesson-time{
+											font-size: 0.18rem;
+										}
 									}
-									.star-count{
-										color: #feb425;
-										font-size: 0.22rem;
+									.box-panel-bottom{
+										display: flex;
+										position: absolute;
+										bottom: 0;
+										width: 100%;
+										border-bottom-left-radius: inherit;
+										border-bottom-right-radius: inherit;
+										background: #f2f2f2;
+										height: 0.38rem;
+										align-items: center;
+										.lesson-state{
+											margin-left: 0.29rem;
+											width: 3.14rem;
+											font-size: 0.18rem;
+											color:#787878;
+											// font-weight: bold;
+											&.abnormal{
+												color: #ff2d2d;
+											}
+										}
+										.star-icon{
+											display: inline;
+											.view-base('stu_star.png');
+											margin-right: 0.1rem;
+										}
+										.star-count{
+											color: #feb425;
+											font-size: 0.22rem;
+										}
+									}
+								}
+								.empty{
+									display: flex;
+									flex-direction: column;
+									justify-content: center;
+									align-items: center;
+									width: 3.41rem;
+									height: 2.34rem;
+									align-content: space-around;
+									.icon{
+										.view-base('stu_empty_done.png');
+										margin-top: -0.5rem;
+										margin-bottom: 0.3rem;
+									}
+									span{
+										color: #fff;
+										font-size: 0.24rem;
+										line-height: 0.24rem;
+										content: "已上的课程会在这里显示哦~"
 									}
 								}
 							}
