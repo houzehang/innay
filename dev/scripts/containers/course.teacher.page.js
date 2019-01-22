@@ -504,7 +504,7 @@ class Course extends React.Component {
 			this.leaveCourse()
 		}
 		if (leaveOnly) {
-			if (this.props.status.started && (!this.props.status.duration || this.props.status.duration <= 2500) ) {
+			if (this.props.status.started && this.isChairMaster () && (!this.props.status.duration || this.props.status.duration <= 0)) {
 				this.props.confirm({
 					content: "请确认是否要结束课程",
 					sure_txt: "结束课程",
