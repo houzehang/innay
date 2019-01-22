@@ -37,11 +37,12 @@ class Course extends React.Component {
 		this.$uuid = 0
 		this.$stat_arr = []
 		this.$session = new Session(this)
+
 		this.state = {
 			no_confirm_mask: false,
 			time: new Date().getTime() / 1000,
 			time_diff: 0,
-			control: !this.props.status.started,
+			control: this.props.room.state == 0,
 			process: { current: 0, total: 0 }
 		}
 		this.$room = new Room(this)
@@ -165,6 +166,12 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
+		//已经上课
+		if (this.props.room.state == 1) {
+			this.props.onBeginCourse();
+			this.setState({ control: false })
+		}
+		
 		context.detector.uncheck()
 		this.$reload_timer = null
 		$(window).on("resize", () => {
@@ -478,30 +485,51 @@ class Course extends React.Component {
 	}
 
 	preLeaveCourse(leaveOnly) {
-		if (leaveOnly) {
-			this.props.confirm({
-				content: "确定要临时退出房间吗？",
-				sure: () => {
-					this.props.showLoading("正在退出房间...")
-					this.leaveCourse()
+		function __endCourse(){
+			this.props.showLoading("正在退出房间...")
+			// 发送关闭房间请求
+			net.closeRoom(this.props.room.channel_id).then((res) => {
+				if (res.status) {
+					this.$session.send_message(Const.STOP_COURSE)
+					this.$signal.send({
+						type: "closeroom",
+						from: this.props.account.id,
+						to: "all"
+					})
 				}
 			})
+		}
+		function __leaveCourse(){
+			this.props.showLoading("正在退出房间...")
+			this.leaveCourse()
+		}
+		if (leaveOnly) {
+			if (this.props.status.started && (!this.props.status.duration || this.props.status.duration <= 2500) ) {
+				this.props.confirm({
+					content: "请确认是否要结束课程",
+					sure_txt: "结束课程",
+					cancel_txt: "确认离开",
+					sure: ()=>{
+						__endCourse.bind(this)();
+					},
+					cancel: ()=>{
+						__leaveCourse.bind(this)();
+					}
+				})
+
+			}else{
+				this.props.confirm({
+					content: "确定要临时退出房间吗？",
+					sure: () => {
+						__leaveCourse.bind(this)();
+					}
+				})
+			}
 		} else {
 			this.props.confirm({
 				content: "确定要结束本次课程吗？",
 				sure: () => {
-					this.props.showLoading("正在退出房间...")
-					// 发送关闭房间请求
-					net.closeRoom(this.props.room.channel_id).then((res) => {
-						if (res.status) {
-							this.$session.send_message(Const.STOP_COURSE)
-							this.$signal.send({
-								type: "closeroom",
-								from: this.props.account.id,
-								to: "all"
-							})
-						}
-					})
+					__endCourse.bind(this)();
 				}
 			})
 		}

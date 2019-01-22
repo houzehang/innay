@@ -197,6 +197,9 @@ class Course extends React.Component {
 			} else {
 				this.props.onEndCourse()
 			}
+			if (this.props.onLeaveRoom) {
+				this.props.onLeaveRoom();
+			}
 		})
 		this.$room.rtc.on("networkquality", (uid, tx, rx)=>{
 			console.log("网络状态：",uid,tx,rx)

@@ -189,6 +189,16 @@ export const onEnterTester = (page)=>({
 	page
 })
 
+export const onEnterMyCourses = (page)=>({
+	type: types.ENTER_MY_COURSES,
+	page
+})
+
+export const onExitMyCourses = (page)=>({
+	type: types.EXIT_MY_COURSES,
+	page
+})
+
 export const onExitTester = ()=>({
 	type: types.EXIT_TESTER
 })
@@ -220,5 +230,40 @@ export const onChangeUserInfo = (user)=>{
 	return {
 		type: types.CHANGE_USER_INFO,
 		user
+	}
+}
+
+export const onLessonComming = (commingRoom)=>{
+	return {
+		type: types.LESSON_COMMING,
+		commingRoom
+	}
+}
+
+export const onLessonsComming = (commingRooms)=>{
+	return {
+		type: types.LESSONS_COMMING,
+		commingRooms
+	}
+}
+
+export const onLessonsDone = (doneRooms)=>{
+	return {
+		type: types.LESSONS_DONE,
+		doneRooms
+	}
+}
+
+export const onLessonsTotalComming = (totalComming)=>{
+	return {
+		type: types.LESSONS_TOTAL_COMMING,
+		totalComming
+	}
+}
+
+export const onLessonsTotalDone = (totalDone)=>{
+	return {
+		type: types.LESSONS_TOTAL_DONE,
+		totalDone
 	}
 }
