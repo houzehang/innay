@@ -223,8 +223,8 @@ class Main extends React.Component {
 								</div>);
 								
 							})}
-							{this.state.comming_page_selected ? <div className={_commingRooms.length == 0 ? "courses-comming-area" : "courses-comming-area empty-area"} id="courses-comming-area">
-								{_commingRooms.length == 0 ?_commingRooms : <div className="empty">
+							{this.state.comming_page_selected ? <div className={_commingRooms.length > 0 ? "courses-comming-area" : "courses-comming-area empty-area"} id="courses-comming-area">
+								{_commingRooms.length > 0 ?_commingRooms : <div className="empty">
 										<div className="icon"></div>
 										<span>接下来没有课程了~</span>
 									</div>}
@@ -245,8 +245,8 @@ class Main extends React.Component {
 										</div>
 									</div>)
 								})}
-								<div className={_doneRooms.length == 0 ? "container" : "container empty-container"}>
-									{_doneRooms.length == 0 ?_doneRooms : <div className="empty">
+								<div className={_doneRooms.length > 0 ? "container" : "container empty-container"}>
+									{_doneRooms.length > 0 ?_doneRooms : <div className="empty">
 										<div className="icon"></div>
 										<span>已上的课程会在这里显示哦~</span>
 									</div>}
