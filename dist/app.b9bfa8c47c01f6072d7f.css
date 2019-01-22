@@ -22,7 +22,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.2rem;
+  font-size: 0.20rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -2228,6 +2228,7 @@ body .page.login-page .login-box .login-radio {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 0.22rem;
+  font-size: 0.16rem;
 }
 html .page.login-page .login-box .login-radio label,
 body .page.login-page .login-box .login-radio label {
@@ -3031,9 +3032,9 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .e
 }
 html .page.student-page .inner .student-box .my-courses .courses-comming-area .empty .icon,
 body .page.student-page .inner .student-box .my-courses .courses-comming-area .empty .icon {
-  width: 1.54rem;
-  height: 1.07rem;
-  background: url(./76b3ce17af5e80ca15adfd0ed3f75dbe.png) no-repeat center center;
+  width: 2.43rem;
+  height: 1.69rem;
+  background: url(./b9897ea65ef3968ae56393747621e0af.png) no-repeat center center;
   background-size: 100% 100%;
   margin-top: -0.5rem;
   margin-bottom: 0.3rem;
@@ -3165,11 +3166,11 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .cont
 }
 html .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty .icon,
 body .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty .icon {
-  width: 1.74rem;
-  height: 1.12rem;
-  background: url(./d3a0cf9df39d29b07ac57b4d2c784145.png) no-repeat center center;
+  width: 2.75rem;
+  height: 1.77rem;
+  background: url(./5e75c33035cc0e893d833bd1dd0f4f1c.png) no-repeat center center;
   background-size: 100% 100%;
-  margin-top: -0.5rem;
+  margin-top: -0.56rem;
   margin-bottom: 0.3rem;
 }
 html .page.student-page .inner .student-box .my-courses .courses-done-area .container .empty span,
