@@ -142,41 +142,48 @@ class Signalize extends Eventer {
 				console.log("channel join failed, retry after 2s")
 				this.__connect_error()
 			}
-			let new_user_joined = (account)=>{
-				console.log('zlog-new_user_joined,account',account);
+			let new_user_joined = (users)=>{
 				// 获取用户信息
-				let userinfo 
-				if (account == this.$inst.props.teacher.id) {
-					userinfo = this.$inst.props.teacher
-				} else {
-					for(let i=0,len=this.$inst.props.students.length;i<len;i++) {
-						let item = this.$inst.props.students[i]
-						if (item.id == account) {
-							userinfo = {
-								child_name: item.child_name,
-								id: item.id,
-								avatarurl: item.child_avatar
+				let userinfos = []
+				users.forEach((account)=>{
+					let userinfo
+					if (account == this.$inst.props.teacher.id) {
+						userinfo = this.$inst.props.teacher
+					} else {
+						for(let i=0,len=this.$inst.props.students.length;i<len;i++) {
+							let item = this.$inst.props.students[i]
+							if (item.id == account) {
+								userinfo = {
+									child_name: item.child_name,
+									id: item.id,
+									avatarurl: item.child_avatar
+								}
+								break
 							}
-							break
 						}
 					}
-				}
-				console.log('zlog-new_user_joined,account',userinfo);
-				if (userinfo) {
-					this.trigger("CHANNEL_NEW_USER", userinfo)
-				}
+					if (userinfo) {
+						userinfos.push(userinfo)
+					}
+				})
+				console.log("call new user joined",userinfos)
+				this.trigger("CHANNEL_NEW_USER", { userinfos })
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
-				console.log('zelog-onChannelUserJoined',account, uid);
+				console.log("onChannelUserJoined",account)
 				this.$user_in_room[account] = true
-				new_user_joined(account)
+				new_user_joined([account])
 			}
-			channel.onChannelUserList = (users)=>{
-				console.log('zelog-onChannelUserList',users);
-				users.forEach((account)=>{
+			channel.onChannelUserList = (accounts)=>{
+				console.log("On channel user list",accounts)
+				let users = []
+				accounts.forEach((account)=>{
 					this.$user_in_room[account[0]] = true
-					new_user_joined(account[0])
+					users.push(account[0])
 				})
+				if (users.length > 0) {
+					new_user_joined(users)
+				}
 			};
 			channel.onChannelLeaved = ()=>{
 				console.log("channel leaved...")

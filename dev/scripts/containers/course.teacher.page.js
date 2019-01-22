@@ -188,7 +188,7 @@ class Course extends React.Component {
 		this.$room.on("REMOVE_STREAM", (stream) => {
 			this.props.onStreamLeave(stream)
 			// 老师监听到有人退出如果还在上台，则发送他下台指令
-			if (this.isMaster()) {
+			if (this.isChairMaster()) {
 				let id = stream.getId()
 				if (id) {
 					if (this.$last_dancing == id) {
@@ -267,18 +267,17 @@ class Course extends React.Component {
 			this.props.showLoading("有人登录了你的帐号哦~")
 			clearTimeout($waiting_timer)
 		})
-		this.$signal.on("CHANNEL_NEW_USER", (user) => {
-			console.log('zelog-CHANNEL_NEW_USER',user);
+		this.$signal.on("CHANNEL_NEW_USER", (response) => {
 			this.$session.send_message(Const.MEMBER_ADD, {}, {
-				userinfos: [user]
+				userinfos: response.userinfos
 			})
-			console.log("channel new user...", user)
+			console.log("channel new user...", response.userinfos)
 		})
 		this.$signal.on("CHANNEL_USER_LEAVE", (id) => {
 			this.$session.send_message(Const.MEMBER_LEAVE, {
 			}, {
-					userinfos: [id]
-				})
+				userinfos: [id]
+			})
 		})
 		this.$signal.on("NEW_MESSAGE", (message) => {
 			console.log("receive new from app", message)
@@ -315,14 +314,14 @@ class Course extends React.Component {
 			masters.push(teacher.id)
 		})
 		let userinfos = [this.props.teacher]
-		userinfos.concat(this.props.students)
+		userinfos = userinfos.concat(this.props.students)
 		this.$session.send_message(Const.INIT_ROOM, {
 			channel_id: this.props.room.channel_id,
 			token: net.token
 		}, {
-				master_ids: masters,
-				userinfos: userinfos
-			})
+			master_ids: masters,
+			userinfos: userinfos
+		})
 	}
 
 	__tick() {

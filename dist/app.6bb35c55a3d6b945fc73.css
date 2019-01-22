@@ -2214,6 +2214,7 @@ body .page.login-page .login-box .login-radio {
   justify-content: flex-start;
   align-items: center;
   margin-bottom: 0.22rem;
+  font-size: 0.16rem;
 }
 html .page.login-page .login-box .login-radio label,
 body .page.login-page .login-box .login-radio label {
@@ -3356,6 +3357,15 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
   background: #000;
   width: 100%;
   height: 100%;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .logo-frame,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .logo-frame {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1.3rem;
+  height: 0.62rem;
+  border: 1px dashed #2878b4;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-head-frame,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-head-frame {

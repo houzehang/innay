@@ -50,7 +50,8 @@ class SideBar extends React.Component {
 SideBar.propTypes = {
 	user	    	: PropTypes.shape({
 		avatarurl	: PropTypes.string.isRequired,
-		// child_name 	: PropTypes.string.isRequired,
+		child_name 	: PropTypes.string,
+		nickname    : PropTypes.string,
 		id  		: PropTypes.number.isRequired
 	}),
 	onDeviceTest	: PropTypes.func.isRequired,

@@ -261,11 +261,11 @@ class Course extends React.Component {
 			this.props.showLoading("有人登录了你的帐号哦~")
 			clearTimeout($waiting_timer)
 		})
-		this.$signal.on("CHANNEL_NEW_USER", (user)=>{
+		this.$signal.on("CHANNEL_NEW_USER", (response)=>{
 			this.$session.send_message(Const.MEMBER_ADD, {}, {
-				userinfos  : [user]
+				userinfos  : response.userinfos
 			})
-			console.log("channel new user...",user)
+			console.log("channel new user...",response.userinfos)
 		})
 		this.$signal.on("CHANNEL_USER_LEAVE", (id)=>{
 			this.$session.send_message(Const.MEMBER_LEAVE, {
@@ -307,7 +307,7 @@ class Course extends React.Component {
 			masters.push(teacher.id)
 		})
 		let userinfos = [ this.props.teacher ]
-		userinfos.concat(this.props.students)
+		userinfos = userinfos.concat(this.props.students)
 		this.$session.send_message(Const.INIT_ROOM, {
 			channel_id: this.props.room.channel_id,
 			token: net.token
