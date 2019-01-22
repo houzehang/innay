@@ -90,6 +90,7 @@ class Signalize extends Eventer {
 				resolve();
 			} else {
 				this.__on_connect()
+				console.log("Const.AGORA_APPID",Const.AGORA_APPID)
 				this.$signal = Signal(Const.AGORA_APPID)
 				// accout参数必须为字符串
 				// this.$session = this.$signal.login(this.$inst.props.account.id+"", net.sigtoken)

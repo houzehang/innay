@@ -63,7 +63,7 @@ SideBar.propTypes = {
 	onDeviceTest	: PropTypes.func.isRequired,
 	onViewUser		: PropTypes.func.isRequired,
 	onViewHelper	: PropTypes.func.isRequired,
-	onEnterMyCourses: PropTypes.func.isRequired,
+	onEnterMyCourses: PropTypes.func,
 }
 
 export default SideBar

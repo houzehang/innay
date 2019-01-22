@@ -1,6 +1,8 @@
+const ENV = require("../env")
+console.log("const ...",ENV.TEST)
 module.exports = {
-	AGORA_APPID 	 	: "d75fe75ab0404a90b2ed7e5bab216f80",
-	AGORA_CHANNEL_KEY	: "7c9b6ed9bba54dc59471cfa09e9f23ea",
+	AGORA_APPID 	 		: ENV.TEST ? "c6a83fe7f78b490c96f69f3fdb71f682" : "d75fe75ab0404a90b2ed7e5bab216f80",
+	AGORA_CHANNEL_KEY		: ENV.TEST ? "dfc09172cb114b06b002c2f9aa7f0d87" : "7c9b6ed9bba54dc59471cfa09e9f23ea",
 	TENCENT_APPID 		: 1400098973,
 	TENCENT_ACCOUNTTYPE : 28218,
 	VIDEO_T_QUALITY 	: "480P_3",
