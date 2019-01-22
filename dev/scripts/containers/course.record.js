@@ -176,7 +176,7 @@ class Course extends React.Component {
 			masters.push(teacher.id)
 		})
 		let userinfos = [ this.props.teacher ]
-		userinfos.concat(this.props.students)
+		userinfos = userinfos.concat(this.props.students)
 		this.$session.send_message(Const.INIT_ROOM, {
 			channel_id: this.props.room.channel_id,
 			token: net.token
