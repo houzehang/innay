@@ -29,7 +29,6 @@ const Hotkey = require('../../hotkey')
 const { ipcRenderer } = $require('electron');
 const context = require('../context')
 const $ = require("jquery")
-const os = $require('os');
 import * as types from '../constants/ActionTypes'
 
 class Course extends React.Component {
@@ -331,8 +330,7 @@ class Course extends React.Component {
 			token: net.token
 		}, {
 			master_ids: masters,
-			userinfos: userinfos,
-			cpus: os.cpus()
+			userinfos: userinfos
 		})
 	}
 
