@@ -72,9 +72,9 @@ class Session extends Eventer {
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
 		} else if(ENV.TEST) {
-			// prefix = "https://kecheng1.runsnailrun.com"
+			prefix = "https://kecheng1.runsnailrun.com"
 			// prefix = "https://kecheng1.mx0a.com"
-			prefix = "https://admintest.youshiyuwen.cn"
+			// prefix = "https://admintest.youshiyuwen.cn"
 		} else {
 			prefix = "https://www.muwenyuwen.com"
 		}
