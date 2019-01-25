@@ -8,9 +8,9 @@ class Network extends Eventer {
 	constructor() {
 		super()
 		if (ENV.DEBUG || ENV.TEST) {
-			// this.$base_url = "https://kecheng1.runsnailrun.com"
+			this.$base_url = "https://kecheng1.runsnailrun.com"
 			// this.$base_url = "https://kecheng1.mx0a.com"
-			this.$base_url = "https://admintest.youshiyuwen.cn"
+			// this.$base_url = "https://admintest.youshiyuwen.cn"
 		} else {
 			this.$base_url = "https://www.muwenyuwen.com"
 		}
