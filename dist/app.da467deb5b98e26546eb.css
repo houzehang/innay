@@ -4018,6 +4018,84 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
   text-align: center;
   border: 1px dashed #ff1111;
 }
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  height: 0.5rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  font-size: 0.18rem;
+  background-color: #ffae57;
+  opacity: 0;
+  transition: all 200ms 0s ease-in-out;
+  transform: translateY(100%);
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show .warning-icon,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show .warning-icon {
+  margin-left: 0.1rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  background: url(./ef1b1ea9c9236d65de00160cfad8a652.png) no-repeat center center;
+  background-size: 0.32rem auto;
+  margin-right: 0.1rem;
+}
+@keyframes warning-anim {
+  0% {
+    background-color: #ffae57;
+  }
+  50% {
+    background-color: #fe7b4e;
+  }
+  100% {
+    background-color: #ffae57;
+  }
+}
+@keyframes scale-anim {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes danger-anim {
+  0% {
+    background-color: #ffae57;
+    color: #fff;
+  }
+  50% {
+    background-color: #fe7b4e;
+    color: #d81e06;
+  }
+  100% {
+    background-color: #ffae57;
+    color: #fff;
+  }
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-2,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-2 {
+  animation: warning-anim 1s ease-in-out 0s infinite;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-3,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-3 {
+  animation: danger-anim 500ms ease-in-out 0s infinite;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-3 .warning-icon,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .warning-box.show.level-3 .warning-icon {
+  animation: scale-anim 500ms ease-in-out 0s infinite;
+}
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info {
   position: absolute;
@@ -4030,6 +4108,25 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
   bottom: 0;
   left: 0;
   text-indent: 0.14rem;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  right: 0;
+  top: 0;
+  background: url(./ef1b1ea9c9236d65de00160cfad8a652.png) no-repeat center center;
+  background-size: 0.32rem 0.32rem;
+  opacity: 0.8;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span:hover,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span:hover {
+  opacity: 1;
+}
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span:active,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .avatar-info span:active {
+  opacity: 0.6;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text {

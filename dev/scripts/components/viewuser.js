@@ -113,7 +113,7 @@ class ViewUser extends React.Component {
 ViewUser.propTypes = {
 	user	    	: PropTypes.shape({
 		avatarurl	: PropTypes.string.isRequired,
-		child_name 	: PropTypes.string.isRequired,
+		child_name 	: PropTypes.string,
 		id  		: PropTypes.number.isRequired
 	}),
 	onLogout    	: PropTypes.func.isRequired,
