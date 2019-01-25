@@ -862,7 +862,9 @@ class Course extends React.Component {
 						"backgroundImage": this.props.teacher.stream ? "" : `url(${this.props.teacher.avatarurl})`
 					}}>
 					</div>
-					<div className="avatar-info">老师：{this.props.teacher.child_name}<span></span></div>
+					<div className="avatar-info">老师：{this.props.teacher.child_name}<span onClick={()=>{
+						net.earlyWarning(this.props.room.channel_id);
+					}}></span></div>
 					<div className="logo-frame"></div>
 					<div className="avatar-head-frame"></div>
 					<div className={this.state.warning && !this.state.warning_shown?("warning-box show level-" + this.state.warning):"warning-box level-1"}><div className="warning-icon"></div>{this.state.warning_message}</div>

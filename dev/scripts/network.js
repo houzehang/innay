@@ -256,6 +256,13 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 上课预警
+	 */
+	earlyWarning(channel_id) {
+		return this.__request('/room/room_early_warning', {channel_id}, "post")
+	}
+
+	/**
 	 * 获取班级联系人信息
 	 */
 	getContactInfo() {
