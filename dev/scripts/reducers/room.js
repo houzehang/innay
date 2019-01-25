@@ -285,7 +285,7 @@ const room = (state = {}, action) => {
 		}
 		case COURSE_TICK:
 		status = {...state.status}
-		if (status.started && !status.paused && status.duration > 0) {
+		if (status.started && !status.paused) {
 			status.duration--
 			storage.store("STATUS_"+status.id, status)
 			return {

@@ -1643,6 +1643,57 @@ html,body {
 									text-align: center;
 									border:1px dashed #ff1111;
 								}
+								.warning-box {
+									position: absolute;
+									width: 100%;
+									left: 0;
+									bottom: 0;
+									height: 0.5rem;
+									color: #fff;
+									display: flex;
+									align-items: center;
+									font-size: 0.18rem;
+									background-color: #ffae57;
+									opacity: 0;
+									transition: all 200ms 0s ease-in-out;
+									transform: translateY(100%);
+									&.show {
+										opacity: 1;
+										transform: translateY(0);
+										.warning-icon {
+											margin-left: 0.1rem;
+											width: 0.5rem;
+											height: 0.5rem;
+											background: url(../assets/course-alert.png) no-repeat center center;
+											background-size: 0.32rem auto;
+											margin-right: 0.1rem;
+										}
+										@keyframes warning-anim {
+											0%   { background-color: #ffae57; }
+											50%  { background-color: #fe7b4e; }
+											100% { background-color: #ffae57; }
+										}
+										@keyframes scale-anim {
+											0%   { transform: scale(1); }
+											50%  { transform: scale(1.2); }
+											100% { transform: scale(1); }
+										}
+										@keyframes danger-anim {
+											0%   { background-color: #ffae57; color: #fff; }
+											50%  { background-color: #fe7b4e; color: #d81e06; }
+											100% { background-color: #ffae57; color: #fff; }
+										}
+										&.level-2 {
+											animation: warning-anim 1s ease-in-out 0s infinite;
+										}
+										&.level-3 {
+											animation: danger-anim 500ms ease-in-out 0s infinite;
+											.warning-icon {
+												animation: scale-anim 500ms ease-in-out 0s infinite;
+											}
+										}
+									}
+								}
 								.avatar-info {
 									position: absolute;
 									width: 100%;
@@ -1654,6 +1705,22 @@ html,body {
 									bottom: 0;
 									left: 0;
 									text-indent: 0.14rem;
+									span {
+										position: absolute;
+										width: 0.5rem;
+										height: 0.5rem;
+										right: 0;
+										top: 0;
+										background: url(../assets/course-alert.png) no-repeat center center;
+										background-size: 0.32rem 0.32rem;
+										opacity: 0.8;
+										&:hover {
+											opacity: 1;
+										}
+										&:active {
+											opacity: 0.6;
+										}
+									}
 								}
 								.ph-text {
 									font-size: 0.2rem;

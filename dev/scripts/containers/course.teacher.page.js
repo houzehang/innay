@@ -43,7 +43,10 @@ class Course extends React.Component {
 			time: new Date().getTime() / 1000,
 			time_diff: 0,
 			control: this.props.room.state == 0,
-			process: { current: 0, total: 0 }
+			process: { current: 0, total: 0 },
+			warning: 0,
+			warning_message: "",
+			warning_shown: false
 		}
 		this.$room = new Room(this)
 		this.$signal = new Signalize(this)
@@ -334,6 +337,40 @@ class Course extends React.Component {
 	__tick() {
 		this.$tick_timer = setInterval(() => {
 			this.props.onCourseTick()
+			// 根据上课时间设置警告
+			let minute = Math.abs(this.props.status.duration) / 60 >> 0
+			if (this.props.status.duration <= -5*60) {
+				this.setState({
+					warning: 3,
+					warning_message: `已经拖堂${minute}分钟啦，请尽快结束！`,
+					warning_shown: false
+				})
+			} else if (this.props.status.duration <= 0) {
+				this.setState({
+					warning: 2,
+					warning_message: "课程已到结束时间，请注意！",
+					warning_shown: false
+				})
+			} else if (this.props.status.duration <= 5*60) {
+				this.setState({
+					warning: 2,
+					warning_message: `距离课程结束还有${minute}分钟，请注意！`,
+					warning_shown: false
+				})
+			} else if (this.props.status.duration <= 15*60) {
+				if (this.state.warning != 1) {
+					this.setState({
+						warning: 1,
+						warning_message: `距离课程结束还有${minute}分钟，请注意！`,
+						warning_shown: false
+					})
+					setTimeout(()=>{
+						this.setState({
+							warning_shown: true
+						})
+					}, 20000)
+				}
+			}
 			if (this.props.status.waiting - this.state.time_diff >= -1000 && 
 				this.props.status.waiting - this.state.time_diff <= 1000 * 60 * 30 && 
 				!this.props.status.started) {
@@ -825,9 +862,10 @@ class Course extends React.Component {
 						"backgroundImage": this.props.teacher.stream ? "" : `url(${this.props.teacher.avatarurl})`
 					}}>
 					</div>
-					<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
+					<div className="avatar-info">老师：{this.props.teacher.child_name}<span></span></div>
 					<div className="logo-frame"></div>
 					<div className="avatar-head-frame"></div>
+					<div className={this.state.warning && !this.state.warning_shown?("warning-box show level-" + this.state.warning):"warning-box level-1"}><div className="warning-icon"></div>{this.state.warning_message}</div>
 				</div>
 			</div>
 		</div>
