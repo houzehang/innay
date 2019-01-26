@@ -405,6 +405,8 @@ class Course extends React.Component {
 		if (!this.$last_dancing || this.$last_dancing != id) {
 			return
 		}
+		this.props.onDancing(id, false);
+		$(`#dancing-head`).empty()
 		$(`#record_${id}`).css({
 			position: "static",
 			left	: 0,
@@ -499,7 +501,10 @@ class Course extends React.Component {
 			}
 		}
 		let studentHeads = students.map((student)=>(
-			<StudentHead key={student.id} isTeacher={false} user={student.online?student:null} onClickSpeak={(user)=>{
+			
+			<StudentHead key={student.id} isTeacher={false} user={
+				student.online?student:null
+			} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0

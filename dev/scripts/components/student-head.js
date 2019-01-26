@@ -32,13 +32,13 @@ class StudentHead extends React.Component {
 						}
 					}}>
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
-							backgroundImage : `url(${this.props.user.child_avatar})`
+							backgroundImage : `url(${this.props.user.avatarurl})`
 						} : null}>
 						</div>
 						<div className="avatar-info">
 							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
 							{this.props.user.percent ? <div className={this.props.user.percent==100?"avatar-bar full":"avatar-bar"} style={{"width":this.props.user.percent+"%"}}></div>:"" }
-							<div className="avatar-name">{this.props.user.child_name}</div>
+							<div className="avatar-name">{this.props.user.stream.$data.child_name}</div>
 							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
 						<div className="summary">
