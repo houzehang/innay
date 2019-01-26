@@ -75,7 +75,7 @@ class StudentHead extends React.Component {
 StudentHead.propTypes = {
 	user  : PropTypes.shape({
 		id 	     	: PropTypes.number,
-		child_name 	: PropTypes.string.isRequired,
+		child_name 	: PropTypes.string,
 		avatarurl	: PropTypes.string.isRequired,
 		handsup 	: PropTypes.number.isRequired,
 		speak  		: PropTypes.number.isRequired,
