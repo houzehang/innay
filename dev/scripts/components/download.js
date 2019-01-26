@@ -4,6 +4,7 @@ require("../../less/download.less")
 const ENV = require("../../../env")
 const {ipcRenderer} 	= $require('electron');
 const context = require("../context")
+const Conf = require("../../const")
 
 class Download extends React.Component {
 	constructor(props) {
@@ -40,11 +41,9 @@ class Download extends React.Component {
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
 		} else if (ENV.TEST) {
-			prefix = "http://kecheng1.runsnailrun.com"
-			// prefix = "https://kecheng1.mx0a.com"
-			// prefix = "https://admintest.youshiyuwen.cn"
+			prefix = Conf.TEST_URL
 		} else {
-			prefix = "https://www.muwenyuwen.com"
+			prefix = Conf.ONLINE_URL
 		}
 		return (
 			<div>

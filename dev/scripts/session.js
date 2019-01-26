@@ -1,6 +1,7 @@
 const Eventer 	= require("./eventer")
 const ENV   	= require("../../env")
 const $ 		= require("jquery")
+const Conf 		= require("../const")
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -72,11 +73,9 @@ class Session extends Eventer {
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
 		} else if(ENV.TEST) {
-			prefix = "https://kecheng1.runsnailrun.com"
-			// prefix = "https://kecheng1.mx0a.com"
-			// prefix = "https://admintest.youshiyuwen.cn"
+			prefix = Conf.TEST_URL
 		} else {
-			prefix = "https://www.muwenyuwen.com"
+			prefix = Conf.ONLINE_URL
 		}
 
 		let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng"></webview>`);

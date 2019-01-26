@@ -4,15 +4,14 @@ const context 	= require('./context')
 const ENV   	= require("../../env")
 const remote 	= $require("electron").remote
 const $ 		= require("jquery")
+const Conf 		= require("../const")
 class Network extends Eventer {
 	constructor() {
 		super()
 		if (ENV.DEBUG || ENV.TEST) {
-			this.$base_url = "https://kecheng1.runsnailrun.com"
-			// this.$base_url = "https://kecheng1.mx0a.com"
-			// this.$base_url = "https://admintest.youshiyuwen.cn"
+			this.$base_url = Conf.TEST_URL
 		} else {
-			this.$base_url = "https://www.muwenyuwen.com"
+			this.$base_url = Conf.ONLINE_URL
 		}
 		this.$log_queue = []
 		this.__restore_token()
