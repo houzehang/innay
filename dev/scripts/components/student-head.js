@@ -21,6 +21,13 @@ class StudentHead extends React.Component {
 	render() {
 		this.__bind()
 		let hasUser = this.props.user
+		let child_name;
+		if (this.props.user) {
+			child_name = this.props.user.child_name;
+		}
+		if (!child_name && this.props.user.stream) {
+			child_name = this.props.user.stream.$data.child_name;
+		}
 		return hasUser ? (
 					<div className={(this.state.hover?"student hover":"student")+(this.props.user.online?"":" nothing")} key={this.props.user.id+""} onMouseOver={()=>{
 						if (this.props.isTeacher) {
@@ -38,7 +45,7 @@ class StudentHead extends React.Component {
 						<div className="avatar-info">
 							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
 							{this.props.user.percent ? <div className={this.props.user.percent==100?"avatar-bar full":"avatar-bar"} style={{"width":this.props.user.percent+"%"}}></div>:"" }
-							<div className="avatar-name">{this.props.user.stream.$data.child_name}</div>
+							<div className="avatar-name">{child_name}</div>
 							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
 						<div className="summary">
