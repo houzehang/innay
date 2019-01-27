@@ -149,7 +149,19 @@ class Course extends React.Component {
 			if (isSubMaster) {
 				return
 			}
-			this.props.onNewStream(stream)
+			this.props.onNewStream(stream);
+
+			let found = false;
+			let all_users = [this.props.teacher].concat(this.props.students);
+			all_users.forEach((user)=>{
+				if (user.id == id) {
+					found = true;
+				}
+			});
+
+			if (!found) {
+				this.__query_roominfo_more();
+			}
 		})
 		this.$room.on("REMOVE_STREAM", (stream) => {
 			this.props.onStreamLeave(stream)
@@ -237,6 +249,10 @@ class Course extends React.Component {
 			})
 			console.log("channel new user...", response.userinfos)
 		})
+		this.$signal.on("CHANNEL_NEW_USER_LATE", (response) => {
+			this.__query_roominfo_more(response.retry);
+			console.log("channel new user late...", response.ids)
+		})
 		this.$signal.on("CHANNEL_USER_LEAVE", (id) => {
 			this.$session.send_message(Const.MEMBER_LEAVE, {
 			}, {
@@ -250,12 +266,7 @@ class Course extends React.Component {
 		this.$session.on("NEW_MESSAGE", (message) => {
 			this.__on_session_message(message)
 		})
-		net.getRoomInfo(this.props.room.channel_id).then((result) => {
-			this.props.onRoomMoreInfo(result)
-			this.$room.start()
-			this.$signal.join()
-			this.__send_init_room()
-		})
+		this.__query_roominfo_more();
 		this.$session.init("#course-content")
 		net.getServerTime().then((res) => {
 			this.setState({ time: res.time * 1000 });
@@ -269,6 +280,31 @@ class Course extends React.Component {
 			}
 		})
 		this.__tick()
+	}
+
+	__query_roominfo_more(callback){
+		console.log('start querying more roominfo...');
+		this.$roominfo_callbacks = this.$roominfo_callbacks || [];
+		this.$roominfo_callbacks.push(callback);
+
+		if(this.$roominfo_networking){
+			return;
+		}
+
+		this.$roominfo_networking = true;
+		net.getRoomInfo(this.props.room.channel_id).then((result) => {
+			this.$roominfo_networking = false;
+
+			this.props.onRoomMoreInfo(result)
+			this.$room.start()
+			this.$signal.join()
+			this.__send_init_room()
+
+			this.$roominfo_callbacks.forEach((_callback)=>{
+				_callback && typeof _callback === 'function' && 
+				_callback();
+			})
+		})
 	}
 
 	__send_init_room() {
