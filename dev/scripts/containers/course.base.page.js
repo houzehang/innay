@@ -131,7 +131,6 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
-		console.log('llll base did')
 		context.detector.uncheck()
 		this.$reload_timer = null
 		$(window).on("resize", () => {

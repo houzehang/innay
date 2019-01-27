@@ -33,8 +33,6 @@ import CourseBase from './course.base.page'
 
 class Course extends CourseBase {
 	constructor(props) {
-		console.log('llll child constructor call',props);
-		console.trace('llll');
 		super(props)
 		this.state = {
 			no_confirm_mask: false,
@@ -59,24 +57,11 @@ class Course extends CourseBase {
 	}
 
 	componentWillUnmount() {
-		this.$signal.leave()
-		this.$room.leave()
-		this.$session.destroy()
-		clearInterval(this.$tick_timer)
-		clearInterval(this.$music_timer)
-		clearTimeout(this.$back_timer)
-		clearTimeout(this.$put_timer)
-		$(`#dancing-head`).empty()
-		$('.avatar-head').empty()
-		clearTimeout(this.$reload_timer)
-		$(window).off("resize")
-		this.props.hideLoading()
-		context.detector.check()
+		super.componentDidMount();
 		this.onHotKey = null;
 	}
 
 	componentDidMount() {
-		console.log('llll teacher did')
 		//已经上课
 		if (this.props.room.state == 1) {
 			this.props.onBeginCourse();
@@ -347,8 +332,6 @@ class Course extends CourseBase {
 	}
 
 	render() {
-		console.log('llll base render');
-
 		let dancing;
 		setTimeout(() => {
 			let teacher = this.props.teacher
