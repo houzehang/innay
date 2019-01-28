@@ -25,7 +25,7 @@ class StudentHead extends React.Component {
 		if (this.props.user) {
 			child_name = this.props.user.child_name;
 		}
-		if (!child_name && this.props.user.stream) {
+		if (!child_name && this.props.user && this.props.user.stream) {
 			child_name = this.props.user.stream.$data.child_name;
 		}
 		return hasUser ? (
