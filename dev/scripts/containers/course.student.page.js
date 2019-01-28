@@ -43,11 +43,7 @@ class Course extends CourseBase {
 	isSubMaster(id) {
 		return false;
 	}
-
-	componentWillUnmount() {
-		super.componentWillUnmount();
-	}
-
+	
 	componentDidMount() {
 		super.componentDidMount();
 		this.$room.on("LEAVE_ROOM", ()=>{

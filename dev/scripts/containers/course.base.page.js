@@ -128,6 +128,7 @@ class Course extends React.Component {
 		$(window).off("resize")
 		this.props.hideLoading()
 		context.detector.check()
+		this.onHotKey = null;
 	}
 
 	componentDidMount() {

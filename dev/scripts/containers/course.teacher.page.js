@@ -56,11 +56,6 @@ class Course extends CourseBase {
 		this.setState({ draft: null })
 	}
 
-	componentWillUnmount() {
-		super.componentDidMount();
-		this.onHotKey = null;
-	}
-
 	componentDidMount() {
 		//已经上课
 		if (this.props.room.state == 1) {
