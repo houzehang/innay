@@ -424,6 +424,16 @@ class Course extends React.Component {
 		return this.props.netStatus == 0 && !this.isMaster()
 	}
 
+	showDraft(draft) {
+		if (this.isMaster()) {
+			this.setState({ draft })
+		}
+	}
+
+	hideDraft() {
+		this.setState({ draft: null })
+	}
+	
 	__on_signal_message(message) {
 		let data = message.message
 		switch (message.type) {

@@ -46,16 +46,6 @@ class Course extends CourseBase {
 		}
 	}
 
-	showDraft(draft) {
-		if (this.isMaster()) {
-			this.setState({ draft })
-		}
-	}
-
-	hideDraft() {
-		this.setState({ draft: null })
-	}
-
 	componentDidMount() {
 		//已经上课
 		if (this.props.room.state == 1) {
