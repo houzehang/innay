@@ -250,8 +250,14 @@ class Course extends React.Component {
 			console.log("channel new user...", response.userinfos)
 		})
 		this.$signal.on("CHANNEL_NEW_USER_LATE", (response) => {
-			this.__query_roominfo_more(response.retry);
-			console.log("channel new user late...", response.ids)
+			let users = response.users;
+			users = users.filter((userId)=>{
+				return !this.isMaster(userId);
+			});
+			if (users.length > 0) {
+				this.__query_roominfo_more(response.retry);
+				console.log("channel new user late...", response.ids)
+			}
 		})
 		this.$signal.on("CHANNEL_USER_LEAVE", (id) => {
 			this.$session.send_message(Const.MEMBER_LEAVE, {
