@@ -147,11 +147,6 @@ class RecordVideo extends Eventer {
 			this.$dom.remove()
 			this.$dom = null
 		}
-		if (this.$xhr) {
-			this.$xhr.abort()
-			this.$xhr = null
-			console.log("abort ajax request")
-		}
 	}
 }
 
