@@ -104,37 +104,9 @@ class RecordVideo extends Eventer {
 		if (!this.$dom) {
 			this.$dom = $(`<div id="record_${this.$id}"></div>`)
 			// 预加载视频资源
-			// let video = $("<video/>")
-			// video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
-			// video.on("canplay", ()=>{
-			// 	this.trigger("canplay")
-			// 	video.off()
-			// 	video.on("timeupdate", ()=>{
-			// 		this.__timeupdate()
-			// 	})
-			// 	video.on("play", ()=>{
-			// 		this.$playing = true
-			// 	})
-			// 	video.on("pause", ()=>{
-			// 		this.$playing = false
-			// 	})
-			// 	this.$dom.append(video)
-			// 	$(this.$holder).append(this.$dom)
-			// 	video[0].playbackRate = this.$speed
-			// 	video[0].play()
-			// 	this.$video = video
-			// })
-			// video.on("durationchange", ()=>{
-			// 	this.__durationupdate(video[0].duration)
-			// })
-			// video.on("error", ()=>{
-			// 	console.log("on load video error",video)
-			// 	this.trigger("error")
-			// })
-			// video[0].load()
-			$.get(this.$data.hf_url, ()=>{
-				let video = $("<video/>")
-				video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
+			let video = $("<video/>")
+			video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
+			video.on("canplay", ()=>{
 				this.trigger("canplay")
 				video.off()
 				video.on("timeupdate", ()=>{
@@ -148,11 +120,17 @@ class RecordVideo extends Eventer {
 				})
 				this.$dom.append(video)
 				$(this.$holder).append(this.$dom)
-				video[0].playbackRate = this.$speed
-				video[0].play()
 				this.$video = video
-
 			})
+			video.on("durationchange", ()=>{
+				this.__durationupdate(video[0].duration)
+			})
+			video.on("error", ()=>{
+				console.log("on load video error",video)
+				this.trigger("error")
+			})
+			video[0].playbackRate = this.$speed
+			video[0].play()
 		} else {
 			this.$video[0].play()
 		}
@@ -163,9 +141,16 @@ class RecordVideo extends Eventer {
 		if (this.$video) {
 			this.$video[0].pause()
 			this.$video.remove()
+			this.$video = null
 		}
 		if (this.$dom) {
 			this.$dom.remove()
+			this.$dom = null
+		}
+		if (this.$xhr) {
+			this.$xhr.abort()
+			this.$xhr = null
+			console.log("abort ajax request")
 		}
 	}
 }
