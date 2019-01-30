@@ -146,8 +146,8 @@ class Course extends React.Component {
 		this.$room.on("NEW_STREAM", (stream) => {
 			// 判断是不是主班老师
 			let id = stream.getId()
-			let isSubMaster = this.isSubMaster(id)
-			if (isSubMaster) {
+			let isMaster = this.isMaster(id)
+			if (isMaster) {
 				return
 			}
 			this.props.onNewStream(stream);
