@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import Calendar from '../components/calendar'
 import Download from '../components/download'
 import CourseForTeacher from './course.teacher.page.js'
-import CourseForStudent from './course.student.page.js'
 import CourseRecord from './course.record'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
@@ -41,61 +40,6 @@ class Main extends React.Component {
 	componentDidMount() {
 		let { account } = this.props  
 		context.user = this.props.account
-	}
-
-	__student_page() {
-		let room 
-		if (this.props.rooms && this.props.rooms.length > 0) {
-			room = this.props.rooms[0]
-		}
-		console.warn(this.props.rooms)
-		return (
-			<div className="page student-page">
-				<div className="inner">
-					<div className="student-box">
-						<div className="student-icon"></div>
-						{ room ? ([
-							room.left > 0 ? (
-								<div key="0" className="time">距离下次上课还有
-								{
-									room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
-								}
-								{
-									room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
-								}
-								{
-									room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
-								}
-								</div>
-							) : (
-								<div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
-							),
-							<div key="1" className="lesson-box">
-								<div className="cover">
-									<img src={room.avatar} alt=""/>
-								</div>
-								<div className="info">
-									<div className="name">{room.name}</div>
-									<div className="index">老师：{room.teacher_name}</div>
-								</div>
-								<button className={room.can_enter?"start-btn":"start-btn waiting"} disabled={!room.can_enter} onClick={()=>{
-									this.onStartRoom(room)
-								}}></button>
-								{room.can_download?<button className="download-btn" onClick={()=>{
-									this.onDownload(room)
-								}}></button>:""}
-							</div>
-						]) : ([
-							<div key="0" className="time">接下来没有课程啦～</div>,
-							<div key="1" className="no-lesson">
-								去“明兮大语文”小程序<br/>
-								和其他小朋友一起完成作业吧~
-							</div>
-						]) }
-					</div>
-				</div>
-			</div>
-		)
 	}
 
 	__on_pick_date(data) {
@@ -301,17 +245,13 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent/> : <CourseForTeacher/>
+			content = <CourseForTeacher/>
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
 		} else if (this.props.testing) {
 			content = <Devices />
 		} else {
-			if (account.dentity == types.DENTITY.STUDENT) {
-				content = this.__student_page()
-			} else {
-				content = this.__master_page()
-			}
+			content = this.__master_page()
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
 			}} onViewUser={()=>{

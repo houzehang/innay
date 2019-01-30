@@ -1,8 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import Calendar from '../components/calendar'
 import Download from '../components/download'
-import CourseForTeacher from './course.teacher.page.js'
 import CourseForStudent from './course.student.page.js'
 import CourseRecord from './course.record'
 import Devices from './devices'
@@ -13,7 +11,7 @@ import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
-	onLogout, onStartCourse, onEndCourse,
+	onLogout, onStartCourse,
 	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,
 	onCourseRecording
 } from '../actions'
@@ -26,7 +24,6 @@ class Main extends React.Component {
 		super(props)
 		this.$detect_delay 		= 5000
 		this.$cache_valid_time 	= 60*60*1000
-		this.$calendarRef  		= React.createRef()
 		this.state 				= {
 			comming_page_selected : true
 		}
@@ -78,7 +75,7 @@ class Main extends React.Component {
 			room.can_enter = true
 			room.can_download = true
 		}
-		console.log('comming room ',room);
+		
 		return (
 			<div className="page student-page">
 				<div className="inner">
@@ -259,22 +256,6 @@ class Main extends React.Component {
 		)
     }
 
-	__on_pick_date(data) {
-		this.props.onCalendarData(data)
-		let choosed = data.choosed_txti
-		net.lessonsByDate(`${choosed.year}-${choosed.month}-${choosed.day}`).then((res)=>{
-			this.props.onRoomList(res.rooms)
-		})
-	}
-
-	__on_change_month(data) {
-		let month = data.month > 9 ? data.month : ("0"+data.month)
-		net.lessons(`${data.year}-${month}`).then((res)=>{
-			let dates = res.dates
-			this.$calendarRef.current.setHighlighted(dates)
-		}).done()
-	}
-
 	onStartRoom(data) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let lastest_download = storage.get(`download_${data.en_name}`)
@@ -451,9 +432,9 @@ class Main extends React.Component {
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
-			content = this.props.account.dentity === types.DENTITY.STUDENT ? <CourseForStudent onLeaveRoom={()=>{
+			content = <CourseForStudent onLeaveRoom={()=>{
 				this.__get_lesson_comming();
-			}}/> : <CourseForTeacher/>
+			}}/>
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
 		} else if (this.props.testing) {

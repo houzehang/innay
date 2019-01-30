@@ -120,8 +120,6 @@ class RecordVideo extends Eventer {
 				})
 				this.$dom.append(video)
 				$(this.$holder).append(this.$dom)
-				video[0].playbackRate = this.$speed
-				video[0].play()
 				this.$video = video
 			})
 			video.on("durationchange", ()=>{
@@ -131,7 +129,8 @@ class RecordVideo extends Eventer {
 				console.log("on load video error",video)
 				this.trigger("error")
 			})
-			video[0].load()
+			video[0].playbackRate = this.$speed
+			video[0].play()
 		} else {
 			this.$video[0].play()
 		}
@@ -142,9 +141,11 @@ class RecordVideo extends Eventer {
 		if (this.$video) {
 			this.$video[0].pause()
 			this.$video.remove()
+			this.$video = null
 		}
 		if (this.$dom) {
 			this.$dom.remove()
+			this.$dom = null
 		}
 	}
 }

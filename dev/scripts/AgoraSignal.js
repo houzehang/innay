@@ -145,7 +145,7 @@ class Signalize extends Eventer {
 			}
 			let new_user_joined = (users)=>{
 				// 获取用户信息
-				let userinfos = []
+				let userinfos = [], missed_users = [];
 				users.forEach((account)=>{
 					let userinfo
 					if (account == this.$inst.props.teacher.id) {
@@ -165,10 +165,24 @@ class Signalize extends Eventer {
 					}
 					if (userinfo) {
 						userinfos.push(userinfo)
+					} else {
+						missed_users.push(account);
 					}
 				})
-				console.log("call new user joined",userinfos)
-				this.trigger("CHANNEL_NEW_USER", { userinfos })
+				if (missed_users.length > 0) {
+					console.log("new user joind, missed users...",missed_users);
+					this.trigger("CHANNEL_NEW_USER_LATE", {
+						users: missed_users,
+						retry: ()=>{
+							console.log('retry new user join...',missed_users)
+							new_user_joined(missed_users)
+						}
+					})
+				}
+				if (userinfos.length > 0) {
+					console.log("call new user joined",userinfos)
+					this.trigger("CHANNEL_NEW_USER", { userinfos })
+				}
 			}
 			channel.onChannelUserJoined = (account, uid)=>{
 				console.log("onChannelUserJoined",account)
