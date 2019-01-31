@@ -31,18 +31,6 @@ class Course extends CourseBase {
 		}
 		this.$view_mode = 1
 	}
-
-	isMaster(id) {
-		return false;
-	}
-
-	isChairMaster(id) {
-		return false;
-	}
-
-	isSubMaster(id) {
-		return false;
-	}
 	
 	componentDidMount() {
 		super.componentDidMount();
