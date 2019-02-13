@@ -24,7 +24,7 @@ class StudentHead extends React.Component {
 		let child_name;
 
 		let features = this.props.features;
-		let student_frature = this.props.user.feature;
+		let student_frature = this.props.user.frature;
 		console.log('features == ',features);
 		let featureColor,hightLight;
 

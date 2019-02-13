@@ -318,6 +318,19 @@ class Course extends React.Component {
 		})
 	}
 
+	__get_feature(uid){
+		if(!uid){
+			uid = this.props.account.id;
+		}
+		let result;
+		this.props.students.map((student)=>{
+			if (student && student.id == uid) {
+				result = student.frature;
+			}
+		});
+		return result;
+	}
+
 	__send_init_room() {
 		// 发送init-room
 		let masters = []
@@ -331,7 +344,8 @@ class Course extends React.Component {
 			token: net.token
 		}, {
 			master_ids: masters,
-			userinfos: userinfos
+			userinfos: userinfos,
+			feature: this.__get_feature()
 		})
 	}
 
