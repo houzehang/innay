@@ -105,7 +105,8 @@ class Course extends CourseBase {
 			}
 		}
 		if (!warn_needed) return;
-
+		if (!data.leave_id) return;
+		
 		this.$in_warning = true;
 		this.$warning_id = data.leave_id;
 
