@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, COURSE_STARTING_TICK,  MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, COURSE_STARTING_TICK,  MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM, WARN } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -44,6 +44,7 @@ const room = (state = {}, action) => {
 		case ROOM_MORE_INFO:
 		let info = {...state.info}
 		info.channel_token = action.data.channel_token
+		info.features = action.data.features
 		return {
 			...state,
 			info,
@@ -62,6 +63,22 @@ const room = (state = {}, action) => {
 			...state,
 			students
 		}
+		case WARN:
+		let warn_info = action.data
+		students = [...state.students]
+		for(let i=0,len=students.length;i<len;i++) {
+			let item = students[i]
+			if (item.id == warn_info.uid) {
+				item.warn = action.status
+			}else{
+				item.warn = false
+			}
+		}
+		return {
+			...state,
+			students
+		}
+
 		case USER_MUTED:
 		students = [...state.students]
 		if (students) {

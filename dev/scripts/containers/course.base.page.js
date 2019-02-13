@@ -289,6 +289,10 @@ class Course extends React.Component {
 		this.__tick()
 	}
 
+	__get_server_time(){
+		return Date.now() + (this.state.time_diff || 0);
+	}
+
 	__query_roominfo_more(callback){
 		console.log('start querying more roominfo...');
 		this.$roominfo_callbacks = this.$roominfo_callbacks || [];
@@ -301,7 +305,7 @@ class Course extends React.Component {
 		this.$roominfo_networking = true;
 		net.getRoomInfo(this.props.room.channel_id).then((result) => {
 			this.$roominfo_networking = false;
-
+			
 			this.props.onRoomMoreInfo(result)
 			this.$room.start()
 			this.$signal.join()
@@ -402,12 +406,17 @@ class Course extends React.Component {
 				case "showdraft":
 					this.showDraft(data.content)
 					break
+				case "showfeature":
+					this.showFeature(data.feature);
 				case "loadsound":
 					this.__load_sound(data.url)
 					break
 				case "course-process":
 					this.setState({ process: data })
 					break
+				case Const.WARN:
+					this.__warned(data);
+					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
 						this.__on_signal_message(message)
@@ -418,6 +427,8 @@ class Course extends React.Component {
 			this.$signal.send(message)
 		}
 	}
+	
+	__warned(data){}
 
 	// 是否处于弱网络状态
 	__in_weak_net() {
@@ -427,6 +438,12 @@ class Course extends React.Component {
 	showDraft(draft) {
 		if (this.isMaster()) {
 			this.setState({ draft })
+		}
+	}
+
+	showFeature(feature){
+		if (this.isMaster()) {
+			this.setState({ feature })
 		}
 	}
 
@@ -471,6 +488,8 @@ class Course extends React.Component {
 				this.props.onNewGift(data)
 				this.$session.send_message(null, null, message)
 				break
+			case Const.WARN:
+				this.$session.send_message(null, null, message);
 			case "progress":
 				//接收到来自学生的进度提示通知界面调整
 				if (this.props.switches.magic) {

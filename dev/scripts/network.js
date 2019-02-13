@@ -234,6 +234,13 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 图像识别
+	 */
+	baseUpload(data){
+		return this.__request("/room/user_base_upload", data, "post")
+	}
+
+	/**
 	 * 关闭房间
 	 */
 	closeRoom(channel_id) {

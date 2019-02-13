@@ -22,6 +22,28 @@ class StudentHead extends React.Component {
 		this.__bind()
 		let hasUser = this.props.user
 		let child_name;
+
+		let features = this.props.features;
+		let student_frature = this.props.user.feature;
+		console.log('features == ',features);
+		let featureColor,hightLight;
+
+		features && features.map((feature)=>{
+			if (feature && feature.en_name == student_frature) {
+				featureColor = "#"+feature.color;
+				hightLight = this.props.mainFeature == feature.en_name;
+			}
+		});
+
+		//1.性格标签背景颜色
+		let ft_bg_color = this.props.isTeacher && featureColor ? {
+			background:featureColor
+		}:{}
+		//2.性格边框颜色
+		let ft_frame_bg_color = this.props.isTeacher && featureColor && hightLight ? {
+			border: `0.01rem solid #fff`,
+			boxShadow:`0rem 0rem 0.2rem ${featureColor}`
+		}:{}
 		if (this.props.user) {
 			child_name = this.props.user.child_name;
 		}
@@ -29,7 +51,7 @@ class StudentHead extends React.Component {
 			child_name = this.props.user.stream.$data.child_name;
 		}
 		return hasUser ? (
-					<div className={(this.state.hover?"student hover":"student")+(this.props.user.online?"":" nothing")} key={this.props.user.id+""} onMouseOver={()=>{
+					<div className={(this.state.hover?"student hover":"student ")+(this.props.user.online?"":" nothing")} key={this.props.user.id+""} onMouseOver={()=>{
 						if (this.props.isTeacher) {
 							this.setState({ hover:true })
 						}
@@ -38,41 +60,52 @@ class StudentHead extends React.Component {
 							this.setState({ hover:false })
 						}
 					}}>
+						{this.props.isTeacher || !this.props.withFrame ? "" : <div className="avatar-frame"></div>}
+						{this.props.isTeacher?<div className = "high-light-frame" style={ft_frame_bg_color}></div>:""}
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
 							backgroundImage : `url(${this.props.user.avatarurl})`
 						} : null}>
 						</div>
-						<div className="avatar-info">
+						<div className="avatar-info" style={ft_bg_color}>
 							{this.props.user.progress_rank ? <div className="avatar-rank">{this.props.user.progress_rank}</div>:""}
 							{this.props.user.percent ? <div className={this.props.user.percent==100?"avatar-bar full":"avatar-bar"} style={{"width":this.props.user.percent+"%"}}></div>:"" }
 							<div className="avatar-name">{child_name}</div>
 							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
+						{this.props.isTeacher?
 						<div className="summary">
 							<div className="summary-inner">
 								<div className={this.props.isTeacher?"btns":"btns student"}>
-									{this.props.isTeacher && this.props.user.stream?(
-										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
+									{this.props.isTeacher?(
+										<button className={this.props.user.dancing?"view-btn on":"view-btn on"} onClick={()=>{
 											this.props.onClickView(this.props.user)
 										}}></button>
 									):""}
-									{this.props.isTeacher && this.props.user.online?(
+									{this.props.isTeacher ?(
 										<button className="gift-btn" onClick={()=>{
 											if (this.props.user.online) {
 												this.props.onClickGift(this.props.user)
 											}
-										}}></button>
+										}}>
+											<div className="btn-icon"><div className="icon"></div></div>
+											<span className="btn-name">礼物</span>
+										</button>
 									):""}
-									{this.props.isTeacher && this.props.user.online?(
+									{this.props.isTeacher ?(
 										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
 											this.props.onClickSpeak(this.props.user)
 										}}></button>
 									):""}
-									<button className="warn-btn" onClick={()=>{
-									}}></button>
-								</div>
+
+									{this.props.isTeacher ?(<button className="warn-btn" onClick={()=>{
+											this.props.onClickWarn(this.props.user);
+									}}>
+										<div className="btn-icon"><div className="icon"></div></div>
+										<span className="btn-name">调整坐姿</span>
+									</button>):""}
 							</div>
 						</div>
+						</div>:""}
 					</div>
 				) : 
 				<div className="student nothing"></div>
@@ -96,7 +129,8 @@ StudentHead.propTypes = {
 	speak 		 : PropTypes.bool,
 	onClickSpeak : PropTypes.func,
 	onClickGift  : PropTypes.func,
-	onClickView  : PropTypes.func
+	onClickView  : PropTypes.func,
+	onClickWarn  : PropTypes.func
 }
 
 export default StudentHead

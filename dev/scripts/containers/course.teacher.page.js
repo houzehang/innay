@@ -8,6 +8,7 @@ import {
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onNewGift,
+	onWarn,
 	onHandsupRank, onUserMuted, onMuteAllSwitch, onSilentSwitch,
 	onDancing,
 	onBeginCourse,
@@ -233,6 +234,24 @@ class Course extends CourseBase {
 		})
 	}
 
+	/**
+	 * 坐姿警告
+	 */
+	__warn(user) {
+		if (!user) return;
+		net.warn({
+			channel_id: this.props.room.channel_id,
+			user_id: user.id,
+			lesson_page: this.state.process.current || 1
+		}).then((res)=>{
+			this.$session.send_message(Const.WARN, {
+				uid: user.id - 0,
+				leave_id: res.leave_id,
+				time: this.__get_server_time()
+			})
+		})
+	}
+
 	__on_start_course() {
 		this.props.confirm({
 			content: "真的真的要上课吗？？",
@@ -316,6 +335,28 @@ class Course extends CourseBase {
 		}
 	}
 
+	__get_feature_name(feature_en_name){
+		let features = this.props.room.features || [];
+		let result;
+		features.map((_feature)=>{
+			if (_feature && _feature.en_name == feature_en_name) {
+				result = _feature.name;
+			}
+		});
+		return result;
+	}
+
+	__get_feature_color(feature_en_name){
+		let features = this.props.room.features || [];
+		let result;
+		features.map((_feature)=>{
+			if (_feature && _feature.en_name == feature_en_name) {
+				result = _feature.color;
+			}
+		});
+		return `#${result}`;
+	}
+
 	render() {
 		let dancing;
 		setTimeout(() => {
@@ -383,7 +424,14 @@ class Course extends CourseBase {
 		}
 
 		let studentHeads = students.map((student, seatIndex) => {
-			return <StudentHead key={student.id} isTeacher={true} user={student} seatIndex={seatIndex} onClickSpeak={(user) => {
+			return <StudentHead 
+				key={student.id} 
+				isTeacher={true} 
+				user={student}
+				features={this.props.room.features}
+				mainFeature={this.state.feature}
+				seatIndex={seatIndex} 
+				onClickSpeak={(user) => {
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {
 						uid: user.id - 0
@@ -404,7 +452,11 @@ class Course extends CourseBase {
 				} else {
 					this.$session.send_message(Const.PUT_DANCE, { id: user.id })
 				}
-			}} />
+			}} onClickWarn={(user)=>{
+				if (this.isMaster()) {
+					this.__warn(user)
+				}
+			}}/>
 		})
 		let handsupStudents = []
 		students.forEach((student) => {
@@ -413,10 +465,15 @@ class Course extends CourseBase {
 			}
 		})
 
+		let feature_tag_style = {
+			background: this.__get_feature_color(this.state.feature)
+		}
+
 		let TeacherView = <div className="teacher-area">
 			<div className="avatars">
 				<div className={this.state.draft ? "avatar draft" : "avatar nothing"}>
 					<div className={this.state.draft ? "draft-text" : "draft-text none"} dangerouslySetInnerHTML={{ __html: this.state.draft }}></div>
+					{this.state.feature?<span className="feature-tag" style={feature_tag_style}>{this.__get_feature_name(this.state.feature)}</span>:""}
 				</div>
 				<div className="avatar">
 					<div className="avatar-head" id="master-head" style={{
@@ -618,6 +675,7 @@ const mapDispatchToProps = dispatch => ({
 	onMuteAllSwitch: (status) => dispatch(onMuteAllSwitch(status)),
 	onSilentSwitch: (status) => dispatch(onSilentSwitch(status)),
 	onNewGift: (data) => dispatch(onNewGift(data)),
+	onWarn: (data,status) => dispatch(onWarn(data,status)),
 	onHandsupRank: (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
 	onDancing: (id, status) => dispatch(onDancing(id, status)),

@@ -5,6 +5,7 @@ import {
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
 	onHandsupSwitch, onNewGift,
+	onWarn,
 	onHandsupRank, onUserMuted, onMuteAllSwitch, onSilentSwitch,
 	onDancing,
 	onBeginCourse,
@@ -17,11 +18,14 @@ import {
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
 	onUpdateGift, onProgressReset, onUserAddRoom
-} from '../actions'
+} from '../actions' 
 const Const   		= require('../../const')
 import * as types from '../constants/ActionTypes'
 
 import CourseBase from './course.base.page'
+const net = require("../network")
+const $ = require("jquery")
+
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
@@ -30,6 +34,8 @@ class Course extends CourseBase {
 			process: {current:0,total:0}
 		}
 		this.$view_mode = 1
+		this.$in_warning = false;
+		this.$warning_id = null;
 	}
 
 	isMaster(id) {
@@ -57,6 +63,9 @@ class Course extends CourseBase {
 				this.props.onLeaveRoom();
 			}
 		})
+		if (this.$timer_warning) {
+			clearTimeout(this.$timer_warning);
+		}
 	}
 
 	leaveCourse() {
@@ -74,8 +83,102 @@ class Course extends CourseBase {
 		})
 	}
 
+	__warned(data){
+		let warn_needed  = false;
+		let max_duration = 30000;
+
+		let warn_time = data.time;
+		if (!warn_time || (this.__get_server_time() - Number(warn_time)) > max_duration) {
+			console.log('warning abort!');
+			return;
+		}
+
+		for (let i = 0,len = this.props.students.length; i < len; i++) {
+			let student =  this.props.students[i];	
+			if (student && this.props.account.id == student.id) {
+				if (this.$in_warning) {
+					console.log('i am in waring ...',student.id);
+					return;
+				}else{
+					warn_needed = true;
+				}
+			}
+		}
+		if (!warn_needed) return;
+
+		this.$in_warning = true;
+		this.$warning_id = data.leave_id;
+
+		this.props.onWarn(data, true);
+		console.log('warned!!!!',data.uid);
+
+		let check_times = 0;
+		let check_limit = 4;
+		let success = (reason)=>{
+
+			this.$in_warning = false;
+			this.props.onWarn(data, false);
+
+			clearTimeout(this.$timer_warning);
+			clearTimeout(this.$timer_check_again);
+			this.$timer_warning = null;
+			this.$timer_check_again = null;
+
+			console.log('success reason:',reason);
+		}
+		
+		this.$timer_warning = setTimeout(() => {
+			success('too long time!');
+		}, max_duration);
+
+		let check = ()=>{
+			let canvas_dom = $(`#student_${this.props.account.id} div canvas`),
+				w 		   = 48,
+				h 		   = 48;
+			if (canvas_dom) {
+				check_times++;
+				console.log('check_times:',check_times);
+				let canvas 		= canvas_dom[0],
+					pre_w  		= canvas.width,
+					pre_h  		= canvas.height;
+
+				canvas.width 	= w;
+				canvas.height 	= h;
+				let context 	= canvas.getContext('webgl'),
+					base64  	= canvas.toDataURL('image/jpeg')
+
+				canvas.width 	= pre_w;
+				canvas.height 	= pre_h;
+
+				net.baseUpload({
+					upload_file	: base64,
+					leave_id 	: this.$warning_id,
+					user_id		: this.props.account.id,
+					channel_id	: this.props.room.channel_id,
+					token		: net.token
+				}).then((res)=>{
+					console.log('baseUploadres == ',res)
+					if (res && res.status) {
+						success('success!!');
+					}else if(check_times >= check_limit){
+						success('overtimes!!');
+					}else{
+						this.$timer_check_again = setTimeout(() => {
+							clearTimeout(this.$timer_check_again);
+							this.$timer_check_again = null;
+							check();
+						}, 5000);
+					}
+				});
+			}else{
+				success('no dream!');
+			}
+		}
+		check();
+	}
+
 	render() {
-		let dancing
+		let dancing, warning
 		setTimeout(()=>{
 			let teacher = this.props.teacher
 			if (teacher.stream && !teacher.stream_inited) {
@@ -136,14 +239,20 @@ class Course extends CourseBase {
 			let item = students[i]
 			if (item.dancing && item.stream) {
 				dancing = item
-				break
+			}
+ 			if (item.warn) {
+				warning = item
 			}
 		}
+		let warned = this.props.account.id == (warning || {}).id;
+		
 		let studentHeads = students.map((student)=>(
 			<StudentHead 
 				key={student.id} 
 				isTeacher={false} 
 				user={student} 
+				features={this.props.room.features}
+				withFrame={this.props.account.id == student.id}
 				onClickSpeak={(user)=>{}} 
 				onClickGift={(user)=>{}} 
 				onClickView={(user)=>{}}/>
@@ -180,6 +289,17 @@ class Course extends CourseBase {
 				<div className="inner">
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
+						{warned?<div className="warn-mask">
+							<div className="warn-word">
+								<div className="warn-word-icon"></div>
+								<span className="warn-word-content">坐姿提醒</span>
+							</div>
+							<div className="warn-panel">
+								<span className="warn-text">不在红框中会减小星星哦~</span>
+								<div className="warn-head"></div>
+								<div className="warn-head-frame"></div>
+							</div>
+						</div>:""}
 					</div>
 					<div className="entities-area">
 						{TeacherView}
@@ -219,6 +339,7 @@ const mapDispatchToProps = dispatch => ({
 	onMuteAllSwitch : (status) => dispatch(onMuteAllSwitch(status)),
 	onSilentSwitch  : (status) => dispatch(onSilentSwitch(status)),
 	onNewGift    	: (data) => dispatch(onNewGift(data)),
+	onWarn       	: (data,status) => dispatch(onWarn(data,status)),
 	onHandsupRank   : (id, rank) => dispatch(onHandsupRank(id, rank)),
 	onUserMuted 	: (id, status, recovering) => dispatch(onUserMuted(id, status, recovering)),
 	onDancing 		: (id, status) => dispatch(onDancing(id, status)),
