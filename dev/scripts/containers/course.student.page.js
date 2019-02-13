@@ -85,7 +85,7 @@ class Course extends CourseBase {
 
 	__warned(data){
 		let warn_needed  = false;
-		let max_duration = 30000;
+		let max_duration = 60000;
 
 		let warn_time = data.time;
 		if (!warn_time || (this.__get_server_time() - Number(warn_time)) > max_duration) {
@@ -114,7 +114,7 @@ class Course extends CourseBase {
 		console.log('warned!!!!',data.uid);
 
 		let check_times = 0;
-		let check_limit = 4;
+		let check_limit = 12;
 		let success = (reason)=>{
 
 			this.$in_warning = false;
@@ -291,6 +291,7 @@ class Course extends CourseBase {
 					<div className="content">
 						<div className="course-content kc-canvas-area" id="course-content"></div>
 						{warned?<div className="warn-mask">
+							<div className="mask-bg"></div>
 							<div className="warn-word">
 								<div className="warn-word-icon"></div>
 								<span className="warn-word-content">坐姿提醒</span>
