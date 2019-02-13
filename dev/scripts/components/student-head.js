@@ -77,9 +77,12 @@ class StudentHead extends React.Component {
 							<div className="summary-inner">
 								<div className={this.props.isTeacher?"btns":"btns student"}>
 									{this.props.isTeacher?(
-										<button className={this.props.user.dancing?"view-btn on":"view-btn on"} onClick={()=>{
+										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
 											this.props.onClickView(this.props.user)
-										}}></button>
+										}}>
+											<div className="btn-icon"><div className="icon"></div></div>
+											<span className="btn-name">讲台</span>
+										</button>
 									):""}
 									{this.props.isTeacher ?(
 										<button className="gift-btn" onClick={()=>{
@@ -94,7 +97,10 @@ class StudentHead extends React.Component {
 									{this.props.isTeacher ?(
 										<button className={this.props.user.unmuted?"speak-btn on":"speak-btn"} onClick={()=>{
 											this.props.onClickSpeak(this.props.user)
-										}}></button>
+										}}>
+											<div className="btn-icon"><div className="icon"></div></div>
+											<span className="btn-name">静音</span>
+										</button>
 									):""}
 
 									{this.props.isTeacher ?(<button className="warn-btn" onClick={()=>{
