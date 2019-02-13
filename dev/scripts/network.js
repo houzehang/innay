@@ -227,6 +227,13 @@ class Network extends Eventer {
 	}
 
 	/**
+	 * 坐姿警告
+	 */
+	warn(data){
+		return this.__request("/room/user_leave_class", data, "post")
+	}
+
+	/**
 	 * 关闭房间
 	 */
 	closeRoom(channel_id) {

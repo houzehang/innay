@@ -85,6 +85,12 @@ export const onNewGift = (data) => ({
 	data
 })
 
+export const onWarn = (data, status) => ({
+	type: types.WARN,
+	data,
+	status
+})
+
 export const onUserMuted = (id, mute=true, recovering=false) => ({
 	type: types.USER_MUTED,
 	id, mute, recovering

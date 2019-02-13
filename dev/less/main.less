@@ -923,6 +923,16 @@ html,body {
 					height: 0.88rem;
 					position: relative;
 					margin-bottom: 0.19rem;
+					.avatar-frame{
+						width: 0.68rem;
+						height: 0.68rem;
+						position: absolute;
+						top: 50%;
+						left: 50%;  
+						margin-left: -0.34rem;  
+						margin-top: -0.35rem;
+						border:1px dashed #ff1111;
+					}
 					.avatar-head {
 						width: 100%;
 						height: 100%;
@@ -1036,41 +1046,89 @@ html,body {
 							display: flex;
 							flex-wrap: wrap;
 							align-items: center;
-							justify-content: center;
+							justify-content: space-around;
 							button {
-								height: 0.24rem;
-								width: 0.24rem;
-								border-radius: 0.24rem;
+								height: 0.42rem;
+								width: 0.42rem;
+								border-radius: 0.03rem;
+								display: flex;
+								flex-direction: column;
+								justify-content: center;
+								align-items: center;
+								.btn-icon{
+									flex: 1;
+									justify-content: center;
+									display: flex;
+									justify-content: center;
+									align-items: center;
+								}
+								.btn-name{
+									font-size: 0.1rem;
+									color: #fff;
+									margin-bottom: 0.02rem;
+								}
 								&:last-child {
 									margin-right: 0;
 								}
 								&.view-btn {
-									width: 0.82rem;
-									background:#3882c2 url(../assets/course-student-view.png) no-repeat center center;
+									background:#3598dc;
 									background-size: 0.16rem;
 									margin-top: 0;
 									&.on {
-										background-image: url(../assets/course-student-view-on.png);
+										.btn-icon{
+											.icon{
+												.view-base('course_icon_posture.png');
+											}
+										}
+									}
+									.btn-icon{
+										.icon{
+											.view-base('course_icon_table.png');
+										}
 									}
 								}
 								&.gift-btn {
-									width: 0.82rem;
-									background:#3882c2 url(../assets/course-gift-student.png) no-repeat center center;
-									background-size: 0.14rem;
+									background:#e77e23;
+									background-size: 0.16rem;
 									margin-top: 0;
+
+									.btn-icon{
+										.icon{
+											.view-base('course_icon_gift.png');
+										}
+									}
 								}
 								&.speak-btn {
-									background:#3882c2 url(../assets/course-sound-off.png) no-repeat center center;
+									background:#9c59b8;
 									background-size: 0.16rem;
-									margin-right: 0.15rem;
 									&.on {
-										background-image: url(../assets/course-sound-on.png);
-										background-size: 0.12rem;
+										.btn-icon{
+											.icon{
+												.view-base('course-sound-on.png');
+											}
+										}
+									}
+									.btn-icon{
+										.icon{
+											.view-base('course_icon_silent.png');
+										}
 									}
 								}
 								&.warn-btn {
-									background:#3882c2 url(../assets/course-student-warning.png) no-repeat center center;
+									background:#e84c3d;
 									background-size: 0.16rem;
+									&.on {
+										.btn-icon{
+											.icon{
+												.view-base('course_icon_cam.png');
+											}
+										}
+									}
+									.btn-icon{
+										.icon{
+											.view-base('course_icon_posture.png');
+										}
+									}
 								}
 							}
 						}
@@ -1393,7 +1451,15 @@ html,body {
 							margin-right: 0;
 						}
 						.avatar-info{ 
-							background:blue;
+							// background:blue;
+						}
+						.high-light-frame{
+							width: 0.88rem;
+							height: 1.04rem;
+							position: absolute;
+							left: -0.02rem;
+							top : -0.02rem;
+							padding: 0.01rem;
 						}
 					}
 					.dancing-container {
@@ -1444,7 +1510,7 @@ html,body {
 				}
 				.content {
 					margin-right: 0.15rem;
-					overflow: hidden;
+					// overflow: hidden;
 				}
 				.inner {
 					.entities-area {
@@ -1502,6 +1568,70 @@ html,body {
 									&.nothing {
 										background-position: center top 0.5rem;
 									}
+								}
+							}
+						}
+					}
+					.content{
+						.warn-mask{
+							position: absolute;
+							display: flex;
+							width: 100%;
+							height: 100%;
+							background: rgba(0, 0, 0, 0.6);
+							.warn-word{
+								position: absolute;
+								display: flex;
+								width: 1.65rem;
+								height: 0.53rem;
+								top: 0.37rem;
+								right: 0.25rem;
+								background: #fff;
+								border-radius: 0.27rem;
+								align-items: center;
+								justify-content: center;
+								.warn-word-icon{
+									.view-base('stu-warning-icon.gif');
+									max-width: 0.4rem;
+									max-height: 0.32rem;
+									margin-right: 0.05rem;
+									margin-bottom: 0.05rem;
+								}
+								.warn-word-content{
+									font-size: 0.2rem;
+									color: #333;
+								}
+							}
+							.warn-panel{
+								.view-base("stu_warn_panel.png");
+								margin-left:0.68rem;
+								margin-top: 1.8rem;
+								position: absolute;
+								display: flex;
+								flex-direction: column;
+								justify-content: center;
+								align-items: center;
+								.warn-text{
+									color: #fff;
+									font-size: 0.18rem;
+									margin-top: -1rem;
+									margin-left: -0.5rem;
+									position: absolute;
+								}
+								.warn-head{
+									.view-base("stu-warn-head.png");
+									margin-left: -1.1rem;
+									margin-bottom: 0.06rem;
+								}
+								.warn-head-frame {
+									position: absolute;
+									top: 50%;
+									width: 1rem;
+									height: 1rem;
+									left: 50%;  
+									margin-left: -1.05rem;  
+									margin-top: -0.5rem;
+									border:1px dashed #ff1111;
 								}
 							}
 						}
@@ -1743,7 +1873,7 @@ html,body {
 										display: block;
 										width: 3.44rem;
 										flex: 1;
-										margin: 0.7rem 0.2rem 0.2rem;
+										margin: 0.7rem 0.2rem 0.5rem;
 										overflow-y: scroll;
 										overflow-x: hidden;
 										font-size: 0.2rem;
@@ -1766,6 +1896,19 @@ html,body {
 									}
 									.back-dance-btn {
 										display: none;
+									}
+									.feature-tag{
+										width: 0.86rem;
+										height: 0.31rem;
+										font-size: 0.2rem;
+										color: #fff;
+										border-radius: 0.16rem;
+										position: absolute;
+										display: flex;
+										justify-content: center;
+										align-items: center;
+										bottom: 0.13rem;
+										left: 0.13rem;
 									}
 								}
 								&.nothing {
