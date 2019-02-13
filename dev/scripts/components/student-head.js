@@ -30,7 +30,7 @@ class StudentHead extends React.Component {
 
 		features && features.map((feature)=>{
 			if (feature && feature.en_name == student_frature) {
-				featureColor = "#"+feature.color;
+				featureColor = feature.color;
 				hightLight = this.props.mainFeature == feature.en_name;
 			}
 		});

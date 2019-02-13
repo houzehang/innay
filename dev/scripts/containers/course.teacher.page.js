@@ -354,7 +354,7 @@ class Course extends CourseBase {
 				result = _feature.color;
 			}
 		});
-		return `#${result}`;
+		return `${result}`;
 	}
 
 	render() {
