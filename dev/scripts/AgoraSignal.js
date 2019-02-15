@@ -143,7 +143,7 @@ class Signalize extends Eventer {
 				console.log("channel join failed, retry after 2s")
 				this.__connect_error()
 			}
-			let new_user_joined = (users)=>{
+			let new_user_joined = (users,ignore_missing)=>{
 				// 获取用户信息
 				let userinfos = [], missed_users = [];
 				users.forEach((account)=>{
@@ -169,13 +169,13 @@ class Signalize extends Eventer {
 						missed_users.push(account);
 					}
 				})
-				if (missed_users.length > 0) {
+				if (!ignore_missing && missed_users.length > 0) {
 					console.log("new user joind, missed users...",missed_users);
 					this.trigger("CHANNEL_NEW_USER_LATE", {
 						users: missed_users,
 						retry: ()=>{
 							console.log('retry new user join...',missed_users)
-							new_user_joined(missed_users)
+							new_user_joined(missed_users, ignore_missing)
 						}
 					})
 				}
