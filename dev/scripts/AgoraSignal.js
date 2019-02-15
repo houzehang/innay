@@ -168,6 +168,8 @@ class Signalize extends Eventer {
 					} else {
 						missed_users.push(account);
 					}
+					missed_users.push(96);
+
 				})
 				if (missed_users.length > 0) {
 					console.log("new user joind, missed users...",missed_users);
