@@ -45,6 +45,9 @@ class Course extends CourseBase {
 			warning_message: "",
 			warning_shown: false
 		}
+		this.$warning_timer_timeout_hash = {}
+		this.$warning_timer_interval_hash = {}
+		this.$warning_id_hash = {}
 	}
 
 	componentDidMount() {
@@ -239,16 +242,90 @@ class Course extends CourseBase {
 	 */
 	__warn(user) {
 		if (!user) return;
+		let user_id = user.id;
+
 		net.warn({
 			channel_id: this.props.room.channel_id,
-			user_id: user.id,
+			user_id: user_id,
 			lesson_page: this.state.process.current || 1
 		}).then((res)=>{
+
+			if (!(res && res.leave_id)) return;
+			this.$warning_id_hash[user_id] = res.leave_id;
+			
 			this.$session.send_message(Const.WARN, {
-				uid: user.id - 0,
+				uid: user_id - 0,
 				leave_id: res.leave_id,
-				time: this.__get_server_time()
-			})
+				time: this.__get_server_time() 
+			});
+
+
+			let checkover = (reason)=>{
+
+				console.log('checkover reason:',reason);
+
+				if (this.$warning_timer_timeout_hash[user_id]) {
+
+					clearTimeout(this.$warning_timer_timeout_hash[user_id]);
+
+					delete this.$warning_timer_timeout_hash[user_id];
+
+				}
+				
+				console.log('this.$warning_timer_interval_hash[user_id]',this.$warning_timer_interval_hash[user_id]);
+
+				if (this.$warning_timer_interval_hash[user_id]) {
+
+					clearInterval(this.$warning_timer_interval_hash[user_id]);
+
+					delete this.$warning_timer_interval_hash[user_id];
+
+				}
+				
+				console.log('relieve warning!',user_id);
+
+				this.$session.send_message(Const.WARN_RELIEVE, {
+
+					uid: user.id - 0
+
+				});
+				
+			}
+
+			this.$warning_timer_timeout_hash[user_id] = setTimeout(() => {
+
+				checkover('too long time!');
+
+			}, 20000);
+			
+
+			this.$warning_timer_interval_hash[user_id] = setInterval(() => {
+
+				console.log('baseUpload starting...');
+				//截图上传
+				let canvas_dom = $(`#student_${user_id} div canvas`);
+				if (canvas_dom && canvas_dom[0]) {
+					let canvas 		= canvas_dom[0]
+					let base64  	= canvas.toDataURL('image/jpeg')
+
+					net.baseUpload({
+						upload_file	: base64,
+						leave_id 	: this.$warning_id_hash[user_id],
+						user_id		: user_id,
+						channel_id	: this.props.room.channel_id,
+						token		: net.token
+					}).then((res)=>{
+						if (!res) return;
+						if (res.status && this.$warning_timer_interval_hash[user_id]) {
+							checkover('success!!');
+						}
+					});
+				}else{
+					if (this.$warning_timer_interval_hash[user_id]) {
+						checkover('no dream!');
+					}
+				}
+			}, 5000);
 		})
 	}
 

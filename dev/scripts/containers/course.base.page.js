@@ -429,7 +429,9 @@ class Course extends React.Component {
 					this.setState({ process: data })
 					break
 				case Const.WARN:
-					this.__warned(data);
+					// this.__warned(data);
+					break;
+				case Const.WARN_RELIEVE:
 					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
@@ -475,6 +477,8 @@ class Course extends React.Component {
 			case Const.CLOSE_MIC:
 			case Const.PUT_DANCE:
 			case Const.BACK_DANCE:
+			case Const.WARN:
+			case Const.WARN_RELIEVE:
 				this.$session.send_message(null, null, message)
 				break
 			case Const.OPEN_RACE:
@@ -502,8 +506,6 @@ class Course extends React.Component {
 				this.props.onNewGift(data)
 				this.$session.send_message(null, null, message)
 				break
-			case Const.WARN:
-				this.$session.send_message(null, null, message);
 			case "progress":
 				//接收到来自学生的进度提示通知界面调整
 				if (this.props.switches.magic) {
