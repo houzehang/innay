@@ -503,7 +503,7 @@ class Course extends React.Component {
 		let studentHeads = students.map((student)=>(
 			
 			<StudentHead key={student.id} isTeacher={false} user={
-				student.online?student:null
+				student.online?student:{}
 			} onClickSpeak={(user)=>{
 				if (!user.unmuted) {
 					this.$session.send_message(Const.OPEN_MIC, {

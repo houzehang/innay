@@ -122,9 +122,9 @@ StudentHead.propTypes = {
 	user  : PropTypes.shape({
 		id 	     	: PropTypes.number,
 		child_name 	: PropTypes.string,
-		avatarurl	: PropTypes.string.isRequired,
-		handsup 	: PropTypes.number.isRequired,
-		speak  		: PropTypes.number.isRequired,
+		avatarurl	: PropTypes.string,
+		handsup 	: PropTypes.number,
+		speak  		: PropTypes.number,
 		gifts  		: PropTypes.arrayOf(PropTypes.shape({
 			id   	: PropTypes.number,
 			total	: PropTypes.number
