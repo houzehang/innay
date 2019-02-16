@@ -60,7 +60,7 @@ class StudentHead extends React.Component {
 							this.setState({ hover:false })
 						}
 					}}>
-						{this.props.isTeacher || !this.props.withFrame ? "" : <div className="avatar-frame"></div>}
+						{this.props.isTeacher || !this.props.withFrame ? "" : <div className={`avatar-frame ${this.props.user.warn?"bink":""}`}></div>}
 						{this.props.isTeacher?<div className = "high-light-frame" style={ft_frame_bg_color}></div>:""}
 						<div className="avatar-head" id={"student_"+this.props.user.id} style={this.props.user.online ? {
 							backgroundImage : `url(${this.props.user.avatarurl})`

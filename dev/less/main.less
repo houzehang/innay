@@ -19,6 +19,17 @@
 		opacity: 1;
 	}
 }
+@keyframes bink {
+	0%{
+		opacity: 1;
+	}
+	50%{
+		opacity: 0;
+	}
+	100%{
+		opacity: 1;
+	}
+}
 @keyframes move_scale {
 	100%{
 		opacity: 0;
@@ -958,6 +969,9 @@ html,body {
 						margin-left: -0.34rem;  
 						margin-top: -0.35rem;
 						border:1px dashed #ff1111;
+						&.bink{
+							animation: bink 1s infinite;
+						}
 					}
 					.avatar-head {
 						width: 100%;

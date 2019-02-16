@@ -429,9 +429,10 @@ class Course extends React.Component {
 					this.setState({ process: data })
 					break
 				case Const.WARN:
-					// this.__warned(data);
+					this.props.onWarn(data,true);
 					break;
 				case Const.WARN_RELIEVE:
+					this.props.onWarn(data,false);
 					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
@@ -444,8 +445,6 @@ class Course extends React.Component {
 		}
 	}
 	
-	__warned(data){}
-
 	// 是否处于弱网络状态
 	__in_weak_net() {
 		return this.props.netStatus == 0 && !this.isMaster()
