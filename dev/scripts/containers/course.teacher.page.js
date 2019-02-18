@@ -296,7 +296,7 @@ class Course extends CourseBase {
 
 				checkover('too long time!');
 
-			}, 20000);
+			}, 60000);
 			
 
 			this.$warning_timer_interval_hash[user_id] = setInterval(() => {
