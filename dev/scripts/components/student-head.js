@@ -25,7 +25,6 @@ class StudentHead extends React.Component {
 
 		let features = this.props.features;
 		let student_frature = this.props.user.frature;
-		console.log('features == ',features);
 		let featureColor,hightLight;
 
 		features && features.map((feature)=>{
