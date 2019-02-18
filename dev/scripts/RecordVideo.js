@@ -9,6 +9,7 @@ class RecordVideo extends Eventer {
 		this.$seek_to   = null
 		this.$speed 	= speed
 		this.$seeking   = false
+		this.$canplay   = false
 		if (data) {
 			this.$data  = data
 		}
@@ -79,10 +80,8 @@ class RecordVideo extends Eventer {
 
 	pause() {
 		console.log("call video pause..",this.$playing)
-		if (this.$playing) {
-			this.$playing = false
-			this.$video[0].pause()
-		}
+		this.$playing = false
+		this.$video && this.$video[0].pause()
 	}
 
 	__timeupdate() {
@@ -102,11 +101,13 @@ class RecordVideo extends Eventer {
 
 	__render() {
 		if (!this.$dom) {
+
 			this.$dom = $(`<div id="record_${this.$id}"></div>`)
 			// 预加载视频资源
 			let video = $("<video/>")
 			video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
 			video.on("canplay", ()=>{
+				
 				this.trigger("canplay")
 				video.off()
 				video.on("timeupdate", ()=>{
@@ -121,6 +122,7 @@ class RecordVideo extends Eventer {
 				this.$dom.append(video)
 				$(this.$holder).append(this.$dom)
 				this.$video = video
+				this.$canplay = true;
 			})
 			video.on("durationchange", ()=>{
 				this.__durationupdate(video[0].duration)
@@ -132,7 +134,9 @@ class RecordVideo extends Eventer {
 			video[0].playbackRate = this.$speed
 			video[0].play()
 		} else {
-			this.$video[0].play()
+			if (this.$canplay) {
+				this.$video[0].play()
+			}
 		}
 		this.$waiting = false
 	}
@@ -158,6 +162,7 @@ class RecordVideoManager extends Eventer {
 		this.$list 		= {}
 		this.$data 		= {}
 		this.$speed     = 1
+		this.$jump_queue_hash = {}
 	}
 
 	__timeupdate(id, time) {
@@ -196,8 +201,10 @@ class RecordVideoManager extends Eventer {
 	}
 
 	jumpTo(id, time) {
-		let video = this.$list[id]
-		if (video) {
+		let video = this.$list[id];
+		if (!video) return;
+
+		let __jumpTo = ()=>{
 			if (time < 0) {
 				console.log("call pause...",id,time)
 				video.pause()
@@ -206,6 +213,12 @@ class RecordVideoManager extends Eventer {
 				video.jumpTo(time)
 				video.play()
 			}
+		}
+		if (video.$canplay) {
+			__jumpTo();
+		} else {
+			this.$jump_queue_hash[id] = this.$jump_queue_hash[id] || [];
+			this.$jump_queue_hash[id].push(__jumpTo);
 		}
 	}
 
@@ -265,6 +278,10 @@ class RecordVideoManager extends Eventer {
 				this.play()
 			} 
 			stream.on('canplay', ()=>{
+				let _jump_to_func = (this.$jump_queue_hash[stream.$id] || []).shift();
+				_jump_to_func && typeof _jump_to_func === 'function' && 
+				_jump_to_func();
+				
 				goon()
 			})
 			stream.on('error', ()=>{
