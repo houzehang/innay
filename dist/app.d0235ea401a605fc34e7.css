@@ -464,7 +464,7 @@ body .sound-outer .sound-tester .step-content .selector .select {
   opacity: 0;
 }
 body .sound-outer .sound-tester .step-content .video-area {
-  width: 3.72rem;
+  width: 2.1rem;
   height: 2.1rem;
   margin: 0.25rem auto;
   overflow: hidden;
@@ -2068,6 +2068,17 @@ body .calendar-col.highlighted::after {
     opacity: 1;
   }
 }
+@keyframes bink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 @keyframes move_scale {
   100% {
     opacity: 0;
@@ -3224,6 +3235,10 @@ body .page.course-page .student-area .student .avatar-frame {
   margin-top: -0.35rem;
   border: 1px dashed #ff1111;
 }
+html .page.course-page .student-area .student .avatar-frame.bink,
+body .page.course-page .student-area .student .avatar-frame.bink {
+  animation: bink 1s infinite;
+}
 html .page.course-page .student-area .student .avatar-head,
 body .page.course-page .student-area .student .avatar-head {
   width: 100%;
@@ -4365,8 +4380,8 @@ html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.draf
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.draft .back-dance-btn {
   display: none;
 }
-html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.draft .feature-tag,
-body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.draft .feature-tag {
+html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .feature-tag,
+body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .feature-tag {
   width: 0.86rem;
   height: 0.31rem;
   font-size: 0.2rem;
