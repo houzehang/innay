@@ -153,6 +153,8 @@ class Main extends React.Component {
 							<div className="nav-area">
 								<div className="btn-exit" onClick={()=>{
 									this.props.onExitMyCourses()
+									this.$no_morelessons_comming = false;
+									this.$no_morelessons_done 	 = false;
 									this.__get_lesson_comming();
 								}}></div>
 								<div className={this.state.comming_page_selected ? "switch-bar" : "switch-bar first-selected"} >
@@ -160,7 +162,6 @@ class Main extends React.Component {
 										this.setState({
 											comming_page_selected:true
 										});
-										this.__query_courses();
 										setTimeout(()=>{
 											this.__query_courses();
 										},0);
