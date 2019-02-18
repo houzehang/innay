@@ -21,18 +21,15 @@ class Room extends Eventer {
 		this.$client.setParameters('{"che.audio.live_for_comm":true}');
 		this.$client.setParameters('{"che.audio.enable.agc":false}');
 		this.$client.setParameters('{"che.video.moreFecSchemeEnable":true}');
+		this.$client.setParameters('{"che.video.lowBitRateStreamParameter":{"width":120,"height":120,"frameRate":15,"bitRate":140}}')
 		this.$client.enableDualStreamMode(true);
 		this.$client.setLocalVideoMirrorMode(2);
 		if (!this.inst.isSubMaster(this.inst.props.account.id)) {
 			this.$client.enableVideo();
 			this.$client.enableLocalVideo(true);
-			let isMaster = this.inst.props.room.teacher_id == 
-						   this.inst.props.account.id
-			if (isMaster) {
-				this.$client.setVideoProfile(45);
-			} else {
-				this.$client.setVideoProfile(2);
-			}
+			// let isMaster = this.inst.props.room.teacher_id == 
+						//    this.inst.props.account.id
+			this.$client.setVideoProfile(45);
 		} else {
 			this.$client.muteLocalAudioStream(true)
 			this.$client.enableLocalVideo(false);
