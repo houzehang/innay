@@ -370,6 +370,8 @@ class Main extends React.Component {
 
 	onLogout() {
 		this.props.onLogout()
+		this.props.onLessonsComming([]);
+		this.props.onLessonsDone([]);
 	}
 	
 	__view_user() {
