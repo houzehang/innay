@@ -48,6 +48,12 @@ class Course extends CourseBase {
 		this.$warning_timer_timeout_hash = {}
 		this.$warning_timer_interval_hash = {}
 		this.$warning_id_hash = {}
+
+		ipcRenderer.on('hotkey', (event, hotkeyName) => {
+			if (this.onHotKey && typeof this.onHotKey === 'function') {
+				this.onHotKey(hotkeyName);
+			}
+		});
 	}
 
 	componentDidMount() {

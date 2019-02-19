@@ -7,7 +7,6 @@ const Room = require("../AgoraStream")
 const Signalize = require('../AgoraSignal')
 const Session = require('../session')
 const Const = require('../../const')
-const Hotkey = require('../../hotkey')
 const { ipcRenderer } = $require('electron');
 const context = require('../context')
 const $ = require("jquery")
@@ -25,12 +24,6 @@ class Course extends React.Component {
 		ipcRenderer.on("DOWNLOADED", (event, url, file) => {
 			net.log({ name: "DOWNLOADED", url, file })
 			this.$audios_files[url] = file
-		});
-
-		ipcRenderer.on('hotkey', (event, hotkeyName) => {
-			if (this.onHotKey && typeof this.onHotKey === 'function') {
-				this.onHotKey(hotkeyName);
-			}
 		});
 		
 		if (context && context.detector) {
