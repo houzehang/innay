@@ -49,6 +49,12 @@ class StudentHead extends React.Component {
 		if (!child_name && this.props.user && this.props.user.stream) {
 			child_name = this.props.user.stream.$data.child_name;
 		}
+
+		setTimeout(() => {
+			if (!(this.props.user && this.props.user.online)) {
+				$(`#student_${this.props.user.id}`).empty();
+			}
+		}, 0);
 		return hasUser ? (
 					<div className={(this.state.hover?"student hover":"student ")+(this.props.user.online?"":" nothing")} key={this.props.user.id+""} onMouseOver={()=>{
 						if (this.props.isTeacher) {
@@ -71,7 +77,7 @@ class StudentHead extends React.Component {
 							<div className="avatar-name">{child_name}</div>
 							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
-						{this.props.isTeacher?
+						{this.props.isTeacher && this.props.user && this.props.user.online?
 						<div className="summary">
 							<div className="summary-inner">
 								<div className={this.props.isTeacher?"btns":"btns student"}>
