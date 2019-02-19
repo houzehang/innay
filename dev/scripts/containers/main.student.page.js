@@ -91,7 +91,7 @@ class Main extends React.Component {
                                         <div className="name"><span>{room.name}</span></div>
                                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                                         {/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-                                        <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{room.ability}</span></div>
+                                        <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability)}</span></div>
                                         <div className="date"><span>{room.class_date} {room.class_time}</span></div>
                                     </div>
 									
@@ -202,7 +202,7 @@ class Main extends React.Component {
 											<div className="name"><span>{room.name}</span></div>
 											<div className="desc">课时简介：{room.content}</div>
 											{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-											<div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{room.ability}</span></div>
+											<div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability||"")}</span></div>
 											<div className="date"><span>{room.between_time}</span></div>
 										</div>
 										<div className="btns-panel">
