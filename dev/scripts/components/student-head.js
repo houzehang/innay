@@ -35,7 +35,7 @@ class StudentHead extends React.Component {
 		});
 
 		//1.性格标签背景颜色
-		let ft_bg_color = this.props.isTeacher && featureColor ? {
+		let ft_bg_color = this.props.isTeacher && featureColor && !this.props.user.percent ? {
 			background:featureColor
 		}:{}
 		//2.性格边框颜色
