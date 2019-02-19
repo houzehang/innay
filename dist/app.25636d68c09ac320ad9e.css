@@ -2547,7 +2547,7 @@ body .page.student-page .inner .student-box .main-page .lesson-box .info .desc {
   margin-bottom: 0.07rem;
   display: flex;
   align-items: flex-start;
-  line-height: 0.26rem;
+  line-height: 0.28rem;
   vertical-align: top;
   overflow: scroll;
 }
@@ -2900,7 +2900,7 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .l
   margin-bottom: 0.07rem;
   display: flex;
   align-items: flex-start;
-  line-height: 0.26rem;
+  line-height: 0.28rem;
   vertical-align: top;
   overflow: scroll;
 }
@@ -3081,6 +3081,11 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area {
   height: 5.24rem;
   width: 8.7rem;
   position: relative;
+  overflow: scroll;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area::-webkit-scrollbar,
+body .page.student-page .inner .student-box .my-courses .courses-done-area::-webkit-scrollbar {
+  display: none;
 }
 html .page.student-page .inner .student-box .my-courses .courses-done-area .container,
 body .page.student-page .inner .student-box .my-courses .courses-done-area .container {
