@@ -313,8 +313,9 @@ class Course extends React.Component {
 
 			this.$roominfo_callbacks.forEach((_callback)=>{
 				_callback && typeof _callback === 'function' && 
-				_callback();
+				_callback(true);
 			})
+			this.$roominfo_callbacks = null;
 		})
 	}
 
