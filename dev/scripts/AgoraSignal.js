@@ -173,9 +173,10 @@ class Signalize extends Eventer {
 					console.log("new user joind, missed users...",missed_users);
 					this.trigger("CHANNEL_NEW_USER_LATE", {
 						users: missed_users,
-						retry: ()=>{
+						retry: (over)=>{
+							if (over) return;
 							console.log('retry new user join...',missed_users)
-							new_user_joined(missed_users, ignore_missing)
+							new_user_joined(missed_users, true)
 						}
 					})
 				}
@@ -197,7 +198,7 @@ class Signalize extends Eventer {
 					users.push(account[0])
 				})
 				if (users.length > 0) {
-					new_user_joined(users)
+					new_user_joined(users, true)
 				}
 			};
 			channel.onChannelLeaved = ()=>{
