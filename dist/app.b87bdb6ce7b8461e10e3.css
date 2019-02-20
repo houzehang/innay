@@ -3838,7 +3838,7 @@ body .page.course-page.teacher .student-area {
 }
 html .page.course-page.teacher .student-area .student,
 body .page.course-page.teacher .student-area .student {
-  margin-left: 0.27rem;
+  margin-left: 0.06rem;
 }
 html .page.course-page.teacher .student-area .student .summary,
 body .page.course-page.teacher .student-area .student .summary {
@@ -3860,7 +3860,7 @@ body .page.course-page.teacher .student-area .student .high-light-frame {
 html .page.course-page.teacher .student-area .dancing-container,
 body .page.course-page.teacher .student-area .dancing-container {
   position: relative;
-  margin-left: 0.27rem;
+  margin-left: 0.06rem;
   width: 2rem;
   height: 1.88rem;
   background: black;
