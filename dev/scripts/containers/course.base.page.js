@@ -422,12 +422,6 @@ class Course extends React.Component {
 				case "course-process":
 					this.setState({ process: data })
 					break
-				case Const.WARN:
-					this.props.onWarn(data,true);
-					break;
-				case Const.WARN_RELIEVE:
-					this.props.onWarn(data,false);
-					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
 						this.__on_signal_message(message)
@@ -470,8 +464,6 @@ class Course extends React.Component {
 			case Const.CLOSE_MIC:
 			case Const.PUT_DANCE:
 			case Const.BACK_DANCE:
-			case Const.WARN:
-			case Const.WARN_RELIEVE:
 				this.$session.send_message(null, null, message)
 				break
 			case Const.OPEN_RACE:
@@ -505,6 +497,14 @@ class Course extends React.Component {
 					this.props.onProgressUpdate(message.from, data.percent)
 				}
 				break
+			case Const.WARN:
+				this.props.onWarn(data,true);
+				this.$session.send_message(null, null, message)
+				break;
+			case Const.WARN_RELIEVE:
+				this.props.onWarn(data,false);
+				this.$session.send_message(null, null, message)
+				break;
 			default:
 				this.$session.send_message(null, null, message)
 		}

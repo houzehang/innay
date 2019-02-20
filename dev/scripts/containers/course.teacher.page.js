@@ -258,12 +258,17 @@ class Course extends CourseBase {
 
 			if (!(res && res.leave_id)) return;
 			this.$warning_id_hash[user_id] = res.leave_id;
-			
-			this.$session.send_message(Const.WARN, {
-				uid: user_id - 0,
-				leave_id: res.leave_id,
-				time: this.__get_server_time() 
-			});
+
+			this.$signal.send({
+				type: Const.WARN,
+				from: this.props.account.id,
+				to: "all",
+				message: {
+					uid: user_id - 0,
+					leave_id: res.leave_id,
+					time: this.__get_server_time() 
+				}
+			})
 
 
 			let checkover = (reason)=>{
@@ -290,12 +295,14 @@ class Course extends CourseBase {
 				
 				console.log('relieve warning!',user_id);
 
-				this.$session.send_message(Const.WARN_RELIEVE, {
-
-					uid: user.id - 0
-
-				});
-				
+				this.$signal.send({
+					type: Const.WARN_RELIEVE,
+					from: this.props.account.id,
+					to: "all",
+					message: {
+						uid: user.id - 0 
+					}
+				})
 			}
 
 			this.$warning_timer_timeout_hash[user_id] = setTimeout(() => {
