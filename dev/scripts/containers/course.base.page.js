@@ -250,7 +250,6 @@ class Course extends React.Component {
 			});
 			if (users.length > 0) {
 				this.__query_roominfo_more(response.retry);
-				console.log("channel new user late...", response.ids)
 			}
 		})
 		this.$signal.on("CHANNEL_USER_LEAVE", (id) => {
