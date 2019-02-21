@@ -68,23 +68,6 @@ class Course extends CourseBase {
 		super.componentDidMount();
 	}
 
-	__send_init_room() {
-		// 发送init-room
-		let masters = []
-		this.props.room.teachers.forEach((teacher) => {
-			masters.push(teacher.id)
-		})
-		let userinfos = [this.props.teacher]
-		userinfos = userinfos.concat(this.props.students)
-		this.$session.send_message(Const.INIT_ROOM, {
-			channel_id: this.props.room.channel_id,
-			token: net.token
-		}, {
-			master_ids: masters,
-			userinfos: userinfos
-		})
-	}
-
 	__tick() {
 		super.__tick(()=>{
 			// 根据上课时间设置警告

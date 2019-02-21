@@ -313,6 +313,7 @@ class Course extends React.Component {
 	}
 
 	__get_feature(uid){
+		console.log('__get_feature,uid:',uid);
 		if(!uid){
 			uid = this.props.account.id;
 		}
@@ -320,6 +321,16 @@ class Course extends React.Component {
 		this.props.students.map((student)=>{
 			if (student && student.id == uid) {
 				result = student.frature;
+			}
+		});
+		return result;
+	}
+
+	__get_feature_hash(){
+		let result = {};
+		this.props.students.map((student)=>{
+			if (student && student.id) {
+				result[student.id] = student.frature;
 			}
 		});
 		return result;
@@ -339,7 +350,7 @@ class Course extends React.Component {
 		}, {
 			master_ids: masters,
 			userinfos: userinfos,
-			feature: this.__get_feature()
+			feature_data: this.__get_feature_hash()
 		})
 	}
 
