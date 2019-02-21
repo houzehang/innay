@@ -22,7 +22,7 @@
   transform: translateY(0);
 }
 .handsup-layer .handsup-title {
-  font-size: 0.2rem;
+  font-size: 0.20rem;
   color: #000232;
   line-height: 0.26rem;
   margin-top: 0.1rem;
@@ -3862,7 +3862,7 @@ body .page.course-page.teacher .student-area .dancing-container {
   position: relative;
   margin-left: 0.06rem;
   width: 2rem;
-  height: 1.88rem;
+  height: 2rem;
   background: black;
 }
 html .page.course-page.teacher .student-area .dancing-container .dancing-student,
