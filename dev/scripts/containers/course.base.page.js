@@ -570,18 +570,4 @@ class Course extends React.Component {
 	}
 }
 
-const mapStateToProps = (state, ownProps) => {
-	return {
-		account: state.login.account,
-		room: state.room.info,
-		students: state.room.students,
-		start_time: state.room.start_time,
-		teacher: state.room.teacher,
-		started: state.main.courseStarted,
-		switches: state.room.switches,
-		status: state.room.status,
-		netStatus: state.main.netStatus
-	}
-}
-
 export default Course

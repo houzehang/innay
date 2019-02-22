@@ -94,6 +94,8 @@ class Devices extends React.Component {
 
 	componentWillUnmount() {
 		try {
+			this.$client.videoSourceLeave();
+			this.$client.videoSourceRelease();
 			this.$client.stopPreview();
 			this.$client.stopAudioRecordingDeviceTest();
 			this.$client.removeAllListeners('audiovolumeindication');

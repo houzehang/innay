@@ -1,6 +1,5 @@
 const Eventer 	= require("./eventer")
 const net  		= require("./network")
-const $ 		= require("jquery")
 class NetDetector extends Eventer {
 	constructor() {
 		super()
@@ -37,29 +36,29 @@ class NetDetector extends Eventer {
 	}
 
 	check() {
-		console.log("call check")
-		this.$check_closed = false
-		let base = "https://muwen.mw009.com/netdetector.jpg"
-		clearTimeout(this.$check_timer)
-		this.$check_timer = setTimeout(()=>{
-			this.onAjaxTime(this.$check_delay)
-			this.check()
-		},this.$check_delay)
-		let start = new Date().getTime()
-		$.get(`${base}?t=${new Date().getTime()}`,()=>{
-			let delay = new Date().getTime() - start
-			this.onAjaxTime(delay)
-			clearTimeout(this.$check_timer)
-			this.$check_timer = setTimeout(()=>{
-				this.check()
-			},this.$check_delay)
-		}).fail(()=>{
-			this.onAjaxTime(-1)
-			clearTimeout(this.$check_timer)
-			this.$check_timer = setTimeout(()=>{
-				this.check()
-			},this.$check_delay)
-		})
+		// console.log("call check")
+		// this.$check_closed = false
+		// let base = "https://muwen.mw009.com/netdetector.jpg"
+		// clearTimeout(this.$check_timer)
+		// this.$check_timer = setTimeout(()=>{
+		// 	this.onAjaxTime(this.$check_delay)
+		// 	this.check()
+		// },this.$check_delay)
+		// let start = new Date().getTime()
+		// $.get(`${base}?t=${new Date().getTime()}`,()=>{
+		// 	let delay = new Date().getTime() - start
+		// 	this.onAjaxTime(delay)
+		// 	clearTimeout(this.$check_timer)
+		// 	this.$check_timer = setTimeout(()=>{
+		// 		this.check()
+		// 	},this.$check_delay)
+		// }).fail(()=>{
+		// 	this.onAjaxTime(-1)
+		// 	clearTimeout(this.$check_timer)
+		// 	this.$check_timer = setTimeout(()=>{
+		// 		this.check()
+		// 	},this.$check_delay)
+		// })
 	}
 
 	uncheck() {
