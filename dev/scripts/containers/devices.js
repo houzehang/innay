@@ -29,6 +29,7 @@ class Devices extends React.Component {
 		this.$client.enableVideo();
 		this.$client.enableLocalVideo(true);
 		this.$client.setVideoProfile(45);
+		this.$client.enableLastmileTest()
 
 		let video_devices 	= this.$client.getVideoDevices()
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
@@ -75,6 +76,7 @@ class Devices extends React.Component {
 				currentSpeakerName = item.devicename
 			}
 		}
+		this.$quality_msg = ["未知","极好","好","一般","差","极差","不可用"]
 		this.state = {
 			currentVideoDevice, 
 			currentVideoName,
@@ -84,8 +86,18 @@ class Devices extends React.Component {
 			currentAudioName,
 			video_devices, audio_devices, speaker_devices,
 			volume: this.$client.getAudioPlaybackVolume(),
-			step: 1
+			step: 1,
+			netquality: 0,
+			net_history: [0]
 		}
+
+		this.$client.on("lastmilequality", (quality) => {
+			console.log("quality",quality)
+			let qualities = this.state.net_history
+			qualities = qualities.splice(qualities.length-50,qualities.length)
+			qualities.push(quality)
+			this.setState({ netquality: quality, net_history: qualities })
+		})
 	}
 
 	componentDidMount() {
@@ -100,6 +112,7 @@ class Devices extends React.Component {
 			this.$client.stopAudioRecordingDeviceTest();
 			this.$client.removeAllListeners('audiovolumeindication');
 			this.$client.stopAudioPlaybackDeviceTest();
+			this.$client.disableLastmileTest()
 		} catch (err) {
 			console.log("client leave failed ", err);
 		}
@@ -301,6 +314,12 @@ class Devices extends React.Component {
 				this.props.onExitTester()
 			}}></button>
 			<div className={"sound-tester s-"+this.state.step}>
+				<div className="network">实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
+				<div className="network-bar">
+				{this.state.net_history.map((quality,index)=>{
+					return <div className={"quality q-"+quality} key={index}></div>
+				})}
+				</div>
 				<div className="steps">
 					<div className="line l1"></div>
 					<div className="line l2"></div>

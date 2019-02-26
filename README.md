@@ -37,4 +37,9 @@ Need more info please goto package.json in the root directory.
 ## To Develop And Debug
 ```bash
 gulp watch
+
+
+## CRASHES
 ```
+https://github.com/electron/electron/issues/15725
+https://github.com/atom/atom/issues/17071

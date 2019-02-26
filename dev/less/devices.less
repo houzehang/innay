@@ -25,11 +25,47 @@ body {
 			border: 1px solid #e9e9e9;
 			position: relative;
 			width: 7.08rem;
-			height: 6.17rem;
+			height: 6.4rem;
 			margin: 0 auto;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
+			.network {
+				font-size: 0.16rem;
+				text-align: center;
+			}
+			.network-bar {
+				height: 0.02rem;
+				display: flex;
+				flex-wrap: nowrap;
+				margin-top: 0.15rem;
+				border-bottom: 1px solid #e9e9e9;
+				padding: 0 0.1rem 0.2rem;
+				.quality {
+					width: 0.4rem;
+					&.q-0 {
+						background: #cc9900;
+					}
+					&.q-1 {
+						background: #00ff00;
+					}
+					&.q-2 {
+						background: #99ff00;
+					}
+					&.q-3 {
+						background: #ffff00;
+					}
+					&.q-4 {
+						background: #ff6600;
+					}
+					&.q-5 {
+						background: #ff0000;
+					}
+					&.q-6 {
+						background: #b2b2b2;
+					}
+				}
+			}
 			&.s-1,&.s-2,&.s-3 {
 				.steps {
 					.step {
