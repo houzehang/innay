@@ -67,6 +67,7 @@ class Main extends React.Component {
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
+		net.reportSystemBaseInfo()
 	}
 
 	__student_page() {

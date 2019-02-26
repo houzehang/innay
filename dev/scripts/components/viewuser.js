@@ -22,7 +22,7 @@ class ViewUser extends React.Component {
 	}
 
 	componentDidMount() {
-		this.setState({ version: window.ENV_PATHES.version })
+		this.setState({ version: window.ENV_CONF.version })
 	}
 
 	componentWillUnmount() {

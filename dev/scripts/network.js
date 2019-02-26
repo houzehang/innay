@@ -1,10 +1,10 @@
-const Q 		= require('q')
-const Eventer 	= require('./eventer')
-const context 	= require('./context')
-const ENV   	= require("../../env")
-const remote 	= $require("electron").remote
-const $ 		= require("jquery")
-const Conf 		= require("../const")
+const Q 			= require('q')
+const Eventer 		= require('./eventer')
+const context 		= require('./context')
+const ENV   		= require("../../env")
+const remote 		= $require("electron").remote
+const $ 			= require("jquery")
+const Conf 			= require("../const")
 class Network extends Eventer {
 	constructor() {
 		super()
@@ -296,6 +296,16 @@ class Network extends Eventer {
 		}
 		return system
 	}
+
+	reportSystemBaseInfo() {
+		let _timer = setInterval(()=>{
+			if (window.ENV_CONF.systeminfo) {
+				clearInterval(_timer)
+				this.log(window.ENV_CONF.systeminfo)
+			}
+		},1000)
+	}
+
 	/**
 	 * 发送log数据
 	 * @param {*} data 

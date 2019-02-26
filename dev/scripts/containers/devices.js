@@ -248,9 +248,9 @@ class Devices extends React.Component {
 		setTimeout(()=>{
 			let filepath;
 			if (DEBUG) {
-				filepath = path.join(window.ENV_PATHES.__dirname,'libs','AgoraSDK','music.mp3');
+				filepath = path.join(window.ENV_CONF.__dirname,'libs','AgoraSDK','music.mp3');
 			} else {
-				filepath = path.join(window.ENV_PATHES.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
+				filepath = path.join(window.ENV_CONF.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
 			}
 			console.log("filepath",filepath)
 			this.$client.startAudioPlaybackDeviceTest(filepath);

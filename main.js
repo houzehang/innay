@@ -9,6 +9,7 @@ const { TC_DEBUG, TEST, TEACHER } = require('./env.js');
 const Const = require('./config/const.js');
 const Hotkey = require('./config/hotkey.js');
 const StaticServ = require("./staticserv")
+const SystemInfo = require("systeminformation")
 // 初始化主框架
 const { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
 const log = require('electron-log');
@@ -164,6 +165,12 @@ function createMainWindow() {
             mainWindowHotkeyListener.mainWindow = $main;
             mainWindowHotkeyListener.tick();
         }
+        
+		SystemInfo.getStaticData((info)=>{
+            $main.webContents.send('configure', {
+               systeminfo: info
+            });
+		})
     })
     $main.webContents.on('will-navigate', (ev, url) => {
         ev.preventDefault();
