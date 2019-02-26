@@ -38,7 +38,6 @@ class Main extends React.Component {
 	}
 
 	componentDidMount() {
-		let { account } = this.props  
 		context.user = this.props.account
 		net.reportSystemBaseInfo()
 	}
