@@ -145,17 +145,17 @@ class Course extends React.Component {
 			}
 			this.props.onNewStream(stream);
 
-			let found = false;
-			let all_users = [this.props.teacher].concat(this.props.students);
-			all_users.forEach((user)=>{
-				if (user.id == id) {
-					found = true;
-				}
-			});
+			// let found = false;
+			// let all_users = [this.props.teacher].concat(this.props.students);
+			// all_users.forEach((user)=>{
+			// 	if (user.id == id) {
+			// 		found = true;
+			// 	}
+			// });
 
-			if (!found) {
-				this.__query_roominfo_more();
-			}
+			// if (!found) {
+			// 	this.__query_roominfo_more();
+			// }
 		})
 		this.$room.on("REMOVE_STREAM", (stream) => {
 			this.props.onStreamLeave(stream)
@@ -243,15 +243,15 @@ class Course extends React.Component {
 			})
 			console.log("channel new user...", response.userinfos)
 		})
-		this.$signal.on("CHANNEL_NEW_USER_LATE", (response) => {
-			let users = response.users;
-			users = users.filter((userId)=>{
-				return !this.isMaster(userId);
-			});
-			if (users.length > 0) {
-				this.__query_roominfo_more(response.retry);
-			}
-		})
+		// this.$signal.on("CHANNEL_NEW_USER_LATE", (response) => {
+		// 	let users = response.users;
+		// 	users = users.filter((userId)=>{
+		// 		return !this.isMaster(userId);
+		// 	});
+		// 	if (users.length > 0) {
+		// 		this.__query_roominfo_more(response.retry);
+		// 	}
+		// })
 		this.$signal.on("CHANNEL_USER_LEAVE", (id) => {
 			this.$session.send_message(Const.MEMBER_LEAVE, {
 			}, {
@@ -288,7 +288,9 @@ class Course extends React.Component {
 	__query_roominfo_more(callback){
 		console.log('start querying more roominfo...');
 		this.$roominfo_callbacks = this.$roominfo_callbacks || [];
-		this.$roominfo_callbacks.push(callback);
+		if (callback) {
+			this.$roominfo_callbacks.push(callback);
+		}
 
 		if(this.$roominfo_networking){
 			return;
@@ -304,7 +306,6 @@ class Course extends React.Component {
 			this.__send_init_room()
 
 			this.$roominfo_callbacks.forEach((_callback)=>{
-				_callback && typeof _callback === 'function' && 
 				_callback(true);
 			})
 			this.$roominfo_callbacks = null;
