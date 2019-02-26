@@ -7,19 +7,7 @@ class StudentHead extends React.Component {
 		super(props)
 		this.state = { hover: false }
 	}
-	__bind() {
-		if (this.props.user && !this.$binded) {
-			this.$binded = true
-			$(".student-area").on("mouseover", `#student_${this.props.user.id} .fixed`, (event)=>{
-				if (this.props.user.dancing) {
-					event.stopPropagation()
-					event.preventDefault()
-				}
-			})
-		}
-	}
 	render() {
-		this.__bind()
 		let hasUser = this.props.user
 		let child_name;
 
