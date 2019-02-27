@@ -25,7 +25,7 @@ let updateWindow,
     rationalMaximize = false,
     screenSize,
     closeWarning,
-    mianWindowSize = { width: 1300, height: 790 };
+    mainWindowSize = { width: 1300, height: 790 };
 
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
@@ -133,13 +133,13 @@ function createMainWindow() {
     console.log("app path", process.env.APP_PATH)
 
     if (screenSize && rationalMaximize) {
-        let maxRatio = Math.min(screenSize.width / mianWindowSize.width, screenSize.height / mianWindowSize.height);
-        mianWindowSize.width *= maxRatio;
-        mianWindowSize.height *= maxRatio;
+        let maxRatio = Math.min(screenSize.width / mainWindowSize.width, screenSize.height / mainWindowSize.height);
+        mainWindowSize.width *= maxRatio;
+        mainWindowSize.height *= maxRatio;
     }
 
     let $main = new BrowserWindow({
-        width: mianWindowSize.width | 0, height: mianWindowSize.height | 0,
+        width: mainWindowSize.width | 0, height: mainWindowSize.height | 0,
         resizable: TC_DEBUG,
         center: true,
         frame: true,
