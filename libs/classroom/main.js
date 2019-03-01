@@ -97,10 +97,12 @@
             cc.director.loadScene(launchScene, null,
                 function () {
                     console.log('Success to load scene: ' + launchScene);
-                    window.SCENE_LOADED = true
-                    if (window.ON_SCENE_LOADED) {
-                        window.ON_SCENE_LOADED()
-                    }
+                    setTimeout(()=>{
+                        window.SCENE_LOADED = true
+                        if (window.ON_SCENE_LOADED) {
+                            window.ON_SCENE_LOADED()
+                        }
+                    },0)
                 }
             );
         };
