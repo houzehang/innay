@@ -8,7 +8,8 @@ module.exports = {
   devtool: 'cheap-source-map',
   entry: {
     app : './dev/scripts/app.js',
-    version : './dev/scripts/version.js'
+    version : './dev/scripts/version.js',
+    classroom: './dev/scripts/classroom.js'
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -80,6 +81,24 @@ module.exports = {
       template: path.resolve(__dirname, "dev", "version.html"),
       filename: "version.html",
       alwaysWriteToDisk: true
+    }),
+    new HtmlWebpackPlugin({
+      chunks: ["classroom"],
+      template: path.resolve(__dirname, "dev", "classroom.html"),
+      filename: "classroom.html",
+      alwaysWriteToDisk: true
+    }),
+    new HtmlWebpackIncludeAssetsPlugin({
+      assets: [
+        'http://localhost:3030/libs/flexible.js',
+        'http://localhost:3030/libs/AgoraSDK/AgoraRTCSDK-2.5.1.js',
+        'http://localhost:3030/libs/cocos2d-js-min.js',
+        'http://localhost:3030/libs/classroom/src/settings.js',
+        'http://localhost:3030/libs/classroom/main.js'
+      ],
+      publicPath: false,
+      append: false,
+      files: ['classroom.html']
     }),
     new HtmlWebpackHarddiskPlugin({
       outputPath: path.resolve(__dirname, 'dist')

@@ -8,7 +8,7 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
-import * as types from '../constants/ActionTypes'
+const { ipcRenderer } = $require('electron');
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
@@ -105,6 +105,14 @@ class Main extends React.Component {
 	}
 
 	onStartRoom(data) {
+		net.getRoomInfo(data.channel_id).then((result) => {
+			for (let key in result) {
+				data[key] = result[key]
+			}
+			data.user_id = this.props.account.id
+			ipcRenderer.send('open-classroom', data);
+		})
+		return
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let lastest_download = storage.get(`download_${data.en_name}`)
 		if (lastest_download) {

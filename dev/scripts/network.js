@@ -299,7 +299,7 @@ class Network extends Eventer {
 
 	reportSystemBaseInfo() {
 		let _timer = setInterval(()=>{
-			if (window.ENV_CONF.systeminfo) {
+			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
 				clearInterval(_timer)
 				this.log(window.ENV_CONF.systeminfo)
 			}
