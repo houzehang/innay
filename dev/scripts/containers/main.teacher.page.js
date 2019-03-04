@@ -114,28 +114,7 @@ class Main extends React.Component {
 				return
 			}
 		}
-		if (context.detector.offline) {
-			this.props.confirm({
-				content: "您的网络已经断开，建议您检查网络后再开始上课。",
-				sure_txt: "去检查网络",
-				cancel_txt: "坚持上课",
-				cancel: ()=>{
-					this.__onStartRoom(data)
-				}
-			})
-		} else {
-			this.props.confirm({
-				content: "为保证上课体验，建议您先下载课程包再开始上课。",
-				sure_txt: "去下载",
-				cancel_txt: "直接上课",
-				sure: ()=>{
-					this.onDownload(data, true)
-				},
-				cancel: ()=>{
-					this.__onStartRoom(data)
-				}
-			})
-		}
+		this.onDownload(data, true)
 	}
 
 	__onStartRoom(data,isRecord) {

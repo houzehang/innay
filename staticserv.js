@@ -10,11 +10,7 @@ class StaticServer {
 		this.$down_queue 	= []
 		this.$entity 		= entity
 		this.$loaded 		= {}
-		if (DEBUG) {
-			this.$dir = path.join(app.getAppPath(),'downloads');
-		} else {
-			this.$dir = path.join(app.getAppPath(), '..', 'downloads');
-		}
+		this.$dir = path.join(app.getPath("userData"),"class_sounds");
 		this.__clearCache()
 		log.log("download dir",this.$dir);
 		ipcMain.on("DOWNLOAD", (event, url)=>{
