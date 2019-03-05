@@ -25,7 +25,7 @@ let updateWindow,
     rationalMaximize = false,
     screenSize,
     closeWarning,
-    mainWindowSize = { width: 960, height: 650 };
+    mainWindowSize = { width: 1300, height: 790 };
 
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
