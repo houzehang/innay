@@ -3925,19 +3925,19 @@ body .page.course-page.student .counter.icon {
 }
 html .page.course-page.student .inner .entities-area .teacher-area,
 body .page.course-page.student .inner .entities-area .teacher-area {
-  width: 3.34rem;
+  width: 2.2rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar {
-  height: 3.34rem;
+  height: 2.2rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar:first-child,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar:first-child {
-  height: 3.34rem;
+  height: 2.2rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar.nothing,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar.nothing {
-  background-position: center top 0.5rem;
+  background-position: center top 0.3rem;
 }
 html .page.course-page.student .inner .content .warn-mask,
 body .page.course-page.student .inner .content .warn-mask {
@@ -4304,9 +4304,9 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text {
-  font-size: 0.2rem;
+  font-size: 0.16rem;
   color: #c2c2c2;
-  padding-top: 2.4rem;
+  padding-top: 1.6rem;
   text-align: center;
   display: none;
 }
@@ -4369,7 +4369,7 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .fea
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing {
   background: #e7e7e7 url(./8a6807b7bc8662c49c02741496dab778.png) no-repeat center center;
-  background-size: 1.45rem auto;
+  background-size: 1rem auto;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .avatar-info,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .avatar-info,

@@ -92,7 +92,7 @@ class Session extends Eventer {
 	__bind() {
 		if (this.$webview) {
 			this.$webview.addEventListener("dom-ready", ()=>{
-				if (ENV.TC_DEBUG || ENV.TEST) {
+				if (ENV.TC_DEBUG) {
 					this.$webview.openDevTools(); 
 				}
 			});

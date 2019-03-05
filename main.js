@@ -25,7 +25,7 @@ let updateWindow,
     rationalMaximize = false,
     screenSize,
     closeWarning,
-    mainWindowSize = { width: 1300, height: 790 };
+    mainWindowSize = { width: 960, height: 650 };
 
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
@@ -153,7 +153,7 @@ function createMainWindow() {
     let userAgent = $main.webContents.getUserAgent()
     $main.webContents.setUserAgent(userAgent + ' KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
-    if (TC_DEBUG || TEST) {
+    if (TC_DEBUG) {
         $main.webContents.openDevTools();
     }
     $main.webContents.on('did-finish-load', () => {

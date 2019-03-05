@@ -56,6 +56,15 @@ class Course extends CourseBase {
 		}
 	}
 
+	__back_from_dancing(id) {
+		if (!this.$last_dancing || this.$last_dancing != id) {
+			return
+		}
+		$(`#dancing-head`).empty()
+		this.$room.unsubscribe(id)
+		this.$last_dancing = null
+	}
+
 	leaveCourse() {
 		this.$room.leave()
 		this.$signal.leave()
@@ -181,7 +190,6 @@ class Course extends CourseBase {
 					</div>
 					<div className="entities-area">
 						{TeacherView}
-						{StudentView}
 						<div className="counter icon">
 							<button className="help-btn" onClick={()=>{
 								this.onHelpClick()

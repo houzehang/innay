@@ -15,7 +15,7 @@ class Download extends React.Component {
 	componentDidMount() {
 		context.detector.uncheck()
 		this.$webview.current.addEventListener("dom-ready", ()=>{
-			if (ENV.TC_DEBUG || ENV.TEST) {
+			if (ENV.TC_DEBUG) {
 				this.$webview.current.openDevTools(); 
 			}
 			this.$webview.current.send("userinfo", this.props.user)

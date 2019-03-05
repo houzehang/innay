@@ -2,7 +2,7 @@ const Const 			= require("../const")
 const Q 				= require("q")
 const Eventer   		= require('./eventer')
 const Storage 			= require('./Storage')
-const AgoraRtcEngine 	= require('../agora/AgoraSdk')
+const AgoraRtcEngine 	= require('../agora/AgoraRTC')
 const $ 				= require("jquery")
 class Room extends Eventer {
 	constructor(inst) {
@@ -13,6 +13,11 @@ class Room extends Eventer {
 	}
 
 	init() {
+		this.$client = AgoraRTC.createClient({mode: 'live'});
+		this.$client.init(Const.AGORA_APPID, function () {
+
+		})
+
 		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(Const.AGORA_APPID);
 		this.$client.setChannelProfile(1);
@@ -216,10 +221,9 @@ class Room extends Eventer {
 	}
 
 	start() {
-		this.$client.joinChannel(this.inst.props.room.channel_token, this.inst.props.room.channel_id, '', this.inst.props.account.id);
-		this.$client.on('joinedchannel', () => {
+		this.$client.join(this.inst.props.room.channel_token, this.inst.props.room.channel_id, this.inst.props.account.id, function(uid) {
 			this.__start_stream()
-		});
+		})
 	}
 
 	leave() {
