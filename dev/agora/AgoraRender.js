@@ -1,5 +1,72 @@
-const createProgramFromSources = require('./webgl-utils').createProgramFromSources;
 const EventEmitter = require('events').EventEmitter;
+const WebglUtils = {
+  defaultShaderType: [
+    "VERTEX_SHADER",
+    "FRAGMENT_SHADER",
+  ],
+  loadShader: function(gl, shaderSource, shaderType, opt_errorCallback) {
+    var errFn = opt_errorCallback || console.error;
+    // Create the shader object
+    var shader = gl.createShader(shaderType);
+
+    // Load the shader source
+    gl.shaderSource(shader, shaderSource);
+
+    // Compile the shader
+    gl.compileShader(shader);
+
+    // Check the compile status
+    var compiled = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    if (!compiled) {
+      // Something went wrong during compilation; get the error
+      var lastError = gl.getShaderInfoLog(shader);
+      errFn("*** Error compiling shader '" + shader + "':" + lastError);
+      gl.deleteShader(shader);
+      return null;
+    }
+
+    return shader;
+  }, 
+	createProgram: function(
+		gl, shaders, opt_attribs, opt_locations, opt_errorCallback) {
+	  var errFn = opt_errorCallback || console.error;
+	  var program = gl.createProgram();
+	  shaders.forEach(function(shader) {
+		gl.attachShader(program, shader);
+	  });
+	  if (opt_attribs) {
+		obj_attrib.forEach(function(attrib, ndx) {
+		  gl.bindAttribLocation(
+			  program,
+			  opt_locations ? opt_locations[ndx] : ndx,
+			  attrib);
+		});
+	  }
+	  gl.linkProgram(program);
+	
+	  // Check the link status
+	  var linked = gl.getProgramParameter(program, gl.LINK_STATUS);
+	  if (!linked) {
+		  // something went wrong with the link
+		  var lastError = gl.getProgramInfoLog(program);
+		  errFn("Error in program linking:" + lastError);
+	
+		  gl.deleteProgram(program);
+		  return null;
+	  }
+	  return program;
+	},
+
+	createProgramFromSources: function (
+		gl, shaderSources, opt_attribs, opt_locations, opt_errorCallback) {
+	  var shaders = [];
+	  for (var ii = 0; ii < shaderSources.length; ++ii) {
+		shaders.push(WebglUtils.loadShader(
+			gl, shaderSources[ii], gl[WebglUtils.defaultShaderType[ii]], opt_errorCallback));
+	  }
+	  return WebglUtils.createProgram(gl, shaders, opt_attribs, opt_locations, opt_errorCallback);
+	}
+}
 
 const AgoraRender = function() {
   let gl;
@@ -29,15 +96,14 @@ const AgoraRender = function() {
     firstFrameRender: false
   };
 
-  that.bind = function(view) {
-    initCanvas(
-      view,
-      that.mirrorView,
-      view.clientWidth,
-      view.clientHeight,
-      that.initRotation,
-      console.warn
-    );
+  that.bind = function(size) {
+		initCanvas(
+			that.mirrorView,
+			size.width,
+			size.height,
+			that.initRotation,
+			console.warn
+		);
   };
 
   that.unbind = function() {
@@ -64,17 +130,7 @@ const AgoraRender = function() {
     
     gl = undefined;
 
-    if (that.container) {
-      that.container.removeChild(that.canvas);
-    }
-
-    if (that.view) {
-      that.view.removeChild(that.container);
-    }
-
     that.canvas = undefined;
-    that.container = undefined;
-    that.view = undefined;
     that.mirrorView = false;
   };
 
@@ -85,29 +141,6 @@ const AgoraRender = function() {
       return;
     }
 
-    if (
-      image.width != that.initWidth ||
-      image.height != that.initHeight ||
-      image.rotation != that.initRotation ||
-      image.mirror != that.mirrorView
-    ) {
-      const view = that.view;
-      that.unbind();
-      // Console.log('init canvas ' + image.width + "*" + image.height + " rotation " + image.rotation);
-      initCanvas(view, image.mirror, image.width, image.height, image.rotation, e => {
-        console.error(
-          `init canvas ${image.width}*${image.height} rotation ${
-            image.rotation
-          } failed. ${e}`
-        );
-      });
-    }
-
-    // Console.log(image.width, "*", image.height, "planes "
-    //    , " y ", image.yplane[0], image.yplane[image.yplane.length - 1]
-    //    , " u ", image.uplane[0], image.uplane[image.uplane.length - 1]
-    //    , " v ", image.vplane[0], image.vplane[image.vplane.length - 1]
-    // );
     gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
     const xWidth = image.width + image.left + image.right;
     const xHeight = image.height + image.top + image.bottom;
@@ -297,14 +330,9 @@ const AgoraRender = function() {
     '  gl_FragColor=vec4(r,g,b,1.0);' +
     '}';
 
-  function initCanvas(view, mirror, width, height, rotation, onFailure) {
-    that.clientWidth = view.clientWidth;
-    that.clientHeight = view.clientHeight;
-
-    that.view = view;
+  function initCanvas(mirror, width, height, rotation, onFailure) {
     that.mirrorView = mirror;
     that.canvasUpdated = false;
-
 
     that.canvas = document.createElement('canvas');
     if (rotation == 0 || rotation == 180) {
@@ -317,10 +345,6 @@ const AgoraRender = function() {
     that.initWidth = width;
     that.initHeight = height;
     that.initRotation = rotation;
-    if (that.mirrorView) {
-      that.canvas.style.transform = 'rotateY(180deg)';
-    }
-    that.container.appendChild(that.canvas);
     try {
       // Try to grab the standard context. If it fails, fallback to experimental.
       gl =
@@ -346,7 +370,7 @@ const AgoraRender = function() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Setup GLSL program
-    program = createProgramFromSources(gl, [vertexShaderSource, yuvShaderSource]);
+    program = WebglUtils.createProgramFromSources(gl, [vertexShaderSource, yuvShaderSource]);
     gl.useProgram(program);
 
     initTextures();
@@ -412,10 +436,19 @@ const AgoraRender = function() {
     const p2 = { x: width, y: 0 };
     const p3 = { x: width, y: height };
     const p4 = { x: 0, y: height };
-    let pp1 = p1,
-      pp2 = p2,
-      pp3 = p3,
-      pp4 = p4;
+    let pp1, pp2, pp3, pp4
+	  
+	if (that.mirrorView) {
+		pp1 = p2,
+		pp2 = p1,
+		pp3 = p4,
+		pp4 = p3;
+	} else {
+		pp1 = p1,
+		pp2 = p2,
+		pp3 = p3,
+		pp4 = p4;
+	}
 
     switch (rotation) {
       case 0:

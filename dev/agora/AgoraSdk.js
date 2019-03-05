@@ -1,6 +1,6 @@
 ﻿const EventEmitter = $require('events').EventEmitter;
 const Renderer = require('./Renderer');
-const OldRenderer = require('./OldRenderer')
+const OldRenderer = require('./AgoraRender')
 
 /**
  * @class AgoraRtcEngine
@@ -377,6 +377,14 @@ class AgoraRtcEngine extends EventEmitter {
     } else {
       console.warn('Invalid type for getRenderer, only accept 0~3.')
       return false;
+    }
+  }
+
+  getRender(uid) {
+    if (uid === 0) {
+      return this.streams['local'];
+    } else {
+      return this.streams[uid];
     }
   }
 

@@ -270,3 +270,27 @@ ipcMain.on('on-closewarning', function (warningMsg) {
 ipcMain.on('off-closewarning', function () {
     TEACHER && (closeWarning = warningMsg);
 });
+
+ipcMain.on('open-classroom', function(event, roominfo) {
+    let $classroom = new BrowserWindow({
+        width: mainWindowSize.width | 0, height: mainWindowSize.height | 0,
+        resizable: TC_DEBUG,
+        center: true,
+        frame: true,
+        autoHideMenuBar: true,
+        webPreferences: {
+            webSecurity: false,
+            javascript: true,
+            plugins: true
+        }
+    })
+    let userAgent = $classroom.webContents.getUserAgent()
+    $classroom.webContents.setUserAgent(userAgent + ' KCPC');
+    $classroom.loadURL(`file://${__dirname}/dist/classroom.html`)
+    if (TC_DEBUG || TEST) {
+        $classroom.webContents.openDevTools();
+    }
+    $classroom.webContents.on('did-finish-load', () => {
+        $classroom.webContents.send('roominfo', roominfo);
+    })
+});
