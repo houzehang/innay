@@ -35,40 +35,6 @@ class Session extends Eventer {
 	 * 创建webview
 	 */
 	__createWebview() {
-		// $.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
-		// 	window.CANVAS_HOLDER   = "#course-content"
-		// 	window.CANVAS_LOCATION = `${prefix}/app?from=app`
-		// 	window.CANVAS_SIZE     = [ 
-		// 		$("#course-content").width(), 
-		// 		$("#course-content").height()
-		// 	]
-		// 	response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
-		// 		if (!/^\//.test(result)) {
-		// 			result = "/app" + result
-		// 		}
-		// 		$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
-		// 		return
-		// 	})
-		// 	$(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
-		// 	let scripts = []
-		// 	response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
-		// 		if (/(flexible)|(zepto)/.test(result)) return
-		// 		if (!/^\//.test(result)) {
-		// 			result = "/app/" + result
-		// 		}
-		// 		scripts.push(prefix+result)
-		// 		return
-		// 	})
-		// 	let _next = ()=>{
-		// 		let script = scripts.shift()
-		// 		if (script) {
-		// 			$.getScript(script, ()=>{
-		// 				_next()
-		// 			})
-		// 		}
-		// 	}
-		// 	_next()
-		// })
 		let prefix
 		if (ENV.DEBUG) {
 			prefix = "http://localhost:3000"
@@ -77,9 +43,43 @@ class Session extends Eventer {
 		} else {
 			prefix = Conf.ONLINE_URL
 		}
+		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
+			window.CANVAS_HOLDER   = "#course-content"
+			window.CANVAS_LOCATION = `${prefix}/app?from=app`
+			window.CANVAS_SIZE     = [ 
+				$("#course-content").width(), 
+				$("#course-content").height()
+			]
+			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
+				if (!/^\//.test(result)) {
+					result = "/app" + result
+				}
+				$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
+				return
+			})
+			$(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
+			let scripts = []
+			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
+				if (/(flexible)/.test(result)) return
+				if (!/^\//.test(result)) {
+					result = "/app/" + result
+				}
+				scripts.push(prefix+result)
+				return
+			})
+			let _next = ()=>{
+				let script = scripts.shift()
+				if (script) {
+					$.getScript(script, ()=>{
+						_next()
+					})
+				}
+			}
+			_next()
+		})
 
-		let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng"></webview>`);
-		this.$webview = webview[0];
+		// let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng"></webview>`);
+		// this.$webview = webview[0];
 	}
 
 	reload() {

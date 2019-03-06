@@ -1,13 +1,14 @@
-﻿const EventEmitter = $require('events').EventEmitter;
-const Renderer = require('./Renderer');
-const OldRenderer = require('./AgoraRender')
+﻿const EventEmitter = require('events').EventEmitter;
+const OldRenderer = require('./OldRenderer')
 
 /**
  * @class AgoraRtcEngine
  */
 class AgoraRtcEngine extends EventEmitter {
-  constructor() {
+  constructor(agora) {
     super();
+    console.log("1111")
+    console.log("agora.....",agora)
     this.rtcengine = new agora.NodeRtcEngine();
     this.initEventHandler();
     this.streams = {};
@@ -477,8 +478,6 @@ class AgoraRtcEngine extends EventEmitter {
     let renderer;
     if (this.renderMode === 1) {
       renderer = new OldRenderer();
-    } else if (this.renderMode === 2) {
-      renderer = new Renderer();
     } else {
       console.warn('Unknown render mode, fallback to 1')
       renderer = new OldRenderer();

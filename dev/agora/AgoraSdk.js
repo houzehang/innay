@@ -1,6 +1,6 @@
 ﻿const EventEmitter = $require('events').EventEmitter;
 const Renderer = require('./Renderer');
-const OldRenderer = require('./AgoraRender')
+const OldRenderer = require('./OldRenderer')
 
 /**
  * @class AgoraRtcEngine

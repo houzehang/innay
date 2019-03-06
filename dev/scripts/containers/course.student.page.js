@@ -19,11 +19,8 @@ import {
 	onProgressUpdate,
 	onUpdateGift, onProgressReset, onUserAddRoom
 } from '../actions' 
-const Const   		= require('../../const')
-import * as types from '../constants/ActionTypes'
 
 import CourseBase from './course.base.page'
-const net = require("../network")
 const $ = require("jquery")
 
 class Course extends CourseBase {

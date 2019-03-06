@@ -161,15 +161,17 @@ class Room extends Eventer {
 		return { 
 			getId: ()=>id, 
 			play: (dom)=>{
-				dom = $(`#${dom}`)[0]
-				if (dom) {
-					$(dom).empty()
+				console.log("call stream play",dom)
+				// dom = $(`#${dom}`)[0]
+				// if (dom) {
+				// 	$(dom).empty()
 					if (id == this.inst.props.account.id) {
-						// this.$client.setupLocalVideo(dom)
+						console.log("aaa",document.getElementById("master-head"))
+						this.$client.setupLocalVideo(document.getElementById("master-head"))
 					} else {
 						this.$client.subscribe(id, dom)
 					}
-				}
+				// }
 			},
 			stop: ()=>{
 				this.unsubscribe(id)
