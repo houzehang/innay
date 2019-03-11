@@ -17,19 +17,9 @@ class Session extends Eventer {
 		return ++this.$uuid
 	}
 
-	get view() {
-		return this.$webview
-	}
-
-	init(dom) {
-		// this.__bind()
-		// this.__createWebview()
-
-		this.$dom = $(dom)
-		this.__createWebview()
+	init() {
 		this.__bind()
-		this.$dom.empty()
-		this.$dom.append(this.$webview)
+		this.__createWebview()
 	}
 	/**
 	 * 创建webview
@@ -83,24 +73,13 @@ class Session extends Eventer {
 	}
 
 	reload() {
-		if (this.$webview) {
-			this.$webview.reload()
-			this.$jsready = false
-		}
+		
 	}
 
 	__bind() {
-		if (this.$webview) {
-			this.$webview.addEventListener("dom-ready", ()=>{
-				if (ENV.TC_DEBUG) {
-					this.$webview.openDevTools(); 
-				}
-			});
-			this.$webview.addEventListener('ipc-message', (event) => {
-				if (event.channel == "message") {
-					this.receive_message(event.args[0]);
-				}
-			})
+		window.ON_SESSION_MESSAGE = (message)=>{
+			console.log("receive session message",message)
+			this.receive_message(message);
 		}
 	}
 
@@ -119,7 +98,9 @@ class Session extends Eventer {
 			for(let key in extra) {
 				message[key] = extra[key]
 			}
-			this.$webview.send('message', message);
+			if (window.BridgeH5Do) {
+				window.BridgeH5Do(message)
+			}
 		} else {
 			this.$queue.push([type, data, extra])
 		}
@@ -141,7 +122,6 @@ class Session extends Eventer {
 		this.$_parts 	= []
 		this.$jsready 	= false
 		this.$queue		= []
-		$(this.$webview).remove()
 	}
 }
 

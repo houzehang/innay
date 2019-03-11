@@ -187,6 +187,7 @@ class Course extends CourseBase {
 					</div>
 					<div className="entities-area">
 						{TeacherView}
+						{StudentView}
 						<div className="counter icon">
 							<button className="help-btn" onClick={()=>{
 								this.onHelpClick()

@@ -18,6 +18,7 @@ import {
 } from '../actions'
 const context = require("../context")
 const storage = require("../Storage")
+const Conf    = require("../../const")
 
 class Main extends React.Component {
 	constructor(props) {
@@ -110,8 +111,10 @@ class Main extends React.Component {
 		// 		data[key] = result[key]
 		// 	}
 		// 	data.user_id = this.props.account.id
+		// 	data.app_id  = Conf.AGORA_APPID
+		// 	console.log("set up open classroom",data)
 		// 	ipcRenderer.send('open-classroom', data);
-		// })
+		// }).done()
 		// return
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let lastest_download = storage.get(`download_${data.en_name}`)
