@@ -421,34 +421,39 @@ const AgoraRender = function() {
     gl.uniform1i(v, 2); /* Bind Vtex to texture unit 2 */
   }
 
-  function updateCanvas(rotation, width, height) {
+  function updateCanvas(rotation, destWidth, destHeight) {
+    var width = that.initWidth, height = that.initHeight
     gl.bindBuffer(gl.ARRAY_BUFFER, surfaceBuffer);
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
     // Console.log('image rotation from ', that.imageRotation, ' to ', rotation);
     // 4 vertex, 1(x1,y1), 2(x2,y1), 3(x2,y2), 4(x1,y2)
     //  0: 1,2,4/4,2,3
     // 90: 2,3,1/1,3,4
     // 180: 3,4,2/2,4,1
     // 270: 4,1,3/3,1,2
-    const p1 = { x: 0, y: 0 };
-    const p2 = { x: width, y: 0 };
-    const p3 = { x: width, y: height };
-    const p4 = { x: 0, y: height };
+    var scale       = Math.max(width/destWidth, height/destHeight),
+        deltaWidth  = destWidth * scale - width >> 1,
+        deltaHeight = destHeight * scale - height >> 1
+
+    const p1 = { x: -deltaWidth, y: -deltaHeight };
+    const p2 = { x: width + deltaWidth, y: -deltaHeight };
+    const p3 = { x: width + deltaWidth, y: height + deltaHeight };
+    const p4 = { x: -deltaWidth, y: height + deltaHeight };
+    
     let pp1, pp2, pp3, pp4
 	  
-	if (that.mirrorView) {
-		pp1 = p2,
-		pp2 = p1,
-		pp3 = p4,
-		pp4 = p3;
-	} else {
-		pp1 = p1,
-		pp2 = p2,
-		pp3 = p3,
-		pp4 = p4;
-	}
+    if (that.mirrorView) {
+      pp1 = p2,
+      pp2 = p1,
+      pp3 = p4,
+      pp4 = p3;
+    } else {
+      pp1 = p1,
+      pp2 = p2,
+      pp3 = p3,
+      pp4 = p4;
+    }
 
     switch (rotation) {
       case 0:

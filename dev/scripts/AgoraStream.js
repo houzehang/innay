@@ -133,7 +133,7 @@ class Room extends Eventer {
 			this.$client.subscribe(id, dom)
 			let setStreamResult
 			if (largeMode) {
-				setStreamResult = this.$client.setRemoteVideoStreamType(id, 1)
+				setStreamResult = this.$client.setRemoteVideoStreamType(id, 0)
 			} else {
 				setStreamResult = this.$client.setRemoteVideoStreamType(id, 1)
 			}
@@ -173,7 +173,7 @@ class Room extends Eventer {
 					}
 				} else {
 					let isMaster = this.inst.props.room.teacher_id == id;
-					let width  = isMaster ? 480 : 120,
+					let width  = isMaster ? 480 : 88,
 						height = isMaster ? 480 : 88;
 					if (id == this.inst.props.account.id) {
 						this.$client.setupLocalVideo({ width, height, cocos: true })
@@ -206,7 +206,7 @@ class Room extends Eventer {
 			console.log("add stream", id);
 			let isMaster = this.inst.props.room.teacher_id == id
 			if (isMaster) {
-				this.$client.setRemoteVideoStreamType(id, 1);
+				this.$client.setRemoteVideoStreamType(id, 0);
 			} else {
 				this.$client.setRemoteVideoStreamType(id, 1);
 			}
