@@ -22,6 +22,7 @@ import {
 
 import CourseBase from './course.base.page'
 const $ = require("jquery")
+const Const = require('../../const')
 
 class Course extends CourseBase {
 	constructor(props) {
@@ -36,7 +37,44 @@ class Course extends CourseBase {
 	}
 	
 	componentDidMount() {
-		super.componentDidMount();
+		this.$room.init()
+		this.$room.on("NEW_STREAM", (stream) => {
+			// 判断是不是主班老师
+			let id = stream.getId()
+			let isSubMaster = this.isSubMaster(id)
+			if (isSubMaster) {
+				return
+			}
+			let self = id == this.props.account.id
+			console.log("new stream from student",self,id)
+			stream.play()
+			this.$session.send_message("NEW_STREAM", {
+				id,
+				render: ()=>{
+					let render = this.$room.rtc.getRender(self ? 0 : id)
+					if (render) {
+						return render.canvas
+					}
+				}
+			})
+		})
+		this.$room.on("REMOVE_STREAM", (stream) => {
+			let id = stream.getId()
+			this.$session.send_message("REMOVE_STREAM", { id })
+			// 老师监听到有人退出如果还在上台，则发送他下台指令
+			if (this.isChairMaster()) {
+				if (id) {
+					if (this.$last_dancing == id) {
+						this.$session.send_message(Const.BACK_DANCE, { id })
+					}
+				}
+			}
+		})
+		this.$room.on("ADD_ROOM", (id) => {
+			// 新用户加入
+			this.$session.send_message("ADD_ROOM", { id })
+			this.$room.refreshMute()
+		})
 		this.$room.on("LEAVE_ROOM", ()=>{
 			this.$session.destroy()
 			if (this.$waiting_to_tester) {
@@ -51,6 +89,7 @@ class Course extends CourseBase {
 		if (this.$timer_warning) {
 			clearTimeout(this.$timer_warning);
 		}
+		super.componentDidMount();
 	}
 
 	__back_from_dancing(id) {
@@ -78,121 +117,11 @@ class Course extends CourseBase {
 	}
 
 	render() {
-		let dancing, warning
-		setTimeout(()=>{
-			let teacher = this.props.teacher
-			if (teacher.stream && !teacher.stream_inited) {
-				teacher.stream_inited = true
-				teacher.stream.play('master-head');
-			}
-			if (this.props.students) {
-				this.props.students.forEach((student)=>{
-					if(student.stream && !student.stream_inited) {
-						console.log("play stream",student.id)
-						// 开启了弱网络优化时
-						if (this.__in_weak_net()) {
-							if (student.id == this.props.account.id) {
-								student.stream.play('student_'+student.id)
-								student.stream_inited = true
-							}
-						} else {
-							if (student.id != this.$last_dancing) {
-								student.stream.play('student_'+student.id)
-							}
-							student.stream_inited = true
-						}
-					}
-					if (student.stream_inited) {
-						// 开启了弱网络优化时，只保留自己的流和正在上台人的流
-						if (this.__in_weak_net()) {
-							if (student.id != this.props.account.id && 
-								this.$last_dancing != student.id) {
-								student.stream.stop()
-								student.stream_inited = false
-							}
-						}
-					}
-					if (!student.stream && student.id == this.$last_dancing) {
-						this.$room.rtc.rtcengine.unsubscribe(this.$last_dancing)
-						this.$last_dancing = null
-					}
-				})
-			}
-			if (dancing) {
-				this.__put_to_dancing(dancing.id)
-			} else {
-				if (this.$last_dancing) {
-					this.__back_from_dancing(this.$last_dancing)
-				}
-				this.$last_dancing = null
-			}
-		},0)
-		let students = (this.props.students||[]).concat()
-		// 排序按照进入场景的时间来排序
-		students.sort((prev,next)=>{
-			next = next.online_time || new Date().getTime()+1000000
-			prev = prev.online_time || new Date().getTime()+1000000
-			return next < prev ? 1 : -1
-		})
-
-		for(let i=0,len=students.length;i<len;i++) {
-			let item = students[i]
-			if (item.dancing && item.stream) {
-				dancing = item
-			}
-		}
-		let studentHeads = students.map((student)=>(
-			<StudentHead 
-				key={student.id} 
-				isTeacher={false} 
-				user={student} 
-				features={this.props.room.features}
-				withFrame={this.props.account.id == student.id}
-				onClickSpeak={(user)=>{}} 
-				onClickGift={(user)=>{}} 
-				onClickView={(user)=>{}}/>
-		))
-		let handsupStudents = []
-		students.forEach((student)=>{
-			if (student.online) {
-				handsupStudents.push(student)
-			}
-		})
-
-		let TeacherView = <div className="teacher-area">
-			<div className="avatars">
-				<div className="avatar">
-					<div className="avatar-head" id="master-head" style={{
-						"backgroundImage" : this.props.teacher.stream?"":`url(${this.props.teacher.avatarurl})`
-					}}>
-					</div>
-					<div className="avatar-info">老师：{this.props.teacher.child_name}</div>
-				</div>
-				<div className={dancing?"avatar":(this.state.draft?"avatar draft":"avatar nothing")}>
-					<div className="ph-text">未指定小朋友发言</div>
-					<div className="avatar-head" id="dancing-head"></div>
-					<div className="avatar-info">学生：{dancing?dancing.child_name:""}</div>
-					<div className={this.state.draft?"draft-text":"draft-text none"} dangerouslySetInnerHTML={{__html: this.state.draft}}></div>
-				</div>
-			</div>
-		</div>
-		let StudentView = <div className="student-area">
-			{studentHeads}
-		</div>
 		return (
 			<div className="page course-page student">
 				<div className="inner">
 					<div className="content">
-						<div className="course-content kc-canvas-area" id="course-content"></div>
-					</div>
-					<div className="entities-area">
-						{TeacherView}
-						{StudentView}
-						<div className="counter icon">
-							<button className="help-btn" onClick={()=>{
-								this.onHelpClick()
-							}}></button>
-						</div>
+						<div className="course-content kc-canvas-area cocos" id="course-content"></div>
 					</div>
 				</div>
 			</div>

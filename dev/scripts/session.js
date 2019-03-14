@@ -1,7 +1,8 @@
-const Eventer 	= require("./eventer")
-const ENV   	= require("../../env")
-const $ 		= require("jquery")
-const Conf 		= require("../const")
+const Eventer 			= require("./eventer")
+const ENV   			= require("../../env")
+const $ 				= require("jquery")
+const Conf 				= require("../const")
+const AgoraRtcEngine 	= require('../agora/AgoraSdk')
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -17,7 +18,9 @@ class Session extends Eventer {
 		return ++this.$uuid
 	}
 
-	init() {
+	init(dom) {
+		window.CANVAS_HOLDER = dom
+		this.$dom = $(dom)
 		this.__bind()
 		this.__createWebview()
 	}
@@ -34,12 +37,16 @@ class Session extends Eventer {
 			prefix = Conf.ONLINE_URL
 		}
 		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
-			window.CANVAS_HOLDER   = "#course-content"
-			window.CANVAS_LOCATION = `${prefix}/app?from=app`
+			if (this.$inst.isMaster()) {
+				window.CANVAS_LOCATION = `${prefix}/app?from=app`
+			} else {
+				window.CANVAS_LOCATION = `${prefix}/app?from=native`
+			}
 			window.CANVAS_SIZE     = [ 
-				$("#course-content").width(), 
-				$("#course-content").height()
+				this.$dom.width(), 
+				this.$dom.height()
 			]
+			console.log('window.CANVAS_SIZE',window.CANVAS_SIZE);
 			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
 				if (!/^\//.test(result)) {
 					result = "/app" + result

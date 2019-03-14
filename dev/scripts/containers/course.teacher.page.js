@@ -62,9 +62,42 @@ class Course extends CourseBase {
 			this.props.onBeginCourse();
 			this.setState({ control: false })
 		}
-		let onNewStream = ()=>{
-
-		}
+		this.$reload_timer = null
+		$(window).on("resize", () => {
+			clearTimeout(this.$reload_timer)
+			this.$reload_timer = setTimeout(() => {
+				this.$session.reload()
+				// 发送init room message
+				this.__send_init_room()
+			}, 1000)
+		})
+		this.$room.init()
+		this.$room.on("NEW_STREAM", (stream) => {
+			// 判断是不是主班老师
+			let id = stream.getId()
+			let isSubMaster = this.isSubMaster(id)
+			if (isSubMaster) {
+				return
+			}
+			this.props.onNewStream(stream);
+		})
+		this.$room.on("REMOVE_STREAM", (stream) => {
+			this.props.onStreamLeave(stream)
+			// 老师监听到有人退出如果还在上台，则发送他下台指令
+			if (this.isChairMaster()) {
+				let id = stream.getId()
+				if (id) {
+					if (this.$last_dancing == id) {
+						this.$session.send_message(Const.BACK_DANCE, { id })
+					}
+				}
+			}
+		})
+		this.$room.on("ADD_ROOM", (id) => {
+			// 新用户加入
+			this.props.onUserAddRoom(id)
+			this.$room.refreshMute()
+		})
 		super.componentDidMount();
 	}
 

@@ -1,6 +1,7 @@
 ﻿const EventEmitter = $require('events').EventEmitter;
 const Renderer = require('./Renderer');
-const OldRenderer = require('./AgoraRender')
+const AgoraRender = require('./AgoraRender')
+const OldRenderer = require('./OldRenderer')
 
 /**
  * @class AgoraRtcEngine
@@ -475,13 +476,17 @@ class AgoraRtcEngine extends EventEmitter {
       this.destroyRender(key);
     }
     let renderer;
-    if (this.renderMode === 1) {
-      renderer = new OldRenderer();
-    } else if (this.renderMode === 2) {
-      renderer = new Renderer();
+    if (view.cocos) {
+      renderer = new AgoraRender()
     } else {
-      console.warn('Unknown render mode, fallback to 1')
-      renderer = new OldRenderer();
+      if (this.renderMode === 1) {
+        renderer = new OldRenderer();
+      } else if (this.renderMode === 2) {
+        renderer = new Renderer();
+      } else {
+        console.warn('Unknown render mode, fallback to 1')
+        renderer = new OldRenderer();
+      }
     }
     renderer.bind(view);
     this.streams[key] = renderer;

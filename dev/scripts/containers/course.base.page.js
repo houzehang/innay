@@ -126,54 +126,7 @@ class Course extends React.Component {
 
 	componentDidMount() {
 		context.detector.uncheck()
-		this.$reload_timer = null
-		$(window).on("resize", () => {
-			clearTimeout(this.$reload_timer)
-			this.$reload_timer = setTimeout(() => {
-				this.$session.reload()
-				// 发送init room message
-				this.__send_init_room()
-			}, 1000)
-		})
-		this.$room.init()
-		this.$room.on("NEW_STREAM", (stream) => {
-			// 判断是不是主班老师
-			let id = stream.getId()
-			let isSubMaster = this.isSubMaster(id)
-			if (isSubMaster) {
-				return
-			}
-			this.props.onNewStream(stream);
 
-			// let found = false;
-			// let all_users = [this.props.teacher].concat(this.props.students);
-			// all_users.forEach((user)=>{
-			// 	if (user.id == id) {
-			// 		found = true;
-			// 	}
-			// });
-
-			// if (!found) {
-			// 	this.__query_roominfo_more();
-			// }
-		})
-		this.$room.on("REMOVE_STREAM", (stream) => {
-			this.props.onStreamLeave(stream)
-			// 老师监听到有人退出如果还在上台，则发送他下台指令
-			if (this.isChairMaster()) {
-				let id = stream.getId()
-				if (id) {
-					if (this.$last_dancing == id) {
-						this.$session.send_message(Const.BACK_DANCE, { id })
-					}
-				}
-			}
-		})
-		this.$room.on("ADD_ROOM", (id) => {
-			// 新用户加入
-			this.props.onUserAddRoom(id)
-			this.$room.refreshMute()
-		})
 		this.$room.rtc.on("networkquality", (uid, tx, rx) => {
 			console.log("网络状态：", uid, tx, rx)
 			if (uid == 0) {
@@ -350,7 +303,15 @@ class Course extends React.Component {
 		}, {
 			master_ids: masters,
 			userinfos: userinfos,
-			feature_data: this.__get_feature_hash()
+			feature_data: this.__get_feature_hash(),
+			classroom_info: {
+				teacher_name	: this.props.room.teacher_name,
+				teacher_id		: this.props.room.teacher_id,
+				teacher_avatar	: this.props.room.teacher_avatar,
+				channel_token	: this.props.room.channel_token,
+				agora_appid 	: Const.AGORA_APPID,
+				userid 			: this.props.account.id
+			}
 		})
 	}
 

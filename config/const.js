@@ -60,5 +60,6 @@ module.exports = {
 		ERROR: "update error",
 		DOWNLOADING: "update downloading",
 		DOWNLOADED: "update downloaded"
-	}
+	},
+	COCOS		  : 1
 };

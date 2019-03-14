@@ -161,17 +161,27 @@ class Room extends Eventer {
 		return { 
 			getId: ()=>id, 
 			play: (dom)=>{
-				console.log("call stream play",dom)
-				// dom = $(`#${dom}`)[0]
-				// if (dom) {
-				// 	$(dom).empty()
-					if (id == this.inst.props.account.id) {
-						console.log("aaa",document.getElementById("master-head"))
-						this.$client.setupLocalVideo(document.getElementById("master-head"))
-					} else {
-						this.$client.subscribe(id, dom)
+				if (dom) {
+					dom = $(`#${dom}`)[0]
+					if (dom) {
+						$(dom).empty()
+						if (id == this.inst.props.account.id) {
+							this.$client.setupLocalVideo(document.getElementById("master-head"))
+						} else {
+							this.$client.subscribe(id, dom)
+						}
 					}
-				// }
+				} else {
+					let isMaster = this.inst.props.room.teacher_id == id;
+					let width  = isMaster ? 480 : 120,
+						height = isMaster ? 480 : 88;
+					if (id == this.inst.props.account.id) {
+						this.$client.setupLocalVideo({ width, height, cocos: true })
+					} else {
+						this.$client.subscribe(id, {width, height, cocos: true })
+					}
+
+				}
 			},
 			stop: ()=>{
 				this.unsubscribe(id)
@@ -200,6 +210,8 @@ class Room extends Eventer {
 			} else {
 				this.$client.setRemoteVideoStreamType(id, 1);
 			}
+			console.log('test2---trigger someone', id);
+
 			this.trigger("NEW_STREAM", this.__stream(id))
 		});
 	
@@ -213,6 +225,7 @@ class Room extends Eventer {
 			console.log("userjoined",id)
 			this.trigger("ADD_ROOM", id)
 		});
+		console.log('test2---trigger self', this.inst.props.account.id);
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 		this.__stream_audio(this.inst.props.account.id)
 	}
