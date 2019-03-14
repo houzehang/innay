@@ -10,6 +10,8 @@ module.exports = {
 	VIDEO_T_QUALITY 	: "480P_3",
 	VIDEO_S_QUALITY 	: "120P_3",
 	ROOM_ID				: 111111,
+	LARGE_MODE 			: 480,
+	SMALL_MODE 			: 88,
 	WEB_IM_GROUP_TIP    : {
 		"JOIN" 			: 1, //加入群组
 		"QUIT"   		: 2, //退出群组

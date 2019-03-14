@@ -92,13 +92,45 @@ class Course extends CourseBase {
 		super.componentDidMount();
 	}
 
-	__back_from_dancing(id) {
-		if (!this.$last_dancing || this.$last_dancing != id) {
-			return
+	__dancing_handler(data) {
+		let id = data.message.id
+		let isSelf = id == this.props.account.id
+		let render = this.$room.rtc.getRender(isSelf ? 0 : id)
+		switch (data.type) {
+			case Const.PUT_DANCE:
+			if (!isSelf) {
+				this.$room.rtc.setRemoteVideoStreamType(id, 0)
+			}
+			if (render) {
+				render.updateSize({width: Const.LARGE_MODE, height: Const.LARGE_MODE})
+			}
+			break
+			case Const.BACK_DANCE:
+			if (!isSelf) {
+				this.$room.rtc.setRemoteVideoStreamType(id, 1)
+			}
+			if (render) {
+				render.updateSize({width: Const.SMALL_MODE, height: Const.SMALL_MODE})
+			}
+			break
 		}
-		$(`#dancing-head`).empty()
-		this.$room.unsubscribe(id)
-		this.$last_dancing = null
+	}
+
+	__on_session_message(message, force) {
+		if (message.to == "app" || force) {
+			switch (message.type) {
+				case Const.PUT_DANCE:
+				case Const.BACK_DANCE:
+				this.__dancing_handler(message)
+				break
+			}
+		}
+		super.__on_session_message(message, force)
+	}
+
+	__on_signal_message(data) {
+		this.__dancing_handler(data)
+		super.__on_signal_message(data)
 	}
 
 	leaveCourse() {

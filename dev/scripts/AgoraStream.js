@@ -29,7 +29,7 @@ class Room extends Eventer {
 			this.$client.enableLocalVideo(true);
 			// let isMaster = this.inst.props.room.teacher_id == 
 						//    this.inst.props.account.id
-			// this.$client.setVideoProfile(45);
+			this.$client.setVideoProfile(45);
 		} else {
 			this.$client.muteLocalAudioStream(true)
 			this.$client.enableLocalVideo(false);
@@ -173,8 +173,8 @@ class Room extends Eventer {
 					}
 				} else {
 					let isMaster = this.inst.props.room.teacher_id == id;
-					let width  = isMaster ? 480 : 88,
-						height = isMaster ? 480 : 88;
+					let width  = isMaster ? Const.LARGE_MODE : Const.SMALL_MODE,
+						height = isMaster ? Const.LARGE_MODE : Const.SMALL_MODE;
 					if (id == this.inst.props.account.id) {
 						this.$client.setupLocalVideo({ width, height, cocos: true })
 					} else {

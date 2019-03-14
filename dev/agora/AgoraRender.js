@@ -106,6 +106,11 @@ const AgoraRender = function() {
 		);
   };
 
+  that.updateSize = function(size) {
+    that.unbind()
+    that.bind(size)
+  }
+
   that.unbind = function() {
     try {
       gl.getExtension('WEBGL_lose_context').loseContext();
@@ -435,6 +440,7 @@ const AgoraRender = function() {
     var scale       = Math.max(width/destWidth, height/destHeight),
         deltaWidth  = destWidth * scale - width >> 1,
         deltaHeight = destHeight * scale - height >> 1
+
 
     const p1 = { x: -deltaWidth, y: -deltaHeight };
     const p2 = { x: width + deltaWidth, y: -deltaHeight };
