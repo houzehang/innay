@@ -35,6 +35,10 @@ class Course extends CourseBase {
 		this.$in_warning = false;
 		this.$warning_id = null;
 	}
+
+	shouldComponentUpdate() {
+		return false
+	}
 	
 	componentDidMount() {
 		this.$room.init()
