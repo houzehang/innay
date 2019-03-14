@@ -38,7 +38,7 @@ class Session extends Eventer {
 		}
 		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 			if (this.$inst.isMaster()) {
-				window.CANVAS_LOCATION = `${prefix}/app?from=app`
+			window.CANVAS_LOCATION = `${prefix}/app?from=app`
 			} else {
 				window.CANVAS_LOCATION = `${prefix}/app?from=native`
 			}
@@ -46,7 +46,6 @@ class Session extends Eventer {
 				this.$dom.width(), 
 				this.$dom.height()
 			]
-			console.log('window.CANVAS_SIZE',window.CANVAS_SIZE);
 			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
 				if (!/^\//.test(result)) {
 					result = "/app" + result
