@@ -128,14 +128,21 @@ class Room extends Eventer {
 	cameraTo(id, dom, largeMode) {
 		if (id == this.inst.props.account.id) {
 			this.$client.setupLocalVideo(dom)
+			if (largeMode) {
+				this.$client.setVideoRenderDimension(0, id, 200, 200)
+			} else {
+				this.$client.setVideoRenderDimension(0, id, 88, 88)
+			}
 		} else {
-			this.$client.rtcengine.unsubscribe(id)
+			// this.$client.rtcengine.unsubscribe(id)
 			this.$client.subscribe(id, dom)
 			let setStreamResult
 			if (largeMode) {
 				setStreamResult = this.$client.setRemoteVideoStreamType(id, 0)
+				this.$client.setVideoRenderDimension(1, id, 200, 200)
 			} else {
 				setStreamResult = this.$client.setRemoteVideoStreamType(id, 1)
+				this.$client.setVideoRenderDimension(1, id, 88, 88)
 			}
 			console.log("setStreamResult",setStreamResult)
 		}
@@ -154,7 +161,7 @@ class Room extends Eventer {
 	}
 
 	unsubscribe(id) {
-		this.$client.rtcengine.unsubscribe(id)
+		// this.$client.rtcengine.unsubscribe(id)
 	}
 
 	__stream(id) {
@@ -172,7 +179,7 @@ class Room extends Eventer {
 				}
 			},
 			stop: ()=>{
-				this.unsubscribe(id)
+				// this.unsubscribe(id)
 				$(`#student_${id}`).empty()
 			}
 		}
@@ -195,8 +202,10 @@ class Room extends Eventer {
 			let isMaster = this.inst.props.room.teacher_id == id
 			if (isMaster) {
 				this.$client.setRemoteVideoStreamType(id, 0);
+				this.$client.setVideoRenderDimension(1, id, 480, 480)
 			} else {
 				this.$client.setRemoteVideoStreamType(id, 1);
+				this.$client.setVideoRenderDimension(1, id, 88, 88)
 			}
 			this.trigger("NEW_STREAM", this.__stream(id))
 		});
