@@ -82,7 +82,8 @@ module.exports = {
     }),
     new HtmlWebpackIncludeAssetsPlugin({
       assets: [
-        './libs/flexible.js'
+        './libs/flexible.js',
+        './libs/cocos2d-js-v1.1-min.js'
       ],
       publicPath: false,
       append: false,

@@ -2,7 +2,6 @@ const Eventer 			= require("./eventer")
 const ENV   			= require("../../env")
 const $ 				= require("jquery")
 const Conf 				= require("../const")
-const AgoraRtcEngine 	= require('../agora/AgoraSdk')
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -46,17 +45,18 @@ class Session extends Eventer {
 				this.$dom.width(), 
 				this.$dom.height()
 			]
-			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
-				if (/^\//.test(result)) {
-					result = prefix + result
-				}
-				$(`<link href="${result}" rel="stylesheet"/>`).appendTo("head")
-				return
-			})
-			$(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
+			window.$ = $;
+			// response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
+			// 	if (/^\//.test(result)) {
+			// 		result = prefix + result
+			// 	}
+			// 	$(`<link href="${result}" rel="stylesheet"/>`).appendTo("head")
+			// 	return
+			// })
+			// $(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
-				if (/(flexible)/.test(result)) return
+				if (/(flexible)|(zepto)|(vconsole)|(cocos2d-js)/.test(result)) return
 				if (/^\//.test(result)) {
 					result = prefix + result
 				}
