@@ -25,7 +25,8 @@ let updateWindow,
     rationalMaximize = false,
     screenSize,
     closeWarning,
-    mainWindowSize = { width: 1300, height: 790 };
+    mainWindowSize = { width: 1300, height: 790 },
+    hotkeyTickTimer;
 
 //register hotkey for mainwindow
 mainWindowHotkeyListener = {
@@ -33,7 +34,7 @@ mainWindowHotkeyListener = {
     tick: function () {
         // 处理从输入框激活状态直接切出,
         // app不响应`browser-window-blur`的问题
-        setInterval(() => {
+        hotkeyTickTimer = setInterval(() => {
             this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
         }, 2000);
     },
@@ -177,8 +178,10 @@ function createMainWindow() {
     });
     $main.on('closed', function (event) {
         mainWindow = null
+        clearInterval(hotkeyTickTimer)
     })
     $main.on('close', function (event) {
+        clearInterval(hotkeyTickTimer)
         if (closeWarning) {
             dialog.showMessageBox(null, {
                 type: 'question',

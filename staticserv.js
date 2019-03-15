@@ -14,6 +14,7 @@ class StaticServer {
 		this.__clearCache()
 		log.log("download dir",this.$dir);
 		ipcMain.on("DOWNLOAD", (event, url)=>{
+			if (!url) return
 			this.__log("on download message",url);
 			this.__download(url)
 		})
@@ -27,8 +28,6 @@ class StaticServer {
 				} else if (state === 'progressing') {
 					if (item.isPaused()) {
 						this.__log("Download is paused")
-					} else {
-						this.__log(`Received bytes: ${item.getReceivedBytes()},${item.getTotalBytes()}`)
 					}
 				}
 			})
