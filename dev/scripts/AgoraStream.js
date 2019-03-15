@@ -225,6 +225,10 @@ class Room extends Eventer {
 			console.log("userjoined",id)
 			this.trigger("ADD_ROOM", id)
 		});
+		this.$client.on('leavechannel', () => {
+			this.$client.removeAllListeners();
+			this.trigger("LEAVE_ROOM", this.$client)
+		});
 		console.log('test2---trigger self', this.inst.props.account.id);
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 		this.__stream_audio(this.inst.props.account.id)
@@ -242,10 +246,6 @@ class Room extends Eventer {
 			this.$client.videoSourceLeave();
 			this.$client.videoSourceRelease();
 			this.$client.leaveChannel();
-			this.$client.on('leavechannel', () => {
-				this.$client.removeAllListeners();
-				this.trigger("LEAVE_ROOM", this.$client)
-			});
 		} catch (err) {
 			this.trigger("LEAVE_ROOM", this.$client)
 			console.log("client leave failed ", err);

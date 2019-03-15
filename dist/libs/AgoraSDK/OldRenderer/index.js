@@ -305,13 +305,6 @@ const AgoraRender = function() {
     that.mirrorView = mirror;
     that.canvasUpdated = false;
 
-    that.container = document.createElement('div');
-    that.container.style.width = '100%';
-    that.container.style.height = '100%';
-    that.container.style.display = 'flex';
-    that.container.style.justifyContent = 'center';
-    that.container.style.alignItems = 'center';
-    that.view.appendChild(that.container);
 
     that.canvas = document.createElement('canvas');
     if (rotation == 0 || rotation == 180) {
@@ -405,50 +398,6 @@ const AgoraRender = function() {
   }
 
   function updateCanvas(rotation, width, height) {
-    if (that.canvasUpdated) {
-      return;
-    }
-    that.clientWidth = that.view.clientWidth;
-    that.clientHeight = that.view.clientHeight;
-
-    try {
-      if (that.contentMode === 0) {
-        // Cover
-        if (rotation === 0 || rotation === 180) {
-          if (that.clientWidth / that.clientHeight > width / height) {
-            that.canvas.style.zoom = that.clientWidth / width;
-          } else {
-            that.canvas.style.zoom = that.clientHeight / height;
-          }
-        } else {
-          // 90, 270
-          if (that.clientHeight / that.clientWidth > width / height) {
-            that.canvas.style.zoom = that.clientHeight / height;
-          } else {
-            that.canvas.style.zoom = that.clientWidth / width;
-          }
-        }
-      } else if (rotation === 0 || rotation === 180) {
-        if (that.clientWidth / that.clientHeight > width / height) {
-          that.canvas.style.zoom = that.clientHeight / height;
-        } else {
-          that.canvas.style.zoom = that.clientWidth / width;
-        }
-      } else {
-        // 90, 270
-        if (that.clientHeight / that.clientWidth > width / height) {
-          that.canvas.style.zoom = that.clientWidth / width;
-        } else {
-          that.canvas.style.zoom = that.clientHeight / height;
-        }
-      }
-    } catch (e) {
-      console.log(`updateCanvas 00001 gone ${that.canvas}`);
-      console.log(that);
-      console.error(e);
-      return;
-    }
-
     gl.bindBuffer(gl.ARRAY_BUFFER, surfaceBuffer);
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);

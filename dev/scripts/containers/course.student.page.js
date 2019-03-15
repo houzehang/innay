@@ -23,6 +23,7 @@ import {
 import CourseBase from './course.base.page'
 const $ = require("jquery")
 const Const = require('../../const')
+const {getCurrentWindow} = $require('electron').remote;
 
 class Course extends CourseBase {
 	constructor(props) {
@@ -36,10 +37,6 @@ class Course extends CourseBase {
 		this.$warning_id = null;
 	}
 
-	shouldComponentUpdate() {
-		return false
-	}
-	
 	componentDidMount() {
 		this.$room.init()
 		this.$room.on("NEW_STREAM", (stream) => {
@@ -80,15 +77,16 @@ class Course extends CourseBase {
 			this.$room.refreshMute()
 		})
 		this.$room.on("LEAVE_ROOM", ()=>{
-			this.$session.destroy()
-			if (this.$waiting_to_tester) {
-				this.props.onEnterTester("course")
-			} else {
-				this.props.onEndCourse()
-			}
-			if (this.props.onLeaveRoom) {
-				this.props.onLeaveRoom();
-			}
+			// this.$session.destroy()
+			// if (this.$waiting_to_tester) {
+			// 	this.props.onEnterTester("course")
+			// } else {
+			// 	this.props.onEndCourse()
+			// }
+			// if (this.props.onLeaveRoom) {
+			// 	this.props.onLeaveRoom();
+			// }
+			getCurrentWindow().reload()
 		})
 		if (this.$timer_warning) {
 			clearTimeout(this.$timer_warning);
@@ -97,6 +95,7 @@ class Course extends CourseBase {
 	}
 
 	__dancing_handler(data) {
+		if (!data.message || !data.message.id) return
 		let id = data.message.id
 		let isSelf = id == this.props.account.id
 		let render = this.$room.rtc.getRender(isSelf ? 0 : id)
@@ -156,6 +155,9 @@ class Course extends CourseBase {
 		return (
 			<div className="page course-page student">
 				<div className="inner">
+					<div className="course-page-back" onClick={()=>{
+						this.preLeaveCourse()
+					}}></div>
 					<div className="content">
 						<div className="course-content kc-canvas-area cocos" id="course-content"></div>
 					</div>

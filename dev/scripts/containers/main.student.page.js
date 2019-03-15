@@ -261,25 +261,6 @@ class Main extends React.Component {
     }
 
 	onStartRoom(data) {
-		// net.getRoomInfo(data.channel_id).then((result) => {
-		// 	for (let key in result) {
-		// 		data[key] = result[key]
-		// 	}
-		// 	data.user_id = this.props.account.id
-		// 	data.app_id  = Conf.AGORA_APPID
-		// 	console.log("set up open classroom",data)
-		// 	ipcRenderer.send('open-classroom', data);
-		// }).done()
-		// return
-		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let lastest_download = storage.get(`download_${data.en_name}`)
-		if (lastest_download) {
-			let delay = new Date().getTime() - lastest_download
-			if (delay <= this.$cache_valid_time) {
-				this.__onStartRoom(data)
-				return
-			}
-		}
 		this.onDownload(data, true)
 	}
 

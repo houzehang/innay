@@ -153,7 +153,7 @@ function createMainWindow() {
     let userAgent = $main.webContents.getUserAgent()
     $main.webContents.setUserAgent(userAgent + ' KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
-    if (TC_DEBUG) {
+    if (TC_DEBUG || TEST) {
         $main.webContents.openDevTools();
     }
     $main.webContents.on('did-finish-load', () => {
@@ -197,52 +197,6 @@ function createMainWindow() {
         createMainWindow()
         $main.destroy()
     })
-    let $classroom
-    ipcMain.on('open-classroom', function(event, roominfo) {
-        if ($classroom) {
-            $classroom.close()
-            $classroom = null
-        }
-        $classroom = new BrowserWindow({
-            width: mainWindowSize.width | 0, height: mainWindowSize.height | 0,
-            resizable: TC_DEBUG,
-            center: true,
-            frame: true,
-            autoHideMenuBar: true,
-            webPreferences: {
-                webSecurity: false,
-                javascript: true,
-                plugins: true
-            }
-        })
-        let userAgent = $classroom.webContents.getUserAgent()
-        $classroom.webContents.setUserAgent(userAgent + ' KCPC');
-        $classroom.loadURL(`http://localhost:3000/app?from=native`)
-        // let url = require('url').format({
-        //     protocol: 'file',
-        //     slashes: true,
-        //     pathname: require('path').join(__dirname, 'index.html')
-        //   })
-          
-        if (TC_DEBUG || TEST) {
-            $classroom.webContents.openDevTools();
-        }
-        $classroom.webContents.on('did-finish-load', () => {
-            $classroom.webContents.send('roominfo', roominfo);
-        })
-        ipcMain.on('message-classroom-to-main', (event, data) => {
-            console.log("on classroom message",data)
-            $main.webContents.send('classroom-message', data);
-        })
-        ipcMain.on('message-main-to-classroom', function(event, data) {
-            if ($classroom) {
-                $classroom.webContents.send('message',data)
-            }
-        })
-        $classroom.on('closed', function (event) {
-            $classroom = null
-        })
-    });
     new StaticServ($main)
 }
 

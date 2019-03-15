@@ -38,7 +38,7 @@ class Session extends Eventer {
 		}
 		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 			if (this.$inst.isMaster()) {
-			window.CANVAS_LOCATION = `${prefix}/app?from=app`
+				window.CANVAS_LOCATION = `${prefix}/app?from=app`
 			} else {
 				window.CANVAS_LOCATION = `${prefix}/app?from=native`
 			}
@@ -47,28 +47,30 @@ class Session extends Eventer {
 				this.$dom.height()
 			]
 			response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
-				if (!/^\//.test(result)) {
-					result = "/app" + result
+				if (/^\//.test(result)) {
+					result = prefix + result
 				}
-				$(`<link href="${prefix+result}" rel="stylesheet"/>`).appendTo("head")
+				$(`<link href="${result}" rel="stylesheet"/>`).appendTo("head")
 				return
 			})
 			$(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
 				if (/(flexible)/.test(result)) return
-				if (!/^\//.test(result)) {
-					result = "/app/" + result
+				if (/^\//.test(result)) {
+					result = prefix + result
 				}
-				scripts.push(prefix+result)
+				scripts.push(result)
 				return
 			})
 			let _next = ()=>{
-				let script = scripts.shift()
-				if (script) {
-					$.getScript(script, ()=>{
-						_next()
-					})
+				let url = scripts.shift()
+				if (url) {
+					var script = document.createElement('script');
+					script.async = true;
+					script.src = url;
+					script.onload = _next
+					document.getElementsByTagName('head')[0].appendChild(script);
 				}
 			}
 			_next()
@@ -128,6 +130,7 @@ class Session extends Eventer {
 		this.$_parts 	= []
 		this.$jsready 	= false
 		this.$queue		= []
+		this.$dom.empty()
 	}
 }
 

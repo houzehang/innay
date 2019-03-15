@@ -3904,6 +3904,24 @@ html .page.course-page.teacher .inner .entities-area .teacher-area .avatars .ava
 body .page.course-page.teacher .inner .entities-area .teacher-area .avatars .avatar:last-child {
   height: 3.84rem;
 }
+html .page.course-page.student,
+body .page.course-page.student {
+  background: #2d3144 url(./45297c31ffa896365096625c6a352659.svg) no-repeat center center;
+  background-size: 1rem auto;
+}
+html .page.course-page.student .course-page-back,
+body .page.course-page.student .course-page-back {
+  position: absolute;
+  width: 0.45rem;
+  height: 0.45rem;
+  background: url(./b8305e86ffcf12fe0582473298e6130a.png) no-repeat center center;
+  background-size: 100% 100%;
+  top: 0.1rem;
+  left: 0.1rem;
+  width: 0.3rem;
+  height: 0.3rem;
+  z-index: 10;
+}
 html .page.course-page.student .student-area,
 body .page.course-page.student .student-area {
   position: relative;
@@ -3915,6 +3933,10 @@ html .page.course-page.student .course-content,
 body .page.course-page.student .course-content {
   margin: 0 0.15rem 0 0;
 }
+html .page.course-page.student .course-content.cocos,
+body .page.course-page.student .course-content.cocos {
+  margin: 0;
+}
 html .page.course-page.student .counter.icon,
 body .page.course-page.student .counter.icon {
   background: none !important;
@@ -3923,21 +3945,25 @@ body .page.course-page.student .counter.icon {
   bottom: 0.18rem !important;
   right: 0.2rem !important;
 }
+html .page.course-page.student .inner .entities-area.cocos,
+body .page.course-page.student .inner .entities-area.cocos {
+  display: none;
+}
 html .page.course-page.student .inner .entities-area .teacher-area,
 body .page.course-page.student .inner .entities-area .teacher-area {
-  width: 2.2rem;
+  width: 3.34rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar {
-  height: 2.2rem;
+  height: 3.34rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar:first-child,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar:first-child {
-  height: 2.2rem;
+  height: 3.34rem;
 }
 html .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar.nothing,
 body .page.course-page.student .inner .entities-area .teacher-area .avatars .avatar.nothing {
-  background-position: center top 0.3rem;
+  background-position: center top 0.5rem;
 }
 html .page.course-page.student .inner .content .warn-mask,
 body .page.course-page.student .inner .content .warn-mask {
@@ -4304,9 +4330,9 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ava
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .ph-text {
-  font-size: 0.16rem;
+  font-size: 0.2rem;
   color: #c2c2c2;
-  padding-top: 1.6rem;
+  padding-top: 2.4rem;
   text-align: center;
   display: none;
 }
@@ -4369,7 +4395,7 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar .fea
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing {
   background: #e7e7e7 url(./8a6807b7bc8662c49c02741496dab778.png) no-repeat center center;
-  background-size: 1rem auto;
+  background-size: 1.45rem auto;
 }
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .avatar-info,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .avatar-info,
