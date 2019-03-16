@@ -10,6 +10,7 @@ const DEBUG 			= require("../../../env").DEBUG
 const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
 const $ 				= require("jquery")
+const net 				= require("../network")
 import { 
 	onExitTester
 } from '../actions'
@@ -97,6 +98,18 @@ class Devices extends React.Component {
 			qualities = qualities.splice(qualities.length-50,qualities.length)
 			qualities.push(quality)
 			this.setState({ netquality: quality, net_history: qualities })
+			if (quality == 1 || quality == 2) {
+				quality = 1
+			} else if (quality == 3) {
+				quality = 2
+			} else if (quality == 4) {
+				quality = 3
+			} else if (quality == 5) {
+				quality = 4
+			} else {
+				quality = 0
+			}
+			net.log({name:"NET:STATUS", status: quality})
 		})
 	}
 

@@ -8,11 +8,11 @@ SERVER=root@101.200.53.74
 VERSION=$1
 DIR=/var/www/downloadfile/software
 
-scp build/student/*${VERSION}.exe  ${SERVER}:${DIR}
-scp build/student/*${VERSION}*.zip  ${SERVER}:${DIR}
-scp build/student/*${VERSION}*.dmg  ${SERVER}:${DIR}
-scp build/student/*.yml  ${SERVER}:${DIR}
-scp build/student/*.json ${SERVER}:${DIR}
+scp -P 65522 build/student/*${VERSION}.exe  ${SERVER}:${DIR}
+scp -P 65522 build/student/*${VERSION}*.zip  ${SERVER}:${DIR}
+scp -P 65522 build/student/*${VERSION}*.dmg  ${SERVER}:${DIR}
+scp -P 65522 build/student/*.yml  ${SERVER}:${DIR}
+scp -P 65522 build/student/*.json ${SERVER}:${DIR}
 
 # echo "upload to old server."
 SERVER=root@59.110.14.106
