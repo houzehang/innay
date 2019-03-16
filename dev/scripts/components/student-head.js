@@ -71,7 +71,9 @@ class StudentHead extends React.Component {
 								<div className={this.props.isTeacher?"btns":"btns student"}>
 									{this.props.isTeacher?(
 										<button className={this.props.user.dancing?"view-btn on":"view-btn"} onClick={()=>{
-											this.props.onClickView(this.props.user)
+											if (this.props.user.stream) {
+												this.props.onClickView(this.props.user)
+											}
 										}}>
 											<div className="btn-icon"><div className="icon"></div></div>
 											<span className="btn-name">讲台</span>
