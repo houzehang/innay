@@ -1,6 +1,6 @@
 {
   "name": "mingxi",
-  "version": "1.0.23",
+  "version": "1.0.25",
   "description": "明兮大语文客户端",
   "main": "main.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.11",
     "dotenv": "^5.0.1",
-    "electron": "2.0.2",
+    "electron": "^2.0.2",
     "electron-builder": "^20.22.0",
     "electron-winstaller": "^2.5.2",
     "eslint": "^4.18.2",

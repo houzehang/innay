@@ -309,7 +309,7 @@ class Course extends React.Component {
 				_callback(true);
 			})
 			this.$roominfo_callbacks = null;
-		})
+		}).done()
 	}
 
 	__get_feature(uid){
