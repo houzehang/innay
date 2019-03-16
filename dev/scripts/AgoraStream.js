@@ -30,6 +30,14 @@ class Room extends Eventer {
 			// let isMaster = this.inst.props.room.teacher_id == 
 						//    this.inst.props.account.id
 			this.$client.setVideoProfile(45);
+			let id = this.inst.props.account.id
+			if (this.inst.isMaster()) {
+				this.$client.setVideoRenderDimension(0, id, 400, 400)
+			} else {
+				this.$client.setVideoRenderDimension(0, id, 88, 88)
+			}
+			this.$client.setLocalPublishFallbackOption(1);
+			this.$client.setRemoteSubscribeFallbackOption(1);
 		} else {
 			this.$client.muteLocalAudioStream(true)
 			this.$client.enableLocalVideo(false);
@@ -202,7 +210,7 @@ class Room extends Eventer {
 			let isMaster = this.inst.props.room.teacher_id == id
 			if (isMaster) {
 				this.$client.setRemoteVideoStreamType(id, 0);
-				this.$client.setVideoRenderDimension(1, id, 480, 480)
+				this.$client.setVideoRenderDimension(1, id, 400, 400)
 			} else {
 				this.$client.setRemoteVideoStreamType(id, 1);
 				this.$client.setVideoRenderDimension(1, id, 88, 88)
