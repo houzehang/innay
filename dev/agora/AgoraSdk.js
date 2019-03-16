@@ -1,8 +1,8 @@
 ﻿"use strict";
 const Renderer_1 = require("./Renderer");
 const events_1 = $require("events");
+const AgoraRender = require("./AgoraRender")
 
-console.log("Renderer_1",Renderer_1)
 /**
  * @class AgoraRtcEngine
  */
@@ -334,6 +334,15 @@ class AgoraRtcEngine extends events_1.EventEmitter {
             return false;
         }
     }
+
+    getRender(uid) {
+        if (uid === 0) {
+            return this.streams.get('local');
+        }
+        else {
+            return this.streams.get(String(uid));
+        }
+    }
     /**
      * check if data is valid
      * @private
@@ -405,15 +414,10 @@ class AgoraRtcEngine extends events_1.EventEmitter {
         if (this.streams.has(String(key))) {
             this.destroyRender(key);
         }
-        let renderer;
-        if (this.renderMode === 1) {
-            renderer = new Renderer_1.GlRenderer();
-        }
-        else if (this.renderMode === 2) {
-            renderer = new Renderer_1.SoftwareRenderer();
-        }
-        else {
-            console.warn('Unknown render mode, fallback to 1');
+        let renderer
+        if (view.cocos) {
+            renderer = new AgoraRender()
+        } else {
             renderer = new Renderer_1.GlRenderer();
         }
         renderer.bind(view);

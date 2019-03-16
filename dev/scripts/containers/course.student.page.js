@@ -104,6 +104,7 @@ class Course extends CourseBase {
 			if (!isSelf) {
 				this.$room.rtc.setRemoteVideoStreamType(id, 0)
 			}
+			this.$room.rtc.setVideoRenderDimension(isSelf ? 0 : 1, id, Const.LARGE_MODE, Const.LARGE_MODE)
 			if (render) {
 				render.updateSize({width: Const.LARGE_MODE, height: Const.LARGE_MODE})
 			}
@@ -112,6 +113,7 @@ class Course extends CourseBase {
 			if (!isSelf) {
 				this.$room.rtc.setRemoteVideoStreamType(id, 1)
 			}
+			this.$room.rtc.setVideoRenderDimension(isSelf ? 0 : 1, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			if (render) {
 				render.updateSize({width: Const.SMALL_MODE, height: Const.SMALL_MODE})
 			}

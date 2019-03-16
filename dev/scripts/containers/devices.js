@@ -258,16 +258,19 @@ class Devices extends React.Component {
 	}
 
 	step3() {
-		setTimeout(()=>{
-			let filepath;
-			if (DEBUG) {
-				filepath = path.join(window.ENV_CONF.__dirname,'libs','AgoraSDK','music.mp3');
-			} else {
-				filepath = path.join(window.ENV_CONF.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
-			}
-			console.log("filepath",filepath)
-			this.$client.startAudioPlaybackDeviceTest(filepath);
-		},0)
+		if (!this.$playing) {
+			this.$playing = true
+			setTimeout(()=>{
+				let filepath;
+				if (DEBUG) {
+					filepath = path.join(window.ENV_CONF.__dirname,'libs','AgoraSDK','music.mp3');
+				} else {
+					filepath = path.join(window.ENV_CONF.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
+				}
+				console.log("filepath",filepath)
+				this.$client.startAudioPlaybackDeviceTest(filepath);
+			},0)
+		}
 		return (
 			<div className="step-content">
 				<div className="step-title">调整音量确认能听到音乐，如有问题切换设备试试</div>
@@ -312,6 +315,7 @@ class Devices extends React.Component {
 						this.props.onExitTester()
 					}}>完成</button>
 					<button onClick={()=>{
+						this.$playing = false
 						this.$client.stopAudioPlaybackDeviceTest();
 						this.onStartMicTest()
 						this.setState({step: 2})

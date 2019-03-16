@@ -32,9 +32,9 @@ class Room extends Eventer {
 			this.$client.setVideoProfile(45);
 			let id = this.inst.props.account.id
 			if (this.inst.isMaster()) {
-				this.$client.setVideoRenderDimension(0, id, 400, 400)
+				this.$client.setVideoRenderDimension(0, id, Const.LARGE_MODE, Const.LARGE_MODE)
 			} else {
-				this.$client.setVideoRenderDimension(0, id, 88, 88)
+				this.$client.setVideoRenderDimension(0, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
 			this.$client.setLocalPublishFallbackOption(1);
 			this.$client.setRemoteSubscribeFallbackOption(1);
@@ -137,9 +137,9 @@ class Room extends Eventer {
 		if (id == this.inst.props.account.id) {
 			this.$client.setupLocalVideo(dom)
 			if (largeMode) {
-				this.$client.setVideoRenderDimension(0, id, 200, 200)
+				this.$client.setVideoRenderDimension(0, id, Const.DANCE_MODE, Const.DANCE_MODE)
 			} else {
-				this.$client.setVideoRenderDimension(0, id, 88, 88)
+				this.$client.setVideoRenderDimension(0, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
 		} else {
 			// this.$client.rtcengine.unsubscribe(id)
@@ -147,10 +147,10 @@ class Room extends Eventer {
 			let setStreamResult
 			if (largeMode) {
 				setStreamResult = this.$client.setRemoteVideoStreamType(id, 0)
-				this.$client.setVideoRenderDimension(1, id, 200, 200)
+				this.$client.setVideoRenderDimension(1, id, Const.DANCE_MODE, Const.DANCE_MODE)
 			} else {
 				setStreamResult = this.$client.setRemoteVideoStreamType(id, 1)
-				this.$client.setVideoRenderDimension(1, id, 88, 88)
+				this.$client.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
 			console.log("setStreamResult",setStreamResult)
 		}
@@ -222,10 +222,10 @@ class Room extends Eventer {
 			let isMaster = this.inst.props.room.teacher_id == id
 			if (isMaster) {
 				this.$client.setRemoteVideoStreamType(id, 0);
-				this.$client.setVideoRenderDimension(1, id, 400, 400)
+				this.$client.setVideoRenderDimension(1, id, Const.LARGE_MODE, Const.LARGE_MODE)
 			} else {
 				this.$client.setRemoteVideoStreamType(id, 1);
-				this.$client.setVideoRenderDimension(1, id, 88, 88)
+				this.$client.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
 			console.log('test2---trigger someone', id);
 

@@ -84,6 +84,20 @@ class Context {
 		this.$audio_device_id = audio_device_id
 	}
 
+	addDownloaded(url, file) {
+		if (!this.$local_files) {
+			this.$local_files = {}
+		}
+		this.$local_files[url] = file
+	}
+
+	getDownloaded(url) {
+		if (!this.$local_files) {
+			return 
+		}
+		return this.$local_files[url]
+	}
+
 	send_to_main(params) {
 		console.log("send_to_main",ipcRenderer,params)
 		ipcRenderer.send(...params);

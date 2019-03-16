@@ -41,7 +41,8 @@ class StaticServer {
 					this.__download()
 				} else {
 					this.__log(`Download failed: ${state}`)
-					this.__download(url)
+					this.$entity.webContents.send('DOWNLOADERROR', url);
+					this.__download()
 				}
 			})
 		})
@@ -76,7 +77,6 @@ class StaticServer {
 		url = this.$down_queue.shift()
 		if (this.$loaded[url]) {
 			this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
-			this.__log("file already loaded!", url)
 			this.__download()
 			return
 		}
@@ -88,7 +88,6 @@ class StaticServer {
 				if (fs.existsSync(file)) {
 					this.$loaded[url] = file
 					this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
-					this.__log("file already exist!", url)
 					this.__download()
 					return
 				}

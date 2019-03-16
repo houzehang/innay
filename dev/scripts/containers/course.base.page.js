@@ -20,11 +20,10 @@ class Course extends React.Component {
 
 		this.$room = new Room(this)
 		this.$signal = new Signalize(this)
-		this.$audios_files = {}
-		ipcRenderer.on("DOWNLOADED", (event, url, file) => {
-			net.log({ name: "DOWNLOADED", url, file })
-			this.$audios_files[url] = file
-		});
+		this.$downloaded_handler = (event, url, file) => {
+			context.addDownloaded(url, file)			
+		}
+		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
 		
 		if (context && context.detector) {
 			context.detector.waring_threshold = 2;
@@ -76,15 +75,17 @@ class Course extends React.Component {
 	}
 
 	__load_sound(url) {
-		console.log("call load file...", url)
-		ipcRenderer.send("DOWNLOAD", url)
+		if (!context.getDownloaded(url)) {
+			console.log("call load file...", url)
+			ipcRenderer.send("DOWNLOAD", url)
+		}
 	}
 
 	playMusic(url, needevent) {
 		this.stopMusic()
-		let soundUrl = url
-		if (this.$audios_files[url]) {
-			soundUrl = this.$audios_files[url]
+		let soundUrl = url, localFile = context.getDownloaded(url)
+		if (localFile) {
+			soundUrl = localFile
 		}
 		let result = this.$room.rtc.startAudioMixing(soundUrl, true, false, 1)
 		net.log({ name: "play music", soundUrl, needevent, result })
@@ -122,6 +123,7 @@ class Course extends React.Component {
 		this.props.hideLoading()
 		context.detector.check()
 		this.onHotKey = null;
+		ipcRenderer.removeListener("DOWNLOADED", this.$downloaded_handler);
 	}
 
 	componentDidMount() {

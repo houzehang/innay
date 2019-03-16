@@ -11,6 +11,7 @@ module.exports = {
 	VIDEO_S_QUALITY 	: "120P_3",
 	ROOM_ID				: 111111,
 	LARGE_MODE 			: 480,
+	DANCE_MODE 			: 200,
 	SMALL_MODE 			: 88,
 	WEB_IM_GROUP_TIP    : {
 		"JOIN" 			: 1, //加入群组

@@ -35,7 +35,11 @@ mainWindowHotkeyListener = {
         // 处理从输入框激活状态直接切出,
         // app不响应`browser-window-blur`的问题
         hotkeyTickTimer = setInterval(() => {
-            this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
+            try {
+                this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
+            } catch(e) {
+                console.log("window has been destroy.")
+            }
         }, 2000);
     },
     send: function (key) {
