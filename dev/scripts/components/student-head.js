@@ -65,7 +65,7 @@ class StudentHead extends React.Component {
 							<div className="avatar-name">{child_name}</div>
 							<div className="avatar-stars">{this.props.user.gift_total || 0}</div>
 						</div>
-						{this.props.isTeacher && this.props.user && this.props.user.online ?
+						{this.props.isTeacher && this.props.user && this.props.user.online && this.props.user.stream?
 						<div className="summary">
 							<div className="summary-inner">
 								<div className={this.props.isTeacher?"btns":"btns student"}>
