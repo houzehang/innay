@@ -259,6 +259,10 @@ class Room extends Eventer {
 	}
 
 	leave() {
+		if (!this.$client) {
+			this.trigger("LEAVE_ROOM")
+			return
+		}
 		try {
 			this.$client.videoSourceLeave();
 			this.$client.videoSourceRelease();
