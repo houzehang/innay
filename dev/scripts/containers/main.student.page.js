@@ -13,7 +13,9 @@ import {
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse,
 	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,
-	onCourseRecording
+	onCourseRecording,
+	showLoading,
+	hideLoading
 } from '../actions'
 import { setTimeout } from 'core-js';
 const context = require("../context")
@@ -40,6 +42,8 @@ class Main extends React.Component {
 	}
 
 	__check_device(){
+
+		this.props.showLoading("正在分析设备信息...")
 		this.$timer_device_check = setInterval(() => {
 			//轮询等待systeminfo
 			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
@@ -47,20 +51,24 @@ class Main extends React.Component {
 				this.$timer_device_check = null;
 
 				net.checkDevice().then((res)=>{
-					if (res.old_device) {
-						context.setOldDevice();
-					}
+					this.props.hideLoading();
+					
+					res.old_device && context.setOldDevice();
 					context.join_class_enabled = !!res.to_class;
+				});
+
+				let oldUser = localStorage.getItem('OLD_USER');
+				if (oldUser) return;
+				localStorage.setItem('OLD_USER','1');
+
+				this.props.alert({
+					content: "进入设备检测",
+					sure: ()=>{
+						this.props.onEnterTester("main")
+					}
 				});
 			}
 		}, 200);
-		
-		this.props.alert({
-			content: "进入设备检测",
-			sure: ()=>{
-				this.props.onEnterTester("main")
-			}
-		});
 	}
 
 	strToDate(str) {
@@ -297,6 +305,13 @@ class Main extends React.Component {
 	}
 
 	__onStartRoom(data,isRecord) {
+		if (!context.join_class_enabled) {
+			this.props.alert({
+				content: "您的设备配置较低，暂时无法上课",
+				sure: ()=>{}
+			});
+			return;
+		}
 		this.props.onRoomInfo(data)
 		if(isRecord){
 			this.props.hide()
@@ -515,6 +530,8 @@ const mapDispatchToProps = dispatch => ({
 	onLessonsDone       : (rooms) => dispatch(onLessonsDone(rooms)),
 	onLessonsTotalComming: (rooms) => dispatch(onLessonsTotalComming(rooms)),
 	onLessonsTotalDone   : (rooms) => dispatch(onLessonsTotalDone(rooms)),
+	showLoading 		: (message) => dispatch(showLoading(message)),
+	hideLoading 		: () => dispatch(hideLoading()),
 })
   
 export default connect(
