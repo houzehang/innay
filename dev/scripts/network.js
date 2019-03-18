@@ -282,7 +282,15 @@ class Network extends Eventer {
 		return this.__request('/user/banji_contact')
 	}
 
-
+	/**
+	 * 设备检测
+	 */
+	checkDevice(){
+		return this.__request("/api/device_testing",{
+			logs	: [window.ENV_CONF.systeminfo]
+		}, "post")
+	}
+	
 	__get_system_info() {
 		let usedMemory 	= remote.process.getProcessMemoryInfo(),
 			memory 		= remote.process.getSystemMemoryInfo(),
@@ -311,7 +319,8 @@ class Network extends Eventer {
 	 * @param {*} data 
 	 */
 	log(data={}) {
-		console.log(data)
+		console.log('net log:',data)
+		console.trace()
 		this.$log_queue.push(data)
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
@@ -325,6 +334,9 @@ class Network extends Eventer {
 				this.$log_queue = []
 			},8000)
 		}
+	}
+
+	device_check() {
 	}
 }
 

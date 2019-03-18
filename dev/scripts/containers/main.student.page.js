@@ -34,6 +34,41 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
+		this.__check_device();
+	}
+
+	__check_device(){
+		let	oldDevice 		 = storage.get('OLD_DEVICE');
+		let	joinClassEnabled = storage.get('JOIN_CLASS_ENABLED');
+
+		if (oldDevice != undefined && joinClassEnabled != undefined) {
+			context.join_class_enabled = joinClassEnabled == 1;
+			context.old_device 		   = oldDevice == 1;
+			return;
+		}
+
+		this.$timer_device_check = setInterval(() => {
+			//轮询等待systeminfo
+			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
+				clearInterval(this.$timer_device_check);
+				this.$timer_device_check = null;
+
+				net.checkDevice().then((res)=>{
+					storage.store('OLD_DEVICE', res.old_device & 1);
+					storage.store('JOIN_CLASS_ENABLED', res.to_class & 1);
+
+					context.old_device 		   = !!res.old_device;
+					context.join_class_enabled = !!res.to_class;
+				});
+			}
+		}, 200);
+		
+		this.props.alert({
+			content: "进入设备检测",
+			sure: ()=>{
+				this.props.onEnterTester("main")
+			}
+		});
 	}
 
 	strToDate(str) {
@@ -69,6 +104,14 @@ class Main extends React.Component {
 		context.user = this.props.account
 		net.reportSystemBaseInfo()
 	}
+
+	componentWillUnmount() {
+		if (this.$timer_device_check) {
+			clearInterval(this.$timer_device_check)
+			this.$timer_device_check = null;
+		}
+	}
+
 
 	__student_page() {
 		let room = this.props.commingRoom;

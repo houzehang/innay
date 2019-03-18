@@ -1,1 +1,1 @@
-module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : true}
+module.exports = {DEBUG : 1,TC_DEBUG : 1,TEST : 0,TEACHER : 0}

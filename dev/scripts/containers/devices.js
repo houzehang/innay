@@ -165,34 +165,38 @@ class Devices extends React.Component {
 	}
 
 	step0() {
-		let systemInfo = window.ENV_CONF.systeminfo || {
+		let systemInfo = (window.ENV_CONF||{}).systeminfo || {
 			os:{},cpu:{},system:{}
 		}
-		let memory 	   = remote.process.getSystemMemoryInfo() || {total:0}
-		let os		   = '操作系统：' + (systemInfo.os.distro || '') + ' ' + (systemInfo.os.kernal || '');
-		let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
-		let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz - ' + (systemInfo.cpu.speedmax || '') + 'Hz'; 
-		let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
-		let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
-
-		return (
-			<div className="step-content">
-				<div className="os-detail-area">
-					<div className='os-cell'>
-						<div className='cell-tag'>{os}</div>
-						<div className='cell-tag'>{cpuCores}</div>
-						<div className='cell-tag'>{cpuSpeed}</div>
-						<div className='cell-tag'>{memoray}</div>
-						<div className='cell-tag'>{deviceType}</div>
+		try{
+			let memory 	   = remote.process.getSystemMemoryInfo() || {total:0}
+			let os		   = '操作系统：' + (systemInfo.os.distro || '') + ' ' + (systemInfo.os.kernal || '');
+			let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
+			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz - ' + (systemInfo.cpu.speedmax || '') + 'Hz'; 
+			let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
+			let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
+			return (
+				<div className="step-content">
+					<div className="os-detail-area">
+						<div className='os-cell'>
+							<div className='cell-tag'>{os}</div>
+							<div className='cell-tag'>{cpuCores}</div>
+							<div className='cell-tag'>{cpuSpeed}</div>
+							<div className='cell-tag'>{memoray}</div>
+							<div className='cell-tag'>{deviceType}</div>
+						</div>
+					</div>
+					<div className="step-btns">
+						<button onClick={()=>{
+							this.setState({step: 1})
+						}} className="step-btn">下一步</button>
 					</div>
 				</div>
-				<div className="step-btns">
-					<button onClick={()=>{
-						this.setState({step: 1})
-					}} className="step-btn">下一步</button>
-				</div>
-			</div>
-		)
+			)
+		}catch(error){
+			console.log('error:device->step0,',error.message || error);
+		}
+		return '';
 	}
 
 	step1() {

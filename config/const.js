@@ -2,8 +2,8 @@ const ENV = require("../env")
 module.exports = {
 	AGORA_APPID 	 		: ENV.TEST||ENV.DEBUG ? "c6a83fe7f78b490c96f69f3fdb71f682" : "d75fe75ab0404a90b2ed7e5bab216f80",
 	AGORA_CHANNEL_KEY		: ENV.TEST||ENV.DEBUG ? "dfc09172cb114b06b002c2f9aa7f0d87" : "7c9b6ed9bba54dc59471cfa09e9f23ea",
-	// TEST_URL 			: "https://admintest.youshiyuwen.cn",
-	TEST_URL 			: "https://kecheng1.runsnailrun.com",
+	TEST_URL 			: "https://admintest.youshiyuwen.cn",
+	// TEST_URL 			: "https://kecheng1.runsnailrun.com",
 	ONLINE_URL 			: "https://www.muwenyuwen.com",
 	TENCENT_APPID 		: 1400098973,
 	TENCENT_ACCOUNTTYPE : 28218,
