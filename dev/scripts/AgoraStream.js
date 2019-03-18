@@ -246,7 +246,6 @@ class Room extends Eventer {
 			this.$client.removeAllListeners();
 			this.trigger("LEAVE_ROOM", this.$client)
 		});
-		console.log('test2---trigger self', this.inst.props.account.id);
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 		this.__stream_audio(this.inst.props.account.id)
 	}

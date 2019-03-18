@@ -21,9 +21,9 @@ import {
 } from '../actions' 
 
 import CourseBase from './course.base.page'
-const $ = require("jquery")
 const Const = require('../../const')
 const {getCurrentWindow} = $require('electron').remote;
+const context = require("../context")
 
 class Course extends CourseBase {
 	constructor(props) {
@@ -48,7 +48,10 @@ class Course extends CourseBase {
 			}
 			let self = id == this.props.account.id
 			console.log("new stream from student",self,id)
-			stream.play()
+			// 如果是低端设备则不显示流信息
+			if (self || !context.isOldDevice) {
+				stream.play()
+			}
 			this.$session.send_message("NEW_STREAM", {
 				id,
 				render: ()=>{
