@@ -168,8 +168,12 @@ class Room extends Eventer {
 		}
 	}
 
+	/**
+	 * 取消接收远端音视频流
+	 * @param {*} id 
+	 */
 	unsubscribe(id) {
-		// this.$client.rtcengine.unsubscribe(id)
+		this.$client.rtcengine.unsubscribe(id)
 	}
 
 	__stream(id) {
@@ -227,7 +231,6 @@ class Room extends Eventer {
 				this.$client.setRemoteVideoStreamType(id, 1);
 				this.$client.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
-			console.log('test2---trigger someone', id);
 
 			this.trigger("NEW_STREAM", this.__stream(id))
 		});
@@ -246,7 +249,6 @@ class Room extends Eventer {
 			this.$client.removeAllListeners();
 			this.trigger("LEAVE_ROOM", this.$client)
 		});
-		console.log('test2---trigger self', this.inst.props.account.id);
 		this.trigger("NEW_STREAM", this.__stream(this.inst.props.account.id))
 		this.__stream_audio(this.inst.props.account.id)
 	}
