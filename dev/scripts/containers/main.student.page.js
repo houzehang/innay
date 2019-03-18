@@ -40,15 +40,6 @@ class Main extends React.Component {
 	}
 
 	__check_device(){
-		let	oldDevice 		 = storage.get('OLD_DEVICE');
-		let	joinClassEnabled = storage.get('JOIN_CLASS_ENABLED');
-
-		if (oldDevice != undefined && joinClassEnabled != undefined) {
-			context.join_class_enabled = joinClassEnabled == 1;
-			context.old_device 		   = oldDevice == 1;
-			return;
-		}
-
 		this.$timer_device_check = setInterval(() => {
 			//轮询等待systeminfo
 			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
@@ -56,10 +47,9 @@ class Main extends React.Component {
 				this.$timer_device_check = null;
 
 				net.checkDevice().then((res)=>{
-					storage.store('OLD_DEVICE', res.old_device & 1);
-					storage.store('JOIN_CLASS_ENABLED', res.to_class & 1);
-
-					context.old_device 		   = !!res.old_device;
+					if (res.old_device) {
+						context.setOldDevice();
+					}
 					context.join_class_enabled = !!res.to_class;
 				});
 			}
@@ -80,7 +70,6 @@ class Main extends React.Component {
 
 	__get_lesson_comming(){
 		net.getLessonComming().then((res)=>{
-			console.log('roominfo == ',res);
 			// 计算剩余时间
 			let room = res.room;
 			if (room) {
