@@ -66,20 +66,44 @@ body {
 					}
 				}
 			}
-			&.s-1,&.s-2,&.s-3 {
+			&.s-0,&.s-1,&.s-2,&.s-3 {
 				.steps {
 					.step {
-						&.step-1 {
+						&.step-0 {
 							color: #ffac29;
 							.step-num {
 								background: #ffac29;
 							}
+							.icon {
+								background-image: url(../assets/tester-step-0-on.png);
+							}
+						}
+						&.step-1 .icon{
+							background-image: url(../assets/tester-step-1.png);
 						}
 						&.step-2 .icon {
 							background-image: url(../assets/tester-step-2.png);
 						}
 						&.step-3 .icon {
 							background-image: url(../assets/tester-step-3.png);
+						}
+					}
+				}
+			}
+			&.s-1,&.s-2,&.s-3 {
+				.steps {
+					.l0 {
+						background: #ffac29;
+					}
+					.step {
+						&.step-1 {
+							color: #ffac29;
+							.icon {
+								background-image: url(../assets/tester-step-1-on.png);
+							}
+							.step-num {
+								background: #ffac29;
+							}
 						}
 					}
 				}
@@ -99,9 +123,6 @@ body {
 								background: #ffac29;
 							}
 						}
-						&.step-3 .icon {
-							background-image: url(../assets/tester-step-3.png);
-						}
 					}
 				}
 			}
@@ -111,9 +132,6 @@ body {
 						background: #ffac29;
 					}
 					.step {
-						&.step-2 .icon {
-							background-image: url(../assets/tester-step-2-on.png);
-						}
 						&.step-3 {
 							color: #ffac29;
 							.icon {
@@ -133,16 +151,19 @@ body {
 				justify-content: center;
 				position: relative;
 				.line {
-					width: 2.34rem;
+					width: 1.56rem;
 					height: 2px;
 					background: #b2b2b2;
 					position: absolute;
 					top: 0.88rem;
+					&.l0 {
+						left: 1rem;
+					}
 					&.l1 {
-						left: 1.16rem;
+						left: 2.7rem;
 					}
 					&.l2 {
-						left: 3.5rem;
+						left: 4.56rem;
 					}
 				}
 				.step {
@@ -168,8 +189,8 @@ body {
 							margin-right: 0.05rem;
 						}
 					}
-					&.step-1 .icon {
-						background-image: url(../assets/tester-step-1-on.png);
+					&.step-0 .icon {
+						background-image: url(../assets/tester-step-0-on.png);
 					}
 					.step-num {
 						width: 0.4rem;
@@ -228,6 +249,30 @@ body {
 						width: 2.9rem;
 						height: 0.4rem;
 						opacity: 0;
+					}
+				}
+				.os-detail-area{
+					height: 3.46rem;
+					display: flex;
+					flex-direction: column;
+					justify-content: flex-start;
+					align-items: center;
+					margin-top: 0.2rem;
+					// background: #f7f7f7;
+					.os-cell{
+						width: 100%;
+						display: flex;
+						flex-direction: column;
+						justify-content: flex-start;
+
+						align-items: center;
+						.cell-tag{
+							width: 100%;
+							color: #000;
+							font-size: 0.17rem;
+							line-height: 0.2rem;
+							margin-top: 0.2rem;
+						}
 					}
 				}
 				.video-area {

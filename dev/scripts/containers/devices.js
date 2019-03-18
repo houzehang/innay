@@ -11,6 +11,7 @@ const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
 const $ 				= require("jquery")
 const net 				= require("../network")
+const remote 			= $require("electron").remote
 import { 
 	onExitTester
 } from '../actions'
@@ -87,7 +88,7 @@ class Devices extends React.Component {
 			currentAudioName,
 			video_devices, audio_devices, speaker_devices,
 			volume: this.$client.getAudioPlaybackVolume(),
-			step: 1,
+			step: 0,
 			netquality: 0,
 			net_history: [0]
 		}
@@ -154,13 +155,44 @@ class Devices extends React.Component {
 		this.$previewing = true
 	}
 
-	onStopPreview() {
+	onStopPreviewAndStepTo(step) {
 		this.$previewing = false
 		this.$client.stopPreview();
 		$("#video-area").empty()
 		setTimeout(()=>{
-			this.setState({step: 2})
+			this.setState({step})
 		})
+	}
+
+	step0() {
+		let systemInfo = window.ENV_CONF.systeminfo || {
+			os:{},cpu:{},system:{}
+		}
+		let memory 	   = remote.process.getSystemMemoryInfo() || {total:0}
+		let os		   = '操作系统：' + (systemInfo.os.distro || '') + ' ' + (systemInfo.os.kernal || '');
+		let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
+		let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz - ' + (systemInfo.cpu.speedmax || '') + 'Hz'; 
+		let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
+		let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
+
+		return (
+			<div className="step-content">
+				<div className="os-detail-area">
+					<div className='os-cell'>
+						<div className='cell-tag'>{os}</div>
+						<div className='cell-tag'>{cpuCores}</div>
+						<div className='cell-tag'>{cpuSpeed}</div>
+						<div className='cell-tag'>{memoray}</div>
+						<div className='cell-tag'>{deviceType}</div>
+					</div>
+				</div>
+				<div className="step-btns">
+					<button onClick={()=>{
+						this.setState({step: 1})
+					}} className="step-btn">下一步</button>
+				</div>
+			</div>
+		)
 	}
 
 	step1() {
@@ -197,8 +229,12 @@ class Devices extends React.Component {
 				<div className="step-btns">
 					<button onClick={()=>{
 						this.onStartMicTest()
-						this.onStopPreview()
+						this.onStopPreviewAndStepTo(2)
 					}} className="step-btn">下一步</button>
+					<button onClick={()=>{
+						this.onStopPreviewAndStepTo(0)
+						this.setState({step: 0})
+					}} className="prev-step-btn">上一步</button>
 				</div>
 			</div>
 		)
@@ -334,28 +370,36 @@ class Devices extends React.Component {
 				})}
 				</div>
 				<div className="steps">
+					<div className="line l0"></div>
 					<div className="line l1"></div>
 					<div className="line l2"></div>
+					<div className="step step-0">
+						<div className="step-name">
+							<i className="icon"></i>
+							主机检测
+						</div>
+						<div className="step-num">1</div>
+					</div>
 					<div className="step step-1">
 						<div className="step-name">
 							<i className="icon"></i>
 							摄像头检测
 						</div>
-						<div className="step-num">1</div>
+						<div className="step-num">2</div>
 					</div>
 					<div className="step step-2">
 						<div className="step-name">
 							<i className="icon"></i>
 							麦克风检测
 						</div>
-						<div className="step-num">2</div>
+						<div className="step-num">3</div>
 					</div>
 					<div className="step step-3">
 						<div className="step-name">
 							<i className="icon"></i>
 							扬声器检测
 						</div>
-						<div className="step-num">3</div>
+						<div className="step-num">4</div>
 					</div>
 				</div>
 				{this[`step${this.state.step}`]()}
