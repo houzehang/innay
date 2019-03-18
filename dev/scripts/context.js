@@ -102,6 +102,26 @@ class Context {
 		console.log("send_to_main",ipcRenderer,params)
 		ipcRenderer.send(...params);
 	}
+
+	/**
+	 * 是否为低端设备
+	 */
+	isOldDevice() {
+		if (this.$is_old_device !== undefined) {
+			return this.$is_old_device
+		}
+		let oldDevice = localStorage.getItem("IS_OLD_DEVICE")
+		this.$is_old_device = oldDevice
+		return oldDevice
+	}
+
+	/**
+	 * 设置为低端设备
+	 */
+	setOldDevice() {
+		localStorage.setItem("IS_OLD_DEVICE", 1)
+		this.$is_old_device = true
+	}
 }
 
 module.exports = new Context

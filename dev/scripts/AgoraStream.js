@@ -142,7 +142,6 @@ class Room extends Eventer {
 				this.$client.setVideoRenderDimension(0, id, Const.SMALL_MODE, Const.SMALL_MODE)
 			}
 		} else {
-			// this.$client.rtcengine.unsubscribe(id)
 			this.$client.subscribe(id, dom)
 			let setStreamResult
 			if (largeMode) {
@@ -173,7 +172,7 @@ class Room extends Eventer {
 	 * @param {*} id 
 	 */
 	unsubscribe(id) {
-		this.$client.rtcengine.unsubscribe(id)
+		this.$client.rtcEngine.unsubscribe(id)
 	}
 
 	__stream(id) {
@@ -203,7 +202,7 @@ class Room extends Eventer {
 				}
 			},
 			stop: ()=>{
-				// this.unsubscribe(id)
+				this.unsubscribe(id)
 				$(`#student_${id}`).empty()
 			}
 		}
