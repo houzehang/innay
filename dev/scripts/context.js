@@ -68,6 +68,22 @@ class Context {
 		this.$storage = storage
 	}
 
+	get old_device(){
+		return !!this.$old_device
+	}
+
+	set join_class_enabled(enabled){
+		this.$join_class_enabled = !!enabled;
+	}
+
+	get join_class_enabled(){
+		return this.$join_class_enabled;
+	}
+
+	set old_device(old_device){
+		this.$old_device = !!old_device
+	}
+
 	get video_device_id() {
 		return this.$video_device_id
 	}

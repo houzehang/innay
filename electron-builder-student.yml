@@ -31,7 +31,9 @@ mac:
 #   license: license.txt
 #   createDesktopShortcut: true
 #   createStartMenuShortcut: true
-
+nsis:
+  deleteAppDataOnUninstall: true
+  
 win:
   asar: true
   asarUnpack: 
