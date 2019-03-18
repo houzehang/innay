@@ -11,9 +11,10 @@ const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
 const $ 				= require("jquery")
 const net 				= require("../network")
+const context		    = require("../context")
 const remote 			= $require("electron").remote
 import { 
-	onExitTester
+	onExitTester,alert
 } from '../actions'
 class Devices extends React.Component {
 	constructor(props) {
@@ -188,6 +189,13 @@ class Devices extends React.Component {
 					</div>
 					<div className="step-btns">
 						<button onClick={()=>{
+							if (!context.join_class_enabled) {
+								this.props.alert({
+									content: "主机配置较低，无法进入下一步",
+									sure: ()=>{}
+								});
+								return;
+							}
 							this.setState({step: 1})
 						}} className="step-btn">下一步</button>
 					</div>
@@ -426,7 +434,8 @@ const mapStateToProps = (state, ownProps) => {
 
 
 const mapDispatchToProps = dispatch => ({
-	onExitTester 	: () => dispatch(onExitTester())
+	onExitTester 	: () => dispatch(onExitTester()),
+	alert 	   	   	: (data) => dispatch(alert(data))
 })
 
 export default connect(

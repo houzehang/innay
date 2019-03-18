@@ -54,7 +54,7 @@ class Main extends React.Component {
 					this.props.hideLoading();
 					
 					res.old_device && context.setOldDevice();
-					context.join_class_enabled = !!res.to_class;
+					context.join_class_enabled = !res.to_class;
 				});
 
 				let oldUser = localStorage.getItem('OLD_USER');
