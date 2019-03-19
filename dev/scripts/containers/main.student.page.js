@@ -42,7 +42,10 @@ class Main extends React.Component {
 	}
 
 	__check_device(){
+		let oldUser = localStorage.getItem('OLD_USER') == 1,
+			checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
 
+		if(oldUser || checked)return;
 		this.props.showLoading("正在分析设备信息...")
 		this.$timer_device_check = setInterval(() => {
 			//轮询等待systeminfo
@@ -55,17 +58,14 @@ class Main extends React.Component {
 					
 					res.old_device && context.setOldDevice();
 					context.join_class_enabled = !!res.to_class;
-				});
-
-				let oldUser = localStorage.getItem('OLD_USER');
-				if (oldUser) return;
-				localStorage.setItem('OLD_USER','1');
-
-				this.props.alert({
-					content: "进入设备检测",
-					sure: ()=>{
-						this.props.onEnterTester("main")
-					}
+					
+					localStorage.setItem('OLD_USER', res.old_user & 1);
+					this.props.alert({
+						content: "进入设备检测",
+						sure: ()=>{
+							this.props.onEnterTester("main")
+						}
+					});
 				});
 			}
 		}, 200);

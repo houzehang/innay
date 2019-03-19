@@ -91,7 +91,8 @@ class Devices extends React.Component {
 			volume: this.$client.getAudioPlaybackVolume(),
 			step: 0,
 			netquality: 0,
-			net_history: [0]
+			net_history: [0],
+			check_over: 0,
 		}
 
 		this.$client.on("lastmilequality", (quality) => {
@@ -295,6 +296,9 @@ class Devices extends React.Component {
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
 						this.setState({step: 3})
+						this.setState({
+							check_over: true
+						})
 					}} className="step-btn">下一步</button>
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
@@ -360,7 +364,7 @@ class Devices extends React.Component {
 				</div>
 				<div className="step-btns">
 					<button className="step-btn" onClick={()=>{
-						this.props.onExitTester()
+						this.__exit();
 					}}>完成</button>
 					<button onClick={()=>{
 						this.$playing = false
@@ -373,10 +377,17 @@ class Devices extends React.Component {
 		)
 	}
 
+	__exit() {
+		this.props.onExitTester();
+		if(this.state.check_over){
+			localStorage.setItem('DEVICE_CHECKED_ALREADY', 1);
+		}
+	}
+
 	render() {
 		return  <div className="sound-outer">
 			<button className="page-back" onClick={()=>{
-				this.props.onExitTester()
+				this.__exit();
 			}}></button>
 			<div className={"sound-tester s-"+this.state.step}>
 				<div className="network">实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
