@@ -47,9 +47,8 @@ class Course extends CourseBase {
 				return
 			}
 			let self = id == this.props.account.id
-			console.log("new stream from student",self,id)
 			// 如果是低端设备则不显示流信息
-			if (self || !context.isOldDevice()) {
+			if (self || this.isChairMaster(id) || !context.isOldDevice()) {
 				stream.play()
 			}
 			this.$session.send_message("NEW_STREAM", {
