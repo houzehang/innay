@@ -320,7 +320,6 @@ class Network extends Eventer {
 	 */
 	log(data={}) {
 		console.log('net log:',data)
-		console.trace()
 		this.$log_queue.push(data)
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{

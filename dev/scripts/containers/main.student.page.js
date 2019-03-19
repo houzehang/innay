@@ -38,7 +38,7 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
-		// this.__check_device();
+		this.__check_device();
 	}
 
 	__check_device(){
