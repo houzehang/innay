@@ -339,25 +339,61 @@ body .sound-outer .sound-tester .network-bar .quality.q-5 {
 body .sound-outer .sound-tester .network-bar .quality.q-6 {
   background: #b2b2b2;
 }
-body .sound-outer .sound-tester.s-1 .steps .step.step-1,
-body .sound-outer .sound-tester.s-2 .steps .step.step-1,
-body .sound-outer .sound-tester.s-3 .steps .step.step-1 {
+body .sound-outer .sound-tester.s-0 .steps .step.step-0,
+body .sound-outer .sound-tester.s-1 .steps .step.step-0,
+body .sound-outer .sound-tester.s-2 .steps .step.step-0,
+body .sound-outer .sound-tester.s-3 .steps .step.step-0 {
   color: #ffac29;
 }
-body .sound-outer .sound-tester.s-1 .steps .step.step-1 .step-num,
-body .sound-outer .sound-tester.s-2 .steps .step.step-1 .step-num,
-body .sound-outer .sound-tester.s-3 .steps .step.step-1 .step-num {
+body .sound-outer .sound-tester.s-0 .steps .step.step-0 .step-num,
+body .sound-outer .sound-tester.s-1 .steps .step.step-0 .step-num,
+body .sound-outer .sound-tester.s-2 .steps .step.step-0 .step-num,
+body .sound-outer .sound-tester.s-3 .steps .step.step-0 .step-num {
   background: #ffac29;
 }
+body .sound-outer .sound-tester.s-0 .steps .step.step-0 .icon,
+body .sound-outer .sound-tester.s-1 .steps .step.step-0 .icon,
+body .sound-outer .sound-tester.s-2 .steps .step.step-0 .icon,
+body .sound-outer .sound-tester.s-3 .steps .step.step-0 .icon {
+  background-image: url(./e3c97f315c4d62016b7ddac95ece4e9c.png);
+}
+body .sound-outer .sound-tester.s-0 .steps .step.step-1 .icon,
+body .sound-outer .sound-tester.s-1 .steps .step.step-1 .icon,
+body .sound-outer .sound-tester.s-2 .steps .step.step-1 .icon,
+body .sound-outer .sound-tester.s-3 .steps .step.step-1 .icon {
+  background-image: url(./6abc1bde7ac96e0287c5084218000704.png);
+}
+body .sound-outer .sound-tester.s-0 .steps .step.step-2 .icon,
 body .sound-outer .sound-tester.s-1 .steps .step.step-2 .icon,
 body .sound-outer .sound-tester.s-2 .steps .step.step-2 .icon,
 body .sound-outer .sound-tester.s-3 .steps .step.step-2 .icon {
   background-image: url(./fb0e66150493ed9818199e91cbc3b2cf.png);
 }
+body .sound-outer .sound-tester.s-0 .steps .step.step-3 .icon,
 body .sound-outer .sound-tester.s-1 .steps .step.step-3 .icon,
 body .sound-outer .sound-tester.s-2 .steps .step.step-3 .icon,
 body .sound-outer .sound-tester.s-3 .steps .step.step-3 .icon {
   background-image: url(./21e958e74d48226b0d85cdb00c0bb4f8.png);
+}
+body .sound-outer .sound-tester.s-1 .steps .l0,
+body .sound-outer .sound-tester.s-2 .steps .l0,
+body .sound-outer .sound-tester.s-3 .steps .l0 {
+  background: #ffac29;
+}
+body .sound-outer .sound-tester.s-1 .steps .step.step-1,
+body .sound-outer .sound-tester.s-2 .steps .step.step-1,
+body .sound-outer .sound-tester.s-3 .steps .step.step-1 {
+  color: #ffac29;
+}
+body .sound-outer .sound-tester.s-1 .steps .step.step-1 .icon,
+body .sound-outer .sound-tester.s-2 .steps .step.step-1 .icon,
+body .sound-outer .sound-tester.s-3 .steps .step.step-1 .icon {
+  background-image: url(./01835e90e4fc0b8799b8773de0713cb1.png);
+}
+body .sound-outer .sound-tester.s-1 .steps .step.step-1 .step-num,
+body .sound-outer .sound-tester.s-2 .steps .step.step-1 .step-num,
+body .sound-outer .sound-tester.s-3 .steps .step.step-1 .step-num {
+  background: #ffac29;
 }
 body .sound-outer .sound-tester.s-2 .steps .l1,
 body .sound-outer .sound-tester.s-3 .steps .l1 {
@@ -375,15 +411,8 @@ body .sound-outer .sound-tester.s-2 .steps .step.step-2 .step-num,
 body .sound-outer .sound-tester.s-3 .steps .step.step-2 .step-num {
   background: #ffac29;
 }
-body .sound-outer .sound-tester.s-2 .steps .step.step-3 .icon,
-body .sound-outer .sound-tester.s-3 .steps .step.step-3 .icon {
-  background-image: url(./21e958e74d48226b0d85cdb00c0bb4f8.png);
-}
 body .sound-outer .sound-tester.s-3 .steps .l2 {
   background: #ffac29;
-}
-body .sound-outer .sound-tester.s-3 .steps .step.step-2 .icon {
-  background-image: url(./7b98879503c5a50c305cbaf5b981764e.png);
 }
 body .sound-outer .sound-tester.s-3 .steps .step.step-3 {
   color: #ffac29;
@@ -402,17 +431,20 @@ body .sound-outer .sound-tester .steps {
   position: relative;
 }
 body .sound-outer .sound-tester .steps .line {
-  width: 2.34rem;
+  width: 1.56rem;
   height: 2px;
   background: #b2b2b2;
   position: absolute;
   top: 0.88rem;
 }
+body .sound-outer .sound-tester .steps .line.l0 {
+  left: 1rem;
+}
 body .sound-outer .sound-tester .steps .line.l1 {
-  left: 1.16rem;
+  left: 2.7rem;
 }
 body .sound-outer .sound-tester .steps .line.l2 {
-  left: 3.5rem;
+  left: 4.56rem;
 }
 body .sound-outer .sound-tester .steps .step {
   flex: 1;
@@ -438,8 +470,8 @@ body .sound-outer .sound-tester .steps .step .step-name .icon {
   background-position: center center;
   margin-right: 0.05rem;
 }
-body .sound-outer .sound-tester .steps .step.step-1 .icon {
-  background-image: url(./01835e90e4fc0b8799b8773de0713cb1.png);
+body .sound-outer .sound-tester .steps .step.step-0 .icon {
+  background-image: url(./e3c97f315c4d62016b7ddac95ece4e9c.png);
 }
 body .sound-outer .sound-tester .steps .step .step-num {
   width: 0.4rem;
@@ -498,6 +530,28 @@ body .sound-outer .sound-tester .step-content .selector .select {
   width: 2.9rem;
   height: 0.4rem;
   opacity: 0;
+}
+body .sound-outer .sound-tester .step-content .os-detail-area {
+  height: 3.46rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+body .sound-outer .sound-tester .step-content .os-detail-area .os-cell {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+body .sound-outer .sound-tester .step-content .os-detail-area .os-cell .cell-tag {
+  width: 100%;
+  color: #000;
+  font-size: 0.17rem;
+  line-height: 0.2rem;
+  margin-top: 0.2rem;
 }
 body .sound-outer .sound-tester .step-content .video-area {
   width: 2.1rem;
