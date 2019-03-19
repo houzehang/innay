@@ -172,9 +172,10 @@ class Devices extends React.Component {
 		}
 		try{
 			let memory 	   = remote.process.getSystemMemoryInfo() || {total:0}
-			let os		   = '操作系统：' + (systemInfo.os.distro || '') + ' ' + (systemInfo.os.kernal || '');
-			let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
-			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz - ' + (systemInfo.cpu.speedmax || '') + 'Hz'; 
+			let os		   = '操作系统：' + (systemInfo.os.distro || '').replace(/[^a-zA-Z_0-9 ]/g,'') + ' ' + (systemInfo.os.kernal || '');
+			let cpuBrand   = 'CPU型号：' + (systemInfo.cpu.brand || '');
+ 			let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
+			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz' + (systemInfo.cpu.speedmin == systemInfo.cpu.speedmax ? '' : (' - '+(systemInfo.cpu.speedmax || '') + 'Hz')); 
 			let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
 			let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
 			return (
@@ -182,6 +183,7 @@ class Devices extends React.Component {
 					<div className="os-detail-area">
 						<div className='os-cell'>
 							<div className='cell-tag'>{os}</div>
+							<div className='cell-tag'>{cpuBrand}</div>
 							<div className='cell-tag'>{cpuCores}</div>
 							<div className='cell-tag'>{cpuSpeed}</div>
 							<div className='cell-tag'>{memoray}</div>

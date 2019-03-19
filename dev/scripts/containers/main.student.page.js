@@ -45,8 +45,10 @@ class Main extends React.Component {
 		let oldUser = localStorage.getItem('OLD_USER') == 1,
 			checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
 
-		if(oldUser || checked)return;
-		this.props.showLoading("正在分析设备信息...")
+		if(oldUser)return;
+		if(!checked){
+			this.props.showLoading("正在分析设备信息...")
+		}
 		this.$timer_device_check = setInterval(() => {
 			//轮询等待systeminfo
 			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
@@ -55,16 +57,17 @@ class Main extends React.Component {
 
 				net.checkDevice().then((res)=>{
 					this.props.hideLoading();
-					
 					res.old_device && context.setOldDevice();
-					context.join_class_enabled = !!res.to_class;
+					context.join_class_enabled = res.old_user || !!res.to_class;
 					
 					localStorage.setItem('OLD_USER', res.old_user & 1);
+					if(res.old_user) return;
 					this.props.alert({
 						content: "进入设备检测",
 						sure: ()=>{
 							this.props.onEnterTester("main")
-						}
+						},
+						close_hidden: true
 					});
 				});
 			}

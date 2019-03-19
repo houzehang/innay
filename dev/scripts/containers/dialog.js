@@ -42,7 +42,7 @@ class Dialog extends React.Component {
 			<div className={"dialog "+(configure.classname||"")} style={configure.styles}>
 				<div className="title">
 					{configure.title || "提示"}
-					<div className="close-btn" onClick={this.hide.bind(this)}></div>
+					{this.props.data.configure.close_hidden ? '' : <div className="close-btn" onClick={this.hide.bind(this)}></div>}
 				</div>
 				<div className={configure.nobutton?"content nobtn":"content"}>
 					<div className="texts">{configure.content}</div>
@@ -81,6 +81,7 @@ Dialog.propTypes = {
 			cancel_txt  : PropTypes.string,
 			sure		: PropTypes.func,
 			cancel		: PropTypes.func,
+			close_hidden: PropTypes.bool,
 			viewport	: PropTypes.shape({
 				width 	: PropTypes.string.isRequired,
 				height	: PropTypes.string
