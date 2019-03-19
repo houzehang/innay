@@ -47,7 +47,7 @@ class Main extends React.Component {
 
 		if(oldUser)return;
 		if(!checked){
-			this.props.showLoading("正在分析设备信息...")
+			this.props.showLoading("首次进入，需要为您做些优化")
 		}
 		this.$timer_device_check = setInterval(() => {
 			//轮询等待systeminfo
@@ -63,10 +63,11 @@ class Main extends React.Component {
 					localStorage.setItem('OLD_USER', res.old_user & 1);
 					if(res.old_user) return;
 					this.props.alert({
-						content: "进入设备检测",
+						content: "欢迎进入明兮学堂，为了您更好的体验，请先来检测下设备吧",
 						sure: ()=>{
 							this.props.onEnterTester("main")
 						},
+						sure_txt: "设备检测",
 						close_hidden: true
 					});
 				});
@@ -304,17 +305,17 @@ class Main extends React.Component {
     }
 
 	onStartRoom(data) {
-		this.onDownload(data, true)
-	}
-
-	__onStartRoom(data,isRecord) {
 		if (!context.join_class_enabled) {
 			this.props.alert({
-				content: "您的设备配置较低，暂时无法上课",
+				content: "亲爱的宝妈您好，因我们课件的动画和交互较多，经检测您目前的设备可能不支持我们的正常上课，为了避免影响您的上课体验，请联系您的顾问老师帮您解决，感谢您的支持！",
 				sure: ()=>{}
 			});
 			return;
 		}
+		this.onDownload(data, true)
+	}
+
+	__onStartRoom(data,isRecord) {
 		this.props.onRoomInfo(data)
 		if(isRecord){
 			this.props.hide()

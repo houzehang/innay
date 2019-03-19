@@ -175,7 +175,7 @@ class Devices extends React.Component {
 			let os		   = '操作系统：' + (systemInfo.os.distro || '').replace(/[^a-zA-Z_0-9 ]/g,'') + ' ' + (systemInfo.os.kernal || '');
 			let cpuBrand   = 'CPU型号：' + (systemInfo.cpu.brand || '');
  			let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
-			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speedmin || '') + 'Hz' + (systemInfo.cpu.speedmin == systemInfo.cpu.speedmax ? '' : (' - '+(systemInfo.cpu.speedmax || '') + 'Hz')); 
+			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speed || '') + 'Hz' + (systemInfo.cpu.speed == systemInfo.cpu.speedmax ? '' : (' - '+(systemInfo.cpu.speedmax || '') + 'Hz')); 
 			let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
 			let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
 			return (
@@ -194,7 +194,7 @@ class Devices extends React.Component {
 						<button onClick={()=>{
 							if (!context.join_class_enabled) {
 								this.props.alert({
-									content: "主机配置较低，无法进入下一步",
+									content: "亲爱的宝妈您好，因我们课件的动画和交互较多，经检测您目前的设备可能不支持我们的正常上课，为了避免影响您的上课体验，请联系您的顾问老师帮您解决，感谢您的支持！",
 									sure: ()=>{}
 								});
 								return;
