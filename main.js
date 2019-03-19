@@ -48,6 +48,7 @@ mainWindowHotkeyListener = {
     },
     register: function () {
         for (let _keyName in Hotkey) {
+            globalShortcut.unregister(Hotkey[_keyName].code);
             globalShortcut.register(Hotkey[_keyName].code, () => {
                 this.send(_keyName);
             })

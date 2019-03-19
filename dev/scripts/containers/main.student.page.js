@@ -61,7 +61,7 @@ class Main extends React.Component {
 					context.join_class_enabled = res.old_user || !!res.to_class;
 					
 					localStorage.setItem('OLD_USER', res.old_user & 1);
-					if(res.old_user) return;
+					if(res.old_user || checked) return;
 					this.props.alert({
 						content: "欢迎进入明兮学堂，为了您更好的体验，请先来检测下设备吧",
 						sure: ()=>{
