@@ -128,6 +128,9 @@ class Context {
 	}
 
 	get join_class_enabled(){
+		if (this.$join_class_enabled === undefined) {
+			return true;
+		}
 		return this.$join_class_enabled;
 	}
 }
