@@ -117,14 +117,14 @@ class Main extends React.Component {
 		// }).done()
 		// return
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let lastest_download = storage.get(`download_${data.en_name}`)
-		if (lastest_download) {
-			let delay = new Date().getTime() - lastest_download
-			if (delay <= this.$cache_valid_time) {
-				this.__onStartRoom(data)
-				return
-			}
-		}
+		// let lastest_download = storage.get(`download_${data.en_name}`)
+		// if (lastest_download) {
+		// 	let delay = new Date().getTime() - lastest_download
+		// 	if (delay <= this.$cache_valid_time) {
+		// 		this.__onStartRoom(data)
+		// 		return
+		// 	}
+		// }
 		this.onDownload(data, true)
 	}
 
