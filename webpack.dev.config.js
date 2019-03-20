@@ -69,10 +69,7 @@ module.exports = {
       alwaysWriteToDisk: true
     }),
     new HtmlWebpackIncludeAssetsPlugin({
-      assets: [
-        'http://localhost:3030/libs/flexible.js',
-        'http://localhost:3030/libs/cocos2d-js-v1.1-min.js'
-      ],
+      assets: [ ],
       publicPath: false,
       append: false,
       files: ['index.html']

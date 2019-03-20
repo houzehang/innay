@@ -264,6 +264,8 @@ class Course extends React.Component {
 				_callback(true);
 			})
 			this.$roominfo_callbacks = null;
+		}, ()=>{
+			this.leaveCourse()
 		}).done()
 	}
 

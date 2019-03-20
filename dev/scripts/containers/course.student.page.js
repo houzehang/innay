@@ -88,6 +88,7 @@ class Course extends CourseBase {
 			// if (this.props.onLeaveRoom) {
 			// 	this.props.onLeaveRoom();
 			// }
+			localStorage.setItem("ENTERED",1)
 			getCurrentWindow().reload()
 		})
 		if (this.$timer_warning) {

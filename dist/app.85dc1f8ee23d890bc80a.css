@@ -2109,6 +2109,7 @@ body .calendar-col.highlighted::after {
 }
 html,
 body {
+  color: #000;
   width: 100%;
   overflow: hidden;
   height: 100%;
