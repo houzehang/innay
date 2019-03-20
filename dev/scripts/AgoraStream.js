@@ -253,6 +253,7 @@ class Room extends Eventer {
 	}
 
 	start() {
+		this.$started = true
 		this.$client.joinChannel(this.inst.props.room.channel_token, this.inst.props.room.channel_id, '', this.inst.props.account.id);
 		this.$client.on('joinedchannel', () => {
 			this.__start_stream()
@@ -260,7 +261,7 @@ class Room extends Eventer {
 	}
 
 	leave() {
-		if (!this.$client) {
+		if (!this.$started) {
 			this.trigger("LEAVE_ROOM")
 			return
 		}

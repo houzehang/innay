@@ -17,6 +17,7 @@ class Course extends React.Component {
 		this.$uuid = 0
 		this.$stat_arr = []
 		this.$session = new Session(this)
+		this.$entered = false
 
 		this.$room = new Room(this)
 		this.$signal = new Signalize(this)
@@ -254,7 +255,7 @@ class Course extends React.Component {
 		this.$roominfo_networking = true;
 		net.getRoomInfo(this.props.room.channel_id).then((result) => {
 			this.$roominfo_networking = false;
-			
+			this.$entered = true
 			this.props.onRoomMoreInfo(result)
 			this.$room.start()
 			this.$signal.join()
@@ -265,6 +266,7 @@ class Course extends React.Component {
 			})
 			this.$roominfo_callbacks = null;
 		}, ()=>{
+			console.log("call error leave course")
 			this.leaveCourse()
 		}).done()
 	}

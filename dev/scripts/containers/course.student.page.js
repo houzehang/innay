@@ -79,17 +79,16 @@ class Course extends CourseBase {
 			this.$room.refreshMute()
 		})
 		this.$room.on("LEAVE_ROOM", ()=>{
-			// this.$session.destroy()
-			// if (this.$waiting_to_tester) {
-			// 	this.props.onEnterTester("course")
-			// } else {
-			// 	this.props.onEndCourse()
-			// }
-			// if (this.props.onLeaveRoom) {
-			// 	this.props.onLeaveRoom();
-			// }
-			localStorage.setItem("ENTERED",1)
-			getCurrentWindow().reload()
+			if (this.$entered) {
+				localStorage.setItem("ENTERED",1)
+				getCurrentWindow().reload()
+			} else {
+				this.$session.destroy()
+				this.props.onEndCourse()
+				if (this.props.onLeaveRoom) {
+					this.props.onLeaveRoom();
+				}
+			}
 		})
 		if (this.$timer_warning) {
 			clearTimeout(this.$timer_warning);
