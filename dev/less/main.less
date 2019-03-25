@@ -1605,15 +1605,6 @@ html,body {
 						margin: 0;
 					}
 				}
-				.counter {
-					&.icon {
-						background: none !important;
-						width: 0.3rem !important;
-						height: 0.3rem !important;
-						bottom: 0.18rem !important;
-						right: 0.2rem !important;
-					}
-				}
 				.question-list {
 					width: 1.5rem;
 					height: 0.9rem;
@@ -1641,6 +1632,42 @@ html,body {
 						&:last-child{
 							border-bottom:0;
 						}
+					}
+				}
+				.counter {
+					position: fixed;
+					bottom: 0;
+					right: 0.14rem;
+					width: 3.84rem;
+					background: #2d3144;
+					height: 0.3rem;
+					font-size: 0.16rem;
+					color: #ececec;
+					display: flex;
+					align-items: center;
+					z-index: 105;
+					&.icon {
+						background: none !important;
+						width: 0.3rem !important;
+						height: 0.3rem !important;
+						bottom: 0.18rem !important;
+						right: 0.2rem !important;
+					}
+					.process {
+						margin-left: 0.2rem;
+					}
+					.help-btn {
+						background: #fff url(../assets/sound.png) no-repeat center center;
+						background-size: 0.2rem auto;
+						width: 0.3rem !important;
+						height: 0.3rem !important;
+						border-radius: 50%;
+						line-height: 0;
+					}
+					.couter-g {
+						height: 0.3rem;
+						line-height: 0.3rem;
+						color: #ececec;
 					}
 				}
 				.inner {

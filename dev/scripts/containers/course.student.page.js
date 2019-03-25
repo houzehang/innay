@@ -295,6 +295,27 @@ class Course extends CourseBase {
 					<div className="content">
 						<div className="course-content kc-canvas-area cocos" id="course-content"></div>
 					</div>
+					<div className="counter icon">
+						<button className="help-btn" onClick={()=>{
+							// this.onHelpClick()
+							this.props.onQuestionList(!this.props.switches.questionList);
+						}}></button>
+					</div>
+					{this.props.switches.questionList?
+						<div className="question-list">
+							<button className="question-cell cell-1" onClick={()=>{
+								this.__select_question(1);
+							}}>老师看不到我？</button>
+							<button className="question-cell cell-2" onClick={()=>{
+								this.__select_question(2);
+							}}>老师听不到我的声音？</button>
+							<button className="question-cell cell-3" onClick={()=>{
+								this.__select_question(3);
+							}}>听不到老师的声音？</button>
+						</div>	
+					:""}
+
+
 				</div>
 			</div>
 		)
