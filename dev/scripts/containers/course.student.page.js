@@ -17,7 +17,9 @@ import {
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
-	onUpdateGift, onProgressReset, onUserAddRoom
+	onUpdateGift, onProgressReset, onUserAddRoom,
+	onQuestionList,
+	onQuestionDetail
 } from '../actions' 
 
 import CourseBase from './course.base.page'
@@ -181,10 +183,112 @@ class Course extends CourseBase {
 		})
 	}
 
+	__select_question(id){
+		this.props.onQuestionDetail(id);
+		this.props.onQuestionList(false);
+	}
+
+	__select_device(value, name){
+		let curIndex = 0, device;
+		if (this.props.switches.questionDetail == 1) {
+			if (!value && !name) {
+				this.state.video_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentVideoDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.video_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.video_devices[curIndex];
+				value = device.deviceid;
+				name  = device.devicename;
+			}
+
+			this.setState({currentVideoDevice : value, currentVideoName: name})
+			Storage.store("VIDEO_DEVICE",value)
+			this.$client.setVideoDevice(value);
+
+		}else if(this.props.switches.questionDetail == 2){
+			if (!value && !name) {
+				this.state.audio_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentAudioDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.audio_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.audio_devices[curIndex];
+				value  = device.deviceid;
+				name   = device.devicename;
+			}
+
+			this.setState({currentAudioDevice : value, currentAudioName: name})
+			Storage.store("AUDIO_DEVICE",value)
+			this.$client.setAudioRecordingDevice(value);
+		}else if(this.props.switches.questionDetail == 3){
+			if (!value && !name) {
+				this.state.speaker_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentSpeakerDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.speaker_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.speaker_devices[curIndex];
+				value  = device.deviceid;
+				name   = device.devicename;
+			}
+			
+			this.setState({currentSpeakerDevice : value, currentSpeakerName: name})
+			Storage.store("PLAYBACK_DEVICE",value)
+			this.$client.setAudioPlaybackDevice(value);
+		}
+		this.$room.__resume_devices()
+	}
+
 	render() {
 		return (
 			<div className="page course-page student">
 				<div className="inner">
+				{this.props.switches.questionDetail?
+					<div className="question-detail">
+						<div className="container">
+							<div className="selector">
+								设备：<div className="select-box">{displayDeviceName}</div>
+								<select className="select" value={curDevice} onChange={(event)=>{
+									var index = event.nativeEvent.target.selectedIndex;
+									var name  = event.nativeEvent.target[index].text
+									this.__select_device(event.target.value,name);
+								}}>
+								{
+									devices.length > 0 ?
+									devices.map((device)=>(
+										<option key={device.deviceid} value={device.deviceid}>
+											{device.devicename}
+										</option>
+										))
+									:
+										<option key="nothing" disabled selected>
+											{emptyText}
+										</option>
+								}
+								</select>
+							</div>
+							
+							<div className="btn-switch" onClick={()=>{
+								this.__select_device()
+							}}>
+							</div>
+							<button className="close-btn" onClick={()=>{
+								this.__select_question(0);
+							}}></button>
+						</div>
+					</div>
+
+				:""}
 					<div className="course-page-back" onClick={()=>{
 						this.preLeaveCourse()
 					}}></div>
@@ -237,7 +341,9 @@ const mapDispatchToProps = dispatch => ({
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
 	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
 	onProgressReset : () => dispatch(onProgressReset()),
-	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id))
+	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id)),
+	onQuestionList  : (status) => dispatch(onQuestionList(status)),
+	onQuestionDetail: (status) => dispatch(onQuestionDetail(status))
 })
   
 export default connect(
