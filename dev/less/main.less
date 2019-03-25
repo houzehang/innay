@@ -1671,6 +1671,95 @@ html,body {
 					}
 				}
 				.inner {
+					.question-detail {
+						left: 0;
+						top: 0;
+						position: fixed;
+						width: 100%;
+						height: 100%;
+						background: rgba(0, 0, 0, 0.65);
+						z-index: 300;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						opacity: 1;
+						.container{
+							width: 4rem;
+							height: 2rem;
+							position: absolute;
+							left: 50%;
+							top: 50%;
+							margin: -1rem 0 0 -2rem;
+							background: #fff;
+							border-radius: 0.1rem;
+							z-index: 2;
+							display: flex;
+							flex-direction: column;
+							align-items: center;
+							.selector{
+								z-index: 302;
+								position: relative;
+								display: flex;
+								height: 0.4rem;
+								justify-content: center;
+								align-items: center;
+								font-size: 0.18rem;
+								color: #333333;
+								margin-top: 0.52rem;
+								.select-box {
+									font-size: 0.18rem;
+									color: #808080;
+									height: 0.4rem;
+									line-height: 0.4rem;
+									border: 1px solid #e9e9e9;
+									border-radius: 0.1rem;
+									padding-left: 0.2rem;
+									width: 2.3rem;
+									background: url(../assets/tester-select.png) no-repeat center right 0.1rem;
+									background-size: 0.18rem auto;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									padding-right: 0.4rem;
+								}
+								.select {
+									position: absolute;
+									right: 0;
+									top: 0;
+									width: 2.7rem;
+									height: 0.4rem;
+									background: rgba(0, 0, 0, 0.5);
+									opacity: 0;
+								}
+							}
+							.btn-switch{
+								width: 1.38rem;
+								height: 0.48rem;
+								background: #3882c2;
+								color: #fff;
+								font-size: 0.2rem;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								border-radius: 0.06rem;
+								margin-top: 0.3rem;
+								&::after {
+									content: "切换设备";
+								}
+								z-index: 304;
+							}
+							.close-btn {
+								width: 0.4rem;
+								height: 0.4rem;
+								background: url(../assets/alert-close.png) no-repeat center center;
+								background-size: 0.16rem auto;
+								position: absolute;
+								right: 0;
+								top: 0;
+								z-index: 303;
+							}
+						}
+					}
 					.entities-area {
 						&.cocos{
 							display: none;

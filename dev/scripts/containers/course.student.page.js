@@ -25,18 +25,74 @@ import {
 import CourseBase from './course.base.page'
 const Const = require('../../const')
 const {getCurrentWindow} = $require('electron').remote;
-const context = require("../context")
+
+const context 		 = require("../context")
+const Storage 		 = require('../Storage')
+const AgoraRtcEngine = require('../../agora/AgoraSdk')
 
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
-		this.state 		= { 
-			control: !this.props.status.started,
-			process: {current:0,total:0}
-		}
 		this.$view_mode = 1
 		this.$in_warning = false;
 		this.$warning_id = null;
+
+		this.$client = new AgoraRtcEngine()
+		this.$client.initialize(Const.AGORA_APPID);
+		let currentVideoDevice 	 = Storage.get("VIDEO_DEVICE") 	  || this.$client.getCurrentVideoDevice(),
+			currentAudioDevice 	 = Storage.get("AUDIO_DEVICE") 	  || this.$client.getCurrentAudioRecordingDevice(),
+			currentSpeakerDevice = Storage.get("PLAYBACK_DEVICE") || this.$client.getCurrentAudioPlaybackDevice(),
+			currentVideoName, 
+			currentAudioName,
+			currentSpeakerName
+
+		if (currentVideoDevice) {
+			this.$client.setVideoDevice(currentVideoDevice);
+		}
+		if (currentAudioDevice) {
+			this.$client.setAudioRecordingDevice(currentAudioDevice);
+		}
+		if (currentSpeakerDevice) {
+			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
+		}
+
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices   = this.$client.getAudioRecordingDevices()
+		let speaker_devices = this.$client.getAudioPlaybackDevices()
+
+		for(let i=0,len=video_devices.length;i<len;i++) {
+			let item = video_devices[i]
+			if (item.deviceid == currentVideoDevice) {
+				currentVideoName = item.devicename
+			}
+		}
+		for(let i=0,len=audio_devices.length;i<len;i++) {
+			let item = audio_devices[i]
+			if (item.deviceid == currentAudioDevice) {
+				currentAudioName = item.devicename
+			}
+		}
+		for(let i=0,len=speaker_devices.length;i<len;i++) {
+			let item = speaker_devices[i]
+			if (item.deviceid == currentSpeakerDevice) {
+				currentSpeakerName = item.devicename
+			}
+		}
+		this.state 		= { 
+			control: !this.props.status.started,
+			process: {current:0,total:0},
+			currentVideoDevice,
+			currentAudioDevice,
+			currentSpeakerDevice,
+			currentVideoName,
+			currentAudioName,
+			currentSpeakerName,
+			video_devices,
+			audio_devices,
+			speaker_devices
+		}
+
+
 	}
 
 	componentDidMount() {
@@ -250,6 +306,24 @@ class Course extends CourseBase {
 	}
 
 	render() {
+		let displayDeviceName, curDevice, devices, emptyText;
+		if (this.props.switches.questionDetail == 1) {
+			displayDeviceName = this.state.currentVideoName
+			curDevice 		  = this.state.currentVideoDevice
+			devices			  = this.state.video_devices
+			emptyText		  = '无可用摄像头设备'
+			
+		}else if(this.props.switches.questionDetail == 2){
+			displayDeviceName = this.state.currentAudioName
+			curDevice 		  = this.state.currentAudioDevice
+			devices			  = this.state.audio_devices
+			emptyText		  = '无可用麦克风设备'
+		}else if(this.props.switches.questionDetail == 3){
+			displayDeviceName = this.state.currentSpeakerName
+			curDevice 		  = this.state.currentSpeakerDevice
+			devices			  = this.state.speaker_devices
+			emptyText		  = '无可用扬声器设备'
+		}
 		return (
 			<div className="page course-page student">
 				<div className="inner">
