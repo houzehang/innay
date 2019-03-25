@@ -273,3 +273,13 @@ export const onLessonsTotalDone = (totalDone)=>{
 		totalDone
 	}
 }
+
+export const onQuestionList = (status) => ({
+	type: types.QUESTION_LIST,
+	status
+})
+
+export const onQuestionDetail = (status) => ({
+	type: types.QUESTION_DETAIL,
+	status
+})

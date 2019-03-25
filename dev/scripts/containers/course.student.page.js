@@ -17,24 +17,82 @@ import {
 	onMagicSwitch,
 	showLoading,hideLoading,onRankSwitch,
 	onProgressUpdate,
-	onUpdateGift, onProgressReset, onUserAddRoom
+	onUpdateGift, onProgressReset, onUserAddRoom,
+	onQuestionList,
+	onQuestionDetail
 } from '../actions' 
 
 import CourseBase from './course.base.page'
 const Const = require('../../const')
 const {getCurrentWindow} = $require('electron').remote;
-const context = require("../context")
+
+const context 		 = require("../context")
+const Storage 		 = require('../Storage')
+const AgoraRtcEngine = require('../../agora/AgoraSdk')
 
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
-		this.state 		= { 
-			control: !this.props.status.started,
-			process: {current:0,total:0}
-		}
 		this.$view_mode = 1
 		this.$in_warning = false;
 		this.$warning_id = null;
+
+		this.$client = new AgoraRtcEngine()
+		this.$client.initialize(Const.AGORA_APPID);
+		let currentVideoDevice 	 = Storage.get("VIDEO_DEVICE") 	  || this.$client.getCurrentVideoDevice(),
+			currentAudioDevice 	 = Storage.get("AUDIO_DEVICE") 	  || this.$client.getCurrentAudioRecordingDevice(),
+			currentSpeakerDevice = Storage.get("PLAYBACK_DEVICE") || this.$client.getCurrentAudioPlaybackDevice(),
+			currentVideoName, 
+			currentAudioName,
+			currentSpeakerName
+
+		if (currentVideoDevice) {
+			this.$client.setVideoDevice(currentVideoDevice);
+		}
+		if (currentAudioDevice) {
+			this.$client.setAudioRecordingDevice(currentAudioDevice);
+		}
+		if (currentSpeakerDevice) {
+			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
+		}
+
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices   = this.$client.getAudioRecordingDevices()
+		let speaker_devices = this.$client.getAudioPlaybackDevices()
+
+		for(let i=0,len=video_devices.length;i<len;i++) {
+			let item = video_devices[i]
+			if (item.deviceid == currentVideoDevice) {
+				currentVideoName = item.devicename
+			}
+		}
+		for(let i=0,len=audio_devices.length;i<len;i++) {
+			let item = audio_devices[i]
+			if (item.deviceid == currentAudioDevice) {
+				currentAudioName = item.devicename
+			}
+		}
+		for(let i=0,len=speaker_devices.length;i<len;i++) {
+			let item = speaker_devices[i]
+			if (item.deviceid == currentSpeakerDevice) {
+				currentSpeakerName = item.devicename
+			}
+		}
+		this.state 		= { 
+			control: !this.props.status.started,
+			process: {current:0,total:0},
+			currentVideoDevice,
+			currentAudioDevice,
+			currentSpeakerDevice,
+			currentVideoName,
+			currentAudioName,
+			currentSpeakerName,
+			video_devices,
+			audio_devices,
+			speaker_devices
+		}
+
+
 	}
 
 	componentDidMount() {
@@ -181,16 +239,157 @@ class Course extends CourseBase {
 		})
 	}
 
+	__select_question(id){
+		this.props.onQuestionDetail(id);
+		this.props.onQuestionList(false);
+	}
+
+	__select_device(value, name){
+		let curIndex = 0, device;
+		if (this.props.switches.questionDetail == 1) {
+			if (!value && !name) {
+				this.state.video_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentVideoDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.video_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.video_devices[curIndex];
+				value = device.deviceid;
+				name  = device.devicename;
+			}
+
+			this.setState({currentVideoDevice : value, currentVideoName: name})
+			Storage.store("VIDEO_DEVICE",value)
+			this.$client.setVideoDevice(value);
+
+		}else if(this.props.switches.questionDetail == 2){
+			if (!value && !name) {
+				this.state.audio_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentAudioDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.audio_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.audio_devices[curIndex];
+				value  = device.deviceid;
+				name   = device.devicename;
+			}
+
+			this.setState({currentAudioDevice : value, currentAudioName: name})
+			Storage.store("AUDIO_DEVICE",value)
+			this.$client.setAudioRecordingDevice(value);
+		}else if(this.props.switches.questionDetail == 3){
+			if (!value && !name) {
+				this.state.speaker_devices.map((device,index)=>{
+					if (device && device.deviceid == this.state.currentSpeakerDevice) {
+						curIndex = index;
+					}
+				});
+				if (++curIndex >= this.state.speaker_devices.length) {
+					curIndex = 0;
+				}
+				device = this.state.speaker_devices[curIndex];
+				value  = device.deviceid;
+				name   = device.devicename;
+			}
+			
+			this.setState({currentSpeakerDevice : value, currentSpeakerName: name})
+			Storage.store("PLAYBACK_DEVICE",value)
+			this.$client.setAudioPlaybackDevice(value);
+		}
+		this.$room.__resume_devices()
+	}
+
 	render() {
+		let displayDeviceName, curDevice, devices, emptyText;
+		if (this.props.switches.questionDetail == 1) {
+			displayDeviceName = this.state.currentVideoName
+			curDevice 		  = this.state.currentVideoDevice
+			devices			  = this.state.video_devices
+			emptyText		  = '无可用摄像头设备'
+			
+		}else if(this.props.switches.questionDetail == 2){
+			displayDeviceName = this.state.currentAudioName
+			curDevice 		  = this.state.currentAudioDevice
+			devices			  = this.state.audio_devices
+			emptyText		  = '无可用麦克风设备'
+		}else if(this.props.switches.questionDetail == 3){
+			displayDeviceName = this.state.currentSpeakerName
+			curDevice 		  = this.state.currentSpeakerDevice
+			devices			  = this.state.speaker_devices
+			emptyText		  = '无可用扬声器设备'
+		}
 		return (
 			<div className="page course-page student">
 				<div className="inner">
+				{this.props.switches.questionDetail?
+					<div className="question-detail">
+						<div className="container">
+							<div className="selector">
+								设备：<div className="select-box">{displayDeviceName}</div>
+								<select className="select" value={curDevice} onChange={(event)=>{
+									var index = event.nativeEvent.target.selectedIndex;
+									var name  = event.nativeEvent.target[index].text
+									this.__select_device(event.target.value,name);
+								}}>
+								{
+									devices.length > 0 ?
+									devices.map((device)=>(
+										<option key={device.deviceid} value={device.deviceid}>
+											{device.devicename}
+										</option>
+										))
+									:
+										<option key="nothing" disabled selected>
+											{emptyText}
+										</option>
+								}
+								</select>
+							</div>
+							
+							<div className="btn-switch" onClick={()=>{
+								this.__select_device()
+							}}>
+							</div>
+							<button className="close-btn" onClick={()=>{
+								this.__select_question(0);
+							}}></button>
+						</div>
+					</div>
+
+				:""}
 					<div className="course-page-back" onClick={()=>{
 						this.preLeaveCourse()
 					}}></div>
 					<div className="content">
 						<div className="course-content kc-canvas-area cocos" id="course-content"></div>
 					</div>
+					<div className="counter icon">
+						<button className="help-btn" onClick={()=>{
+							// this.onHelpClick()
+							this.props.onQuestionList(!this.props.switches.questionList);
+						}}></button>
+					</div>
+					{this.props.switches.questionList?
+						<div className="question-list">
+							<button className="question-cell cell-1" onClick={()=>{
+								this.__select_question(1);
+							}}>老师看不到我？</button>
+							<button className="question-cell cell-2" onClick={()=>{
+								this.__select_question(2);
+							}}>老师听不到我的声音？</button>
+							<button className="question-cell cell-3" onClick={()=>{
+								this.__select_question(3);
+							}}>听不到老师的声音？</button>
+						</div>	
+					:""}
+
+
 				</div>
 			</div>
 		)
@@ -237,7 +436,9 @@ const mapDispatchToProps = dispatch => ({
 	onUpdateGift 	: (data) => dispatch(onUpdateGift(data)),
 	onProgressUpdate: (id, percent) => dispatch(onProgressUpdate(id, percent)),
 	onProgressReset : () => dispatch(onProgressReset()),
-	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id))
+	onUserAddRoom 	: (id) => dispatch(onUserAddRoom(id)),
+	onQuestionList  : (status) => dispatch(onQuestionList(status)),
+	onQuestionDetail: (status) => dispatch(onQuestionDetail(status))
 })
   
 export default connect(

@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, COURSE_STARTING_TICK,  MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM, WARN } from '../constants/ActionTypes'
+import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, ROOM_GIFT, ROOM_MORE_INFO, USER_MUTED, NEW_STREAM, STREAM_LEAVE, CHANNEL_NEW_USER, HANDSUP_SWITCH, GIFT_SWITCH, MAGIC_SWITCH, RANK_SWITCH, NEW_GIFT, HANDSUP_RANK, DANCING, COURSE_BEGIN, COURSE_PAUSE, COURSE_RESUME, COURSE_END, COURSE_TICK, COURSE_STARTING_TICK,  MUTEALL_SWITCH, SILENT_SWITCH,GIFT_UPDATE,PROGRESS_UPDATE,PROGRESS_RESET, USER_ADD_ROOM, WARN, QUESTION_LIST, QUESTION_DETAIL } from '../constants/ActionTypes'
 const storage = require('../Storage')
 
 const room = (state = {}, action) => {
@@ -384,6 +384,20 @@ const room = (state = {}, action) => {
 		return {
 			...state,
 			students
+		}
+		case QUESTION_LIST:
+		switches = {...state.switches}
+		switches.questionList = action.status
+		return {
+			...state,
+			switches
+		}
+		case QUESTION_DETAIL:
+		switches = {...state.switches}
+		switches.questionDetail = action.status
+		return {
+			...state,
+			switches
 		}
 		default:
 		return state
