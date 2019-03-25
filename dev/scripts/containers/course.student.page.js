@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import StudentHead from '../components/student-head'
 import { 
 	onEndCourse, onRoomMoreInfo,
 	onNewStream, onStreamLeave,
@@ -28,7 +27,6 @@ const {getCurrentWindow} = $require('electron').remote;
 
 const context 		 = require("../context")
 const Storage 		 = require('../Storage')
-const AgoraRtcEngine = require('../../agora/AgoraSdk')
 
 class Course extends CourseBase {
 	constructor(props) {
@@ -36,29 +34,24 @@ class Course extends CourseBase {
 		this.$view_mode = 1
 		this.$in_warning = false;
 		this.$warning_id = null;
+		
+		this.state 		= { 
+			control: !this.props.status.started,
+			process: {current:0,total:0}
+		}
+	}
 
-		this.$client = new AgoraRtcEngine()
-		this.$client.initialize(Const.AGORA_APPID);
-		let currentVideoDevice 	 = Storage.get("VIDEO_DEVICE") 	  || this.$client.getCurrentVideoDevice(),
-			currentAudioDevice 	 = Storage.get("AUDIO_DEVICE") 	  || this.$client.getCurrentAudioRecordingDevice(),
-			currentSpeakerDevice = Storage.get("PLAYBACK_DEVICE") || this.$client.getCurrentAudioPlaybackDevice(),
+	__init_device_doctor() {
+		let video_devices 	= this.$room.rtc.getVideoDevices()
+		let audio_devices   = this.$room.rtc.getAudioRecordingDevices()
+		let speaker_devices = this.$room.rtc.getAudioPlaybackDevices()
+
+		let currentVideoDevice 	 = this.$room.rtc.getCurrentVideoDevice(),
+			currentAudioDevice 	 = this.$room.rtc.getCurrentAudioRecordingDevice(),
+			currentSpeakerDevice = this.$room.rtc.getCurrentAudioPlaybackDevice(),
 			currentVideoName, 
 			currentAudioName,
 			currentSpeakerName
-
-		if (currentVideoDevice) {
-			this.$client.setVideoDevice(currentVideoDevice);
-		}
-		if (currentAudioDevice) {
-			this.$client.setAudioRecordingDevice(currentAudioDevice);
-		}
-		if (currentSpeakerDevice) {
-			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
-		}
-
-		let video_devices 	= this.$client.getVideoDevices()
-		let audio_devices   = this.$client.getAudioRecordingDevices()
-		let speaker_devices = this.$client.getAudioPlaybackDevices()
 
 		for(let i=0,len=video_devices.length;i<len;i++) {
 			let item = video_devices[i]
@@ -78,9 +71,7 @@ class Course extends CourseBase {
 				currentSpeakerName = item.devicename
 			}
 		}
-		this.state 		= { 
-			control: !this.props.status.started,
-			process: {current:0,total:0},
+		this.setState({ 
 			currentVideoDevice,
 			currentAudioDevice,
 			currentSpeakerDevice,
@@ -90,9 +81,7 @@ class Course extends CourseBase {
 			video_devices,
 			audio_devices,
 			speaker_devices
-		}
-
-
+		})
 	}
 
 	componentDidMount() {
@@ -151,6 +140,7 @@ class Course extends CourseBase {
 		if (this.$timer_warning) {
 			clearTimeout(this.$timer_warning);
 		}
+		this.__init_device_doctor()
 		super.componentDidMount();
 	}
 
@@ -263,7 +253,7 @@ class Course extends CourseBase {
 
 			this.setState({currentVideoDevice : value, currentVideoName: name})
 			Storage.store("VIDEO_DEVICE",value)
-			this.$client.setVideoDevice(value);
+			this.$room.rtc.setVideoDevice(value);
 
 		}else if(this.props.switches.questionDetail == 2){
 			if (!value && !name) {
@@ -282,7 +272,7 @@ class Course extends CourseBase {
 
 			this.setState({currentAudioDevice : value, currentAudioName: name})
 			Storage.store("AUDIO_DEVICE",value)
-			this.$client.setAudioRecordingDevice(value);
+			this.$room.rtc.setAudioRecordingDevice(value);
 		}else if(this.props.switches.questionDetail == 3){
 			if (!value && !name) {
 				this.state.speaker_devices.map((device,index)=>{
@@ -300,29 +290,32 @@ class Course extends CourseBase {
 			
 			this.setState({currentSpeakerDevice : value, currentSpeakerName: name})
 			Storage.store("PLAYBACK_DEVICE",value)
-			this.$client.setAudioPlaybackDevice(value);
+			this.$room.rtc.setAudioPlaybackDevice(value);
 		}
 		this.$room.__resume_devices()
 	}
 
 	render() {
-		let displayDeviceName, curDevice, devices, emptyText;
+		let displayDeviceName, curDevice, devices, emptyText, tipsText;
 		if (this.props.switches.questionDetail == 1) {
 			displayDeviceName = this.state.currentVideoName
 			curDevice 		  = this.state.currentVideoDevice
 			devices			  = this.state.video_devices
 			emptyText		  = '无可用摄像头设备'
+			tipsText 		  = '点击下拉框切换一个设备，看看老师能不能看到你。'
 			
 		}else if(this.props.switches.questionDetail == 2){
 			displayDeviceName = this.state.currentAudioName
 			curDevice 		  = this.state.currentAudioDevice
 			devices			  = this.state.audio_devices
 			emptyText		  = '无可用麦克风设备'
+			tipsText 		  = '点击下拉框切换一个设备，问问老师能不能听到你。'
 		}else if(this.props.switches.questionDetail == 3){
 			displayDeviceName = this.state.currentSpeakerName
 			curDevice 		  = this.state.currentSpeakerDevice
 			devices			  = this.state.speaker_devices
 			emptyText		  = '无可用扬声器设备'
+			tipsText 		  = '点击下拉框切换一个设备，听听看能不能听到老师说话。'
 		}
 		return (
 			<div className="page course-page student">
@@ -330,6 +323,7 @@ class Course extends CourseBase {
 				{this.props.switches.questionDetail?
 					<div className="question-detail">
 						<div className="container">
+							<div className="tips">{tipsText}</div>
 							<div className="selector">
 								设备：<div className="select-box">{displayDeviceName}</div>
 								<select className="select" value={curDevice} onChange={(event)=>{
@@ -351,9 +345,8 @@ class Course extends CourseBase {
 								}
 								</select>
 							</div>
-							
 							<div className="btn-switch" onClick={()=>{
-								this.__select_device()
+								this.__select_question(0)
 							}}>
 							</div>
 							<button className="close-btn" onClick={()=>{
@@ -370,7 +363,7 @@ class Course extends CourseBase {
 						<div className="course-content kc-canvas-area cocos" id="course-content"></div>
 					</div>
 					<div className="counter icon">
-						<button className="help-btn" onClick={()=>{
+						<button className="help-btn warn-btn" onClick={()=>{
 							// this.onHelpClick()
 							this.props.onQuestionList(!this.props.switches.questionList);
 						}}></button>

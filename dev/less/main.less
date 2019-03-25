@@ -1606,6 +1606,7 @@ html,body {
 					}
 				}
 				.question-list {
+					overflow: hidden;
 					width: 1.5rem;
 					height: 0.9rem;
 					background: #fff;
@@ -1631,6 +1632,9 @@ html,body {
 						border-bottom:0.01rem solid #f8f8f8;
 						&:last-child{
 							border-bottom:0;
+						}
+						&:hover {
+							background:rgba(0, 0, 0, 0.1) !important;
 						}
 					}
 				}
@@ -1663,6 +1667,9 @@ html,body {
 						height: 0.3rem !important;
 						border-radius: 50%;
 						line-height: 0;
+					}
+					.warn-btn { 
+						background-image: url(../assets/course-alert.png);
 					}
 					.couter-g {
 						height: 0.3rem;
@@ -1705,7 +1712,7 @@ html,body {
 								align-items: center;
 								font-size: 0.18rem;
 								color: #333333;
-								margin-top: 0.52rem;
+								margin-top: 0.12rem;
 								.select-box {
 									font-size: 0.18rem;
 									color: #808080;
@@ -1732,19 +1739,27 @@ html,body {
 									opacity: 0;
 								}
 							}
+							.tips {
+								font-size: 0.14rem;
+								color: #000;
+								margin-top: 0.35rem;
+							}
 							.btn-switch{
 								width: 1.38rem;
-								height: 0.48rem;
+								height: 0.38rem;
 								background: #3882c2;
 								color: #fff;
-								font-size: 0.2rem;
+								font-size: 0.16rem;
 								display: flex;
 								justify-content: center;
 								align-items: center;
 								border-radius: 0.06rem;
-								margin-top: 0.3rem;
+								margin-top: 0.4rem;
 								&::after {
-									content: "切换设备";
+									content: "确定";
+								}
+								&:hover {
+									opacity: 0.8;
 								}
 								z-index: 304;
 							}
