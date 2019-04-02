@@ -8,7 +8,6 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
-const { ipcRenderer } = $require('electron');
 const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
