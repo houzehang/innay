@@ -1,5 +1,4 @@
 const Const 			= require("../const")
-const Q 				= require("q")
 const Eventer   		= require('./eventer')
 const Storage 			= require('./Storage')
 const AgoraRtcEngine 	= require('../agora/AgoraSdk')

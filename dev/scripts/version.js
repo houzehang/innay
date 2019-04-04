@@ -12,9 +12,9 @@ import rootReducer from './reducers'
 import { createStore, applyMiddleware } from 'redux'
 import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
-const {ipcRenderer} = $require('electron');
+const {ipcRenderer} = require('electron');
 const Const = require('../const')
-const remote = $require('electron').remote;
+const remote = require('electron').remote;
 
 const middleware = [ thunk ];
 const store = createStore(

@@ -2,7 +2,7 @@ import React from 'react';
 import { hide } from '../actions'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-const { ipcRenderer } = $require('electron');
+const { ipcRenderer } = require('electron');
 const Hotkey = require('../../hotkey')
 
 class Dialog extends React.Component {

@@ -7,7 +7,7 @@ import {
 } from '../actions'
 const net = require("../network")
 const context = require("../context")
-const { ipcRenderer } = $require('electron');
+const { ipcRenderer } = require('electron');
 const {TEACHER}   = require('./../../../env.js');
 
 class Login extends React.Component {

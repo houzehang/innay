@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 require("../../less/handsup.less")
-const { ipcRenderer } = $require('electron');
+const { ipcRenderer } = require('electron');
 const Hotkey = require('../../hotkey')
 
 class Handsup extends React.Component {

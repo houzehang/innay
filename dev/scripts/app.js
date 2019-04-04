@@ -13,7 +13,7 @@ import { createStore, applyMiddleware } from 'redux'
 import App from './containers/entry.page'
 import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
-const {ipcRenderer} = $require('electron');
+const {ipcRenderer} = require('electron');
 ipcRenderer.on('configure', (event, data)=>{
 	console.log("configure",data)
 	if (!window.ENV_CONF) {

@@ -1,6 +1,6 @@
 ﻿"use strict";
 const Renderer_1 = require("./Renderer");
-const events_1 = $require("events");
+const events_1 = require("events");
 const AgoraRender = require("./AgoraRender")
 
 /**

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 require("../../less/download.less")
 const ENV = require("../../../env")
-const {ipcRenderer} 	= $require('electron');
+const {ipcRenderer} 	= require('electron');
 const context = require("../context")
 const Conf = require("../../const")
 

@@ -22,11 +22,11 @@ import {
 const net 			= require("../network")
 const Session   	= require('../session')
 const Const   		= require('../../const')
-const {ipcRenderer} = $require('electron');
+const {ipcRenderer} = require('electron');
 const context 		= require('../context')
 const RecordVideo   = require('../RecordVideo')
 const $ 			= require("jquery")
-const fs 			= $require('fs')
+const fs 			= require('fs')
 class Course extends React.Component {
 	constructor(props) {
 		super(props)

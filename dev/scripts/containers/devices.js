@@ -4,7 +4,7 @@ require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';
-const path				= $require("path")
+const path				= require("path")
 const Const 			= require("../../const")
 const DEBUG 			= require("../../../env").DEBUG
 const Storage 			= require("../Storage")
@@ -12,7 +12,7 @@ const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
 const $ 				= require("jquery")
 const net 				= require("../network")
 const context		    = require("../context")
-const remote 			= $require("electron").remote
+const remote 			= require("electron").remote
 import { 
 	onExitTester,alert
 } from '../actions'

@@ -23,7 +23,7 @@ import {
 
 import CourseBase from './course.base.page'
 const Const = require('../../const')
-const {getCurrentWindow} = $require('electron').remote;
+const {getCurrentWindow} = require('electron').remote;
 
 const context 		 = require("../context")
 const Storage 		 = require('../Storage')

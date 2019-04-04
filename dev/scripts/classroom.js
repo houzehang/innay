@@ -1,6 +1,6 @@
 require("../less/classroom.less")
 const Conf = require("../const")
-const { ipcRenderer } = $require('electron');
+const { ipcRenderer } = require('electron');
 const AgoraRtcEngine = require('../agora/AgoraSdk')
 class VideoCell {
 	constructor(name, teacher) {

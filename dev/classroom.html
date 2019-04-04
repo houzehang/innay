@@ -15,8 +15,6 @@
         }())
         let dir = 'native-' + platform
         document.write('<script defer> var agora = require(".\/libs\/AgoraSDK\/'+ dir +'\/agora_node_ext.node") <\/script>');
-        window.$require = require; 
-        delete window.require;
         </script> 
     </head>
     <body>

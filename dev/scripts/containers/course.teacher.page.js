@@ -26,7 +26,7 @@ import {
 const Session = require('../session')
 const Const = require('../../const')
 const Hotkey = require('../../hotkey')
-const { ipcRenderer } = $require('electron');
+const { ipcRenderer } = require('electron');
 const context = require('../context')
 const $ = require("jquery")
 

@@ -106,7 +106,7 @@ class Main extends React.Component {
 
 	onStartRoom(data) {
 		if (window.cc == undefined) {
-			$require("./libs/cocos2d-js-v1.1-min.js")
+			// require("../../../libs/cocos2d-js-v1.1-min.js")
 		}
 		this.onDownload(data, true)
 	}

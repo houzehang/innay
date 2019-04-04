@@ -1,5 +1,5 @@
 const createProgramFromSources = require('./webgl-utils').createProgramFromSources;
-const EventEmitter = $require('events').EventEmitter;
+const EventEmitter = require('events').EventEmitter;
 const AgoraRender = function () {
     let gl;
     let program;
