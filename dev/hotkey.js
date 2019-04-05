@@ -1,1 +1,2 @@
-module.exports = require('../config/hotkey')
+import Hotkey from '../config/hotkey'
+export default Hotkey

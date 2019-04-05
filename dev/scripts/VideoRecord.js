@@ -1,7 +1,7 @@
-const Q = require('q')
-const fs = require('fs');
-const Eventer = require('./eventer')
-const desktopCapturer = require('electron').desktopCapturer;
+import Q from 'q'
+import fs from 'fs';
+import Eventer from './eventer'
+import {desktopCapturer} from 'electron';
 const APP_NAME = '明兮大语文';
 
 class VideoRecord extends Eventer {
@@ -106,4 +106,4 @@ class VideoRecord extends Eventer {
         console.log('__get_user_media_error', e);
     }
 }
-module.exports = new VideoRecord
+export default new VideoRecord

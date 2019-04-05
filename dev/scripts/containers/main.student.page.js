@@ -8,7 +8,7 @@ import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
 import * as types from '../constants/ActionTypes'
-const net = require("../network")
+import net from "../network"
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse,
@@ -18,10 +18,10 @@ import {
 	hideLoading
 } from '../actions'
 import { setTimeout } from 'core-js';
-const context = require("../context")
-const storage = require("../Storage")
-const Conf    = require("../../const")
-const { ipcRenderer } = require('electron');
+import context from "../context"
+import storage from "../Storage"
+import Conf    from "../../const"
+import { ipcRenderer } from 'electron';
 
 class Main extends React.Component {
 	constructor(props) {

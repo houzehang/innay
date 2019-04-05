@@ -1,7 +1,7 @@
-const Eventer 			= require("./eventer")
-const ENV   			= require("../../env")
-const $ 				= require("jquery")
-const Conf 				= require("../const")
+import Eventer 			from "./eventer"
+import {DEBUG,TEST}     from "../../env"
+import $ 				from "jquery"
+import Conf 			from "../const"
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -28,9 +28,9 @@ class Session extends Eventer {
 	 */
 	__createWebview() {
 		let prefix
-		if (ENV.DEBUG) {
+		if (DEBUG) {
 			prefix = "http://localhost:3000"
-		} else if(ENV.TEST) {
+		} else if(TEST) {
 			prefix = Conf.TEST_URL
 		} else {
 			prefix = Conf.ONLINE_URL
@@ -134,4 +134,4 @@ class Session extends Eventer {
 	}
 }
 
-module.exports = Session
+export default Session

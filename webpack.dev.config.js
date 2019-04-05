@@ -12,14 +12,13 @@ module.exports = {
   mode: 'development',
   target: 'electron-renderer',
   entry: {
-    app : './dev/scripts/app.js',
-    version : './dev/scripts/version.js'
+    app: './dev/scripts/app.js' ,
+    version: './dev/scripts/version.js'
   },
   output: {
     path: path.resolve(__dirname, 'public'),
     publicPath: 'http://localhost:3030/',
     filename: '[name].js',
-    // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2'
   },
   module: {
@@ -63,14 +62,9 @@ module.exports = {
     extensions: ['.js', '.jsx', '.less', '.css'],
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin({
-      multiStep: true
-    }),
-    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'development'
     }),
-    new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       chunks: ["app"],
       title: "大语文",

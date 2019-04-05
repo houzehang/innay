@@ -1,5 +1,5 @@
-const storage = require("../Storage")
-const loading = require("../loading")
+import storage from "../Storage"
+import loading from "../loading"
 import * as types from '../constants/ActionTypes'
 
 export const alert = (configure)=>({

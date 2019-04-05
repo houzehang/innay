@@ -1,5 +1,5 @@
-const Eventer 	= require("./eventer")
-const $ 		= require("jquery")
+import Eventer 	from "./eventer"
+import $ 		from "jquery"
 class RecordVideo extends Eventer {
 	constructor(id, data, speed = 1) {
 		super()
@@ -320,4 +320,4 @@ class RecordVideoManager extends Eventer {
 	}
 }
 
-module.exports = RecordVideoManager
+export default RecordVideoManager

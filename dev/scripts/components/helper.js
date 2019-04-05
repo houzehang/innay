@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-require("../../less/helper.less")
-const ENV = require("../../../env")
-const net = require("../network")
+import "../../less/helper.less"
+import ENV from "../../../env"
+import net from "../network"
 
 class Helper extends React.Component {
 	constructor(props) {

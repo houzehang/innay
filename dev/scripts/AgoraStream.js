@@ -1,8 +1,8 @@
-const Const 			= require("../const")
-const Eventer   		= require('./eventer')
-const Storage 			= require('./Storage')
-const AgoraRtcEngine 	= require('../agora/AgoraSdk')
-const $ 				= require("jquery")
+import Const 			from "../const"
+import Eventer   		from './eventer'
+import Storage 			from './Storage'
+import AgoraRtcEngine 	from '../agora/AgoraSdk'
+import $ 				from "jquery"
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -275,4 +275,4 @@ class Room extends Eventer {
 	}
 }
 
-module.exports = Room
+export default Room

@@ -5,10 +5,10 @@ import {
 	showLoading, hideLoading,
 	alert
 } from '../actions'
-const net = require("../network")
-const context = require("../context")
-const { ipcRenderer } = require('electron');
-const {TEACHER}   = require('./../../../env.js');
+import net from "../network"
+import context from "../context"
+import { ipcRenderer } from 'electron';
+import {TEACHER}   from './../../../env.js';
 
 class Login extends React.Component {
 	constructor(props) {

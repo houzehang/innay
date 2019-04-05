@@ -1,1 +1,2 @@
-module.exports = require('../config/const')
+import Const from '../config/const'
+export default Const

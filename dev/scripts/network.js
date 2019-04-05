@@ -1,14 +1,16 @@
-const Q 			= require('q')
-const Eventer 		= require('./eventer')
-const context 		= require('./context')
-const ENV   		= require("../../env")
-const remote 		= require("electron").remote
-const $ 			= require("jquery")
-const Conf 			= require("../const")
+import Q 			from 'q'
+import Eventer 		from './eventer'
+import context 		from './context'
+import {DEBUG,TEST} from "../../env"
+import {remote} 	from "electron"
+import $ 			from "jquery"
+import Conf 		from "../const"
+
+
 class Network extends Eventer {
 	constructor() {
 		super()
-		if (ENV.DEBUG || ENV.TEST) {
+		if (DEBUG || TEST) {
 			this.$base_url = Conf.TEST_URL
 		} else {
 			this.$base_url = Conf.ONLINE_URL
@@ -339,4 +341,4 @@ class Network extends Eventer {
 	}
 }
 
-module.exports = new Network
+export default new Network

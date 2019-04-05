@@ -1,1 +1,4 @@
-module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : true}
+export const DEBUG 		= true
+export const TC_DEBUG 	= true
+export const TEST 		= false
+export const TEACHER 	= true

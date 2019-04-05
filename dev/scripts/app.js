@@ -1,9 +1,9 @@
 /**
  * 样式文件
  */
-require('../less/anim.less')
-require('../less/common.less')
-require('../less/main.less')
+import '../less/anim.less'
+import '../less/common.less'
+import '../less/main.less'
 
 import React from 'react';
 import { render } from 'react-dom';
@@ -13,7 +13,8 @@ import { createStore, applyMiddleware } from 'redux'
 import App from './containers/entry.page'
 import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
-const {ipcRenderer} = require('electron');
+import {ipcRenderer} from 'electron'
+
 ipcRenderer.on('configure', (event, data)=>{
 	console.log("configure",data)
 	if (!window.ENV_CONF) {

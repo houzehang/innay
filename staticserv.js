@@ -1,8 +1,8 @@
-const path = require('path')
-const fs   = require('fs')
-const {ipcMain,app} = require('electron');
-const log = require('electron-log');
-const {DEBUG}   = require('./env.js');
+import path from 'path'
+import fs from 'fs'
+import {ipcMain,app} from 'electron';
+import log from 'electron-log';
+import {DEBUG} from './env.js';
 
 class StaticServer {
 	constructor(entity) {
@@ -98,4 +98,4 @@ class StaticServer {
 	}
 }
 
-module.exports = StaticServer
+export default StaticServer

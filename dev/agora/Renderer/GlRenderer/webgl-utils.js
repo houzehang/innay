@@ -29,19 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 "use strict";
-(function (root, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD. Register as an anonymous module.
-        define([], factory);
-    }
-    else {
-        // Browser globals
-        var lib = factory.call(root);
-        Object.keys(lib).forEach(function (key) {
-            root[key] = lib[key];
-        });
-    }
-}(this, function () {
+var WebGlUtils = (function () {
     var topWindow = this;
     /** @module webgl-utils */
     /**
@@ -1334,4 +1322,5 @@
         setUniforms: setUniforms,
         setupWebGL: setupWebGL,
     };
-}));
+})();
+export default WebGlUtils

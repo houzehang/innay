@@ -44,4 +44,4 @@ class Eventer {
   }
 }
 
-module.exports = Eventer;
+export default Eventer;

@@ -23,12 +23,12 @@ import {
 	onProgressUpdate,
 	onUpdateGift, onProgressReset, onUserAddRoom
 } from '../actions'
-const Session = require('../session')
-const Const = require('../../const')
-const Hotkey = require('../../hotkey')
-const { ipcRenderer } = require('electron');
-const context = require('../context')
-const $ = require("jquery")
+import Session from '../session'
+import Const from '../../const'
+import Hotkey from '../../hotkey'
+import { ipcRenderer } from 'electron';
+import context from '../context'
+import $ from "jquery"
 
 import CourseBase from './course.base.page'
 

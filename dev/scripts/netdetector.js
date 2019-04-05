@@ -1,5 +1,5 @@
-const Eventer 	= require("./eventer")
-const net  		= require("./network")
+import Eventer 	from "./eventer"
+import net  	from "./network"
 class NetDetector extends Eventer {
 	constructor() {
 		super()
@@ -128,4 +128,4 @@ class NetDetector extends Eventer {
 	}
 }
 
-module.exports = NetDetector
+export default NetDetector

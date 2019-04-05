@@ -1,23 +1,19 @@
-/**
- * 整个程序的入口函数
- * 过程介绍
- * 1. 初始化Electron主框架
- * 2. 创建主窗口
- * 3. 添加渲染线程监听器
- */
-const { TC_DEBUG, TEST, TEACHER } = require('./env.js');
-const Const = require('./config/const.js');
-const Hotkey = require('./config/hotkey.js');
-const StaticServ = require("./staticserv")
-const SystemInfo = require("systeminformation")
+import { TC_DEBUG, TEST, TEACHER } from './env.js';
+import Const from './config/const.js';
+import Hotkey from './config/hotkey.js';
+import StaticServ from "./staticserv"
+import SystemInfo from "systeminformation"
 // 初始化主框架
-const { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
-const log = require('electron-log');
-const { autoUpdater } = require("electron-updater");
+import { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } from 'electron';
+import log from 'electron-log';
+import { autoUpdater } from "electron-updater";
+import path from 'path'
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
-
+if (process.env.NODE_ENV == "development") {
+    autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
+}
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
 let updateWindow,
     loaded,
@@ -160,6 +156,13 @@ function createMainWindow() {
     $main.webContents.setUserAgent(userAgent + ' KCPC');
     $main.loadURL(`file://${__dirname}/dist/index.html`)
     if (TC_DEBUG || TEST) {
+        const installExtensions = () => {
+            const installer = require('electron-devtools-installer');
+            const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
+            const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
+            extensions.map(name => installer.default(installer[name], forceDownload))
+        };
+        installExtensions()
         $main.webContents.openDevTools();
     }
     $main.webContents.on('did-finish-load', () => {
@@ -182,7 +185,6 @@ function createMainWindow() {
         ev.preventDefault();
     });
     $main.on('closed', function (event) {
-        mainWindow = null
         clearInterval(hotkeyTickTimer)
     })
     $main.on('close', function (event) {

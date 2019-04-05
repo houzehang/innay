@@ -1,5 +1,6 @@
-const storage 		= require("./Storage")
-const {ipcRenderer} = require("electron");
+import storage from './Storage'
+import {ipcRenderer} from "electron"
+
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -135,4 +136,4 @@ class Context {
 	}
 }
 
-module.exports = new Context
+export default new Context

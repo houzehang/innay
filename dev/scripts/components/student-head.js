@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-const $ = require("jquery")
+import $ from "jquery"
 
 class StudentHead extends React.Component {
 	constructor(props) {

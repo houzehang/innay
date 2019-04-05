@@ -8,16 +8,16 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
-const net = require("../network")
+import net from "../network"
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse, onEndCourse,
 	confirm, alert, hide, onChangeUserInfo, onEnterTester,
 	onCourseRecording
 } from '../actions'
-const context = require("../context")
-const storage = require("../Storage")
-const Conf    = require("../../const")
+import context from "../context"
+import storage from "../Storage"
+import Conf    from "../../const"
 
 class Main extends React.Component {
 	constructor(props) {

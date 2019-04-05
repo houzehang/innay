@@ -19,14 +19,14 @@ import {
 	onUpdateGift, onProgressReset, onUserAddRoom,
 	onCourseRecording
 } from '../actions'
-const net 			= require("../network")
-const Session   	= require('../session')
-const Const   		= require('../../const')
-const {ipcRenderer} = require('electron');
-const context 		= require('../context')
-const RecordVideo   = require('../RecordVideo')
-const $ 			= require("jquery")
-const fs 			= require('fs')
+import net 			from "../network"
+import Session   	from '../session'
+import Const   		from '../../const'
+import {ipcRenderer} from 'electron';
+import context 		from '../context'
+import RecordVideo  from '../RecordVideo'
+import $ 			from "jquery"
+import fs 			from 'fs'
 class Course extends React.Component {
 	constructor(props) {
 		super(props)

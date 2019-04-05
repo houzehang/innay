@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-require("../../less/download.less")
-const ENV = require("../../../env")
-const {ipcRenderer} 	= require('electron');
-const context = require("../context")
-const Conf = require("../../const")
+import "../../less/download.less"
+import {TC_DENG, DEBUG, TEST} from "../../../env"
+import {ipcRenderer} from 'electron';
+import context from "../context"
+import Conf from "../../const"
 
 class Download extends React.Component {
 	constructor(props) {
@@ -44,7 +44,7 @@ class Download extends React.Component {
 		}
 		ipcRenderer.on("DOWNLOADERROR", this.$download_error_handler);
 		this.$webview.current.addEventListener("dom-ready", ()=>{
-			if (ENV.TC_DEBUG) {
+			if (TC_DEBUG) {
 				this.$webview.current.openDevTools(); 
 			}
 			this.$webview.current.send("userinfo", this.props.user)
@@ -72,9 +72,9 @@ class Download extends React.Component {
 
 	render() {
 		let prefix
-		if (ENV.DEBUG) {
+		if (DEBUG) {
 			prefix = "http://localhost:3000"
-		} else if (ENV.TEST) {
+		} else if (TEST) {
 			prefix = Conf.TEST_URL
 		} else {
 			prefix = Conf.ONLINE_URL

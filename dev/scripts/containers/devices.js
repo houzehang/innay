@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-require("../../less/devices.less")
+import "../../less/devices.less"
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import { findDOMNode } from 'react-dom';

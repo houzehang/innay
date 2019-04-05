@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-require("../../less/netstatus.less")
+import "../../less/netstatus.less"
 
 class NetStatus extends React.Component {
 	render() {

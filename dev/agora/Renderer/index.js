@@ -16,4 +16,4 @@ class GlRenderer {
         return this.self.setContentMode(mode);
     }
 }
-module.exports = { GlRenderer };
+export default { GlRenderer };

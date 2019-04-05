@@ -1,8 +1,7 @@
 ﻿"use strict";
-const Renderer_1 = require("./Renderer");
-const events_1 = require("events");
-const AgoraRender = require("./AgoraRender")
-
+import Renderer_1 from './Renderer'
+import events_1 from 'events'
+import AgoraRender from './AgoraRender'
 /**
  * @class AgoraRtcEngine
  */
@@ -1807,4 +1806,4 @@ class AgoraRtcEngine extends events_1.EventEmitter {
         return this.rtcEngine.setProfile(profile, merge);
     }
 }
-module.exports = AgoraRtcEngine;
+export default AgoraRtcEngine;

@@ -2,14 +2,14 @@ import React from 'react';
 import StudentHead from '../components/student-head'
 import HandsUp from '../components/handsup'
 
-const net = require("../network")
-const Room = require("../AgoraStream")
-const Signalize = require('../AgoraSignal')
-const Session = require('../session')
-const Const = require('../../const')
-const { ipcRenderer } = require('electron');
-const context = require('../context')
-const $ = require("jquery")
+import net from "../network"
+import Room from "../AgoraStream"
+import Signalize from '../AgoraSignal'
+import Session from '../session'
+import Const from '../../const'
+import { ipcRenderer } from 'electron';
+import context from '../context'
+import $ from "jquery"
 
 class Course extends React.Component {
 	constructor(props) {

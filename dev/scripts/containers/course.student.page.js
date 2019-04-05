@@ -22,11 +22,11 @@ import {
 } from '../actions' 
 
 import CourseBase from './course.base.page'
-const Const = require('../../const')
-const {getCurrentWindow} = require('electron').remote;
-
-const context 		 = require("../context")
-const Storage 		 = require('../Storage')
+import Const from '../../const'
+import {remote} from 'electron';
+import context 		 from "../context"
+import Storage 		 from '../Storage'
+const getCurrentWindow = remote.getCurrentWindow
 
 class Course extends CourseBase {
 	constructor(props) {

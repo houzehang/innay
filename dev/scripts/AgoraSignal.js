@@ -1,7 +1,7 @@
-const Const   = require('../const')
-const Q 	  = require('q')
-const Eventer = require('./eventer')
-const Signal  = require('../agora/AgoraSig-1.4.0')
+import Const from '../const'
+import Q from 'q'
+import Eventer from './eventer'
+const Signal = require('../agora/AgoraSig-1.4.0')
 
 class Signalize extends Eventer {
 	constructor(inst) {
@@ -289,4 +289,4 @@ class Signalize extends Eventer {
 	}
 }
 
-module.exports = Signalize
+export default Signalize

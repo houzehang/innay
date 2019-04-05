@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-require("../../less/sidebar.less")
+import "../../less/sidebar.less"
 import * as types from '../constants/ActionTypes'
 
 class SideBar extends React.Component {

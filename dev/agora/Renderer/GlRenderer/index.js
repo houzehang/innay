@@ -1,5 +1,6 @@
-const createProgramFromSources = require('./webgl-utils').createProgramFromSources;
-const EventEmitter = require('events').EventEmitter;
+import WebUtils from './webgl-utils'
+import {EventEmitter} from 'events'
+const createProgramFromSources = WebUtils.createProgramFromSources
 const AgoraRender = function () {
     let gl;
     let program;
@@ -434,4 +435,4 @@ const AgoraRender = function () {
 AgoraRender.prototype.constructor = function () {
     return new AgoraRender();
 };
-module.exports = AgoraRender;
+export default AgoraRender;

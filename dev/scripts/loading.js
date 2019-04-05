@@ -1,4 +1,5 @@
-const $ = require("jquery")
+import $ from "jquery"
+
 class Loading {
 	constructor() {
 		this.$inited = false
@@ -28,4 +29,4 @@ class Loading {
 	}
 }
 
-module.exports = new Loading
+export default new Loading

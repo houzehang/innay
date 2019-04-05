@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-require("../../less/viewuser.less")
-const ENV = require("../../../env")
-const net = require("../network")
+import "../../less/viewuser.less"
+import ENV from "../../../env"
+import net from "../network"
 import * as types from '../constants/ActionTypes'
 
 class ViewUser extends React.Component {

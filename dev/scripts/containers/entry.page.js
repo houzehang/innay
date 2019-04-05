@@ -9,8 +9,8 @@ import MainTeacherPage from './main.teacher.page'
 import MainStudentPage from './main.student.page'
 import Dialog from './dialog'
 import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
-const NetDetector = require("../netdetector")
-const context = require("../context")
+import NetDetector from "../netdetector"
+import context from "../context"
 import * as types from '../constants/ActionTypes'
 
 class Entry extends React.Component {

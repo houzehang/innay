@@ -1,4 +1,5 @@
-const EventEmitter = require('events').EventEmitter;
+import {EventEmitter} from 'events'
+
 const WebglUtils = {
   defaultShaderType: [
     "VERTEX_SHADER",
@@ -459,4 +460,4 @@ const AgoraRender = function() {
   return that;
 };
 
-module.exports = AgoraRender;
+export default AgoraRender;

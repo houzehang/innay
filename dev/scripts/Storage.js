@@ -34,4 +34,4 @@ class Storage {
 	}
 }
 
-module.exports = new Storage;
+export default new Storage;
