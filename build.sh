@@ -27,14 +27,9 @@ fi
 npm run build; 
 mkdir output
 echo "step(2/${TOTAL_STEP}) copy files"
-cp -r dist output
-cp -r installers output
-cp -r config output
-cp env.js output
-cp main.js output
-cp staticserv.js output
+mv dist/main.js output
 cp package.json output
-
+cp -r dist output
 
 echo "step(3/${TOTAL_STEP}) package bundles"
 

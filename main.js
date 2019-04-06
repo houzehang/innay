@@ -4,17 +4,17 @@ import Hotkey from './config/hotkey.js';
 import StaticServ from "./staticserv"
 import SystemInfo from "systeminformation"
 // 初始化主框架
-import { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } from 'electron';
 import log from 'electron-log';
 import { autoUpdater } from "electron-updater";
 import path from 'path'
+import MenuBuilder from './menu';
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
-// console.log("platform",fs.readFileSync(logpath,"utf8"))
 let updateWindow,
     loaded,
     mainWindowHotkeyListener,
@@ -96,7 +96,7 @@ function createUpdateWindow() {
     updateWindow.on('closed', () => {
         updateWindow = null;
     });
-    updateWindow.loadURL(`file://${__dirname}/dist/version.html#v${app.getVersion()}`);
+    updateWindow.loadURL(`file://${__dirname}/dist/version.html`);
 }
 autoUpdater.on('checking-for-update', () => {
     sendStatusToWindow(Const.UPDATE.CHECKING);
@@ -207,6 +207,8 @@ function createMainWindow() {
         createMainWindow()
         $main.destroy()
     })
+    const menuBuilder = new MenuBuilder($main);
+    menuBuilder.buildMenu();
     new StaticServ($main)
 }
 
@@ -215,37 +217,6 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', function () {
-    if (!TC_DEBUG) {
-        if (process.platform === 'darwin') {
-            const template = [
-                {
-                    label: '明兮大语文',
-                    submenu: [
-                        { label: `当前版本 ${app.getVersion()}` },
-                        { type: "separator" },
-                        { label: "退出", accelerator: "Command+Q", click: function () { app.quit(); } }
-                    ]
-                },
-                {
-                    label: '编辑',
-                    submenu: [
-                        { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-                        { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-                        { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" },
-                    ]
-                },
-                {
-                    label: '帮助',
-                    submenu: [
-                        { label: "关于明兮大语文", click() { require('electron').shell.openExternal('https://mingxi.cn') } }
-                    ]
-                },
-            ]
-            const menu = Menu.buildFromTemplate(template)
-            Menu.setApplicationMenu(menu)
-        }
-    }
-
     screenSize = require('electron').screen.getPrimaryDisplay().size;
 })
 

@@ -1,20 +1,19 @@
 /**
  * 样式文件
  */
-require('../less/anim.less')
-require('../less/common.less')
-require('../less/version.less')
+import '../less/anim.less'
+import '../less/common.less'
+import '../less/version.less'
 
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux'
 import rootReducer from './reducers'
 import { createStore, applyMiddleware } from 'redux'
-import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
-const {ipcRenderer} = require('electron');
-const Const = require('../const')
-const remote = require('electron').remote;
+import {ipcRenderer} from 'electron';
+import Const from '../const'
+import {remote} from 'electron';
 
 const middleware = [ thunk ];
 const store = createStore(
@@ -26,15 +25,13 @@ class Version extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			version: "v-.-.-",
+			version: remote.app.getVersion(),
 			message: "",
 			progress : null
 		}
 	}
 
 	componentDidMount() {
-		let version = window.location.hash.substring(1);
-		this.setState({version})
 		ipcRenderer.on('message', (event, status, data)=>{
 			let message
 			if (status == Const.UPDATE.LASTEST) {
