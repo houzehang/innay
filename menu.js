@@ -107,6 +107,13 @@ export default class MenuBuilder {
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
           }
+        },
+        {
+          label: '切换开发者工具',
+          accelerator: 'Alt+Command+I',
+          click: () => {
+            this.mainWindow.toggleDevTools();
+          }
         }
       ]
     };

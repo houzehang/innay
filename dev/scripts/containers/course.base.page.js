@@ -9,7 +9,6 @@ import Session from '../session'
 import Const from '../../const'
 import { ipcRenderer } from 'electron';
 import context from '../context'
-import $ from "jquery"
 
 class Course extends React.Component {
 	constructor(props) {
@@ -117,10 +116,10 @@ class Course extends React.Component {
 		clearInterval(this.$music_timer)
 		clearTimeout(this.$back_timer)
 		clearTimeout(this.$put_timer)
-		$(`#dancing-head`).empty()
-		$('.avatar-head').empty()
+		context.empty('dancing-head')
+		context.empty('.avatar-head')
 		clearTimeout(this.$reload_timer)
-		$(window).off("resize")
+		window.onresize = null
 		this.props.hideLoading()
 		context.detector.check()
 		this.onHotKey = null;
@@ -500,9 +499,9 @@ class Course extends React.Component {
 			this.__back_from_dancing(this.$last_dancing)
 		}
 		console.log("do put message", id)
-		$(`#student_${id}`).empty()
-		$("#dancing-head").empty()
-		this.$room.cameraTo(id, $("#dancing-head")[0], true)
+		context.empty(`#student_${id}`)
+		context.empty("#dancing-head")
+		this.$room.cameraTo(id, context.get("#dancing-head"), true)
 		this.$last_dancing = id
 	}
 
@@ -510,8 +509,8 @@ class Course extends React.Component {
 		if (!this.$last_dancing || this.$last_dancing != id) {
 			return
 		}
-		$(`#dancing-head`).empty()
-		$(`#student_${id}`).empty()
+		context.empty(`#dancing-head`)
+		context.empty(`#student_${id}`)
 		// 当处于弱网络且不是自己时，直接取消流
 		if (this.__in_weak_net() && id != this.props.account.id) {
 			let student = this.getUser(id)
@@ -520,7 +519,7 @@ class Course extends React.Component {
 			}
 			this.$room.unsubscribe(id)
 		} else {
-			this.$room.cameraTo(id, $(`#student_${id}`)[0])
+			this.$room.cameraTo(id, context.get(`#student_${id}`))
 		}
 		this.$last_dancing = null
 	}

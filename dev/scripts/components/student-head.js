@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import $ from "jquery"
+import context from "../context"
 
 class StudentHead extends React.Component {
 	constructor(props) {
@@ -40,7 +40,7 @@ class StudentHead extends React.Component {
 
 		setTimeout(() => {
 			if (!(this.props.user && this.props.user.online)) {
-				$(`#student_${this.props.user.id}`).empty();
+				context.empty(`student_${this.props.user.id}`)
 			}
 		}, 0);
 		return hasUser ? (

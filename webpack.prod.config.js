@@ -85,7 +85,6 @@ module.exports = {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
     }),
-    // new webpack.NamedModulesPlugin(),
     new CleanWebpackPlugin(['dist'], {
       root: __dirname
     }),
@@ -121,9 +120,5 @@ module.exports = {
       append: false,
       files: ['version.html']
     })
-  ],
-  node: {
-    __dirname: false,
-    __filename: false
-  }
+  ]
 };

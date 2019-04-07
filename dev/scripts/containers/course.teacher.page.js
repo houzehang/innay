@@ -23,12 +23,9 @@ import {
 	onProgressUpdate,
 	onUpdateGift, onProgressReset, onUserAddRoom
 } from '../actions'
-import Session from '../session'
 import Const from '../../const'
 import Hotkey from '../../hotkey'
 import { ipcRenderer } from 'electron';
-import context from '../context'
-import $ from "jquery"
 
 import CourseBase from './course.base.page'
 
@@ -63,14 +60,14 @@ class Course extends CourseBase {
 			this.setState({ control: false })
 		}
 		this.$reload_timer = null
-		$(window).on("resize", () => {
+		window.onresize = () => {
 			clearTimeout(this.$reload_timer)
 			this.$reload_timer = setTimeout(() => {
 				this.$session.reload()
 				// 发送init room message
 				this.__send_init_room()
 			}, 1000)
-		})
+		}
 		this.$room.init()
 		this.$room.on("NEW_STREAM", (stream) => {
 			// 判断是不是主班老师
@@ -332,11 +329,12 @@ class Course extends CourseBase {
 
 				console.log('baseUpload starting...');
 				//截图上传
-				let canvas_dom = $(`#student_${user_id} div canvas`);
-				if (canvas_dom && canvas_dom[0]) {
-					let canvas 		= canvas_dom[0]
+				let render = this.$room.rtc.getRender(user_id), canvas
+				if (render) {
+					canvas = render.canvas
+				}
+				if (canvas) {
 					let base64  	= canvas.toDataURL('image/jpeg')
-
 					net.baseUpload({
 						upload_file	: base64,
 						leave_id 	: this.$warning_id_hash[user_id],

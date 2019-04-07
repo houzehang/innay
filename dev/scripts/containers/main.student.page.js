@@ -146,9 +146,6 @@ class Main extends React.Component {
 										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										{room.class_state == 'normal' ? <button className="download-btn" onClick={()=>{
-											this.onDownload(room)
-										}}></button> : "" } 
 										{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
 									</div>
                                 </div>,

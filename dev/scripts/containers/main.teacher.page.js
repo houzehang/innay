@@ -91,9 +91,7 @@ class Main extends React.Component {
 										}}></button>
 										{room.button_hf?<button className="record-btn" onClick={()=>{
 											this.onRecordRoom(room)
-										}}></button>:<button className="download-btn" onClick={()=>{
-											this.onDownload(room)
-										}}></button>}									
+										}}></button>:""}									
 									</div>
 								)))
 							}

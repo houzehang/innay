@@ -9,7 +9,6 @@ const Const 			= require("../../const")
 const DEBUG 			= require("../../../env").DEBUG
 const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
-const $ 				= require("jquery")
 const net 				= require("../network")
 const context		    = require("../context")
 const remote 			= require("electron").remote
@@ -124,6 +123,7 @@ class Devices extends React.Component {
 		try {
 			this.$client.videoSourceLeave();
 			this.$client.videoSourceRelease();
+			this.$client.destroyRender('local')
 			this.$client.stopPreview();
 			this.$client.stopAudioRecordingDeviceTest();
 			this.$client.removeAllListeners('audiovolumeindication');
@@ -152,15 +152,16 @@ class Devices extends React.Component {
 
 	onStartPreview() {
 		if (this.$previewing) return
-		this.$client.setupLocalVideo($("#video-area")[0]);
+		this.$client.setupLocalVideo(context.get("#video-area"));
 		this.$client.startPreview();
 		this.$previewing = true
 	}
 
 	onStopPreviewAndStepTo(step) {
 		this.$previewing = false
+		this.$client.destroyRender('local')
 		this.$client.stopPreview();
-		$("#video-area").empty()
+		context.empty("#video-area")
 		setTimeout(()=>{
 			this.setState({step})
 		})

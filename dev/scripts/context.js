@@ -134,6 +134,31 @@ class Context {
 		}
 		return this.$join_class_enabled;
 	}
+
+	get(dom, parent=document) {
+		if (parent && typeof parent == "string") {
+			parent = this.get(parent)
+		}
+		if (/^\./.test(dom)) {
+			return parent.getElementsByClassName(dom.replace(/^\./,""))
+		} else if (/^#/.test(dom)) {
+			dom = dom.replace(/^#/,"")
+		}
+		return document.getElementById(dom)
+	}
+
+	empty(dom) {
+		if (typeof dom == "string") {
+			dom = this.get(dom)
+		}
+		if (dom.length) {
+			for(let i=0,len=dom.length;i<len;i++) {
+				dom[i].innerHTML = ""
+			}
+		} else if (dom) {
+			dom.innerHTML = ""
+		}
+	}
 }
 
 export default new Context

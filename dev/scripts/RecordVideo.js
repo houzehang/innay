@@ -1,5 +1,5 @@
 import Eventer 	from "./eventer"
-import $ 		from "jquery"
+import context  from "./context"
 class RecordVideo extends Eventer {
 	constructor(id, data, speed = 1) {
 		super()
@@ -19,21 +19,21 @@ class RecordVideo extends Eventer {
 		this.$seek_to = time
 		if (this.$video && !this.$seeking) {
 			// 当前进度超前
-			this.$video[0].currentTime = time
+			this.$video.currentTime = time
 			this.$seeking = true
 		}
 	}
 
 	jumpTo(time) {
 		if (this.$video) {
-			this.$video[0].currentTime = time
+			this.$video.currentTime = time
 		}
 	}
 
 	set speed(speed) {
 		this.$speed = speed
 		if (this.$video) {
-			this.$video[0].playbackRate = this.$speed
+			this.$video.playbackRate = this.$speed
 		}
 	}
 
@@ -51,7 +51,7 @@ class RecordVideo extends Eventer {
 
 	get currentTime() {
 		if (this.$video) {
-			return this.$video[0].currentTime
+			return this.$video.currentTime
 		} else {
 			return 0
 		}
@@ -68,7 +68,7 @@ class RecordVideo extends Eventer {
 	play(dom) {
 		if (this.$playing) return
 		if (dom) {
-			this.$holder = "#"+dom
+			this.$holder = context.get(dom)
 		}
 		if (!this.$data) {
 			this.$waiting = true
@@ -81,7 +81,7 @@ class RecordVideo extends Eventer {
 	pause() {
 		console.log("call video pause..",this.$playing)
 		this.$playing = false
-		this.$video && this.$video[0].pause()
+		this.$video && this.$video.pause()
 	}
 
 	__timeupdate() {
@@ -101,41 +101,44 @@ class RecordVideo extends Eventer {
 
 	__render() {
 		if (!this.$dom) {
-
-			this.$dom = $(`<div id="record_${this.$id}"></div>`)
+			this.$dom = document.createElement("div")
+			this.$dom.id = `record_${this.$id}`
 			// 预加载视频资源
-			let video = $("<video/>")
-			video.attr("src", this.$data.hf_url).attr("id",`video_${this.$id}`)
-			video.on("canplay", ()=>{
-				
+			let video = document.createElement("video")
+			video.src = this.$data.hf_url
+			video.id  = `video_${this.$id}`
+			video.oncanplay = ()=>{
 				this.trigger("canplay")
-				video.off()
-				video.on("timeupdate", ()=>{
+				video.oncanplay = 
+				video.ondurationchange =
+				video.onerror = null
+				video.ontimeupdate = ()=>{
 					this.__timeupdate()
-				})
-				video.on("play", ()=>{
+				}
+				video.onplay = ()=>{
 					this.$playing = true
-				})
-				video.on("pause", ()=>{
+				}
+				video.onpause = ()=>{
 					this.$playing = false
-				})
-				this.$dom.append(video)
-				$(this.$holder).append(this.$dom)
+				}
+
+				this.$dom.appendChild(video)
+				this.$holder.appendChild(this.$dom)
 				this.$video = video
 				this.$canplay = true;
-			})
-			video.on("durationchange", ()=>{
-				this.__durationupdate(video[0].duration)
-			})
-			video.on("error", ()=>{
+			}
+			video.ondurationchange = ()=>{
+				this.__durationupdate(video.duration)
+			}
+			video.onerror = ()=>{
 				console.log("on load video error",video)
 				this.trigger("error")
-			})
-			video[0].playbackRate = this.$speed
-			video[0].play()
+			}
+			video.playbackRate = this.$speed
+			video.play()
 		} else {
 			if (this.$canplay) {
-				this.$video[0].play()
+				this.$video.play()
 			}
 		}
 		this.$waiting = false
@@ -143,7 +146,7 @@ class RecordVideo extends Eventer {
 
 	destroy() {
 		if (this.$video) {
-			this.$video[0].pause()
+			this.$video.pause()
 			this.$video.remove()
 			this.$video = null
 		}

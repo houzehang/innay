@@ -2,7 +2,7 @@ import Const 			from "../const"
 import Eventer   		from './eventer'
 import Storage 			from './Storage'
 import AgoraRtcEngine 	from '../agora/AgoraSdk'
-import $ 				from "jquery"
+import context 			from "./context"
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -179,11 +179,11 @@ class Room extends Eventer {
 			getId: ()=>id, 
 			play: (dom)=>{
 				if (dom) {
-					dom = $(`#${dom}`)[0]
+					dom = context.get(dom)
 					if (dom) {
-						$(dom).empty()
+						context.empty(dom)
 						if (id == this.inst.props.account.id) {
-							this.$client.setupLocalVideo(document.getElementById("master-head"))
+							this.$client.setupLocalVideo(context.get("master-head"))
 						} else {
 							this.$client.subscribe(id, dom)
 						}
@@ -202,7 +202,7 @@ class Room extends Eventer {
 			},
 			stop: ()=>{
 				this.unsubscribe(id)
-				$(`#student_${id}`).empty()
+				context.empty(`student_${id}`)
 			}
 		}
 	}
