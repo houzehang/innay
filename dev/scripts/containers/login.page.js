@@ -29,7 +29,7 @@ class Login extends React.Component {
 				this.props.hideLoading()
 			},()=>{
 				this.props.hideLoading()
-			}).done()
+			})
 		}
 	}
 
@@ -60,7 +60,7 @@ class Login extends React.Component {
 			this.props.loginSuccess(res.user)
 		},()=>{
 			this.props.hideLoading()
-		}).done()
+		})
 	}
 
 	inputOnBlur(){

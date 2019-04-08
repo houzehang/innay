@@ -25,7 +25,6 @@ import Const   		from '../../const'
 import {ipcRenderer} from 'electron';
 import context 		from '../context'
 import RecordVideo  from '../RecordVideo'
-import $ 			from "jquery"
 import fs 			from 'fs'
 class Course extends React.Component {
 	constructor(props) {
@@ -41,7 +40,7 @@ class Course extends React.Component {
 		}
 		this.$record_video 	= new RecordVideo
 		this.$audios_files 	= {}
-		ipcRenderer.on("DOWNLOADED", (event, url, file)=>{
+		ipcRenderer.on("DOWNLOADED", (_, url, file)=>{
 			net.log({name:"DOWNLOADED",url,file})
 			this.$audios_files[url] = file
 		})
@@ -129,10 +128,10 @@ class Course extends React.Component {
 		this.$session.destroy()
 		clearInterval(this.$tick_timer)
 		clearInterval(this.$music_timer)
-		$(`#dancing-head`).empty()
-		$('.avatar-head').empty()
+		context.empty("#dancing-head")
+		context.empty('.avatar-head')
 		clearTimeout(this.$reload_timer)
-		$(window).off("resize")
+		window.onresize = null
 		this.props.hideLoading()
 		context.detector.check()
 	}
@@ -140,14 +139,14 @@ class Course extends React.Component {
 	componentDidMount() {
 		context.detector.uncheck()
 		this.$reload_timer = null
-		$(window).on("resize", ()=>{
+		window.onresize = ()=>{
 			clearTimeout(this.$reload_timer)
 			this.$reload_timer = setTimeout(()=>{
 				this.$session.reload()
 				// 发送init room message
 				this.__send_init_room()
 			},1000)
-		})
+		}
 		this.$session.on("NEW_MESSAGE", (message)=>{
 			this.__on_session_message(message)
 		})
@@ -389,15 +388,15 @@ class Course extends React.Component {
 			this.__back_from_dancing(this.$last_dancing)
 		}
 		console.log("do put message",id)
-		$(`#record_${id}`).css({
-			position: "fixed",
-			left	: $("#dancing-head").offset().left,
-			top 	: $("#dancing-head").offset().top,
-			width	: $("#dancing-head").width(),
-			height	: $("#dancing-head").height(),
-			"background-color" : "#000",
-			overflow: "hidden"
-		})
+		let dom 	= context.get(`#record_${id}`),
+			offset	= context.offset(dom)
+		dom.style.position			= "fixed"
+		dom.style.left      		= offset.left + "px"
+		dom.style.top 				= offset.top + "px"
+		dom.style.width     		= context.get("#dancing-head").width
+		dom.style.height     		= context.get("#dancing-head").height
+		dom.style.backgroundColor 	= "#000"
+		dom.style.overflow     		= "hidden"
 		this.$last_dancing = id
 	}
 
@@ -406,15 +405,14 @@ class Course extends React.Component {
 			return
 		}
 		this.props.onDancing(id, false);
-		$(`#dancing-head`).empty()
-		$(`#record_${id}`).css({
-			position: "static",
-			left	: 0,
-			top 	: 0,
-			width	: "100%",
-			height	: "100%",
-			"background-color" : "transparent"
-		})
+		context.empty("#dancing-head")
+		let dom = context.get(`#record_${id}`)
+		dom.style.position 			= "static"
+		dom.style.left 	  			= 0
+		dom.style.top 				= 0
+		dom.style.width 			= "100%"
+		dom.style.height 			= "100%"
+		dom.style.backgroundColor 	= "transparent"
 		this.$last_dancing = null
 	}
 

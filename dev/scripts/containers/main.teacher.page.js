@@ -55,7 +55,7 @@ class Main extends React.Component {
 		net.lessons(`${data.year}-${month}`).then((res)=>{
 			let dates = res.dates
 			this.$calendarRef.current.setHighlighted(dates)
-		}).done()
+		})
 	}
 
 	__master_page() {

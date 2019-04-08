@@ -88,11 +88,16 @@
   },
   "author": "youshi inc.",
   "dependencies": {
+    "bluebird": "^3.5.4",
     "core-js": "^3.0.0",
+    "decompress": "^4.2.0",
+    "del": "^4.1.0",
     "electron-log": "^2.2.16",
     "electron-updater": "^2.23.3",
+    "fse": "^4.0.1",
     "got": "^9.6.0",
     "jquery": "^3.3.1",
+    "mkdirp": "^0.5.1",
     "q": "^1.5.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -103,6 +108,8 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "request": "^2.81.0",
+    "semver": "^6.0.0",
+    "superagent": "^5.0.2",
     "systeminformation": "^4.0.11",
     "webpack-dev-server": "^3.2.1"
   }

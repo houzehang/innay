@@ -1,7 +1,8 @@
 import Eventer 			from "./eventer"
 import {DEBUG,TEST}     from "../../env"
-import $ 				from "jquery"
 import Conf 			from "../const"
+import context 			from "./context"
+import request 			from "superagent"
 
 class Session extends Eventer {
 	constructor(inst) {
@@ -19,7 +20,7 @@ class Session extends Eventer {
 
 	init(dom) {
 		window.CANVAS_HOLDER = dom
-		this.$dom = $(dom)
+		this.$dom = context.get(dom)
 		this.__bind()
 		this.__createWebview()
 	}
@@ -35,25 +36,16 @@ class Session extends Eventer {
 		} else {
 			prefix = Conf.ONLINE_URL
 		}
-		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
+		request.get(`${prefix}/app?from=app&t=`+new Date().getTime()).then((response)=>{
 			if (this.$inst.isMaster()) {
 				window.CANVAS_LOCATION = `${prefix}/app?from=app`
 			} else {
 				window.CANVAS_LOCATION = `${prefix}/app?from=native`
 			}
 			window.CANVAS_SIZE     = [ 
-				this.$dom.width(), 
-				this.$dom.height()
+				this.$dom.offsetWidth, 
+				this.$dom.offsetHeight
 			]
-			window.$ = $;
-			// response.replace(/<link\s+href="([^"]+)"/g, (m,result)=>{
-			// 	if (/^\//.test(result)) {
-			// 		result = prefix + result
-			// 	}
-			// 	$(`<link href="${result}" rel="stylesheet"/>`).appendTo("head")
-			// 	return
-			// })
-			// $(`<script cocos="true" src="${prefix}/cocos.js"></script>`).appendTo("head")
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
 				if (/(flexible)|(zepto)|(vconsole)|(cocos2d-js)/.test(result)) return
@@ -75,9 +67,6 @@ class Session extends Eventer {
 			}
 			_next()
 		})
-
-		// let webview   = $(`<webview class="webview" nodeintegration='true' src="${prefix}/app?from=app&t=${new Date().getTime()}" partition="persist:kecheng"></webview>`);
-		// this.$webview = webview[0];
 	}
 
 	reload() {
@@ -130,7 +119,7 @@ class Session extends Eventer {
 		this.$_parts 	= []
 		this.$jsready 	= false
 		this.$queue		= []
-		this.$dom.empty()
+		context.empty(this.$dom)
 	}
 }
 

@@ -1,10 +1,10 @@
-import Q 			from 'q'
 import Eventer 		from './eventer'
 import context 		from './context'
 import {DEBUG,TEST} from "../../env"
 import {remote} 	from "electron"
-import $ 			from "jquery"
 import Conf 		from "../const"
+import * as Promise from "bluebird"
+import request 		from "superagent"
 
 
 class Network extends Eventer {
@@ -32,67 +32,50 @@ class Network extends Eventer {
 	}
 
 	upload_file(data) {
-		return Q.Promise((resolve, reject)=>{
+		return new Promise((resolve, reject)=>{
 			const formData = new FormData();
-    		formData.append('upload_file',data)
-			$.ajax(this.$base_url + "/uploadfile/index", {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`
-				},
-				method: "POST",
-				data: formData,
-				processData: false,
-        		contentType: false,
-				success: (response)=>{
-					if (response.data && response.data.url) {
-						resolve(response.data.url)
-					} else {
-						reject()
-					}
-				},
-				error: ()=>{
-					alert("啊哦，文件上传失败~")
+			formData.append('upload_file',data)
+			request
+			.set("Authorization", `Bearer ${this.$token}`)
+			.post(this.$base_url + "/uploadfile/index")
+			.send(formData).then((response)=>{
+				response = response.body
+				if (response.data && response.data.url) {
+					resolve(response.data.url)
+				} else {
 					reject()
 				}
+			}).catch((err)=>{
+				alert("啊哦，文件上传失败~")
+				reject()
 			})
 		})
 	}
 
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
-		return Q.Promise((resolve, reject)=>{
-			let start = new Date().getTime()
-			$.ajax(this.$base_url + url, {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`,
-					"Accept" : "application/json"
-				},
-				method : method.toUpperCase(),
-				data,
-				dataType: "json",
-				statusCode: {
-					403: ()=>{
-						this.trigger("LOGIN_NEEDED")
-					}
-				},
-				success: (res)=>{
-					resolve(res.data)
-				},
-				error: (res)=>{
-					if (res.responseJSON) {
-						alert(res.responseJSON.message)
-					}
-					if (res.status == 401) {
-						//登录
-						this.trigger("LOGOUT_NEEDED")
-						reject()
-						return
-					}
-					if (!res.responseJSON) {
-						alert("啊哦，网络出问题啦~")
-					}
-					reject()
+		return new Promise((resolve, reject)=>{
+			request[method.toLowerCase()](this.$base_url + url)
+			.set("Authorization", `Bearer ${this.$token}`)
+			.set("Accept", "application/json")
+			.accept('application/json')
+			.send(data)
+			.then((response)=>{
+				resolve(response.body.data)
+			}).catch((err, response)=>{
+				if (response.body) {
+					alert(response.body.message)
 				}
+				if (err.status == 401) {
+					//登录
+					this.trigger("LOGOUT_NEEDED")
+					reject()
+					return
+				}
+				if (!response.body) {
+					alert("啊哦，网络出问题啦~")
+				}
+				reject()
 			})
 		})
 	}
@@ -326,7 +309,9 @@ class Network extends Eventer {
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
 				if (this.$log_queue.length > 0) {
-					$.post(`${this.$base_url}/api/h5_log`,{
+					request
+					.post(`${this.$base_url}/api/h5_log`)
+					.send({
 						logs	: this.$log_queue, 
 						user	: context.user.id, 
 						system  : this.__get_system_info()

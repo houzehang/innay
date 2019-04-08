@@ -267,7 +267,7 @@ class Course extends React.Component {
 		}, ()=>{
 			console.log("call error leave course")
 			this.leaveCourse()
-		}).done()
+		})
 	}
 
 	__get_feature(uid){

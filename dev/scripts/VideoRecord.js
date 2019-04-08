@@ -1,7 +1,7 @@
-import Q from 'q'
 import fs from 'fs';
 import Eventer from './eventer'
 import {desktopCapturer} from 'electron';
+import * as Promise from 'bluebird'
 const APP_NAME = '明兮大语文';
 
 class VideoRecord extends Eventer {
@@ -46,7 +46,7 @@ class VideoRecord extends Eventer {
 
     __mixAudioStream(Mediastream) {
         let systemAudioTrack = Mediastream.getAudioTracks()[0]; //获取强制获取的桌面音【轨】
-        return Q.Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             this.__get_micro_audio_stream().then((audioStream) => {//获取麦克风音频【流】
                 let audioContext = new AudioContext();//创建音频上下文
                 let microphoneStreamNode = audioContext.createMediaStreamSource(audioStream);//创建节点

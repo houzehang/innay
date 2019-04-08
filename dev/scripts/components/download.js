@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import "../../less/download.less"
-import {TC_DENG, DEBUG, TEST} from "../../../env"
+import {TC_DEBUG, DEBUG, TEST} from "../../../env"
 import {ipcRenderer} from 'electron';
 import context from "../context"
 import Conf from "../../const"

@@ -1,5 +1,5 @@
 import Const from '../const'
-import Q from 'q'
+import * as Promise from 'bluebird'
 import Eventer from './eventer'
 const Signal = require('../agora/AgoraSig-1.4.0')
 
@@ -85,7 +85,7 @@ class Signalize extends Eventer {
 	}
 
 	init() {
-		return Q.Promise((resolve, reject)=>{
+		return new Promise((resolve, reject)=>{
 			if (this.$inited) {
 				resolve();
 			} else {
@@ -227,7 +227,7 @@ class Signalize extends Eventer {
 				console.log("receive new peer message", msg)
 				this.trigger("NEW_MESSAGE", message)
 			}
-		},()=>{}).done()
+		},()=>{})
 	}
 
 	leave() {

@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import "../../less/viewuser.less"
-import ENV from "../../../env"
 import net from "../network"
 import * as types from '../constants/ActionTypes'
 
@@ -72,7 +71,7 @@ class ViewUser extends React.Component {
 					this.__change_user()
 				}
 			})
-		}).done()
+		})
 	}
 
 	render() {

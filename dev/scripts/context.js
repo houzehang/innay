@@ -136,6 +136,9 @@ class Context {
 	}
 
 	get(dom, parent=document) {
+		if (typeof dom == "object") {
+			return dom
+		}
 		if (parent && typeof parent == "string") {
 			parent = this.get(parent)
 		}
@@ -145,6 +148,17 @@ class Context {
 			dom = dom.replace(/^#/,"")
 		}
 		return document.getElementById(dom)
+	}
+
+	offset(dom) {
+		dom = this.get(dom)
+        var top = 0, left = 0;
+        do {
+			top  += dom.offsetTop
+			left += dom.offsetLeft
+            dom = dom.parentNode
+	   } while (dom.parentNode)
+	   return {top, left}
 	}
 
 	empty(dom) {
