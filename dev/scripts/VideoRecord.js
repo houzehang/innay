@@ -1,7 +1,6 @@
 import fs from 'fs';
 import Eventer from './eventer'
 import {desktopCapturer} from 'electron';
-import * as Promise from 'bluebird'
 const APP_NAME = '明兮大语文';
 
 class VideoRecord extends Eventer {

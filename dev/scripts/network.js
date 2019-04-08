@@ -3,10 +3,7 @@ import context 		from './context'
 import {DEBUG,TEST} from "../../env"
 import {remote} 	from "electron"
 import Conf 		from "../const"
-import * as Promise from "bluebird"
-import request 		from "superagent"
-
-
+import $ from "jquery"
 class Network extends Eventer {
 	constructor() {
 		super()

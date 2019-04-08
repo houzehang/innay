@@ -36,8 +36,7 @@ module.exports = {
   plugins: [
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
-    }),
-    new webpack.NamedModulesPlugin()
+    })
   ],
   /**
    * Disables webpack processing of __dirname and __filename.

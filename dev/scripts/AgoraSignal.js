@@ -1,5 +1,4 @@
 import Const from '../const'
-import * as Promise from 'bluebird'
 import Eventer from './eventer'
 const Signal = require('../agora/AgoraSig-1.4.0')
 

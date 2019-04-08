@@ -7,7 +7,6 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
-import * as types from '../constants/ActionTypes'
 import net from "../network"
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
@@ -20,8 +19,6 @@ import {
 import { setTimeout } from 'core-js';
 import context from "../context"
 import storage from "../Storage"
-import Conf    from "../../const"
-import { ipcRenderer } from 'electron';
 
 class Main extends React.Component {
 	constructor(props) {

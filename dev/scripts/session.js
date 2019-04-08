@@ -2,7 +2,7 @@ import Eventer 			from "./eventer"
 import {DEBUG,TEST}     from "../../env"
 import Conf 			from "../const"
 import context 			from "./context"
-import request 			from "superagent"
+import $ from "jquery"
 
 class Session extends Eventer {
 	constructor(inst) {

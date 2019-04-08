@@ -144,17 +144,13 @@ function createMainWindow() {
         width: mainWindowSize.width | 0, height: mainWindowSize.height | 0,
         resizable: TC_DEBUG,
         center: true,
-        frame: true,
-        autoHideMenuBar: true,
-        webPreferences: {
-            webSecurity: false,
-            javascript: true,
-            plugins: true
-        }
+        autoHideMenuBar: true
     })
     let userAgent = $main.webContents.getUserAgent()
     $main.webContents.setUserAgent(userAgent + ' KCPC');
-    $main.loadURL(`file://${__dirname}/dist/index.html`)
+    let classroom = path.join(app.getPath("userData"),"classroom");
+    console.log("classroom",classroom)
+    $main.loadURL(`file://${classroom}/index.html`)
     if (TC_DEBUG || TEST) {
         const installExtensions = () => {
             const installer = require('electron-devtools-installer');
