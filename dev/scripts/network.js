@@ -3,7 +3,7 @@ import context 		from './context'
 import {DEBUG,TEST} from "../../env"
 import {remote} 	from "electron"
 import Conf 		from "../const"
-import $ from "jquery"
+import $ 			from "jquery"
 class Network extends Eventer {
 	constructor() {
 		super()
@@ -31,20 +31,26 @@ class Network extends Eventer {
 	upload_file(data) {
 		return new Promise((resolve, reject)=>{
 			const formData = new FormData();
-			formData.append('upload_file',data)
-			request
-			.set("Authorization", `Bearer ${this.$token}`)
-			.post(this.$base_url + "/uploadfile/index")
-			.send(formData).then((response)=>{
-				response = response.body
-				if (response.data && response.data.url) {
-					resolve(response.data.url)
-				} else {
+    		formData.append('upload_file',data)
+			$.ajax(this.$base_url + "/uploadfile/index", {
+				headers: { 
+					"Authorization": `Bearer ${this.$token}`
+				},
+				method: "POST",
+				data: formData,
+				processData: false,
+        		contentType: false,
+				success: (response)=>{
+					if (response.data && response.data.url) {
+						resolve(response.data.url)
+					} else {
+						reject()
+					}
+				},
+				error: ()=>{
+					alert("啊哦，文件上传失败~")
 					reject()
 				}
-			}).catch((err)=>{
-				alert("啊哦，文件上传失败~")
-				reject()
 			})
 		})
 	}
@@ -52,27 +58,37 @@ class Network extends Eventer {
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
 		return new Promise((resolve, reject)=>{
-			request[method.toLowerCase()](this.$base_url + url)
-			.set("Authorization", `Bearer ${this.$token}`)
-			.set("Accept", "application/json")
-			.accept('application/json')
-			.send(data)
-			.then((response)=>{
-				resolve(response.body.data)
-			}).catch((err, response)=>{
-				if (response.body) {
-					alert(response.body.message)
-				}
-				if (err.status == 401) {
-					//登录
-					this.trigger("LOGOUT_NEEDED")
+			$.ajax(this.$base_url + url, {
+				headers: { 
+					"Authorization": `Bearer ${this.$token}`,
+					"Accept" : "application/json"
+				},
+				method : method.toUpperCase(),
+				data,
+				dataType: "json",
+				statusCode: {
+					403: ()=>{
+						this.trigger("LOGIN_NEEDED")
+					}
+				},
+				success: (res)=>{
+					resolve(res.data)
+				},
+				error: (res)=>{
+					if (res.responseJSON) {
+						alert(res.responseJSON.message)
+					}
+					if (res.status == 401) {
+						//登录
+						this.trigger("LOGOUT_NEEDED")
+						reject()
+						return
+					}
+					if (!res.responseJSON) {
+						alert("啊哦，网络出问题啦~")
+					}
 					reject()
-					return
 				}
-				if (!response.body) {
-					alert("啊哦，网络出问题啦~")
-				}
-				reject()
 			})
 		})
 	}
@@ -306,9 +322,7 @@ class Network extends Eventer {
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
 				if (this.$log_queue.length > 0) {
-					request
-					.post(`${this.$base_url}/api/h5_log`)
-					.send({
+					$.post(`${this.$base_url}/api/h5_log`,{
 						logs	: this.$log_queue, 
 						user	: context.user.id, 
 						system  : this.__get_system_info()

@@ -35,8 +35,14 @@
                 return 'mac'
             }
         }())
-        let dir = 'native-' + platform
-        document.write('<script defer> var agora = require(".\/libs\/AgoraSDK\/'+ dir +'\/agora_node_ext.node") <\/script>');
+        let app = require('electron').remote.app
+        let dir = 'native-' + platform, apppath = app.getAppPath(),
+            basedir = ".."
+        console.log("apppath",apppath,process.env.NODE_ENV)
+        if (process.env.NODE_ENV != "development") {
+            basedir = apppath + "/dist"
+        }
+        document.write('<script defer> var agora = require("'+basedir+'\/libs\/AgoraSDK\/'+dir+'\/agora_node_ext.node")<\/script>');
         </script> 
     </head>
     <body>

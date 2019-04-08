@@ -3,7 +3,6 @@ const path = require('path');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const dependencies = require('./package.json').dependencies;
@@ -14,12 +13,12 @@ module.exports = {
   target: 'electron-renderer',
   mode: 'production',
   entry: {
-    renderer : path.join(__dirname,'dev/scripts/version.js')
+    renderer : path.join(__dirname,'dev/scripts/renderer.js')
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     publicPath: './',
-    filename: '[name].[hash].js',
+    filename: 'renderer.js',
     // https://github.com/webpack/webpack/issues/1114
     libraryTarget: 'commonjs2'
   },
@@ -88,16 +87,22 @@ module.exports = {
       root: __dirname
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].[hash].css"
+      filename: "renderer.css"
     }),
     new CopyWebpackPlugin([
-      { from: 'libs/**/*', to: '' },
-      { from: 'dev/version.html', to: 'version.html', toType: "file" }
+      { from: 'libs/**/*', to: '' }
     ]),
     new HtmlWebpackPlugin({
-      chunks: ["version"],
-      template: path.resolve(__dirname, "dev", "version.html"),
-      filename: "version.html",
+      template: path.resolve(__dirname, "dev", "renderer.html"),
+	  filename: "index.html",
+	  minify: {
+		collapseWhitespace: true,
+		removeComments: true,
+		removeRedundantAttributes: true,
+		removeScriptTypeAttributes: true,
+		removeStyleLinkTypeAttributes: true,
+		useShortDoctype: true
+	  },
     })
   ]
 };

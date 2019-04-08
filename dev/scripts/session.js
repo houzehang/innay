@@ -2,8 +2,7 @@ import Eventer 			from "./eventer"
 import {DEBUG,TEST}     from "../../env"
 import Conf 			from "../const"
 import context 			from "./context"
-import $ from "jquery"
-
+import $ 				from "jquery"
 class Session extends Eventer {
 	constructor(inst) {
 		super()
@@ -36,16 +35,17 @@ class Session extends Eventer {
 		} else {
 			prefix = Conf.ONLINE_URL
 		}
-		request.get(`${prefix}/app?from=app&t=`+new Date().getTime()).then((response)=>{
+		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
 			if (this.$inst.isMaster()) {
 				window.CANVAS_LOCATION = `${prefix}/app?from=app`
 			} else {
 				window.CANVAS_LOCATION = `${prefix}/app?from=native`
 			}
 			window.CANVAS_SIZE     = [ 
-				this.$dom.offsetWidth, 
-				this.$dom.offsetHeight
+				this.$dom.width(), 
+				this.$dom.height()
 			]
+			window.$ = $;
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
 				if (/(flexible)|(zepto)|(vconsole)|(cocos2d-js)/.test(result)) return

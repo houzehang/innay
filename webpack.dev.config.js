@@ -12,8 +12,7 @@ module.exports = {
   mode: 'development',
   target: 'electron-renderer',
   entry: {
-    app: './dev/scripts/app.js' ,
-    version: './dev/scripts/version.js'
+    renderer: './dev/scripts/renderer.js'
   },
   output: {
     path: path.resolve(__dirname, 'public'),
@@ -66,22 +65,9 @@ module.exports = {
       NODE_ENV: 'development'
     }),
     new HtmlWebpackPlugin({
-      chunks: ["app"],
-      title: "大语文",
-      template: path.resolve(__dirname, "dev", "index.html"),
+      chunks: ["renderer"],
+      template: path.resolve(__dirname, "dev", "renderer.html"),
       filename: "index.html",
-      alwaysWriteToDisk: true
-    }),
-    new HtmlWebpackIncludeAssetsPlugin({
-      assets: [ ],
-      publicPath: false,
-      append: false,
-      files: ['index.html']
-    }),
-    new HtmlWebpackPlugin({
-      chunks: ["version"],
-      template: path.resolve(__dirname, "dev", "version.html"),
-      filename: "version.html",
       alwaysWriteToDisk: true
     }),
     new HtmlWebpackHarddiskPlugin({

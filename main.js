@@ -4,20 +4,17 @@ import Hotkey from './config/hotkey.js';
 import StaticServ from "./staticserv"
 import SystemInfo from "systeminformation"
 // 初始化主框架
-import { app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron';
 import log from 'electron-log';
-import { autoUpdater } from "electron-updater";
 import path from 'path'
 import MenuBuilder from './menu';
-
-autoUpdater.logger = log;
-autoUpdater.logger.transports.file.level = 'info';
+import {autoUpdater} from 'electron-updater'
+import Updater from './core/Updater'
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
-let updateWindow,
-    loaded,
-    mainWindowHotkeyListener,
+
+let mainWindowHotkeyListener,
     rationalMaximize = false,
     screenSize,
     closeWarning,
@@ -60,74 +57,9 @@ mainWindowHotkeyListener = {
 
 }
 
-function sendStatusToWindow(status, data) {
-    if (!loaded) {
-        updateWindow.webContents.on('did-finish-load', () => {
-            loaded = true
-            if (updateWindow) {
-                log.info("send message", status);
-                updateWindow.webContents.send('message', status, data);
-            }
-        })
-    } else {
-        if (updateWindow) {
-            log.info("send message", status);
-            updateWindow.webContents.send('message', status, data);
-        }
-    }
-}
-
-function createUpdateWindow() {
-    updateWindow = new BrowserWindow({
-        width: 600, height: 300,
-        resizable: false,
-        center: true,
-        frame: false,
-        autoHideMenuBar: true,
-        webPreferences: {
-            webSecurity: true,
-            javascript: true,
-            plugins: true
-        }
-    });
-    if (TC_DEBUG) {
-        updateWindow.webContents.openDevTools();
-    }
-    updateWindow.on('closed', () => {
-        updateWindow = null;
-    });
-    updateWindow.loadURL(`file://${__dirname}/dist/version.html`);
-}
-autoUpdater.on('checking-for-update', () => {
-    sendStatusToWindow(Const.UPDATE.CHECKING);
-})
-autoUpdater.on('update-available', () => {
-    sendStatusToWindow(Const.UPDATE.AVAILABLE);
-})
-autoUpdater.on('update-not-available', () => {
-    sendStatusToWindow(Const.UPDATE.LASTEST);
-    createMainWindow()
-    updateWindow.close()
-})
-autoUpdater.on('error', (err) => {
-    sendStatusToWindow(Const.UPDATE.ERROR);
-    setTimeout(() => {
-        createMainWindow()
-        updateWindow.close()
-    }, 2000)
-})
-autoUpdater.on('download-progress', (progress) => {
-    sendStatusToWindow(Const.UPDATE.DOWNLOADING, progress);
-})
-autoUpdater.on('update-downloaded', () => {
-    sendStatusToWindow(Const.UPDATE.DOWNLOADED);
-    setTimeout(() => {
-        autoUpdater.quitAndInstall();
-    }, 3000)
-});
 app.on('ready', function () {
-    createUpdateWindow();
-    autoUpdater.checkForUpdates();
+    let updater = new Updater(__dirname)
+    updater.start()
 });
 
 function createMainWindow() {
@@ -150,7 +82,8 @@ function createMainWindow() {
     $main.webContents.setUserAgent(userAgent + ' KCPC');
     let classroom = path.join(app.getPath("userData"),"classroom");
     console.log("classroom",classroom)
-    $main.loadURL(`file://${classroom}/index.html`)
+    // $main.loadURL(`file://${classroom}/index.html`)
+    $main.loadURL(`file://${__dirname}/dist/index.html`)
     if (TC_DEBUG || TEST) {
         const installExtensions = () => {
             const installer = require('electron-devtools-installer');
