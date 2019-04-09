@@ -22,8 +22,10 @@ class Updater {
 		});
 		updateWindow.loadURL(`file://${this.$dirname}/dist/index.html`);
 		this.$update_window = updateWindow
-		ipcMain.on("render.complete", ()=>{
+		ipcMain.on("render.complete", (event, count)=>{
 			ipcMain.removeAllListeners("render.complete")
+			console.log("render complete", count)
+			event.returnValue = {a:10,b:20}
 		})
 	}
 }

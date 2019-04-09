@@ -60,7 +60,9 @@ class Renderer {
 			this.__setStatus(Const.UPDATE.LASTEST);
 			// createMainWindow()
 			// updateWindow.close()
-			this.__on_complete()
+			// this.__on_complete()
+			let result = ipcRenderer.sendSync("render.complete", 10)
+			console.log("result",result)
 		})
 		autoUpdater.on('error', (err) => {
 			this.__setStatus(Const.UPDATE.ERROR);
@@ -76,7 +78,7 @@ class Renderer {
 			this.__setStatus(Const.UPDATE.DOWNLOADED);
 			setTimeout(() => {
 				autoUpdater.quitAndInstall();
-			}, 3000)
+			}, 2000)
 		});
 		autoUpdater.checkForUpdates();
 	}
