@@ -29,4 +29,4 @@ scp build/student/*${VERSION}*.dmg  ${SERVER}:${DIR}
 scp build/student/*.yml  ${SERVER}:${DIR}
 scp build/student/*.json ${SERVER}:${DIR}
 
-echo "deploy done."
+echo "deploy done. Backup timestamp ${timestamp}"
