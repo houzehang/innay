@@ -67,7 +67,6 @@ const main = (state = {}, action) => {
 			recording: action.status
 		}
 		case LESSON_COMMING:
-		console.log('lesson comming 222');
 		return {
 			...state,
 			commingRoom: action.commingRoom

@@ -216,11 +216,9 @@ class Main extends React.Component {
 										<span>要上课程</span>
 									</div>
 									<div className="switch-bar-right" onClick={()=>{
-										console.log('switch-bar-right clicked1');
 										this.setState({
 											comming_page_selected:false
 										});
-										console.log('switch-bar-right clicked2');
 										setTimeout(()=>{
 											this.__query_courses();
 										},0);
