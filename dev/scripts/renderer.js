@@ -7,11 +7,13 @@ import '../less/version.less'
 
 import {remote, ipcRenderer} from 'electron';
 import Const from '../const'
+import bridge from '../../core/MessageBridge'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
 const log 			= remote.require('electron-log')
 
 class Renderer {
 	constructor() {
+		bridge.init(ipcRenderer, ipcRenderer, {})
 		this.__bind()
 		this.state = {
 			version: remote.app.getVersion(),
@@ -61,8 +63,11 @@ class Renderer {
 			// createMainWindow()
 			// updateWindow.close()
 			// this.__on_complete()
-			let result = ipcRenderer.sendSync("render.complete", 10)
-			console.log("result",result)
+			bridge.call("getLocalPackageVersion", "ui").then((result)=>{
+				console.log("call result",result)
+			}).catch((e)=>{
+				console.log("call method error",e)
+			})
 		})
 		autoUpdater.on('error', (err) => {
 			this.__setStatus(Const.UPDATE.ERROR);
@@ -102,7 +107,7 @@ class Renderer {
 		if (this.state.progress) {
 			this.__G("progress").style.display 	= "flex"
 			this.__G("percent").innerText 		= `${this.state.progress.percent>>0}%`
-			this.__G("bar").style.width 			= `${this.state.progress.percent}%`
+			this.__G("bar").style.width 		= `${this.state.progress.percent}%`
 		} else {
 			this.__G("progress").style.display 	= "none"
 		}
