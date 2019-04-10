@@ -29,12 +29,26 @@ const Hotkey = require('../../hotkey')
 const { ipcRenderer } = $require('electron');
 const context = require('../context')
 const $ = require("jquery")
+const Room = require("../AgoraStream")
+const Signalize = require('../AgoraSignal')
 
 import CourseBase from './course.base.page'
 
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
+
+		this.$room = new Room(this)
+		this.$signal = new Signalize(this)
+		this.$downloaded_handler = (event, url, file) => {
+			context.addDownloaded(url, file)			
+		}
+		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
+		
+		if (context && context.detector) {
+			context.detector.waring_threshold = 2;
+		}
+		
 		this.state = {
 			no_confirm_mask: false,
 			time: new Date().getTime() / 1000,

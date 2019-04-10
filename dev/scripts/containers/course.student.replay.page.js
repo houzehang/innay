@@ -28,8 +28,6 @@ const Const              = require('../../const')
 const {getCurrentWindow} = $require('electron').remote;
 
 const {ipcRenderer}  = $require('electron');
-const context 		 = require("../context")
-const Storage 		 = require('../Storage')
 
 const fs 			 = $require('fs')
 
@@ -182,12 +180,8 @@ class Course extends CourseBase {
 					break
 			}
 		} else {
-			this.$signal.send(message)
+			this.__on_signal_message(message)
 		}
-	}
-    
-	__on_signal_message(data) {
-		super.__on_signal_message(data)
 	}
 
 	leaveCourse() {

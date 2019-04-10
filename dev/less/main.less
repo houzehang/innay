@@ -907,6 +907,15 @@ html,body {
 										background: #f2f2f2;
 										height: 0.38rem;
 										align-items: center;
+										.btn-view-record{
+											position: absolute;
+											color: green;
+											font-size: 0.18rem;
+											left: 1.2rem;
+											&:hover{
+												color: #00af43;
+											}
+										}
 										.lesson-state{
 											margin-left: 0.29rem;
 											width: 3.14rem;
@@ -1678,6 +1687,97 @@ html,body {
 					}
 				}
 				.inner {
+					.videos-container{
+						position: absolute;
+						left: 0;
+						top: 0;
+						z-index: 1;
+						.teacher-normal{
+							position: absolute;
+							width: 3.27rem;
+							height: 3.27rem;
+							left: 1.46rem;
+							top: 0rem;
+						}
+						.student-normal{
+							position: absolute;
+							width: 0.88rem;
+							height: 0.88rem;
+							left: 11.854rem;
+							top: 0rem;
+						}
+						.student-dancing{
+							position: absolute;
+							width: 3.27rem;
+							height: 3.27rem;
+							left: 8.46rem;
+							top: 3.39rem;
+						}
+						.label-bg-teacher{
+							position: absolute;
+							width: 3.27rem;
+							height: 0.45rem;
+							z-index: 2;
+							left: 8.46rem;
+							top: 2.82rem;
+							line-height: 0.5rem;
+							font-size: 0.18rem;
+							text-indent: 0.14rem;
+							background: rgba(0, 0, 0, 0.5);
+							color: #fff;
+							opacity: 0;
+						}
+						.label-bg-dancing{
+							position: absolute;
+							width: 3.27rem;
+							height: 0.45rem;
+							z-index: 2;
+							left: 8.46rem;
+							top: 6.21rem;
+							line-height: 0.5rem;
+							font-size: 0.18rem;
+							text-indent: 0.14rem;
+							background: rgba(0, 0, 0, 0.5);
+							color: #fff;
+							opacity: 0;
+						}
+						.label-bg-student{
+							position: absolute;
+							width: 0.88rem;
+							background: #565b72;
+							height: 0.16rem;
+							line-height: 0.18rem;
+							font-size: 0.12rem;
+							text-overflow: ellipsis;
+							color: #fff;
+							display: flex;
+							top: 0.88rem;
+							left: 11.854rem;
+							align-items: center;
+							z-index: 3;
+							opacity: 0;
+							.avatar-name {
+								position: relative;
+								z-index: 2;
+								white-space: nowrap;
+								overflow: hidden;
+								text-overflow: ellipsis;
+								margin-left: 0.06rem;
+								flex: 1;
+							}
+							.avatar-stars {
+								background: url(../assets/gift-icon.png) no-repeat left center;
+								background-size: auto 0.11rem;
+								padding-left: 0.15rem;
+								margin-right: 0.06rem;
+								height: 0.16rem;
+								font-size: 0.12rem;
+								color:#ffffff;
+								position: relative;
+								z-index: 2;
+							}
+						}
+					}
 					.question-detail {
 						left: 0;
 						top: 0;
