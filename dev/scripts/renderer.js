@@ -13,7 +13,6 @@ const log 			= remote.require('electron-log')
 
 class Renderer {
 	constructor() {
-		bridge.init(ipcRenderer, ipcRenderer, {})
 		this.__bind()
 		this.state = {
 			version: remote.app.getVersion(),
@@ -63,10 +62,13 @@ class Renderer {
 			// createMainWindow()
 			// updateWindow.close()
 			// this.__on_complete()
-			bridge.call("getLocalPackageVersion", "ui").then((result)=>{
+			bridge.call({
+				method: "getServerPackageVersion", 
+				args: "https://bundles.mw019.com/body.json"
+			}).then((result)=>{
 				console.log("call result",result)
-			}).catch((e)=>{
-				console.log("call method error",e)
+			}).catch(err=>{
+				console.log("error happened",err)
 			})
 		})
 		autoUpdater.on('error', (err) => {

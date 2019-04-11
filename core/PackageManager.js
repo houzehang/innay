@@ -1,65 +1,52 @@
-import { create } from "./DownloadTask"
-import { app } from "electron"
 import path from "path"
-import mkdirp from "mkdirp"
-import fs from "fs"
-import request from "superagent"
-
-const APP_PATH 		= app.getPath("userData")
-const PACKAGE_PATH 	= path.join(APP_PATH, "packages")
-const ASSETS_PATH   = path.join(APP_PATH, "assets")
+import fs from "fs-extra"
+import got from "got"
+import { PACKAGE_PATH, ASSETS_PATH, INSTALLED_META_FILE, PACKAGE_META_FILE } from './Configure'
 
 export async function getLocalPackageVersion(pack) {
-	return new Promise((resolve, reject)=>{
-		let meta = path.join(PACKAGE_PATH, pack, "meta")
-		if (fs.existsSync(meta)) {
-			let content = fs.readFileSync(meta,"utf8")
-			if (content) {
-				try {
-					content = JSON.parse(content)
-					resolve(content)
-				} catch(e) {
-					reject(e)
-				}
+	let meta = path.join(PACKAGE_PATH, pack, PACKAGE_META_FILE)
+	try {
+		await fs.ensureFile(meta)
+		let content = await fs.readFile(meta,"utf8")
+		if (content) {
+			try {
+				content = JSON.parse(content)
+				return content
+			} catch(e) {
+				return
 			}
-		} else {
-			reject(new Error("no file exists"))
 		}
-	})
+	} catch(e) {
+		return
+	}
 }
 
 export async function getServerPackageVersion(url) {
-	return new Promise((resolve, reject)=>{
-		url = `${url}?t=${new Date().getTime()}`
-		request.get(url).then((response)=>{
-			resolve(response.body)
-		}).catch(err => {
-			reject(err)
-		})
-	})
+	url = `${url}?t=${new Date().getTime()}`
+	let response = await got.get(url, {json: true})
+	return response.body
 }
 
-export async function getInstalledPackageVersion(pack) {
-	return new Promise((resolve, reject)=>{
-		let meta = path.join(ASSETS_PATH, pack, "meta")
-		if (fs.existsSync(meta)) {
-			let content = fs.readFileSync(meta,"utf8")
-			if (content) {
-				try {
-					content = JSON.parse(content)
-					resolve(content)
-				} catch(e) {
-					reject(e)
-				}
+export async function getLocalInstalledVersion(pack) {
+	let meta = path.join(ASSETS_PATH, pack, INSTALLED_META_FILE)
+	try {
+		await fs.ensureFile(meta)
+		let content = await fs.readFile(meta,"utf8")
+		if (content) {
+			try {
+				content = JSON.parse(content)
+				return content
+			} catch(e) {
+				return
 			}
-		} else {
-			reject(new Error("no file exists"))
 		}
-	})
+	} catch(err) {
+		return
+	}
 }
 
-export async function startDownloadTask() {
-
+export async function startDownloadTask({ pack, url, meta }) {
+	
 }
 
 export async function cancelDownloadTask() {
