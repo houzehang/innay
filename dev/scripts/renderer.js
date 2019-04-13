@@ -63,10 +63,36 @@ class Renderer {
 			// updateWindow.close()
 			// this.__on_complete()
 			bridge.call({
-				method: "getServerPackageVersion", 
-				args: "https://bundles.mw019.com/body.json"
+				method: "getServerPackageVersion",
+				args: {
+					url : "http://bundles.runsnailrun.com/app.json"
+				}
+			}).then(result=>{
+				console.log("server package",result)
+			})
+			bridge.call({
+				method: "startDownloadTask", 
+				args: {
+					pack: "classroom-ui", 
+					url	: "https://bundles.mw019.com/common.zip?m=767e9a3d29241457fea7cf0135a0b205", 
+					// md5	: "767e9a3d29241457fea7cf0135a0b205",
+					filename: "common.767e9a3d29241457fea7cf0135a0b205.zip",
+					autoUnzip: true
+				}
 			}).then((result)=>{
 				console.log("call result",result)
+				let identity = result.identity
+				bridge.delegate = {
+					[`${identity}/progress`] : ({ total, transferred, percent })=>{
+						console.log(total, transferred, percent)
+					},
+					[`${identity}/error`] : (error)=>{
+						console.log("download error",error)
+					},
+					[`${identity}/success`] : (data)=>{
+						console.log("download success",data)
+					}
+				}
 			}).catch(err=>{
 				console.log("error happened",err)
 			})

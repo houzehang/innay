@@ -58,7 +58,9 @@ class MessageBridge {
 				this.__send({id, error: 'no method'})
 				return;
 			}
-			Promise.resolve(method(message.args)).then((result=null)=>{
+			let sender = this.$sender || this.$sender_pool[id]
+			Promise.resolve(method(message.args, sender)).then((result=null)=>{
+				console.log("call method", message.id, result, message.method)
 				if (message.id) {
 					this.__send({
 						id, result
@@ -84,6 +86,7 @@ class MessageBridge {
 		}
 		return new Promise((resolve, reject)=>{
 			let id = ++this.$uuid
+			console.log("bridge call id",id)
 			let handler = (err, result)=>{
 				if (err) {
 					reject(err)

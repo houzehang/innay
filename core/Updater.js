@@ -1,7 +1,7 @@
 import { TC_DEBUG } from '../env.js';
 import { BrowserWindow } from 'electron';
 import bridge from './MessageBridge'
-import { getServerPackageVersion,getLocalPackageVersion } from './PackageManager'
+import * as PackageManager from './PackageManager'
 class Updater {
 	constructor(dirname) {
 		this.$dirname = dirname
@@ -23,10 +23,7 @@ class Updater {
 		});
 		updateWindow.loadURL(`file://${this.$dirname}/dist/index.html`);
 		this.$update_window = updateWindow
-		bridge.delegate = {
-			getServerPackageVersion,
-			getLocalPackageVersion
-		}
+		bridge.delegate = PackageManager
 	}
 }
 
