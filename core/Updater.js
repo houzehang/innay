@@ -1,4 +1,4 @@
-import { TC_DEBUG } from '../env.js';
+import { TC_DEBUG, DEBUG } from '../env.js';
 import { BrowserWindow } from 'electron';
 import bridge from './MessageBridge'
 import { EventEmitter } from 'events';
@@ -23,7 +23,8 @@ export default class Updater extends EventEmitter {
 		updateWindow.on('closed', () => {
 			updateWindow = null;
 		});
-		updateWindow.loadURL(`file://${this.$dirname}/dist/index.html`);
+		let url = DEBUG ? "http://localhost:3031" : `file://${this.$dirname}/dist/index.html`
+		updateWindow.loadURL(url);
 		this.$update_window = updateWindow
 		bridge.delegate = PackageManager
 		bridge.delegate = { openMainWindow: async (pack)=>{

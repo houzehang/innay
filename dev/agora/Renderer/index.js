@@ -1,4 +1,4 @@
-const GlRenderer_1 = require("./GlRenderer")
+import GlRenderer_1 from "./GlRenderer"
 class GlRenderer {
     constructor() {
         this.self = GlRenderer_1.apply(this);

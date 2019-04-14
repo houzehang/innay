@@ -15,8 +15,34 @@ import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
 import {ipcRenderer} from 'electron'
 
-ipcRenderer.on('configure', (event, data)=>{
+ipcRenderer.on('configure', (_, data)=>{
 	console.log("configure",data)
+	if (!window.ENV_CONF) {
+		window.ENV_CONF = {}
+	}
+	for (let key in data) {
+		window.ENV_CONF[key] = data[key]
+	}
+	let platform = (function() {
+	switch(process.platform) {
+		case 'win32':
+			return 'win'
+		default:
+		case 'darwin':
+			return 'mac'
+		}
+	}())
+	let dir = 'native-' + platform, basedir
+	if (process.env.NODE_ENV != "development") {
+		basedir = data.__apppath + "/dist"
+	} else {
+		basedir = data.__dirname
+	}
+	window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
+})
+
+ipcRenderer.on('systeminfo', (_, data)=>{
+	console.log("systeminfo",data)
 	if (!window.ENV_CONF) {
 		window.ENV_CONF = {}
 	}

@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "cross-env NODE_ENV=development electron -r @babel/register ./main.js",
-    "watch": "cross-env NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
+    "watch-render": "cross-env NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
+    "watch-ui": "cross-env NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config webpack.ui.dev.config.js",
+    "watch": "./node_modules/.bin/npm-run-all --parallel watch-render watch-ui",
     "build": "npm run build-ui && npm run build-renderer && npm run build-main",
     "build-renderer": "cross-env NODE_ENV=production webpack --config webpack.render.prod.config.js",
     "build-main": "cross-env NODE_ENV=production webpack --config webpack.main.prod.config.js",
@@ -82,6 +84,7 @@
     "lodash-es": "^4.17.10",
     "mini-css-extract-plugin": "^0.5.0",
     "normalize.css": "^5.0.0",
+    "npm-run-all": "^4.1.5",
     "optimize-css-assets-webpack-plugin": "^4.0.0",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",

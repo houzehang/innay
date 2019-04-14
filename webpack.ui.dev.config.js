@@ -7,16 +7,15 @@ const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const dependencies = require('./package.json').dependencies;
 
 module.exports = {
-  externals: [...Object.keys(dependencies || {})],
   devtool: 'inline-source-map',
   mode: 'development',
   target: 'electron-renderer',
   entry: {
-    renderer: './dev/scripts/renderer.js'
+    app : './dev/scripts/app.js'
   },
   output: {
     path: path.resolve(__dirname, 'public'),
-    publicPath: 'http://localhost:3031/',
+    publicPath: 'http://localhost:3030/',
     filename: '[name].js',
     libraryTarget: 'commonjs2'
   },
@@ -65,13 +64,13 @@ module.exports = {
       NODE_ENV: 'development'
     }),
     new HtmlWebpackPlugin({
-      chunks: ["renderer"],
-      template: path.resolve(__dirname, "dev", "renderer.html"),
+      chunks: ["app"],
+      template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html",
       alwaysWriteToDisk: true
     }),
     new HtmlWebpackHarddiskPlugin({
-      outputPath: path.resolve(__dirname, 'dist')
+      outputPath: path.resolve(__dirname, 'app')
     })
   ],
   node: {
@@ -80,7 +79,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
-    port: 3031,
+    port: 3030,
     compress: true,
     noInfo: true,
     stats: 'errors-only',
@@ -88,7 +87,7 @@ module.exports = {
     lazy: false,
     hot: true,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'app'),
     watchOptions: {
       aggregateTimeout: 300,
       ignored: /node_modules/,

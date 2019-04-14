@@ -3,15 +3,14 @@ import { connect } from 'react-redux'
 import "../../less/devices.less"
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
-import { findDOMNode } from 'react-dom';
-const path				= require("path")
-const Const 			= require("../../const")
-const DEBUG 			= require("../../../env").DEBUG
-const Storage 			= require("../Storage")
-const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
-const net 				= require("../network")
-const context		    = require("../context")
-const remote 			= require("electron").remote
+import path				from "path"
+import Const 			from "../../const"
+import { DEBUG } 		from "../../../env"
+import Storage 			from "../Storage"
+import AgoraRtcEngine 	from '../../agora/AgoraSdk'
+import net 				from "../network"
+import context		    from "../context"
+import { remote } 		from "electron"
 import { 
 	onExitTester,alert
 } from '../actions'

@@ -26,7 +26,18 @@
         </style>
         <script> 
         !function(e,t){function n(){t.body?t.body.style.fontSize=12*o+"px":t.addEventListener("DOMContentLoaded",n)}function d(){var e=i.clientWidth/13;i.style.fontSize=e+"px"}var i=t.documentElement,o=e.devicePixelRatio||1;if(n(),d(),e.addEventListener("resize",d),e.addEventListener("pageshow",function(e){e.persisted&&d()}),o>=2){var a=t.createElement("body"),s=t.createElement("div");s.style.border=".5px solid transparent",a.appendChild(s),i.appendChild(a),1===s.offsetHeight&&i.classList.add("hairlines"),i.removeChild(a)}}(window,document);
-        window.$require = window.require
+        let platform = (function() {
+        switch(process.platform) {
+            case 'win32':
+                return 'win'
+            default:
+            case 'darwin':
+                return 'mac'
+            }
+        }())
+        let remote = require('electron').remote
+        let dir = 'native-' + platform
+        document.write('<script defer> var agora = remote.require(".\/libs\/AgoraSDK\/'+dir+'\/agora_node_ext.node")<\/script>');
         </script> 
     </head>
     <body>
@@ -42,5 +53,5 @@
                 </script>
             </div>
         </div>
-    </body>
+    <script type="text/javascript" src="http://localhost:3030/app.js"></script></body>
 </html>

@@ -3,7 +3,7 @@ import SystemInfo from "systeminformation"
 import Const from '../config/const';
 import { PROXY, ASSETS_PATH } from './Configure'
 import { register } from './Eventer'
-import { TC_DEBUG, TEST } from '../env';
+import { TC_DEBUG, TEST, DEBUG } from '../env';
 import { app, BrowserWindow } from 'electron'
 import url from 'url'
 import path from 'path'
@@ -54,7 +54,8 @@ export default class MainUI {
 		})
 		let userAgent = mainWindow.webContents.getUserAgent()
 		mainWindow.webContents.setUserAgent(`${userAgent} KCPC v${app.getVersion()}`);
-		mainWindow.loadURL(`${PROXY}://${this.$pack}`)
+		let url = DEBUG ? "http://localhost:3030" : `${PROXY}://${this.$pack}`
+		mainWindow.loadURL(url)
 		if (TC_DEBUG || TEST) {
 			const installExtensions = () => {
 				const installer = require('electron-devtools-installer');
@@ -67,12 +68,12 @@ export default class MainUI {
 		}
 		mainWindow.webContents.on('did-finish-load', () => {
 			mainWindow.webContents.send('configure', {
-				__dirname, __apppath: app.getAppPath(),
+				__dirname: path.resolve(__dirname,'..'), __apppath: app.getAppPath(),
 				version: app.getVersion()
 			});
 			
 			SystemInfo.getStaticData((info)=>{
-				mainWindow.webContents.send('configure', {
+				mainWindow.webContents.send('systeminfo', {
 				   systeminfo: info
 				});
 			})
