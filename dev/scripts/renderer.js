@@ -11,7 +11,9 @@ import bridge from '../../core/MessageBridge'
 import { DEBUG, TEST } from '../../env'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
 const logger 		= remote.require('electron-log')
-
+const G = (id) => {
+	return document.getElementById(id)
+}
 class Renderer {
 	constructor() {
 		this.__bind()
@@ -49,7 +51,7 @@ class Renderer {
 	}
 
 	__bind() {
-		this.__G("closeBtn").onclick = function() {
+		G("closeBtn").onclick = function() {
 			var window = remote.getCurrentWindow();
 			window.close();
 		}
@@ -141,10 +143,6 @@ class Renderer {
 		});
 		autoUpdater.checkForUpdates();
 	}
-	
-	__G(id) {
-		return document.getElementById(id)
-	}
 
 	__setState(state = {}) {
 		for(let key in state) {
@@ -165,13 +163,13 @@ class Renderer {
 
 	__render() {
 		if (this.state.progress) {
-			this.__G("progress").style.display 	= "flex"
-			this.__G("percent").innerText 		= `${this.state.progress.percent>>0}%`
-			this.__G("bar").style.width 		= `${this.state.progress.percent}%`
+			G("progress").style.display 	= "flex"
+			G("percent").innerText 		= `${this.state.progress.percent>>0}%`
+			G("bar").style.width 		= `${this.state.progress.percent}%`
 		} else {
-			this.__G("progress").style.display 	= "none"
+			G("progress").style.display 	= "none"
 		}
-		this.__G("tips").innerText = `当前版本: ${this.state.version}, ${this.state.message}`
+		G("tips").innerText = `当前版本: ${this.state.version}, ${this.state.message}`
 	}
 }
 

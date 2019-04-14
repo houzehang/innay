@@ -24,12 +24,11 @@ ipcRenderer.on('configure', (_, data)=>{
 		window.ENV_CONF[key] = data[key]
 	}
 	let platform = (function() {
-	switch(process.platform) {
-		case 'win32':
-			return 'win'
-		default:
-		case 'darwin':
-			return 'mac'
+		switch(process.platform) {
+			case 'win32':
+				return 'win'
+			case 'darwin':
+				return 'mac'
 		}
 	}())
 	let dir = 'native-' + platform, basedir
