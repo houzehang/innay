@@ -61,41 +61,49 @@ class Renderer {
 			this.__setStatus(Const.UPDATE.LASTEST);
 			// createMainWindow()
 			// updateWindow.close()
-			// this.__on_complete()
 			bridge.call({
-				method: "getServerPackageVersion",
+				method: "isUpdateAvailable",
 				args: {
-					url : "http://bundles.runsnailrun.com/app.json"
+					url : "http://localhost:8080/app.json",
+					pack: "classroom-ui"
 				}
 			}).then(result=>{
-				console.log("server package",result)
-			})
-			bridge.call({
-				method: "startDownloadTask", 
-				args: {
-					pack: "classroom-ui", 
-					url	: "https://bundles.mw019.com/common.zip?m=767e9a3d29241457fea7cf0135a0b205", 
-					// md5	: "767e9a3d29241457fea7cf0135a0b205",
-					filename: "common.767e9a3d29241457fea7cf0135a0b205.zip",
-					autoUnzip: true
+				console.log("check update",result)
+				if (result.available) {
+					updateBaseUI(result.server)
+				} else {
+					this.__on_complete()
 				}
-			}).then((result)=>{
-				console.log("call result",result)
-				let identity = result.identity
-				bridge.delegate = {
-					[`${identity}/progress`] : ({ total, transferred, percent })=>{
-						console.log(total, transferred, percent)
-					},
-					[`${identity}/error`] : (error)=>{
-						console.log("download error",error)
-					},
-					[`${identity}/success`] : (data)=>{
-						console.log("download success",data)
+			})
+			function updateBaseUI(result) {
+				bridge.call({
+					method: "startDownloadTask", 
+					args: {
+						pack		: "classroom-ui", 
+						url			: `http://localhost:8080/${result.file}`, 
+						md5			: result.md5,
+						version		: result.version,
+						autoUnzip	: true,
+						checksum    : true 
 					}
-				}
-			}).catch(err=>{
-				console.log("error happened",err)
-			})
+				}).then((result)=>{
+					console.log("call result",result)
+					let identity = result.identity
+					bridge.delegate = {
+						[`${identity}/progress`] : ({ total, transferred, percent })=>{
+							console.log("download ui",total, transferred, percent)
+						},
+						[`${identity}/error`] : (error)=>{
+							console.log("download error",error)
+						},
+						[`${identity}/success`] : (data)=>{
+							console.log("download success",data)
+						}
+					}
+				}).catch(err=>{
+					console.log("error happened111",err)
+				})
+			}
 		})
 		autoUpdater.on('error', (err) => {
 			this.__setStatus(Const.UPDATE.ERROR);
@@ -129,6 +137,11 @@ class Renderer {
 
 	__on_complete() {
 		ipcRenderer.send("render.complete")
+		bridge.call({
+			method: "openMainWindow"
+		}).catch(err=>{
+			console.error(err)
+		})
 	}
 
 	__render() {

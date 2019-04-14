@@ -24,6 +24,9 @@ class Updater {
 		updateWindow.loadURL(`file://${this.$dirname}/dist/index.html`);
 		this.$update_window = updateWindow
 		bridge.delegate = PackageManager
+		bridge.delegate = { openMainWindow: async ()=>{
+			
+		} }
 	}
 }
 

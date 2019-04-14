@@ -6,11 +6,20 @@ import logger 		from 'electron-log'
 import bridge 		from './MessageBridge'
 import md5file  	from 'md5-file'
 import decompress 	from 'decompress'
+import semver	    from 'semver'
 import { PACKAGE_PATH, ASSETS_PATH, INSTALLED_META_FILE, PACKAGE_META_FILE } from './Configure'
 let tasks_list = {}
 
+function getLocalPackageMetaFilePath(pack) {
+	return path.join(PACKAGE_PATH, pack, PACKAGE_META_FILE)
+}
+
+function getLocalInstalledMetaFilePath(pack) {
+	return path.join(ASSETS_PATH, pack, INSTALLED_META_FILE)
+}
+
 export async function getLocalPackageVersion({pack}) {
-	let meta = path.join(PACKAGE_PATH, pack, PACKAGE_META_FILE)
+	let meta = getLocalPackageMetaFilePath(pack)
 	try {
 		await fs.ensureFile(meta)
 		let content = await fs.readFile(meta,"utf8")
@@ -34,8 +43,35 @@ export async function getServerPackageVersion({url}) {
 	return response.body
 }
 
+export async function isUpdateAvailable({url, pack, checkVersionOnly}) {
+	let serverInfo = await getServerPackageVersion({url}),
+		localInfo  = await getLocalInstalledVersion({ pack })
+	if (!serverInfo || !semver.valid(serverInfo.version)) {
+		if (localInfo) {
+			return { available: false, local: localInfo }
+		} else {
+			throw new Error("获取远程更新出错，且本地未安装。")
+		}
+	}
+	if (!localInfo || !semver.valid(localInfo.version)) {
+		return { available: true, local: null, server: serverInfo  }
+	}
+	let result = {
+			local	: localInfo,
+			server	: serverInfo
+		}
+	if (checkVersionOnly) {
+		result.available = semver.gt(serverInfo.version, localInfo.version)
+		return result
+	} else {
+		result.available = semver.gt(serverInfo.version, localInfo.version) || 
+						   (semver.eq(serverInfo.version, localInfo.version) && serverInfo.md5 != localInfo.md5)
+		return result
+	}
+}
+
 export async function getLocalInstalledVersion({pack}) {
-	let meta = path.join(ASSETS_PATH, pack, INSTALLED_META_FILE)
+	let meta = getLocalInstalledMetaFilePath(pack)
 	try {
 		await fs.ensureFile(meta)
 		let content = await fs.readFile(meta,"utf8")
@@ -56,8 +92,9 @@ export async function getDownloadTask({ identity }) {
 	return tasks_list[identity] || null
 }
 
-export async function startDownloadTask({ pack, url, md5, filename, autoUnzip }, sender) {
-	let identity = `${pack}/${filename||(md5+".zip")}`,
+export async function startDownloadTask({ pack, url, md5, version, autoUnzip, checksum }, sender) {
+	let filename = `v${version}${md5?("-build."+md5):""}.zip`
+	let identity = `${pack}/${filename}`,
 		destpath = `${PACKAGE_PATH}/${identity}`
 	if (fs.existsSync(destpath)) {
 		await del(destpath, { force: true })
@@ -128,7 +165,7 @@ export async function startDownloadTask({ pack, url, md5, filename, autoUnzip },
 		})
 		.then(()=>{
 			return new Promise((resolve, reject)=>{
-				if (md5) {
+				if (checksum && md5) {
 					md5file(destpath, (err, hash) => {
 						if (err) {
 							reject(new Error("计算文件md5出错"))
@@ -150,8 +187,25 @@ export async function startDownloadTask({ pack, url, md5, filename, autoUnzip },
 			})
 		})
 		.then(() => {
+			// write downloaded version to local
+			let metaContent = JSON.stringify({version,md5,file:filename})
+			logger.info(`write to local package for version ${metaContent}`)
+			let metaFilePath = getLocalPackageMetaFilePath(pack)
+			try {
+				fs.writeFileSync(metaFilePath, metaContent, 'utf8')
+			} catch(err) {
+				throw new Error("写入本地文件包版本号出错")
+			}
 			if (autoUnzip) {
-				return decompressZip({ pack, file: destpath })
+				return decompressZip({ pack, file: destpath }).then(()=>{
+					logger.info(`write to local installed package for version ${metaContent}`)
+					metaFilePath = getLocalInstalledMetaFilePath(pack)
+					try {
+						fs.writeFileSync(metaFilePath, metaContent, 'utf8')
+					} catch(err) {
+						throw new Error("写入本地安装版本号出错")
+					}
+				})
 			}
 		})
 		.then(() => {

@@ -33,7 +33,11 @@ class MessageBridge {
 		if (!sender && "id" in data) {
 			sender = this.$sender_pool[data.id]
 		}
-		sender && sender.send(CHANNEL, data)
+		if (sender) {
+			sender.send(CHANNEL, data)
+		} else {
+			console.error("no sender for message", data)
+		}
 	}
 
 	__received(message) {
@@ -60,7 +64,6 @@ class MessageBridge {
 			}
 			let sender = this.$sender || this.$sender_pool[id]
 			Promise.resolve(method(message.args, sender)).then((result=null)=>{
-				console.log("call method", message.id, result, message.method)
 				if (message.id) {
 					this.__send({
 						id, result
@@ -85,8 +88,7 @@ class MessageBridge {
 			return
 		}
 		return new Promise((resolve, reject)=>{
-			let id = ++this.$uuid
-			console.log("bridge call id",id)
+			let id = (IN_RENDER ? "R":"M")+(++this.$uuid)
 			let handler = (err, result)=>{
 				if (err) {
 					reject(err)
