@@ -138,7 +138,8 @@ class Renderer {
 	__on_complete() {
 		ipcRenderer.send("render.complete")
 		bridge.call({
-			method: "openMainWindow"
+			method	: "openMainWindow",
+			args	: "classroom-ui"
 		}).catch(err=>{
 			console.error(err)
 		})

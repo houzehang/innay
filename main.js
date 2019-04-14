@@ -1,182 +1,65 @@
-import { TC_DEBUG, TEST, TEACHER } from './env.js';
-import Const from './config/const.js';
-import Hotkey from './config/hotkey.js';
-import StaticServ from "./staticserv"
-import SystemInfo from "systeminformation"
-// 初始化主框架
-import { app, BrowserWindow, ipcMain, globalShortcut, dialog } from 'electron';
+import { app, screen, protocol } from 'electron';
 import log from 'electron-log';
 import path from 'path'
-import MenuBuilder from './menu';
 import {autoUpdater} from 'electron-updater'
 import Updater from './core/Updater'
+import MainUI from './core/MainUI'
+import { PROXY } from './core/Configure'
+import { trigger } from './core/Eventer'
+
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
-
-let mainWindowHotkeyListener,
-    rationalMaximize = false,
-    screenSize,
-    closeWarning,
-    mainWindowSize = { width: 1300, height: 790 },
-    hotkeyTickTimer;
-
-//register hotkey for mainwindow
-mainWindowHotkeyListener = {
-    mainWindow: null,
-    tick: function () {
-        // 处理从输入框激活状态直接切出,
-        // app不响应`browser-window-blur`的问题
-        hotkeyTickTimer = setInterval(() => {
-            try {
-                this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
-            } catch(e) {
-                console.log("window has been destroy.")
-            }
-        }, 2000);
-    },
-    send: function (key) {
-        if (!this.mainWindow) return;
-        this.mainWindow.webContents && this.mainWindow.webContents.send('hotkey', key);
-    },
-    register: function () {
-        for (let _keyName in Hotkey) {
-            globalShortcut.unregister(Hotkey[_keyName].code);
-            globalShortcut.register(Hotkey[_keyName].code, () => {
-                this.send(_keyName);
-            })
-        }
-    },
-    unregister: function () {
-        for (let _keyName in Hotkey) {
-            if (Hotkey[_keyName].windowFocusNeeded) {
-                globalShortcut.unregister(Hotkey[_keyName].code);
-            }
-        }
-    },
-
-}
+protocol.registerStandardSchemes([ PROXY ])
 
 app.on('ready', function () {
-    let updater = new Updater(__dirname)
+    let updater     = new Updater(__dirname)
+    let screenSize  = screen.getPrimaryDisplay().size;
     updater.start()
+    updater.on("open-main-window", (pack)=>{
+        updater.close()
+        protocol.registerBufferProtocol(PROXY,(request, callback)=>{
+            trigger("proxy-pass", { request, callback })
+        }, error=>{
+            console.error(error)
+        })
+        let main = new MainUI(screenSize, pack)
+        main.open()
+    })
 });
-
-function createMainWindow() {
-    process.env.APP_PATH = app.getAppPath();
-    console.log("app path", process.env.APP_PATH)
-
-    if (screenSize && rationalMaximize) {
-        let maxRatio = Math.min(screenSize.width / mainWindowSize.width, screenSize.height / mainWindowSize.height);
-        mainWindowSize.width *= maxRatio;
-        mainWindowSize.height *= maxRatio;
-    }
-
-    let $main = new BrowserWindow({
-        width: mainWindowSize.width | 0, height: mainWindowSize.height | 0,
-        resizable: TC_DEBUG,
-        center: true,
-        autoHideMenuBar: true
-    })
-    let userAgent = $main.webContents.getUserAgent()
-    $main.webContents.setUserAgent(userAgent + ' KCPC');
-    let classroom = path.join(app.getPath("userData"),"classroom");
-    console.log("classroom",classroom)
-    // $main.loadURL(`file://${classroom}/index.html`)
-    $main.loadURL(`file://${__dirname}/dist/index.html`)
-    if (TC_DEBUG || TEST) {
-        const installExtensions = () => {
-            const installer = require('electron-devtools-installer');
-            const forceDownload = !!process.env.UPGRADE_EXTENSIONS;
-            const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS'];
-            extensions.map(name => installer.default(installer[name], forceDownload))
-        };
-        installExtensions()
-        $main.webContents.openDevTools();
-    }
-    $main.webContents.on('did-finish-load', () => {
-        $main.webContents.send('configure', {
-            __dirname, __apppath: app.getAppPath(),
-            version: app.getVersion()
-        });
-        if (TEACHER) {
-            mainWindowHotkeyListener.mainWindow = $main;
-            mainWindowHotkeyListener.tick();
-        }
-        
-		SystemInfo.getStaticData((info)=>{
-            $main.webContents.send('configure', {
-               systeminfo: info
-            });
-		})
-    })
-    $main.webContents.on('will-navigate', (ev, url) => {
-        ev.preventDefault();
-    });
-    $main.on('closed', function (event) {
-        clearInterval(hotkeyTickTimer)
-    })
-    $main.on('close', function (event) {
-        clearInterval(hotkeyTickTimer)
-        if (closeWarning) {
-            dialog.showMessageBox(null, {
-                type: 'question',
-                buttons: ['取消', '确认'],
-                title: '',
-                message: closeWarning.toString()
-            }, function (code) {
-                if (code == 0) {
-                    event.preventDefault();
-                }
-            });
-        }
-    })
-    $main.on('crashed', function (event) {
-        log.error("main window crashed", event);
-        createMainWindow()
-        $main.destroy()
-    })
-    const menuBuilder = new MenuBuilder($main);
-    menuBuilder.buildMenu();
-    new StaticServ($main)
-}
 
 app.on('window-all-closed', () => {
     app.quit();
-});
-
-app.on('ready', function () {
-    screenSize = require('electron').screen.getPrimaryDisplay().size;
-})
-
-app.on('browser-window-focus', function () {
-    if (TEACHER) {
-        mainWindowHotkeyListener.register();
-    }
-});
-
-app.on('browser-window-blur', function () {
-    if (TEACHER) {
-        mainWindowHotkeyListener.unregister();
-    }
 });
 
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException", err);
 });
 
-ipcMain.on('off-hotkey', function () {
-    TEACHER && mainWindowHotkeyListener.unregister();
-});
+// app.on('browser-window-focus', function () {
+//     if (TEACHER) {
+//         mainWindowHotkeyListener.register();
+//     }
+// });
 
-ipcMain.on('on-hotkey', function () {
-    TEACHER && mainWindowHotkeyListener.register();
-});
+// app.on('browser-window-blur', function () {
+//     if (TEACHER) {
+//         mainWindowHotkeyListener.unregister();
+//     }
+// });
 
-ipcMain.on('on-closewarning', function (warningMsg) {
-    TEACHER && (closeWarning = warningMsg);
-});
+// ipcMain.on('off-hotkey', function () {
+//     TEACHER && mainWindowHotkeyListener.unregister();
+// });
 
-ipcMain.on('off-closewarning', function () {
-    TEACHER && (closeWarning = warningMsg);
-});
+// ipcMain.on('on-hotkey', function () {
+//     TEACHER && mainWindowHotkeyListener.register();
+// });
+
+// ipcMain.on('on-closewarning', function (warningMsg) {
+//     TEACHER && (closeWarning = warningMsg);
+// });
+
+// ipcMain.on('off-closewarning', function () {
+//     TEACHER && (closeWarning = warningMsg);
+// });

@@ -9,6 +9,7 @@ module.exports = {
 	TENCENT_ACCOUNTTYPE : 28218,
 	VIDEO_T_QUALITY 	: "480P_3",
 	VIDEO_S_QUALITY 	: "120P_3",
+    MAIN_WINDOW_SIZE	: { width: 1300, height: 790 },
 	ROOM_ID				: 111111,
 	LARGE_MODE 			: 480,
 	DANCE_MODE 			: 200,
