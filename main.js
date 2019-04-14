@@ -6,6 +6,7 @@ import Updater from './core/Updater'
 import MainUI from './core/MainUI'
 import { PROXY } from './core/Configure'
 import { trigger } from './core/Eventer'
+import logger from 'electron-log'
 
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
@@ -17,11 +18,14 @@ app.on('ready', function () {
     let screenSize  = screen.getPrimaryDisplay().size;
     updater.start()
     updater.on("open-main-window", (pack)=>{
-        updater.close()
+        setTimeout(()=>{
+            updater.close()
+        },100)
+        logger.log("call open main ui window", PROXY, pack)
         protocol.registerBufferProtocol(PROXY,(request, callback)=>{
             trigger("proxy-pass", { request, callback })
         }, error=>{
-            console.error(error)
+            logger.error(error)
         })
         let main = new MainUI(screenSize, pack)
         main.open()

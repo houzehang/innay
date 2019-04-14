@@ -58,12 +58,14 @@ module.exports = {
 	SHOW_RANKS    : "*showranks",
 	HIDE_RANKS    : "*hideranks",
 	UPDATE : {
-		AVAILABLE: "update available",
-		LASTEST  : "the lastest version",
-		CHECKING : "checking for update",
-		ERROR: "update error",
-		DOWNLOADING: "update downloading",
-		DOWNLOADED: "update downloaded"
+		AVAILABLE	: "update available",
+		LASTEST  	: "the lastest version",
+		CHECKING 	: "checking for update",
+		ERROR		: "update error",
+		DOWNLOADING	: "update downloading",
+		DOWNLOADED	: "update downloaded",
+		DOWNLOADING_UI	: "downloading ui",
+		DOWNLOADED_UI	: "downloaded ui",
 	},
 	COCOS		  : 1
 };

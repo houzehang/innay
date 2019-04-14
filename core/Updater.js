@@ -3,6 +3,7 @@ import { BrowserWindow } from 'electron';
 import bridge from './MessageBridge'
 import { EventEmitter } from 'events';
 import * as PackageManager from './PackageManager'
+import MenuBuilder from '../menu';
 export default class Updater extends EventEmitter {
 	constructor(dirname) {
 		super()
@@ -17,9 +18,6 @@ export default class Updater extends EventEmitter {
 			frame: false,
 			autoHideMenuBar: true
 		});
-		if (TC_DEBUG) {
-			updateWindow.webContents.openDevTools();
-		}
 		updateWindow.on('closed', () => {
 			updateWindow = null;
 		});
@@ -30,6 +28,8 @@ export default class Updater extends EventEmitter {
 		bridge.delegate = { openMainWindow: async (pack)=>{
 			this.emit("open-main-window", pack)
 		} }
+		const menuBuilder = new MenuBuilder(updateWindow);
+		menuBuilder.buildMenu();
 		this.$window = updateWindow
 	}
 

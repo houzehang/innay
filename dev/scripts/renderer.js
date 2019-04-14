@@ -8,15 +8,16 @@ import '../less/version.less'
 import {remote, ipcRenderer} from 'electron';
 import Const from '../const'
 import bridge from '../../core/MessageBridge'
+import { DEBUG, TEST } from '../../env'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
-const log 			= remote.require('electron-log')
+const logger 		= remote.require('electron-log')
 
 class Renderer {
 	constructor() {
 		this.__bind()
 		this.state = {
 			version: remote.app.getVersion(),
-			message: "正在检查版本更新...",
+			message: "",
 			progress : null
 		}
 		this.__setState()
@@ -32,11 +33,17 @@ class Renderer {
 		} else if (status == Const.UPDATE.CHECKING) {
 			message = "正在检查新版本..."
 		} else if (status == Const.UPDATE.ERROR) {
-			message = "更新出错！"
+			message = `更新出错，错误信息:${data}`
 		} else if (status == Const.UPDATE.DOWNLOADING) {
 			message = "正在下载新版本..."
 		} else if (status == Const.UPDATE.DOWNLOADED) {
 			message = "下载完成，请等待安装..."
+		} else if (status == Const.UPDATE.DOWNLOADING_UI) {
+			message = "正在下载基础包..."
+		} else if (status == Const.UPDATE.DOWNLOADED_UI) {
+			message = "下载完成，请等待解压..."
+		} else {
+			message = "正在检查版本更新..."
 		}
 		this.__setState({message, progress: data})
 	}
@@ -48,8 +55,65 @@ class Renderer {
 		}
 	}
 
+	__do_update_bundle(base_url, result) {
+		bridge.call({
+			method: "startDownloadTask", 
+			args: {
+				pack		: "classroom-ui", 
+				url			: `${base_url}/${result.file}`, 
+				md5			: result.md5,
+				version		: result.version,
+				autoUnzip	: true,
+				checksum    : true 
+			}
+		}).then((result)=>{
+			let identity = result.identity
+			bridge.delegate = {
+				[`${identity}/progress`] : ({ total, transferred, percent })=>{
+					this.__setStatus(Const.UPDATE.DOWNLOADING, {percent: percent*100 >> 0});
+				},
+				[`${identity}/error`] : (error)=>{
+					this.__setStatus(Const.UPDATE.ERROR, error.message);
+				},
+				[`${identity}/success`] : (data)=>{
+					this.__setStatus(Const.UPDATE.DOWNLOADED_UI);
+					this.__on_complete()
+				}
+			}
+		}).catch(err=>{
+			console.log("error happened",err)
+			logger.error(err)
+		})
+	}
+
+	__update_bundle() {
+		let base_url
+		if (DEBUG) {
+			base_url = "http://localhost:8080"
+		} else if (TEST) {
+			base_url = "http://bundles.runsnailrun.com"
+		} else {
+			base_url = "https://bundles.mw019.com"
+		}
+		bridge.call({
+			method: "isUpdateAvailable",
+			args: {
+				url : `${base_url}/app.json`,
+				pack: "classroom-ui"
+			}
+		}).then(result=>{
+			if (result.available) {
+				this.__setStatus(Const.UPDATE.DOWNLOADING_UI);
+				this.__do_update_bundle(base_url, result.server)
+			} else {
+				this.__setStatus(Const.UPDATE.LASTEST);
+				this.__on_complete()
+			}
+		})
+	}
+
 	__start_updater() {
-		autoUpdater.logger = log;
+		autoUpdater.logger = logger;
 		autoUpdater.logger.transports.file.level = 'info';
 		autoUpdater.on('checking-for-update', () => {
 			this.__setStatus(Const.UPDATE.CHECKING);
@@ -58,58 +122,12 @@ class Renderer {
 			this.__setStatus(Const.UPDATE.AVAILABLE);
 		})
 		autoUpdater.on('update-not-available', () => {
-			this.__setStatus(Const.UPDATE.LASTEST);
-			// createMainWindow()
-			// updateWindow.close()
-			bridge.call({
-				method: "isUpdateAvailable",
-				args: {
-					url : "http://localhost:8080/app.json",
-					pack: "classroom-ui"
-				}
-			}).then(result=>{
-				console.log("check update",result)
-				if (result.available) {
-					updateBaseUI(result.server)
-				} else {
-					this.__on_complete()
-				}
-			})
-			function updateBaseUI(result) {
-				bridge.call({
-					method: "startDownloadTask", 
-					args: {
-						pack		: "classroom-ui", 
-						url			: `http://localhost:8080/${result.file}`, 
-						md5			: result.md5,
-						version		: result.version,
-						autoUnzip	: true,
-						checksum    : true 
-					}
-				}).then((result)=>{
-					console.log("call result",result)
-					let identity = result.identity
-					bridge.delegate = {
-						[`${identity}/progress`] : ({ total, transferred, percent })=>{
-							console.log("download ui",total, transferred, percent)
-						},
-						[`${identity}/error`] : (error)=>{
-							console.log("download error",error)
-						},
-						[`${identity}/success`] : (data)=>{
-							console.log("download success",data)
-						}
-					}
-				}).catch(err=>{
-					console.log("error happened111",err)
-				})
-			}
+			this.__update_bundle()
 		})
 		autoUpdater.on('error', (err) => {
-			this.__setStatus(Const.UPDATE.ERROR);
+			logger.error("update error",err)
 			setTimeout(() => {
-				createMainWindow()
-				updateWindow.close()
+				this.__update_bundle()
 			}, 2000)
 		})
 		autoUpdater.on('download-progress', (progress) => {

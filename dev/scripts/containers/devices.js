@@ -319,7 +319,7 @@ class Devices extends React.Component {
 				if (DEBUG) {
 					filepath = path.join(window.ENV_CONF.__dirname,'libs','AgoraSDK','music.mp3');
 				} else {
-					filepath = path.join(window.ENV_CONF.__dirname, '..', 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
+					filepath = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');
 				}
 				console.log("filepath",filepath)
 				this.$client.startAudioPlaybackDeviceTest(filepath);
