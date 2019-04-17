@@ -43,6 +43,19 @@ class Room extends Eventer {
 			this.$client.enableLocalVideo(false);
 		}
 		this.__resume_devices()
+
+		this.$client.on('error', (err)=>{
+			console.log("Got error msg:", err.reason);
+			if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+				this.$client.renewToken(this.inst.props.channel_token, ()=>{
+					console.log("Renew channel key successfully");
+				}, function(err){
+					console.log("Renew channel key failed: ", err);
+				});
+			} else {
+				console.error("init agora sdk error", err)
+			}
+		});
 		console.log("Agora Version",this.$client.getVersion())
 	}
 
@@ -209,16 +222,6 @@ class Room extends Eventer {
 	}
 
 	__start_stream() {
-		this.$client.on('error', (err)=>{
-			console.log("Got error msg:", err.reason);
-			if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
-				this.$client.renewToken(this.inst.props.channel_token, ()=>{
-					console.log("Renew channel key successfully");
-				}, function(err){
-					console.log("Renew channel key failed: ", err);
-				});
-			}
-		});
 	
 		this.$client.on('addstream', (id)=>{
 			console.log("add stream", id);
