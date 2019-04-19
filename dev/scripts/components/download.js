@@ -37,16 +37,24 @@ class Download extends React.Component {
 		this.$downloaded_handler = (event, url, file) => {
 			context.addDownloaded(url, file)
 			this.__add_loaded_file(url)
+			if (this.$webview_ready) {
+				this.$webview.current.send("DOWNLOADED", url)
+			}
 		}
 		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
 		this.$download_error_handler = (event, url) => {
+			alert(`文件下载失败，${url}，请联系技术查看。`)
 			this.__add_loaded_file(url)
+			if (this.$webview_ready) {
+				this.$webview.current.send("DOWNLOADERROR", url)
+			}
 		}
 		ipcRenderer.on("DOWNLOADERROR", this.$download_error_handler);
 		this.$webview.current.addEventListener("dom-ready", ()=>{
 			if (ENV.TC_DEBUG) {
 				this.$webview.current.openDevTools(); 
 			}
+			this.$webview_ready = true
 			this.$webview.current.send("userinfo", this.props.user)
 		});
 		this.$webview.current.addEventListener('ipc-message', (event) => {
@@ -81,7 +89,7 @@ class Download extends React.Component {
 		}
 		return (
 			<div>
-				<webview ref={this.$webview} className="download-webview" nodeintegration='true' src={`${prefix}/app/downloader.html?lesson=${this.props.name}&t=${new Date().getTime()}`} partition="persist:kecheng"></webview>
+				<webview ref={this.$webview} className="download-webview" nodeintegration='true' src={`${prefix}/app/downloader.html?lesson=${this.props.name}&mode=check&t=${new Date().getTime()}`} partition="persist:kecheng"></webview>
 			</div>
 		)
 	}
