@@ -7,11 +7,10 @@
  */
 const { TC_DEBUG, TEST, TEACHER } = require('./env.js');
 const Const = require('./config/const.js');
-const Hotkey = require('./config/hotkey.js');
 const StaticServ = require("./staticserv")
 const SystemInfo = require("systeminformation")
 // 初始化主框架
-const { session, app, BrowserWindow, ipcMain, Menu, globalShortcut, dialog } = require('electron');
+const { app, BrowserWindow, dialog } = require('electron');
 const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
 
@@ -19,50 +18,13 @@ autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
 // console.log("platform",fs.readFileSync(logpath,"utf8"))
-let updateWindow,
+let updateWindow, mainWindow,
     loaded,
-    mainWindowHotkeyListener,
-    rationalMaximize = false,
+    rationalMaximize = true,
     screenSize,
     closeWarning,
     mainWindowSize = { width: 1300, height: 790 },
     hotkeyTickTimer;
-
-//register hotkey for mainwindow
-mainWindowHotkeyListener = {
-    mainWindow: null,
-    tick: function () {
-        // 处理从输入框激活状态直接切出,
-        // app不响应`browser-window-blur`的问题
-        hotkeyTickTimer = setInterval(() => {
-            try {
-                this.mainWindow && !this.mainWindow.webContents.isFocused() && this.unregister();
-            } catch(e) {
-                console.log("window has been destroy.")
-            }
-        }, 2000);
-    },
-    send: function (key) {
-        if (!this.mainWindow) return;
-        this.mainWindow.webContents && this.mainWindow.webContents.send('hotkey', key);
-    },
-    register: function () {
-        for (let _keyName in Hotkey) {
-            globalShortcut.unregister(Hotkey[_keyName].code);
-            globalShortcut.register(Hotkey[_keyName].code, () => {
-                this.send(_keyName);
-            })
-        }
-    },
-    unregister: function () {
-        for (let _keyName in Hotkey) {
-            if (Hotkey[_keyName].windowFocusNeeded) {
-                globalShortcut.unregister(Hotkey[_keyName].code);
-            }
-        }
-    },
-
-}
 
 function sendStatusToWindow(status, data) {
     if (!loaded) {
@@ -130,8 +92,54 @@ autoUpdater.on('update-downloaded', () => {
     }, 3000)
 });
 app.on('ready', function () {
+    const shouldQuit = app.makeSingleInstance(() => {
+        let existWindow = updateWindow || mainWindow
+        if (existWindow) {
+            if (existWindow.isMinimized()) {
+                existWindow.restore()
+            }
+            existWindow.focus()
+        }
+    })
+    if (shouldQuit) {
+        app.quit()
+        return
+    }
     createUpdateWindow();
     autoUpdater.checkForUpdates();
+
+    if (!TC_DEBUG) {
+        if (process.platform === 'darwin') {
+            const template = [
+                {
+                    label: '明兮大语文',
+                    submenu: [
+                        { label: `当前版本 ${app.getVersion()}` },
+                        { type: "separator" },
+                        { label: "退出", accelerator: "Command+Q", click: function () { app.quit(); } }
+                    ]
+                },
+                {
+                    label: '编辑',
+                    submenu: [
+                        { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" },
+                        { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" },
+                        { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" },
+                    ]
+                },
+                {
+                    label: '帮助',
+                    submenu: [
+                        { label: "关于明兮大语文", click() { require('electron').shell.openExternal('https://mingxi.cn') } }
+                    ]
+                },
+            ]
+            const menu = Menu.buildFromTemplate(template)
+            Menu.setApplicationMenu(menu)
+        }
+    }
+
+    screenSize = require('electron').screen.getPrimaryDisplay().size;
 });
 
 function createMainWindow() {
@@ -167,11 +175,6 @@ function createMainWindow() {
             __dirname, __apppath: app.getAppPath(),
             version: app.getVersion()
         });
-        if (TEACHER) {
-            mainWindowHotkeyListener.mainWindow = $main;
-            mainWindowHotkeyListener.tick();
-        }
-        
 		SystemInfo.getStaticData((info)=>{
             $main.webContents.send('configure', {
                systeminfo: info
@@ -206,75 +209,13 @@ function createMainWindow() {
         $main.destroy()
     })
     new StaticServ($main)
+    mainWindow = $main
 }
 
 app.on('window-all-closed', () => {
     app.quit();
 });
 
-app.on('ready', function () {
-    if (!TC_DEBUG) {
-        if (process.platform === 'darwin') {
-            const template = [
-                {
-                    label: '明兮大语文',
-                    submenu: [
-                        { label: `当前版本 ${app.getVersion()}` },
-                        { type: "separator" },
-                        { label: "退出", accelerator: "Command+Q", click: function () { app.quit(); } }
-                    ]
-                },
-                {
-                    label: '编辑',
-                    submenu: [
-                        { label: "复制", accelerator: "CmdOrCtrl+C", selector: "copy:" },
-                        { label: "粘贴", accelerator: "CmdOrCtrl+V", selector: "paste:" },
-                        { label: "全选", accelerator: "CmdOrCtrl+A", selector: "selectAll:" },
-                    ]
-                },
-                {
-                    label: '帮助',
-                    submenu: [
-                        { label: "关于明兮大语文", click() { require('electron').shell.openExternal('https://mingxi.cn') } }
-                    ]
-                },
-            ]
-            const menu = Menu.buildFromTemplate(template)
-            Menu.setApplicationMenu(menu)
-        }
-    }
-
-    screenSize = require('electron').screen.getPrimaryDisplay().size;
-})
-
-app.on('browser-window-focus', function () {
-    if (TEACHER) {
-        mainWindowHotkeyListener.register();
-    }
-});
-
-app.on('browser-window-blur', function () {
-    if (TEACHER) {
-        mainWindowHotkeyListener.unregister();
-    }
-});
-
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException", err);
-});
-
-ipcMain.on('off-hotkey', function () {
-    TEACHER && mainWindowHotkeyListener.unregister();
-});
-
-ipcMain.on('on-hotkey', function () {
-    TEACHER && mainWindowHotkeyListener.register();
-});
-
-ipcMain.on('on-closewarning', function (warningMsg) {
-    TEACHER && (closeWarning = warningMsg);
-});
-
-ipcMain.on('off-closewarning', function () {
-    TEACHER && (closeWarning = warningMsg);
 });
