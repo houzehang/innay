@@ -77,7 +77,9 @@
   "dependencies": {
     "electron-log": "^2.2.16",
     "electron-updater": "^2.22.1",
-    "systeminformation": "^4.0.11",
-    "react-rangeslider": "^2.2.0"
+    "fs-extra": "^7.0.1",
+    "got": "^8.6.0",
+    "react-rangeslider": "^2.2.0",
+    "systeminformation": "^4.0.11"
   }
 }
