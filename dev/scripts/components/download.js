@@ -42,8 +42,7 @@ class Download extends React.Component {
 			}
 		}
 		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
-		this.$download_error_handler = (event, url) => {
-			alert(`文件下载失败，${url}，请联系技术查看。`)
+		this.$download_error_handler = (_, url) => {
 			this.__add_loaded_file(url)
 			if (this.$webview_ready) {
 				this.$webview.current.send("DOWNLOADERROR", url)

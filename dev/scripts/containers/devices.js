@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
-import { findDOMNode } from 'react-dom';
 const path				= $require("path")
 const Const 			= require("../../const")
 const DEBUG 			= require("../../../env").DEBUG
@@ -33,7 +32,7 @@ class Devices extends React.Component {
 		this.$client.enableLocalVideo(true);
 		this.$client.setVideoProfile(45);
 		this.$client.enableLastmileTest()
-
+		this.$client.setAudioPlaybackVolume(60);
 		this.$client.on('error', (err)=>{
 			console.error("Got error msg:", err);
 		});
