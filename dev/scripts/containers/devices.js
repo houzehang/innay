@@ -13,7 +13,7 @@ const net 				= require("../network")
 const context		    = require("../context")
 const remote 			= $require("electron").remote
 import { 
-	onExitTester,alert
+	onExitTester,alert,confirm
 } from '../actions'
 class Devices extends React.Component {
 	constructor(props) {
@@ -32,10 +32,12 @@ class Devices extends React.Component {
 		this.$client.enableLocalVideo(true);
 		this.$client.setVideoProfile(45);
 		this.$client.enableLastmileTest()
-		this.$client.setAudioPlaybackVolume(60);
+		this.$client.setAudioPlaybackVolume(120);
 		this.$client.on('error', (err)=>{
 			console.error("Got error msg:", err);
+			net.log({"DEVICE-TEST":"init error, code: " + err})
 		});
+		this.$max_device_volumn = 0
 
 		let video_devices 	= this.$client.getVideoDevices()
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
@@ -96,6 +98,9 @@ class Devices extends React.Component {
 			netquality: 0,
 			net_history: [0],
 			check_over: 0,
+			camera_failed: false,
+			mic_failed: false,
+			speaker_failed: false 
 		}
 
 		this.$client.on("lastmilequality", (quality) => {
@@ -115,7 +120,7 @@ class Devices extends React.Component {
 			} else {
 				quality = 0
 			}
-			net.log({name:"NET:STATUS", status: quality})
+			net.log({name:"NET:STATUS", status: quality, from: "device-test"})
 		})
 	}
 
@@ -141,8 +146,12 @@ class Devices extends React.Component {
 		this.$client.startAudioRecordingDeviceTest(100)
 		this.$client.on('audiovolumeindication', (uid, volume, speaker, totalVolume) => {
 			if (this.state.step == 2) {
+				let volumn =  parseInt(totalVolume / 255 * 13, 10)
+				if (volumn > this.$max_device_volumn) {
+					this.$max_device_volumn = volumn
+				}
 				this.setState({
-					inputVolume: parseInt(totalVolume / 255 * 13, 10)
+					inputVolume: volumn
 				});
 			}
 		});
@@ -164,9 +173,7 @@ class Devices extends React.Component {
 		this.$previewing = false
 		this.$client.stopPreview();
 		$("#video-area").empty()
-		setTimeout(()=>{
-			this.setState({step})
-		})
+		this.setState({step})
 	}
 
 	step0() {
@@ -202,8 +209,9 @@ class Devices extends React.Component {
 								});
 								return;
 							}
+							net.log({"DEVICE-TEST": "hardware test passed"})
 							this.setState({step: 1})
-						}} className="step-btn">下一步</button>
+						}} className="step-btn">设备信息正确，开始检测</button>
 					</div>
 				</div>
 			)
@@ -211,6 +219,13 @@ class Devices extends React.Component {
 			console.log('error:device->step0,',error.message || error);
 		}
 		return '';
+	}
+
+	__on_step1_done({ passed }) {
+		this.onStartMicTest()
+		this.onStopPreviewAndStepTo(2)
+		this.setState({ camera_failed: !passed })
+		net.log({"DEVICE-TEST":`camera test ${passed?"passed":"failed"}`})
 	}
 
 	step1() {
@@ -246,9 +261,11 @@ class Devices extends React.Component {
 				<div className="video-area" id="video-area"></div>
 				<div className="step-btns">
 					<button onClick={()=>{
-						this.onStartMicTest()
-						this.onStopPreviewAndStepTo(2)
-					}} className="step-btn">下一步</button>
+						this.__on_step1_done({ passed: false })
+					}} className="step-btn no-pass">不能看到图像</button>
+					<button onClick={()=>{
+						this.__on_step1_done({ passed: true })
+					}} className="step-btn">能清晰看到图像</button>
 					<button onClick={()=>{
 						this.onStopPreviewAndStepTo(0)
 						this.setState({step: 0})
@@ -256,6 +273,16 @@ class Devices extends React.Component {
 				</div>
 			</div>
 		)
+	}
+
+	__on_step2_done({ passed }) {
+		this.$client.stopAudioRecordingDeviceTest();
+		this.setState({step: 3})
+		this.setState({
+			check_over: true
+		})
+		this.setState({ mic_failed: !passed })
+		net.log({"DEVICE-TEST": `mic test ${passed?"passed":"failed"}, max volumn: ${this.$max_device_volumn / 12 * 100 >> 0}%`})
 	}
 
 	step2() {
@@ -299,12 +326,11 @@ class Devices extends React.Component {
 				</div>
 				<div className="step-btns">
 					<button onClick={()=>{
-    					this.$client.stopAudioRecordingDeviceTest();
-						this.setState({step: 3})
-						this.setState({
-							check_over: true
-						})
-					}} className="step-btn">下一步</button>
+    					this.__on_step2_done({passed: false})
+					}} className="step-btn no-pass">看不到音量变化</button>
+					<button onClick={()=>{
+    					this.__on_step2_done({passed: true})
+					}} className="step-btn">能看到音量变化</button>
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
 						this.setState({step: 1})
@@ -312,6 +338,42 @@ class Devices extends React.Component {
 				</div>
 			</div>
 		)
+	}
+
+	__on_step3_done({ passed }) {
+		this.$client.stopAudioPlaybackDeviceTest();
+		this.setState({ speaker_failed: !passed })
+		net.log({"DEVICE-TEST": `speaker test ${passed?"passed":"failed"}`})
+		let failed
+		if (this.state.camera_failed || this.state.mic_failed || !passed) {
+			failed = true
+		} else {
+			failed = false
+		}
+		if (!failed) {
+			this.props.alert({
+				content: "设备检测通过，欢迎您进入明兮学堂。",
+				sure: ()=>{
+					net.log({"DEVICE-TEST": "user device test success."})
+					this.__exit()
+				}
+			})
+		} else {
+			this.props.confirm({
+				content: "设备检测存在异常，请联系课程顾问帮您解决。",
+				cancel_txt: "跳过检测",
+				sure_txt: "重新检测",
+				sure: ()=>{
+					net.log({"DEVICE-TEST": "user device test failed and restart."})
+					this.$playing = false
+					this.setState({step: 1, camera_failed: false, mic_failed: false, speaker_failed: false})
+				},
+				cancel: ()=>{
+					net.log({"DEVICE-TEST": "user device test failed and stepover."})
+					this.__exit()
+				}
+			})
+		}
 	}
 
 	step3() {
@@ -368,9 +430,12 @@ class Devices extends React.Component {
 					</div>
 				</div>
 				<div className="step-btns">
+					<button className="step-btn no-pass" onClick={()=>{
+						this.__on_step3_done({passed: false})
+					}}>听不到测试音</button>
 					<button className="step-btn" onClick={()=>{
-						this.__exit();
-					}}>完成</button>
+						this.__on_step3_done({passed: true})
+					}}>能听到测试音</button>
 					<button onClick={()=>{
 						this.$playing = false
 						this.$client.stopAudioPlaybackDeviceTest();
@@ -395,7 +460,7 @@ class Devices extends React.Component {
 				this.__exit();
 			}}></button>
 			<div className={"sound-tester s-"+this.state.step}>
-				<div className="network">实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
+				<div className={this.state.netquality>3?"network bad":"network"}>实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
 				<div className="network-bar">
 				{this.state.net_history.map((quality,index)=>{
 					return <div className={"quality q-"+quality} key={index}></div>
@@ -417,21 +482,22 @@ class Devices extends React.Component {
 							<i className="icon"></i>
 							摄像头检测
 						</div>
-						<div className="step-num">2</div>
+						{this.state.camera_failed?<div className="step-num failed">!</div>:<div className="step-num">2</div>}
+						
 					</div>
 					<div className="step step-2">
 						<div className="step-name">
 							<i className="icon"></i>
 							麦克风检测
 						</div>
-						<div className="step-num">3</div>
+						{this.state.mic_failed?<div className="step-num failed">!</div>:<div className="step-num">3</div>}
 					</div>
 					<div className="step step-3">
 						<div className="step-name">
 							<i className="icon"></i>
 							扬声器检测
 						</div>
-						<div className="step-num">4</div>
+						{this.state.speaker_failed?<div className="step-num failed">!</div>:<div className="step-num">4</div>}
 					</div>
 				</div>
 				{this[`step${this.state.step}`]()}
@@ -451,7 +517,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
 	onExitTester 	: () => dispatch(onExitTester()),
-	alert 	   	   	: (data) => dispatch(alert(data))
+	alert 	   	   	: (data) => dispatch(alert(data)),
+	confirm 	   	: (data) => dispatch(confirm(data))
 })
 
 export default connect(

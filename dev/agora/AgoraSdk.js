@@ -415,7 +415,7 @@ class AgoraRtcEngine extends events_1.EventEmitter {
             this.destroyRender(key);
         }
         let renderer
-        if (view.cocos) {
+        if (view && view.cocos) {
             renderer = new AgoraRender()
         } else {
             renderer = new Renderer_1.GlRenderer();
