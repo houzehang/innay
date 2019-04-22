@@ -1,9 +1,11 @@
 const Const 			= require("../const")
-const Q 				= require("q")
 const Eventer   		= require('./eventer')
 const Storage 			= require('./Storage')
+const path				= $require("path")
 const AgoraRtcEngine 	= require('../agora/AgoraSdk')
+const remote 			= $require("electron").remote
 const $ 				= require("jquery")
+const net 				= require("./network")
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -24,6 +26,9 @@ class Room extends Eventer {
 		this.$client.setParameters('{"che.video.lowBitRateStreamParameter":{"width":120,"height":120,"frameRate":15,"bitRate":100}}')
 		this.$client.enableDualStreamMode(true);
 		this.$client.setLocalVideoMirrorMode(2);
+		this.$agora_log_file = path.join(remote.app.getPath("userData"),"agora.log")
+		var result = this.$client.setLogFile(this.$agora_log_file)
+		console.log("set log file",this.$agora_log_file,result)
 		if (!this.inst.isSubMaster(this.inst.props.account.id)) {
 			this.$client.enableVideo();
 			this.$client.enableLocalVideo(true);
@@ -44,9 +49,9 @@ class Room extends Eventer {
 		}
 		this.__resume_devices()
 
-		this.$client.on('error', (err)=>{
-			console.log("Got error msg:", err.reason);
-			if (err.reason === 'DYNAMIC_KEY_TIMEOUT') {
+		this.$client.on('error', (err, msg)=>{
+			console.log("Got error msg:", err);
+			if (err === 109) {
 				this.$client.renewToken(this.inst.props.channel_token, ()=>{
 					console.log("Renew channel key successfully");
 				}, function(err){
@@ -55,6 +60,7 @@ class Room extends Eventer {
 			} else {
 				console.error("init agora sdk error", err)
 			}
+			net.log({"COURSE-ROOM":`agora init error, code: ${err}, message: ${msg}`})
 		});
 		console.log("Agora Version",this.$client.getVersion())
 	}

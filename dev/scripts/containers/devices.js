@@ -8,7 +8,6 @@ const Const 			= require("../../const")
 const DEBUG 			= require("../../../env").DEBUG
 const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
-const $ 				= require("jquery")
 const net 				= require("../network")
 const context		    = require("../context")
 const remote 			= $require("electron").remote
@@ -20,6 +19,10 @@ class Devices extends React.Component {
 		super(props)
 		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(Const.AGORA_APPID);
+		this.$client.on('error', (err, msg)=>{
+			console.error("Got error msg:", err);
+			net.log({"DEVICE-TEST":`init error, code: ${err}, message: ${msg}`})
+		});
 		this.$client.setChannelProfile(1);
 		this.$client.setClientRole(1);
 		this.$client.setAudioProfile(0, 1);
@@ -30,13 +33,11 @@ class Devices extends React.Component {
 		this.$client.enableDualStreamMode(true);
 		this.$client.enableVideo();
 		this.$client.enableLocalVideo(true);
-		this.$client.setVideoProfile(45);
+		this.$client.setVideoProfile(450);
 		this.$client.enableLastmileTest()
 		this.$client.setAudioPlaybackVolume(120);
-		this.$client.on('error', (err)=>{
-			console.error("Got error msg:", err);
-			net.log({"DEVICE-TEST":"init error, code: " + err})
-		});
+		this.$agora_log_file = path.join(remote.app.getPath("userData"),"agora.log")
+		this.$client.setLogFile(this.$agora_log_file)
 		this.$max_device_volumn = 0
 
 		let video_devices 	= this.$client.getVideoDevices()
@@ -164,7 +165,7 @@ class Devices extends React.Component {
 
 	onStartPreview() {
 		if (this.$previewing) return
-		this.$client.setupLocalVideo($("#video-area")[0]);
+		this.$client.setupLocalVideo(this.$video_area);
 		this.$client.startPreview();
 		this.$previewing = true
 	}
@@ -172,7 +173,7 @@ class Devices extends React.Component {
 	onStopPreviewAndStepTo(step) {
 		this.$previewing = false
 		this.$client.stopPreview();
-		$("#video-area").empty()
+		this.$video_area.innerHTML = ""
 		this.setState({step})
 	}
 
@@ -258,7 +259,7 @@ class Devices extends React.Component {
 					}
 					</select>
 				</div>
-				<div className="video-area" id="video-area"></div>
+				<div className="video-area" id="video-area" ref={el=>this.$video_area=el}></div>
 				<div className="step-btns">
 					<button onClick={()=>{
 						this.__on_step1_done({ passed: false })
