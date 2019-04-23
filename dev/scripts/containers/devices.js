@@ -34,6 +34,10 @@ class Devices extends React.Component {
 		this.$client.setVideoProfile(45);
 		this.$client.enableLastmileTest()
 
+		this.$client.on('error', (err)=>{
+			console.error("Got error msg:", err);
+		});
+
 		let video_devices 	= this.$client.getVideoDevices()
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
 		let speaker_devices = this.$client.getAudioPlaybackDevices()
