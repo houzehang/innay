@@ -117,7 +117,9 @@ class Course extends CourseBase {
 				teacher_avatar	: this.props.room.teacher_avatar,
 				channel_token	: this.props.room.channel_token,
 				agora_appid 	: Const.AGORA_APPID,
-				userid 			: this.props.account.id
+				userid 			: this.props.account.id,
+				version			: this.props.room.version,
+				offset_time		: this.props.room.offset_time
 			}
 		})
 	}
