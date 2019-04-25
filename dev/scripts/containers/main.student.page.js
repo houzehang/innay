@@ -285,7 +285,9 @@ class Main extends React.Component {
 											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':(room.class_state=='leave'?"请假":"未到课") }</span>
 											{room.button_hf?<div className="btn-view-record" onClick={()=>{
 												this.__onStartRoom(room,true)
-											}}>查看回放</div>:""}
+											}}>查看回放
+												{room.stable?"":<span>Beta</span>}
+											</div>:""}
 											<div className="star-icon"></div>
 											<span className="star-count">{room.star}</span>
 										</div>
