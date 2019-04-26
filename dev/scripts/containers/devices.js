@@ -35,66 +35,14 @@ class Devices extends React.Component {
 		this.$client.enableLocalVideo(true);
 		this.$client.setVideoProfile(450);
 		this.$client.enableLastmileTest()
-		this.$client.setAudioPlaybackVolume(120);
+		this.$client.setAudioPlaybackVolume(150);
 		this.$agora_log_file = path.join(remote.app.getPath("userData"),"agora.log")
 		this.$client.setLogFile(this.$agora_log_file)
 		this.$max_device_volumn = 0
-
-		let video_devices 	= this.$client.getVideoDevices()
-		let audio_devices 	= this.$client.getAudioRecordingDevices()
-		let speaker_devices = this.$client.getAudioPlaybackDevices()
-
-		let currentVideoDevice 	= Storage.get("VIDEO_DEVICE"),
-			currentAudioDevice 	= Storage.get("AUDIO_DEVICE"),
-			currentSpeakerDevice= Storage.get("PLAYBACK_DEVICE")
-		if (!currentVideoDevice) {
-			currentVideoDevice  = this.$client.getCurrentVideoDevice()
-		}
-		if (!currentAudioDevice) {
-			currentAudioDevice  = this.$client.getCurrentAudioRecordingDevice()
-		}
-		if (!currentSpeakerDevice) {
-			currentSpeakerDevice= this.$client.getCurrentAudioPlaybackDevice()
-		}
-		if (currentVideoDevice) {
-			this.$client.setVideoDevice(currentVideoDevice);
-		}
-		if (currentAudioDevice) {
-			this.$client.setAudioRecordingDevice(currentAudioDevice);
-		}
-		if (currentSpeakerDevice) {
-			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
-		}
-
-		let currentVideoName, currentSpeakerName, currentAudioName
-		for(let i=0,len=video_devices.length;i<len;i++) {
-			let item = video_devices[i]
-			if (item.deviceid == currentVideoDevice) {
-				currentVideoName = item.devicename
-			}
-		}
-		for(let i=0,len=audio_devices.length;i<len;i++) {
-			let item = audio_devices[i]
-			if (item.deviceid == currentAudioDevice) {
-				currentAudioName = item.devicename
-			}
-		}
-		for(let i=0,len=speaker_devices.length;i<len;i++) {
-			let item = speaker_devices[i]
-			if (item.deviceid == currentSpeakerDevice) {
-				currentSpeakerName = item.devicename
-			}
-		}
+		
 		this.$quality_msg = ["未知","极好","好","一般","差","极差","不可用"]
 		this.state = {
-			currentVideoDevice, 
-			currentVideoName,
-			currentSpeakerDevice,
-			currentSpeakerName,
-			currentAudioDevice,
-			currentAudioName,
-			video_devices, audio_devices, speaker_devices,
-			volume: this.$client.getAudioPlaybackVolume(),
+			volume: this.$client.getAudioPlaybackVolume() / 255 * 100 >> 0,
 			step: 0,
 			netquality: 0,
 			net_history: [0],
@@ -102,6 +50,11 @@ class Devices extends React.Component {
 			camera_failed: false,
 			mic_failed: false,
 			speaker_failed: false 
+		}
+
+		let deviceInfo = this.__resume_devices()
+		for (let key in deviceInfo) {
+			this.state[key] = deviceInfo[key]
 		}
 
 		this.$client.on("lastmilequality", (quality) => {
@@ -121,8 +74,92 @@ class Devices extends React.Component {
 			} else {
 				quality = 0
 			}
-			net.log({name:"NET:STATUS", status: quality, from: "device-test"})
+			net.log({name:"NET:STATUS", status: quality, from: "DEVICE-TEST"})
 		})
+	}
+
+	__is_device_in(devices, id) {
+		if (!id) return false
+		let found
+		for(let i=0,len=devices.length;i<len;i++) {
+			let item = devices[i]
+			if (item.deviceid == id) {
+				found = true
+				break
+			}
+		}
+		return found
+	}
+
+	__resume_devices() {
+		let currentVideoDevice 		= Storage.get("VIDEO_DEVICE"),
+			currentAudioDevice 		= Storage.get("AUDIO_DEVICE"),
+			currentSpeakerDevice  	= Storage.get("PLAYBACK_DEVICE")
+		
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices 	= this.$client.getAudioRecordingDevices()
+		let speaker_devices = this.$client.getAudioPlaybackDevices()
+		if (!this.__is_device_in(video_devices,currentVideoDevice)) {
+			currentVideoDevice = null
+		}
+		if (!this.__is_device_in(audio_devices,currentAudioDevice)) {
+			currentAudioDevice = null
+		}
+		if (!this.__is_device_in(speaker_devices,currentSpeakerDevice)) {
+			currentSpeakerDevice = null
+		}
+		if (currentVideoDevice) {
+			this.$client.setVideoDevice(currentVideoDevice);
+		} else {
+			currentVideoDevice = this.$client.getCurrentVideoDevice()
+		}
+		if (currentAudioDevice) {
+			this.$client.setAudioRecordingDevice(currentAudioDevice);
+		} else {
+			currentAudioDevice = this.$client.getCurrentAudioRecordingDevice()
+		}
+		if (currentSpeakerDevice) {
+			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
+		} else {
+			currentSpeakerDevice = this.$client.getCurrentAudioPlaybackDevice()
+		}
+		let currentVideoName, currentSpeakerName, currentAudioName
+		for(let i=0,len=video_devices.length;i<len;i++) {
+			let item = video_devices[i]
+			if (item.deviceid == currentVideoDevice) {
+				currentVideoName = item.devicename
+				break
+			}
+		}
+		for(let i=0,len=audio_devices.length;i<len;i++) {
+			let item = audio_devices[i]
+			if (item.deviceid == currentAudioDevice) {
+				currentAudioName = item.devicename
+				break
+			}
+		}
+		for(let i=0,len=speaker_devices.length;i<len;i++) {
+			let item = speaker_devices[i]
+			if (item.deviceid == currentSpeakerDevice) {
+				currentSpeakerName = item.devicename
+				break
+			}
+		}
+		net.log({
+			"DEVICE-TEST"	: 'device list', 
+			"camera"		: video_devices, 
+			"mic"			: audio_devices, 
+			"speaker"		: speaker_devices 
+		})
+		return {
+			currentVideoDevice, 
+			currentVideoName,
+			currentSpeakerDevice,
+			currentSpeakerName,
+			currentAudioDevice,
+			currentAudioName,
+			video_devices, audio_devices, speaker_devices
+		}
 	}
 
 	componentDidMount() {
@@ -160,7 +197,7 @@ class Devices extends React.Component {
 
 	onChangeVolume(value) {
 		this.setState({volume: value})
-		this.$client.setAudioPlaybackVolume(value);
+		this.$client.setAudioPlaybackVolume(value / 100 * 255 >> 0);
 	}
 
 	onStartPreview() {
@@ -244,6 +281,7 @@ class Devices extends React.Component {
 						this.setState({currentVideoDevice : event.target.value, currentVideoName: name})
 						Storage.store("VIDEO_DEVICE",event.target.value)
 						this.$client.setVideoDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change camera id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.video_devices.length > 0 ?
@@ -306,6 +344,7 @@ class Devices extends React.Component {
 						this.setState({currentAudioDevice : event.target.value, currentAudioName: name})
 						Storage.store("AUDIO_DEVICE",event.target.value)
 						this.$client.setAudioRecordingDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change mic id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.audio_devices.length > 0 ?
@@ -402,6 +441,7 @@ class Devices extends React.Component {
 						this.setState({currentSpeakerDevice : event.target.value, currentSpeakerName: name})
 						Storage.store("PLAYBACK_DEVICE",event.target.value)
 						this.$client.setAudioPlaybackDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change speaker id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.speaker_devices.length > 0 ?
@@ -422,7 +462,7 @@ class Devices extends React.Component {
 					<div className="progress-bar">
 						<Slider
 						min={0}
-						max={255}
+						max={100}
 						value={this.state.volume}
 						onChange={(value)=>{
 							this.onChangeVolume(value)
