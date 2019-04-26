@@ -103,6 +103,10 @@ class Course extends CourseBase {
 		})
 		let userinfos = [ this.props.teacher ]
 		userinfos = userinfos.concat(this.props.students)
+		
+		// console.log('for test');
+		// let offsetTime = Number(localStorage.getItem('offset'))
+		
 		this.$session.send_message(Const.INIT_ROOM, {
 			channel_id: this.props.room.channel_id,
 			token: net.token
