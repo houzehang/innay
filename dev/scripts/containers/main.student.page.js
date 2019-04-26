@@ -286,7 +286,7 @@ class Main extends React.Component {
 											{room.button_hf?<div className="btn-view-record" onClick={()=>{
 												this.__onStartRoom(room,true)
 											}}>查看回放
-												{room.stable?"":<span>Beta</span>}
+												{room.stable?"":<div className="beta-icon"></div>}
 											</div>:""}
 											<div className="star-icon"></div>
 											<span className="star-count">{room.star}</span>
