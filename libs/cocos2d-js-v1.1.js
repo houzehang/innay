@@ -18203,7 +18203,6 @@
         this._onScrollBarTouchBegan();
       },
       _clampDelta: function(delta) {
-        console.log("scroll view", delta);
         var contentSize = this.content.getContentSize();
         var scrollViewSize = this.node.getContentSize();
         contentSize.width < scrollViewSize.width && (delta.x = 0);

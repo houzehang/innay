@@ -12,8 +12,10 @@ timestamp=$(date +%s)
 ssh -p 65522 ${SERVER} "cp ${DIR}/latest.yml ${DIR}/latest.${timestamp}.yml; cp ${DIR}/latest-mac.yml ${DIR}/latest-mac.${timestamp}.yml; cp ${DIR}/latest-mac.json ${DIR}/latest-mac.${timestamp}.json;"
 
 scp -P 65522 build/student/*${VERSION}.exe  ${SERVER}:${DIR}
+scp -P 65522 build/student/*${VERSION}.exe.blockmap  ${SERVER}:${DIR}
 scp -P 65522 build/student/*${VERSION}*.zip  ${SERVER}:${DIR}
 scp -P 65522 build/student/*${VERSION}*.dmg  ${SERVER}:${DIR}
+scp -P 65522 build/student/*${VERSION}*.dmg.blockmap  ${SERVER}:${DIR}
 scp -P 65522 build/student/*.yml  ${SERVER}:${DIR}
 scp -P 65522 build/student/*.json ${SERVER}:${DIR}
 
@@ -24,8 +26,10 @@ DIR=/usr/share/nginx/html/muwen
 ssh ${SERVER} "cp ${DIR}/latest.yml ${DIR}/latest.${timestamp}.yml; cp ${DIR}/latest-mac.yml ${DIR}/latest-mac.${timestamp}.yml; cp ${DIR}/latest-mac.json ${DIR}/latest-mac.${timestamp}.json;"
 
 scp build/student/*${VERSION}.exe  ${SERVER}:${DIR}
+scp build/student/*${VERSION}.exe.blockmap ${SERVER}:${DIR}
 scp build/student/*${VERSION}*.zip  ${SERVER}:${DIR}
 scp build/student/*${VERSION}*.dmg  ${SERVER}:${DIR}
+scp build/student/*${VERSION}*.dmg.blockmap ${SERVER}:${DIR}
 scp build/student/*.yml  ${SERVER}:${DIR}
 scp build/student/*.json ${SERVER}:${DIR}
 
