@@ -3,8 +3,6 @@ import StudentHead from '../components/student-head'
 import HandsUp from '../components/handsup'
 
 import net from "../network"
-import Room from "../AgoraStream"
-import Signalize from '../AgoraSignal'
 import Session from '../session'
 import Const from '../../const'
 import { ipcRenderer } from 'electron';
@@ -17,17 +15,6 @@ class Course extends React.Component {
 		this.$stat_arr = []
 		this.$session = new Session(this)
 		this.$entered = false
-
-		this.$room = new Room(this)
-		this.$signal = new Signalize(this)
-		this.$downloaded_handler = (event, url, file) => {
-			context.addDownloaded(url, file)			
-		}
-		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
-		
-		if (context && context.detector) {
-			context.detector.waring_threshold = 2;
-		}
 	}
 
 	get uuid() {

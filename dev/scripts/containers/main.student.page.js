@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Download from '../components/download'
 import CourseForStudent from './course.student.page.js'
-import CourseRecord from './course.record'
+import CourseRecord from './course.student.replay.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
@@ -210,11 +210,9 @@ class Main extends React.Component {
 										<span>要上课程</span>
 									</div>
 									<div className="switch-bar-right" onClick={()=>{
-										console.log('switch-bar-right clicked1');
 										this.setState({
 											comming_page_selected:false
 										});
-										console.log('switch-bar-right clicked2');
 										setTimeout(()=>{
 											this.__query_courses();
 										},0);
@@ -279,6 +277,11 @@ class Main extends React.Component {
 										</div>
 										<div className="box-panel-bottom">
 											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':(room.class_state=='leave'?"请假":"未到课") }</span>
+											{room.button_hf?<div className="btn-view-record" onClick={()=>{
+												this.__onStartRoom(room,true)
+											}}>回放
+												{room.beta?<div className="beta-icon"></div>:""}
+											</div>:""}
 											<div className="star-icon"></div>
 											<span className="star-count">{room.star}</span>
 										</div>
@@ -306,13 +309,13 @@ class Main extends React.Component {
 			});
 			return;
 		}
-		if (window.cc == undefined) {
-			// require("./libs/cocos2d-js-v1.1-min.js")
-		}
 		this.onDownload(data, true)
 	}
 
 	__onStartRoom(data,isRecord) {
+		if (window.cc == undefined) {
+			$require("./libs/cocos2d-js-v1.1-min.js")
+		}
 		this.props.onRoomInfo(data)
 		if(isRecord){
 			this.props.hide()

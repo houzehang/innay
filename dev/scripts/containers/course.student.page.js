@@ -27,13 +27,28 @@ import {remote} from 'electron';
 import context 		 from "../context"
 import Storage 		 from '../Storage'
 const getCurrentWindow = remote.getCurrentWindow
+import { ipcRenderer } from 'electron'
+
+import Room 		 from "../AgoraStream"
+import Signalize 	 from '../AgoraSignal'
+import context 		 from "../context"
+import Storage 		 from '../Storage'
 
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
+
+		this.$room = new Room(this)
+		this.$signal = new Signalize(this)
+		this.$downloaded_handler = (event, url, file) => {
+			context.addDownloaded(url, file)			
+		}
+		ipcRenderer.on("DOWNLOADED", this.$downloaded_handler);
+		
+		if (context && context.detector) {
+			context.detector.waring_threshold = 2;
+		}
 		this.$view_mode = 1
-		this.$in_warning = false;
-		this.$warning_id = null;
 		
 		this.state 		= { 
 			control: !this.props.status.started,
@@ -137,9 +152,6 @@ class Course extends CourseBase {
 				}
 			}
 		})
-		if (this.$timer_warning) {
-			clearTimeout(this.$timer_warning);
-		}
 		this.__init_device_doctor()
 		super.componentDidMount();
 	}

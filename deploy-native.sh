@@ -29,4 +29,4 @@ scp build/native/*${VERSION}*.dmg  ${SERVER}:${DIR}
 scp build/native/*.yml  ${SERVER}:${DIR}
 scp build/native/*.json ${SERVER}:${DIR}
 
-echo "deploy done."
+echo "deploy done. Backup timestamp ${timestamp}"
