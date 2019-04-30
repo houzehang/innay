@@ -7,6 +7,7 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
+import bridge from '../../../core/MessageBridge'
 import net from "../network"
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
@@ -356,23 +357,93 @@ class Main extends React.Component {
 		}
 	}
 
-	onDownload(data, canenter,isRecord) {
-		this.props.alert({
-			title: "下载课程包",
-			content: <Download name={data.en_name} complete={()=>{
-				// 存储最后一次下载时间
-				storage.store(`download_${data.en_name}`,new Date().getTime())
-				if (canenter) {
-					this.__onStartRoom(data,isRecord)
-				} else {
-					this.props.alert({
-						content: "下载完成。"
-					})
-				}
-			}} user={this.props.account}/>,
-			nobutton: true,
-			noanim	: true
+	__setStatus(status, message) {
+		console.log("download",status,message)
+	}
+
+	__on_complete() {
+		console.log("download complete")
+		bridge.call({
+			method	: "openLiveRoom",
+			args	: "liveroom"
+		}).catch(err=>{
+			console.error(err)
 		})
+	}
+
+	__do_update_bundle(base_url, result) {
+		bridge.call({
+			method: "startDownloadTask", 
+			args: {
+				pack		: "liveroom", 
+				url			: `${base_url}/${result.url}`, 
+				md5			: result.md5,
+				version		: result.version,
+				autoUnzip	: true,
+				checksum    : true 
+			}
+		}).then((result)=>{
+			let identity = result.identity
+			bridge.delegate = {
+				[`${identity}/progress`] : ({ total, transferred, percent })=>{
+					this.__setStatus("UPDATE.DOWNLOADING", {percent: percent*100 >> 0});
+				},
+				[`${identity}/error`] : (error)=>{
+					this.__setStatus("UPDATE.ERROR", error.message);
+				},
+				[`${identity}/success`] : (data)=>{
+					this.__setStatus("UPDATE.DOWNLOADED_UI");
+					this.__on_complete()
+				}
+			}
+		}).catch(err=>{
+			console.log("error happened",err)
+			logger.error(err)
+		})
+	}
+
+	onDownload(data, canenter,isRecord) {
+		let base_url = "http://localhost:8080"
+		// if (DEBUG) {
+		// 	base_url = "http://localhost:8080"
+		// } else if (TEST) {
+		// 	base_url = "http://bundles.runsnailrun.com"
+		// } else {
+		// 	base_url = "https://bundles.mw019.com"
+		// }
+		console.log("bridge",bridge)
+		bridge.call({
+			method: "isUpdateAvailable",
+			args: {
+				url : `${base_url}/liveroom.json`,
+				pack: "liveroom"
+			}
+		}).then(result=>{
+			if (result.available) {
+				this.__setStatus("UPDATE.DOWNLOADING_UI");
+				this.__do_update_bundle(base_url, result.server)
+			} else {
+				this.__setStatus("UPDATE.LASTEST");
+				this.__on_complete()
+			}
+		})
+		
+		// this.props.alert({
+		// 	title: "下载课程包",
+		// 	content: <Download name={data.en_name} complete={()=>{
+		// 		// 存储最后一次下载时间
+		// 		storage.store(`download_${data.en_name}`,new Date().getTime())
+		// 		if (canenter) {
+		// 			this.__onStartRoom(data,isRecord)
+		// 		} else {
+		// 			this.props.alert({
+		// 				content: "下载完成。"
+		// 			})
+		// 		}
+		// 	}} user={this.props.account}/>,
+		// 	nobutton: true,
+		// 	noanim	: true
+		// })
 	}
 
 	onEnterRoom(isRecord) {

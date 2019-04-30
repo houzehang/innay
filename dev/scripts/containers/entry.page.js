@@ -5,7 +5,6 @@ import {
 } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Login from './login.page'
-import MainTeacherPage from './main.teacher.page'
 import MainStudentPage from './main.student.page'
 import Dialog from './dialog'
 import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
@@ -40,7 +39,7 @@ class Entry extends React.Component {
 						if (!account) {
 							return <Login/>
 						} else {
-							return this.props.account.dentity == types.DENTITY.STUDENT ? <MainStudentPage/> : <MainTeacherPage/>
+							return <MainStudentPage/>
 						}
 					}
 				}></Route>

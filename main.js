@@ -3,7 +3,9 @@ import log from 'electron-log';
 import path from 'path'
 import {autoUpdater} from 'electron-updater'
 import Updater from './core/Updater'
-import MainUI from './core/MainUI'
+import * as PackageManager from './core/PackageManager'
+import bridge from './core/MessageBridge'
+import WindowFactory from './core/WindowFactory'
 import { PROXY } from './core/Configure'
 import { trigger } from './core/Eventer'
 import logger from 'electron-log'
@@ -14,21 +16,29 @@ if (process.env.NODE_ENV == "development") {
 protocol.registerStandardSchemes([ PROXY ])
 
 app.on('ready', function () {
+    protocol.registerBufferProtocol(PROXY,(request, callback)=>{
+        trigger("proxy-pass", { request, callback })
+    }, error=>{
+        logger.error(error)
+    })
+    bridge.delegate = PackageManager
     let updater     = new Updater(__dirname)
     let screenSize  = screen.getPrimaryDisplay().size;
+    let windowFactory = new WindowFactory(screenSize)
     updater.start()
     updater.on("open-main-window", (pack)=>{
         setTimeout(()=>{
             updater.close()
         },100)
         logger.log("call open main ui window", PROXY, pack)
-        protocol.registerBufferProtocol(PROXY,(request, callback)=>{
-            trigger("proxy-pass", { request, callback })
-        }, error=>{
-            logger.error(error)
+        windowFactory.open(pack, {
+            openLiveRoom: (pack)=>{
+                let _window = windowFactory.open(pack)
+                _window.on("closed", ()=>{
+                    console.log("window closed")
+                })
+            }
         })
-        let main = new MainUI(screenSize, pack)
-        main.open()
     })
 });
 
@@ -39,31 +49,3 @@ app.on('window-all-closed', () => {
 process.on('uncaughtException', function (err) {
     log.error("uncaughtException", err);
 });
-
-// app.on('browser-window-focus', function () {
-//     if (TEACHER) {
-//         mainWindowHotkeyListener.register();
-//     }
-// });
-
-// app.on('browser-window-blur', function () {
-//     if (TEACHER) {
-//         mainWindowHotkeyListener.unregister();
-//     }
-// });
-
-// ipcMain.on('off-hotkey', function () {
-//     TEACHER && mainWindowHotkeyListener.unregister();
-// });
-
-// ipcMain.on('on-hotkey', function () {
-//     TEACHER && mainWindowHotkeyListener.register();
-// });
-
-// ipcMain.on('on-closewarning', function (warningMsg) {
-//     TEACHER && (closeWarning = warningMsg);
-// });
-
-// ipcMain.on('off-closewarning', function () {
-//     TEACHER && (closeWarning = warningMsg);
-// });

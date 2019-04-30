@@ -82,6 +82,10 @@ class MessageBridge {
 		}
 	}
 
+	removeDelegate(key) {
+		delete this.$delegate[key]
+	}
+
 	call({ method, args, sender }) {
 		if (!IN_RENDER && !sender) {
 			console.error("call from main process must set sender")

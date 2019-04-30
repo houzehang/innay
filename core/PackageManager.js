@@ -39,7 +39,6 @@ export async function getLocalPackageVersion({pack}) {
 export async function getServerPackageVersion({url}) {
 	url = `${url}?t=${new Date().getTime()}`
 	let response = await got.get(url, {json: true})
-	console.log("get server package",url,response.body)
 	return response.body
 }
 

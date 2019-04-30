@@ -2,7 +2,6 @@ import { TC_DEBUG, DEBUG } from '../env.js';
 import { BrowserWindow } from 'electron';
 import bridge from './MessageBridge'
 import { EventEmitter } from 'events';
-import * as PackageManager from './PackageManager'
 import MenuBuilder from '../menu';
 export default class Updater extends EventEmitter {
 	constructor(dirname) {
@@ -19,15 +18,18 @@ export default class Updater extends EventEmitter {
 			autoHideMenuBar: true
 		});
 		updateWindow.on('closed', () => {
+			console.log("remove delegate openMainWindow")
+			bridge.removeDelegate("openMainWindow")
 			updateWindow = null;
 		});
 		let url = DEBUG ? "http://localhost:3031" : `file://${this.$dirname}/dist/index.html`
 		updateWindow.loadURL(url);
 		this.$update_window = updateWindow
-		bridge.delegate = PackageManager
-		bridge.delegate = { openMainWindow: async (pack)=>{
-			this.emit("open-main-window", pack)
-		} }
+		bridge.delegate = { 
+			openMainWindow: async (pack)=>{
+				this.emit("open-main-window", pack)
+			}
+		}
 		const menuBuilder = new MenuBuilder(updateWindow);
 		menuBuilder.buildMenu();
 		this.$window = updateWindow

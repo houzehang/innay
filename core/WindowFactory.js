@@ -1,7 +1,7 @@
 import MenuBuilder from '../menu';
 import SystemInfo from "systeminformation"
 import Const from '../config/const';
-import { PROXY, ASSETS_PATH } from './Configure'
+import { PROXY, ASSETS_PATH, WINDOW_ADAPTER } from './Configure'
 import { register } from './Eventer'
 import { TC_DEBUG, TEST, DEBUG } from '../env';
 import { app, BrowserWindow } from 'electron'
@@ -9,11 +9,12 @@ import url from 'url'
 import path from 'path'
 import fs from 'fs-extra'
 import mime from 'mime-types'
+import bridge from './MessageBridge'
+import { EventEmitter } from 'events';
 
-export default class MainUI {
-	constructor(screenSize, pack) {
+export default class WindowFactory {
+	constructor(screenSize) {
 		this.$screen_size 	= screenSize
-		this.$pack 			= pack
 		this.$error_page    = '<h1>404 Not Found</h1>'
 		this.__init()
 	}
@@ -40,22 +41,27 @@ export default class MainUI {
 		})
 	}
 
-	open() {
+	open(pack, delegates = {}) {
+		const eventer 		= new EventEmitter
 		let {width, height} = Const.MAIN_WINDOW_SIZE,
 			screenSize 		= this.$screen_size,
 			ratio 			= Math.min(screenSize.width/width, screenSize.height/height)
 	
-		let mainWindow = new BrowserWindow({
+		let _window = new BrowserWindow({
 			width: width * ratio >> 0, 
 			height: height * ratio >> 0,
 			resizable: TC_DEBUG,
 			center: true,
 			autoHideMenuBar: true
 		})
-		let userAgent = mainWindow.webContents.getUserAgent()
-		mainWindow.webContents.setUserAgent(`${userAgent} KCPC v${app.getVersion()}`);
-		let url = DEBUG ? "http://localhost:3030" : `${PROXY}://${this.$pack}`
-		mainWindow.loadURL(url)
+		let userAgent = _window.webContents.getUserAgent(), url
+		_window.webContents.setUserAgent(`${userAgent} KCPC v${app.getVersion()} ${pack}`);
+		if (DEBUG && WINDOW_ADAPTER[pack]) {
+			url = WINDOW_ADAPTER[pack]
+		} else {
+			url = `${PROXY}://${pack}`
+		}
+		_window.loadURL(url)
 		if (TC_DEBUG || TEST) {
 			const installExtensions = () => {
 				const installer = require('electron-devtools-installer');
@@ -64,26 +70,40 @@ export default class MainUI {
 				extensions.map(name => installer.default(installer[name], forceDownload))
 			};
 			installExtensions()
-			mainWindow.webContents.openDevTools();
+			_window.webContents.openDevTools();
 		}
-		mainWindow.webContents.on('did-finish-load', () => {
-			mainWindow.webContents.send('configure', {
+		_window.webContents.on('did-finish-load', () => {
+			_window.webContents.send('configure', {
 				__dirname: path.resolve(__dirname,'..'), __apppath: app.getAppPath(),
 				version: app.getVersion()
 			});
 			
 			SystemInfo.getStaticData((info)=>{
-				mainWindow.webContents.send('systeminfo', {
+				_window.webContents.send('systeminfo', {
 				   systeminfo: info
 				});
 			})
+			eventer.emit("loaded")
 		})
-		mainWindow.on('crashed', function (event) {
+		_window.on('crashed', function (event) {
 			log.error("main window crashed", event);
-			createMainWindow()
-			mainWindow.destroy()
+			_window.destroy()
+			eventer.emit("crashed")
 		})
-		const menuBuilder = new MenuBuilder(mainWindow);
+		_window.on('closed', () => {
+			for (let key in delegates) {
+				console.log("remove delegate for key")
+				bridge.removeDelegate(key)
+			}
+			eventer.emit("closed")
+		});
+		bridge.delegate   = delegates
+		const menuBuilder = new MenuBuilder(_window);
 		menuBuilder.buildMenu();
+		eventer.window    = _window
+		process.nextTick(()=>{
+			eventer.emit("start")
+		})
+		return eventer
 	}
 }

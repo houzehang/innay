@@ -28,11 +28,8 @@ import context 		 from "../context"
 import Storage 		 from '../Storage'
 const getCurrentWindow = remote.getCurrentWindow
 import { ipcRenderer } from 'electron'
-
 import Room 		 from "../AgoraStream"
 import Signalize 	 from '../AgoraSignal'
-import context 		 from "../context"
-import Storage 		 from '../Storage'
 
 class Course extends CourseBase {
 	constructor(props) {
