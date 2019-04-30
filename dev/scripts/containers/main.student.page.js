@@ -20,8 +20,7 @@ import {
 import { setTimeout } from 'core-js';
 const context = require("../context")
 const storage = require("../Storage")
-const Conf    = require("../../const")
-const { ipcRenderer } = $require('electron');
+const ENV     = require("../../../env")
 
 class Main extends React.Component {
 	constructor(props) {
@@ -314,6 +313,13 @@ class Main extends React.Component {
 				sure: ()=>{}
 			});
 			return;
+		}
+		if (window.cc == undefined) {
+			if (ENV.DEBUG) {
+				$require("./libs/cocos2d-js-v1.1.js")
+			} else {
+				$require("./libs/cocos2d-js-v1.1-min.js")
+			}
 		}
 		this.onDownload(data, true)
 	}

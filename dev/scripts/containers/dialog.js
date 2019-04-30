@@ -24,7 +24,7 @@ class Dialog extends React.Component {
 	}
 
 	sure() {
-		this.hide()
+		this.props.dispatchHide()
 		if (this.props.data.configure.sure) {
 			this.props.data.configure.sure()
 		}

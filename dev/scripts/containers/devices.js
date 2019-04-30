@@ -3,24 +3,26 @@ import { connect } from 'react-redux'
 require("../../less/devices.less")
 import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
-import { findDOMNode } from 'react-dom';
 const path				= $require("path")
 const Const 			= require("../../const")
 const DEBUG 			= require("../../../env").DEBUG
 const Storage 			= require("../Storage")
 const AgoraRtcEngine 	= require('../../agora/AgoraSdk')
-const $ 				= require("jquery")
 const net 				= require("../network")
 const context		    = require("../context")
 const remote 			= $require("electron").remote
 import { 
-	onExitTester,alert
+	onExitTester,alert,confirm
 } from '../actions'
 class Devices extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(Const.AGORA_APPID);
+		this.$client.on('error', (err, msg)=>{
+			console.error("Got error msg:", err);
+			net.log({"DEVICE-TEST":`init error, code: ${err}, message: ${msg}`})
+		});
 		this.$client.setChannelProfile(1);
 		this.$client.setClientRole(1);
 		this.$client.setAudioProfile(0, 1);
@@ -31,72 +33,28 @@ class Devices extends React.Component {
 		this.$client.enableDualStreamMode(true);
 		this.$client.enableVideo();
 		this.$client.enableLocalVideo(true);
-		this.$client.setVideoProfile(45);
+		this.$client.setVideoProfile(450);
 		this.$client.enableLastmileTest()
-
-		this.$client.on('error', (err)=>{
-			console.error("Got error msg:", err);
-		});
-
-		let video_devices 	= this.$client.getVideoDevices()
-		let audio_devices 	= this.$client.getAudioRecordingDevices()
-		let speaker_devices = this.$client.getAudioPlaybackDevices()
-
-		let currentVideoDevice 	= Storage.get("VIDEO_DEVICE"),
-			currentAudioDevice 	= Storage.get("AUDIO_DEVICE"),
-			currentSpeakerDevice= Storage.get("PLAYBACK_DEVICE")
-		if (!currentVideoDevice) {
-			currentVideoDevice  = this.$client.getCurrentVideoDevice()
-		}
-		if (!currentAudioDevice) {
-			currentAudioDevice  = this.$client.getCurrentAudioRecordingDevice()
-		}
-		if (!currentSpeakerDevice) {
-			currentSpeakerDevice= this.$client.getCurrentAudioPlaybackDevice()
-		}
-		if (currentVideoDevice) {
-			this.$client.setVideoDevice(currentVideoDevice);
-		}
-		if (currentAudioDevice) {
-			this.$client.setAudioRecordingDevice(currentAudioDevice);
-		}
-		if (currentSpeakerDevice) {
-			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
-		}
-
-		let currentVideoName, currentSpeakerName, currentAudioName
-		for(let i=0,len=video_devices.length;i<len;i++) {
-			let item = video_devices[i]
-			if (item.deviceid == currentVideoDevice) {
-				currentVideoName = item.devicename
-			}
-		}
-		for(let i=0,len=audio_devices.length;i<len;i++) {
-			let item = audio_devices[i]
-			if (item.deviceid == currentAudioDevice) {
-				currentAudioName = item.devicename
-			}
-		}
-		for(let i=0,len=speaker_devices.length;i<len;i++) {
-			let item = speaker_devices[i]
-			if (item.deviceid == currentSpeakerDevice) {
-				currentSpeakerName = item.devicename
-			}
-		}
+		this.$client.setAudioPlaybackVolume(150);
+		this.$agora_log_file = path.join(remote.app.getPath("userData"),"agora.log")
+		this.$client.setLogFile(this.$agora_log_file)
+		this.$max_device_volumn = 0
+		
 		this.$quality_msg = ["未知","极好","好","一般","差","极差","不可用"]
 		this.state = {
-			currentVideoDevice, 
-			currentVideoName,
-			currentSpeakerDevice,
-			currentSpeakerName,
-			currentAudioDevice,
-			currentAudioName,
-			video_devices, audio_devices, speaker_devices,
-			volume: this.$client.getAudioPlaybackVolume(),
+			volume: this.$client.getAudioPlaybackVolume() / 255 * 100 >> 0,
 			step: 0,
 			netquality: 0,
 			net_history: [0],
 			check_over: 0,
+			camera_failed: false,
+			mic_failed: false,
+			speaker_failed: false 
+		}
+
+		let deviceInfo = this.__resume_devices()
+		for (let key in deviceInfo) {
+			this.state[key] = deviceInfo[key]
 		}
 
 		this.$client.on("lastmilequality", (quality) => {
@@ -116,8 +74,92 @@ class Devices extends React.Component {
 			} else {
 				quality = 0
 			}
-			net.log({name:"NET:STATUS", status: quality})
+			net.log({name:"NET:STATUS", status: quality, from: "DEVICE-TEST"})
 		})
+	}
+
+	__is_device_in(devices, id) {
+		if (!id) return false
+		let found
+		for(let i=0,len=devices.length;i<len;i++) {
+			let item = devices[i]
+			if (item.deviceid == id) {
+				found = true
+				break
+			}
+		}
+		return found
+	}
+
+	__resume_devices() {
+		let currentVideoDevice 		= Storage.get("VIDEO_DEVICE"),
+			currentAudioDevice 		= Storage.get("AUDIO_DEVICE"),
+			currentSpeakerDevice  	= Storage.get("PLAYBACK_DEVICE")
+		
+		let video_devices 	= this.$client.getVideoDevices()
+		let audio_devices 	= this.$client.getAudioRecordingDevices()
+		let speaker_devices = this.$client.getAudioPlaybackDevices()
+		if (!this.__is_device_in(video_devices,currentVideoDevice)) {
+			currentVideoDevice = null
+		}
+		if (!this.__is_device_in(audio_devices,currentAudioDevice)) {
+			currentAudioDevice = null
+		}
+		if (!this.__is_device_in(speaker_devices,currentSpeakerDevice)) {
+			currentSpeakerDevice = null
+		}
+		if (currentVideoDevice) {
+			this.$client.setVideoDevice(currentVideoDevice);
+		} else {
+			currentVideoDevice = this.$client.getCurrentVideoDevice()
+		}
+		if (currentAudioDevice) {
+			this.$client.setAudioRecordingDevice(currentAudioDevice);
+		} else {
+			currentAudioDevice = this.$client.getCurrentAudioRecordingDevice()
+		}
+		if (currentSpeakerDevice) {
+			this.$client.setAudioPlaybackDevice(currentSpeakerDevice);
+		} else {
+			currentSpeakerDevice = this.$client.getCurrentAudioPlaybackDevice()
+		}
+		let currentVideoName, currentSpeakerName, currentAudioName
+		for(let i=0,len=video_devices.length;i<len;i++) {
+			let item = video_devices[i]
+			if (item.deviceid == currentVideoDevice) {
+				currentVideoName = item.devicename
+				break
+			}
+		}
+		for(let i=0,len=audio_devices.length;i<len;i++) {
+			let item = audio_devices[i]
+			if (item.deviceid == currentAudioDevice) {
+				currentAudioName = item.devicename
+				break
+			}
+		}
+		for(let i=0,len=speaker_devices.length;i<len;i++) {
+			let item = speaker_devices[i]
+			if (item.deviceid == currentSpeakerDevice) {
+				currentSpeakerName = item.devicename
+				break
+			}
+		}
+		net.log({
+			"DEVICE-TEST"	: 'device list', 
+			"camera"		: video_devices, 
+			"mic"			: audio_devices, 
+			"speaker"		: speaker_devices 
+		})
+		return {
+			currentVideoDevice, 
+			currentVideoName,
+			currentSpeakerDevice,
+			currentSpeakerName,
+			currentAudioDevice,
+			currentAudioName,
+			video_devices, audio_devices, speaker_devices
+		}
 	}
 
 	componentDidMount() {
@@ -142,8 +184,12 @@ class Devices extends React.Component {
 		this.$client.startAudioRecordingDeviceTest(100)
 		this.$client.on('audiovolumeindication', (uid, volume, speaker, totalVolume) => {
 			if (this.state.step == 2) {
+				let volumn =  parseInt(totalVolume / 255 * 13, 10)
+				if (volumn > this.$max_device_volumn) {
+					this.$max_device_volumn = volumn
+				}
 				this.setState({
-					inputVolume: parseInt(totalVolume / 255 * 13, 10)
+					inputVolume: volumn
 				});
 			}
 		});
@@ -151,12 +197,12 @@ class Devices extends React.Component {
 
 	onChangeVolume(value) {
 		this.setState({volume: value})
-		this.$client.setAudioPlaybackVolume(value);
+		this.$client.setAudioPlaybackVolume(value / 100 * 255 >> 0);
 	}
 
 	onStartPreview() {
 		if (this.$previewing) return
-		this.$client.setupLocalVideo($("#video-area")[0]);
+		this.$client.setupLocalVideo(this.$video_area);
 		this.$client.startPreview();
 		this.$previewing = true
 	}
@@ -164,10 +210,8 @@ class Devices extends React.Component {
 	onStopPreviewAndStepTo(step) {
 		this.$previewing = false
 		this.$client.stopPreview();
-		$("#video-area").empty()
-		setTimeout(()=>{
-			this.setState({step})
-		})
+		this.$video_area.innerHTML = ""
+		this.setState({step})
 	}
 
 	step0() {
@@ -203,8 +247,9 @@ class Devices extends React.Component {
 								});
 								return;
 							}
+							net.log({"DEVICE-TEST": "hardware test passed"})
 							this.setState({step: 1})
-						}} className="step-btn">下一步</button>
+						}} className="step-btn">设备信息正确，开始检测</button>
 					</div>
 				</div>
 			)
@@ -212,6 +257,13 @@ class Devices extends React.Component {
 			console.log('error:device->step0,',error.message || error);
 		}
 		return '';
+	}
+
+	__on_step1_done({ passed }) {
+		this.onStartMicTest()
+		this.onStopPreviewAndStepTo(2)
+		this.setState({ camera_failed: !passed })
+		net.log({"DEVICE-TEST":`camera test ${passed?"passed":"failed"}`})
 	}
 
 	step1() {
@@ -229,6 +281,7 @@ class Devices extends React.Component {
 						this.setState({currentVideoDevice : event.target.value, currentVideoName: name})
 						Storage.store("VIDEO_DEVICE",event.target.value)
 						this.$client.setVideoDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change camera id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.video_devices.length > 0 ?
@@ -244,12 +297,14 @@ class Devices extends React.Component {
 					}
 					</select>
 				</div>
-				<div className="video-area" id="video-area"></div>
+				<div className="video-area" id="video-area" ref={el=>this.$video_area=el}></div>
 				<div className="step-btns">
 					<button onClick={()=>{
-						this.onStartMicTest()
-						this.onStopPreviewAndStepTo(2)
-					}} className="step-btn">下一步</button>
+						this.__on_step1_done({ passed: false })
+					}} className="step-btn no-pass">不能看到图像</button>
+					<button onClick={()=>{
+						this.__on_step1_done({ passed: true })
+					}} className="step-btn">能清晰看到图像</button>
 					<button onClick={()=>{
 						this.onStopPreviewAndStepTo(0)
 						this.setState({step: 0})
@@ -257,6 +312,16 @@ class Devices extends React.Component {
 				</div>
 			</div>
 		)
+	}
+
+	__on_step2_done({ passed }) {
+		this.$client.stopAudioRecordingDeviceTest();
+		this.setState({step: 3})
+		this.setState({
+			check_over: true
+		})
+		this.setState({ mic_failed: !passed })
+		net.log({"DEVICE-TEST": `mic test ${passed?"passed":"failed"}, max volumn: ${this.$max_device_volumn / 12 * 100 >> 0}%`})
 	}
 
 	step2() {
@@ -279,6 +344,7 @@ class Devices extends React.Component {
 						this.setState({currentAudioDevice : event.target.value, currentAudioName: name})
 						Storage.store("AUDIO_DEVICE",event.target.value)
 						this.$client.setAudioRecordingDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change mic id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.audio_devices.length > 0 ?
@@ -300,12 +366,11 @@ class Devices extends React.Component {
 				</div>
 				<div className="step-btns">
 					<button onClick={()=>{
-    					this.$client.stopAudioRecordingDeviceTest();
-						this.setState({step: 3})
-						this.setState({
-							check_over: true
-						})
-					}} className="step-btn">下一步</button>
+    					this.__on_step2_done({passed: false})
+					}} className="step-btn no-pass">看不到音量变化</button>
+					<button onClick={()=>{
+    					this.__on_step2_done({passed: true})
+					}} className="step-btn">能看到音量变化</button>
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
 						this.setState({step: 1})
@@ -313,6 +378,42 @@ class Devices extends React.Component {
 				</div>
 			</div>
 		)
+	}
+
+	__on_step3_done({ passed }) {
+		this.$client.stopAudioPlaybackDeviceTest();
+		this.setState({ speaker_failed: !passed })
+		net.log({"DEVICE-TEST": `speaker test ${passed?"passed":"failed"}`})
+		let failed
+		if (this.state.camera_failed || this.state.mic_failed || !passed) {
+			failed = true
+		} else {
+			failed = false
+		}
+		if (!failed) {
+			this.props.alert({
+				content: "设备检测通过，欢迎您进入明兮学堂。",
+				sure: ()=>{
+					net.log({"DEVICE-TEST": "user device test success."})
+					this.__exit()
+				}
+			})
+		} else {
+			this.props.confirm({
+				content: "设备检测存在异常，请联系课程顾问帮您解决。",
+				cancel_txt: "跳过检测",
+				sure_txt: "重新检测",
+				sure: ()=>{
+					net.log({"DEVICE-TEST": "user device test failed and restart."})
+					this.$playing = false
+					this.setState({step: 1, camera_failed: false, mic_failed: false, speaker_failed: false})
+				},
+				cancel: ()=>{
+					net.log({"DEVICE-TEST": "user device test failed and stepover."})
+					this.__exit()
+				}
+			})
+		}
 	}
 
 	step3() {
@@ -340,6 +441,7 @@ class Devices extends React.Component {
 						this.setState({currentSpeakerDevice : event.target.value, currentSpeakerName: name})
 						Storage.store("PLAYBACK_DEVICE",event.target.value)
 						this.$client.setAudioPlaybackDevice(event.target.value);
+						net.log({"DEVICE-TEST":`change speaker id:${event.target.value}, name: ${name}`})
 					}}>
 					{
 						this.state.speaker_devices.length > 0 ?
@@ -360,7 +462,7 @@ class Devices extends React.Component {
 					<div className="progress-bar">
 						<Slider
 						min={0}
-						max={255}
+						max={100}
 						value={this.state.volume}
 						onChange={(value)=>{
 							this.onChangeVolume(value)
@@ -369,9 +471,12 @@ class Devices extends React.Component {
 					</div>
 				</div>
 				<div className="step-btns">
+					<button className="step-btn no-pass" onClick={()=>{
+						this.__on_step3_done({passed: false})
+					}}>听不到测试音</button>
 					<button className="step-btn" onClick={()=>{
-						this.__exit();
-					}}>完成</button>
+						this.__on_step3_done({passed: true})
+					}}>能听到测试音</button>
 					<button onClick={()=>{
 						this.$playing = false
 						this.$client.stopAudioPlaybackDeviceTest();
@@ -396,7 +501,7 @@ class Devices extends React.Component {
 				this.__exit();
 			}}></button>
 			<div className={"sound-tester s-"+this.state.step}>
-				<div className="network">实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
+				<div className={this.state.netquality>3?"network bad":"network"}>实时网络状态: {this.$quality_msg[this.state.netquality]}</div>
 				<div className="network-bar">
 				{this.state.net_history.map((quality,index)=>{
 					return <div className={"quality q-"+quality} key={index}></div>
@@ -418,21 +523,22 @@ class Devices extends React.Component {
 							<i className="icon"></i>
 							摄像头检测
 						</div>
-						<div className="step-num">2</div>
+						{this.state.camera_failed?<div className="step-num failed">!</div>:<div className="step-num">2</div>}
+						
 					</div>
 					<div className="step step-2">
 						<div className="step-name">
 							<i className="icon"></i>
 							麦克风检测
 						</div>
-						<div className="step-num">3</div>
+						{this.state.mic_failed?<div className="step-num failed">!</div>:<div className="step-num">3</div>}
 					</div>
 					<div className="step step-3">
 						<div className="step-name">
 							<i className="icon"></i>
 							扬声器检测
 						</div>
-						<div className="step-num">4</div>
+						{this.state.speaker_failed?<div className="step-num failed">!</div>:<div className="step-num">4</div>}
 					</div>
 				</div>
 				{this[`step${this.state.step}`]()}
@@ -452,7 +558,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
 	onExitTester 	: () => dispatch(onExitTester()),
-	alert 	   	   	: (data) => dispatch(alert(data))
+	alert 	   	   	: (data) => dispatch(alert(data)),
+	confirm 	   	: (data) => dispatch(confirm(data))
 })
 
 export default connect(

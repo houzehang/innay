@@ -1,7 +1,8 @@
 const path = require('path')
-const fs   = require('fs')
+const fs   = require('fs-extra')
 const {ipcMain,app} = require('electron');
-const log = require('electron-log');
+const logger = require('electron-log');
+const got = require("got")
 const {DEBUG}   = require('./env.js');
 
 class StaticServer {
@@ -9,42 +10,13 @@ class StaticServer {
 		this.$downloading 	= false
 		this.$down_queue 	= []
 		this.$entity 		= entity
-		this.$loaded 		= {}
 		this.$dir = path.join(app.getPath("userData"),"class_sounds");
 		this.__clearCache()
-		log.log("download dir",this.$dir);
+		logger.log("download dir",this.$dir);
 		ipcMain.on("DOWNLOAD", (event, url)=>{
 			if (!url) return
 			this.__log("on download message",url);
 			this.__download(url)
-		})
-		this.$entity.webContents.session.on("will-download", (event, item, webContents)=>{
-			let file = path.join(this.$dir,item.getFilename())
-			this.__log("will download",file);
-			item.setSavePath(file)
-			item.on("updated", (event, state)=>{
-				if (state === 'interrupted') {
-					this.__log("Download is interrupted but can be resumed")
-				} else if (state === 'progressing') {
-					if (item.isPaused()) {
-						this.__log("Download is paused")
-					}
-				}
-			})
-			item.once('done', (event, state)=>{
-				this.$downloading = false
-				let url = item.getURL()
-				if (state === 'completed') {
-					this.__log('Download successfully',file,item.getURL())
-					this.$loaded[url] = file
-					this.$entity.webContents.send('DOWNLOADED', url, file);
-					this.__download()
-				} else {
-					this.__log(`Download failed: ${state}`)
-					this.$entity.webContents.send('DOWNLOADERROR', url);
-					this.__download()
-				}
-			})
 		})
 	}
 
@@ -63,37 +35,58 @@ class StaticServer {
 	};
 
 	__log(...params) {
-		log.log(...params);
-		console.log(...params)
+		logger.log(...params);
+	}
+
+	__do_download(url, file) {
+		console.log("call do download", url, file)
+		let task
+		try {
+			task = got(url, { encoding: null, timeout: {socket: 60000}})
+		} catch(e) {
+			error = e
+		}
+		if (
+			!task ||
+			typeof task.on !== 'function' ||
+			typeof error !== 'undefined'
+		) {
+			if (!error) {
+				error = new Error('unknown error');
+			}
+			this.$entity.webContents.send('DOWNLOADERROR', url);
+			logger.error('[Download Error]', error.message);
+			logger.error(error.stack);
+			return;
+		}
+		task.then((response) => {
+			return fs.outputFile(file, response.body);
+		}).then(() => {
+			logger.info(`downloaded ${url}, ${file}`);
+			this.$entity.webContents.send('DOWNLOADED', url, file);
+		}).catch(err => {
+			logger.error(`download error ${url} ${err}`)
+			this.$entity.webContents.send('DOWNLOADERROR', url);
+		})
 	}
 
 	__download(url) {
-		if (url) {
-			this.$down_queue.push(url)
-		}
-		if (this.$downloading) {
-			return
-		}
-		url = this.$down_queue.shift()
-		if (this.$loaded[url]) {
-			this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
-			this.__download()
-			return
-		}
 		if (url) {
 			// 判断本地硬盘是否存在文件
 			let name = url.match(/([^\/]+)$/)
 			if (name) {
 				let file = path.join(this.$dir,name[1])
 				if (fs.existsSync(file)) {
-					this.$loaded[url] = file
-					this.$entity.webContents.send('DOWNLOADED', url, this.$loaded[url]);
+					this.__log('Download file already exist', url)
+					this.$entity.webContents.send('DOWNLOADED', url, file);
 					this.__download()
 					return
+				} else {
+					this.__do_download(url, file)
 				}
+			} else {
+				this.$entity.webContents.send('DOWNLOADERROR', url);
 			}
-			this.$downloading = true
-			this.$entity.webContents.downloadURL(url)
 		}
 	}
 }
