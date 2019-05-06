@@ -123,7 +123,8 @@ class Course extends CourseBase {
 				agora_appid 	: Const.AGORA_APPID,
 				userid 			: this.props.account.id,
 				version			: this.props.room.version,
-				offset_time		: this.props.room.offset_time
+				offset_time		: this.props.room.offset_time,
+				en_name			: this.props.room.en_name,
 			}
 		})
 	}
