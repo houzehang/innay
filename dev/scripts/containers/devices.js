@@ -6,7 +6,7 @@ import 'react-rangeslider/lib/index.css'
 import path				from "path"
 import Const 			from "../../const"
 import { DEBUG } 		from "../../../env"
-import Storage 			from "../Storage"
+import Storage  		from "../../../core/DB"
 import AgoraRtcEngine 	from '../../agora/AgoraSdk'
 import net 				from "../network"
 import context		    from "../context"

@@ -8,5 +8,5 @@ export const PACKAGE_META_FILE 		= "lastest-downloaded-meta"
 export const PROXY 					= "mingxi"
 export const WINDOW_ADAPTER 		= {
 	"classroom-ui" : "http://localhost:3030",
-	"liveroom"     : "http://localhost:3000/app?from=turbo"
+	// "liveroom"     : "http://localhost:3000/app?from=turbo"
 }

@@ -15,7 +15,7 @@ import { EventEmitter } from 'events';
 export default class WindowFactory {
 	constructor(screenSize) {
 		this.$screen_size 	= screenSize
-		this.$error_page    = '<h1>404 Not Found</h1>'
+		this.$error_page    = '404 Not Found'
 		this.__init()
 	}
 
@@ -24,6 +24,13 @@ export default class WindowFactory {
 			let location 	= url.parse(request.url)
 			if (location.pathname == "/") {
 				location.pathname = "index.html"
+			}
+			if (/^\/__root__/.test(location.pathname)) {
+				const parsed = location.pathname.match(/^\/__root__\/([^/]+?)\/(.+)/)
+				if (parsed) {
+					location.host 		= parsed[1]
+					location.pathname 	= parsed[2]
+				}
 			}
 			const file 		= path.join(ASSETS_PATH, location.host, location.pathname),
 				  exist 	= fs.existsSync(file),
@@ -58,6 +65,7 @@ export default class WindowFactory {
 		_window.webContents.setUserAgent(`${userAgent} KCPC v${app.getVersion()} ${pack}`);
 		if (DEBUG && WINDOW_ADAPTER[pack]) {
 			url = WINDOW_ADAPTER[pack]
+			console.log("url",url)
 		} else {
 			url = `${PROXY}://${pack}`
 		}

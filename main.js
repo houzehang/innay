@@ -9,7 +9,6 @@ import WindowFactory from './core/WindowFactory'
 import { PROXY } from './core/Configure'
 import { trigger } from './core/Eventer'
 import logger from 'electron-log'
-
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
@@ -23,7 +22,7 @@ app.on('ready', function () {
     })
     bridge.delegate = PackageManager
     let updater     = new Updater(__dirname)
-    let screenSize  = screen.getPrimaryDisplay().size;
+    let screenSize  = screen.getPrimaryDisplay().size
     let windowFactory = new WindowFactory(screenSize)
     updater.start()
     updater.on("open-main-window", (pack)=>{

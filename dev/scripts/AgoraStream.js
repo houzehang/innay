@@ -1,6 +1,6 @@
 import Const 			from "../const"
 import Eventer   		from './eventer'
-import Storage 			from './Storage'
+import Storage 			from '../../core/DB'
 import AgoraRtcEngine 	from '../agora/AgoraSdk'
 import context 			from "./context"
 class Room extends Eventer {

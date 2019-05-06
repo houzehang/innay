@@ -1,5 +1,6 @@
 import storage from './Storage'
 import {ipcRenderer} from "electron"
+import DB from '../../core/DB'
 
 class Context {
 	get dmg() {
@@ -111,7 +112,7 @@ class Context {
 		if (this.$is_old_device !== undefined) {
 			return this.$is_old_device
 		}
-		let oldDevice = localStorage.getItem("IS_OLD_DEVICE")
+		let oldDevice = DB.get("IS_OLD_DEVICE")
 		this.$is_old_device = oldDevice
 		return oldDevice
 	}
@@ -120,7 +121,7 @@ class Context {
 	 * 设置为低端设备
 	 */
 	setOldDevice() {
-		localStorage.setItem("IS_OLD_DEVICE", 1)
+		DB.set("IS_OLD_DEVICE", 1)
 		this.$is_old_device = true
 	}
 

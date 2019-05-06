@@ -111,6 +111,7 @@
     "electron-updater": "^2.23.3",
     "fs-extra": "^7.0.1",
     "got": "^8.3.2",
+    "lowdb": "^1.0.0",
     "md5-file": "^4.0.0",
     "mime-types": "^2.1.22",
     "mkdirp": "^0.5.1",

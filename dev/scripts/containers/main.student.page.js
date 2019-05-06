@@ -7,7 +7,6 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
-import bridge from '../../../core/MessageBridge'
 import net from "../network"
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
@@ -20,8 +19,7 @@ import {
 import { setTimeout } from 'core-js';
 import context from "../context"
 import storage from "../Storage"
-import {remote} from 'electron';
-const logger = remote.require('electron-log')
+import bridge from '../../../core/MessageBridge'
 
 class Main extends React.Component {
 	constructor(props) {
@@ -365,159 +363,23 @@ class Main extends React.Component {
 		}
 	}
 
-	__setStatus(status, message) {
-		console.log("download",status,message)
-	}
-
-	__on_complete(data) {
-		net.getRoomInfo(data.room.channel_id).then((result) => {
-			console.log(result)
-			data.students 		= result.students
-			data.channel_token	= result.channel_token
-			data.features 		= result.features
-			bridge.call({
-				method	: "openLiveRoom",
-				args	: { pack: "liveroom", data }
-			}).catch(error=>{
-				console.error(error)
-			})
-		}, error=>{
-			console.error(error)
-		})
-	}
-
-	__do_update_bundle({pack, result, base_url = this.$base_url, checksum = true}) {
-		return new Promise((resolve, reject)=>{
-			bridge.call({
-				method: "startDownloadTask", 
-				args: {
-					pack, 
-					url			: `${base_url}/${result.url}`, 
-					md5			: result.md5,
-					version		: result.version,
-					autoUnzip	: true,
-					checksum
-				}
-			}).then((response)=>{
-				let identity = response.identity
-				bridge.delegate = {
-					[`${identity}/progress`] : ({ total, transferred, percent })=>{
-						this.__setStatus("UPDATE.DOWNLOADING", {percent: percent*100 >> 0});
-					},
-					[`${identity}/error`] : (error)=>{
-						this.__setStatus("UPDATE.ERROR", error.message);
-						reject(error)
-					},
-					[`${identity}/success`] : ()=>{
-						this.__setStatus("UPDATE.DOWNLOADED_UI")
-						resolve(result)
-					}
-				}
-			}).catch(error=>{
-				logger.error(error)
-				reject(error)
-			})
-		})
-	}
-
-	__update_base_frame() {
-		return new Promise((resolve, reject)=>{
-			bridge.call({
-				method: "isUpdateAvailable",
-				args: {
-					url : `${this.$base_url}/liveroom.json`,
-					pack: "liveroom"
-				}
-			}).then(result=>{
-				if (result.available) {
-					this.__setStatus("UPDATE.DOWNLOADING_UI");
-					this.__do_update_bundle({
-						pack	: "liveroom", 
-						result	: result.server
-					}).then(data=>{
-						resolve(data)
-					}).catch(error=>{
-						reject(error)
-					})
-				} else {
-					this.__setStatus("UPDATE.LASTEST");
-					resolve(result.server)
-				}
-			}).catch(err=>{
-				reject(err)
-			})
-		})
-	}
-
-	__update_course_bundle(lesson) {
-		return new Promise((resolve, reject)=>{
-			bridge.call({
-				method: "isUpdateAvailable",
-				args: {
-					url : `${this.$base_url}/${lesson}.json`,
-					pack: "course-ui"
-				}
-			}).then(result=>{
-				if (result.available) {
-					this.__setStatus("UPDATE.DOWNLOADING_UI");
-					this.__do_update_bundle({
-						pack  	: "course-ui", 
-						result	: result.server,
-						base_url: "https://lessonsyun.mx0a.com",
-						checksum: false
-					}).then(data=>{
-						resolve(data)
-					}).catch(error=>{
-						reject(error)
-					})
-				} else {
-					this.__setStatus("UPDATE.LASTEST");
-					resolve(result.server)
-				}
-			}).catch(err=>{
-				reject(err)
-			})
-		})
-	}
-
 	onDownload(room, isRecord) {
-		const params = {
-			room,
-			token 	: net.token,
-			account	: this.props.account,
-		}
-		console.log("bridge",bridge)
-		this.__update_base_frame().then(data=>{
-			logger.log(`下载基础库成功。版本号：${data.version}`)
-			return this.__update_course_bundle(room.en_name)
-		}).then(data=>{
-			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
-			this.__on_complete(params)
-		}).catch(error=>{
-			logger.error(error)
-			this.props.alert({
-				content: `更新失败，失败原因:${error.message}`,
-				nobutton: true,
-				noanim	: true
-			})
+		this.props.alert({
+			title: "下载课程包",
+			content: <Download data={room} complete={(data)=>{
+				this.props.hide()
+				bridge.call({
+					method	: "openLiveRoom",
+					args	: { pack: "liveroom", data }
+				}).catch(error=>{
+					console.error(error)
+				})
+			}} error={(error)=>{
+				
+			}} user={this.props.account}/>,
+			nobutton: true,
+			noanim	: true
 		})
-		
-		// this.props.alert({
-		// 	title: "下载课程包",
-		// 	content: <Download name={data.en_name} complete={()=>{
-		// 		// 存储最后一次下载时间
-		// 		storage.store(`download_${data.en_name}`,new Date().getTime())
-		// 		if (canenter) {
-		// 			this.__onStartRoom(data,isRecord)
-		// 		} else {
-		// 			this.props.alert({
-		// 				content: "下载完成。"
-		// 			})
-		// 		}
-		// 	}} user={this.props.account}/>,
-		// 	nobutton: true,
-		// 	noanim	: true
-		// })
 	}
 
 	onEnterRoom(isRecord) {
