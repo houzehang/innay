@@ -29,17 +29,17 @@ class Session extends Eventer {
 	__createWebview() {
 		let prefix
 		if (DEBUG) {
-			prefix = "http://localhost:3000"
+			prefix = "mingxi://liveroom"
 		} else if(TEST) {
 			prefix = Conf.TEST_URL
 		} else {
 			prefix = Conf.ONLINE_URL
 		}
-		$.get(`${prefix}/app?from=app&t=`+new Date().getTime(),(response)=>{
+		$.get(`${prefix}?from=app&t=`+new Date().getTime(),(response)=>{
 			if (this.$inst.isMaster()) {
-				window.CANVAS_LOCATION = `${prefix}/app?from=app`
+				window.CANVAS_LOCATION = `${prefix}?from=app`
 			} else {
-				window.CANVAS_LOCATION = `${prefix}/app?from=native`
+				window.CANVAS_LOCATION = `${prefix}?from=native`
 			}
 			window.CANVAS_SIZE     = [ 
 				this.$dom.width(), 
@@ -48,7 +48,7 @@ class Session extends Eventer {
 			window.$ = $;
 			let scripts = []
 			response.replace(/<script.+?src="([^"]+)"/g, (m,result)=>{
-				if (/(flexible)|(zepto)|(vconsole)|(cocos2d-js)/.test(result)) return
+				if (/(flexible)|(zepto)|(vconsole)/.test(result)) return
 				if (/^\//.test(result)) {
 					result = prefix + result
 				}

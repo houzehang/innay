@@ -22,6 +22,14 @@ class Renderer {
 			message: "",
 			progress : null
 		}
+		this.$base_url = "http://localhost:8080"
+		// if (DEBUG) {
+		// 	base_url = "http://localhost:8080"
+		// } else if (TEST) {
+		// 	base_url = "http://bundles.runsnailrun.com"
+		// } else {
+		// 	base_url = "https://bundles.mw019.com"
+		// }
 		this.__setState()
 		this.__start_updater()
 	}
@@ -57,12 +65,12 @@ class Renderer {
 		}
 	}
 
-	__do_update_bundle(base_url, result) {
+	__do_update_bundle(result) {
 		bridge.call({
 			method: "startDownloadTask", 
 			args: {
 				pack		: "classroom-ui", 
-				url			: `${base_url}/${result.file}`, 
+				url			: `${this.$base_url}/${result.url}`, 
 				md5			: result.md5,
 				version		: result.version,
 				autoUnzip	: true,
@@ -89,24 +97,16 @@ class Renderer {
 	}
 
 	__update_bundle() {
-		let base_url
-		if (DEBUG) {
-			base_url = "http://localhost:8080"
-		} else if (TEST) {
-			base_url = "http://bundles.runsnailrun.com"
-		} else {
-			base_url = "https://bundles.mw019.com"
-		}
 		bridge.call({
 			method: "isUpdateAvailable",
 			args: {
-				url : `${base_url}/app.json`,
+				url : `${this.$base_url}/app.json`,
 				pack: "classroom-ui"
 			}
 		}).then(result=>{
 			if (result.available) {
 				this.__setStatus(Const.UPDATE.DOWNLOADING_UI);
-				this.__do_update_bundle(base_url, result.server)
+				this.__do_update_bundle(result.server)
 			} else {
 				this.__setStatus(Const.UPDATE.LASTEST);
 				this.__on_complete()

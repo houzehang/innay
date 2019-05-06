@@ -32,11 +32,8 @@ app.on('ready', function () {
         },100)
         logger.log("call open main ui window", PROXY, pack)
         windowFactory.open(pack, {
-            openLiveRoom: (pack)=>{
-                let _window = windowFactory.open(pack)
-                _window.on("closed", ()=>{
-                    console.log("window closed")
-                })
+            openLiveRoom: ({pack, data})=>{
+                windowFactory.open(pack, null, data)
             }
         })
     })

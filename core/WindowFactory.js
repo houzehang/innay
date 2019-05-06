@@ -41,7 +41,7 @@ export default class WindowFactory {
 		})
 	}
 
-	open(pack, delegates = {}) {
+	open(pack, delegates = {}, data = {}) {
 		const eventer 		= new EventEmitter
 		let {width, height} = Const.MAIN_WINDOW_SIZE,
 			screenSize 		= this.$screen_size,
@@ -75,7 +75,8 @@ export default class WindowFactory {
 		_window.webContents.on('did-finish-load', () => {
 			_window.webContents.send('configure', {
 				__dirname: path.resolve(__dirname,'..'), __apppath: app.getAppPath(),
-				version: app.getVersion()
+				version: app.getVersion(),
+				data
 			});
 			
 			SystemInfo.getStaticData((info)=>{

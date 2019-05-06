@@ -1,6 +1,4 @@
 import React from 'react';
-import StudentHead from '../components/student-head'
-import HandsUp from '../components/handsup'
 
 import net from "../network"
 import Session from '../session'
