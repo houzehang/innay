@@ -3207,6 +3207,36 @@ body .page.student-page .inner .student-box .my-courses .courses-done-area .cont
   height: 0.38rem;
   align-items: center;
 }
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record {
+  position: absolute;
+  color: #fff;
+  font-size: 0.16rem;
+  left: 1.2rem;
+  background: #19b7a8;
+  width: 0.6rem;
+  height: 0.26rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.15rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record:hover,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record:hover {
+  color: #eeeeee;
+}
+html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record .beta-icon,
+body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .btn-view-record .beta-icon {
+  position: absolute;
+  display: inline;
+  width: 0.8rem;
+  height: 0.42rem;
+  background: url(./2f9ee0ee83220296b00965af6c22acdc.png) no-repeat center center;
+  background-size: 100% 100%;
+  transform: scale(0.4);
+  top: -0.2rem;
+  right: -0.36rem;
+}
 html .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state,
 body .page.student-page .inner .student-box .my-courses .courses-done-area .container .lesson-done-box-panel .box-panel-bottom .lesson-state {
   margin-left: 0.29rem;
@@ -4094,6 +4124,106 @@ body .page.course-page.student .counter .couter-g {
   height: 0.3rem;
   line-height: 0.3rem;
   color: #ececec;
+}
+html .page.course-page.student .inner .videos-container,
+body .page.course-page.student .inner .videos-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+html .page.course-page.student .inner .videos-container .teacher-normal,
+body .page.course-page.student .inner .videos-container .teacher-normal {
+  position: absolute;
+  width: 3.27rem;
+  height: 3.27rem;
+  left: 1.46rem;
+  top: 0rem;
+}
+html .page.course-page.student .inner .videos-container .student-normal,
+body .page.course-page.student .inner .videos-container .student-normal {
+  position: absolute;
+  width: 0.88rem;
+  height: 0.88rem;
+  left: 11.854rem;
+  top: 0rem;
+}
+html .page.course-page.student .inner .videos-container .student-dancing,
+body .page.course-page.student .inner .videos-container .student-dancing {
+  position: absolute;
+  width: 3.27rem;
+  height: 3.27rem;
+  left: 8.46rem;
+  top: 3.39rem;
+}
+html .page.course-page.student .inner .videos-container .label-bg-teacher,
+body .page.course-page.student .inner .videos-container .label-bg-teacher {
+  position: absolute;
+  width: 3.27rem;
+  height: 0.45rem;
+  z-index: 2;
+  left: 8.46rem;
+  top: 2.82rem;
+  line-height: 0.5rem;
+  font-size: 0.18rem;
+  text-indent: 0.14rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  opacity: 0;
+}
+html .page.course-page.student .inner .videos-container .label-bg-dancing,
+body .page.course-page.student .inner .videos-container .label-bg-dancing {
+  position: absolute;
+  width: 3.27rem;
+  height: 0.45rem;
+  z-index: 2;
+  left: 8.46rem;
+  top: 6.21rem;
+  line-height: 0.5rem;
+  font-size: 0.18rem;
+  text-indent: 0.14rem;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  opacity: 0;
+}
+html .page.course-page.student .inner .videos-container .label-bg-student,
+body .page.course-page.student .inner .videos-container .label-bg-student {
+  position: absolute;
+  width: 0.88rem;
+  background: #565b72;
+  height: 0.16rem;
+  line-height: 0.18rem;
+  font-size: 0.12rem;
+  text-overflow: ellipsis;
+  color: #fff;
+  display: flex;
+  top: 0.88rem;
+  left: 11.854rem;
+  align-items: center;
+  z-index: 3;
+  opacity: 0;
+}
+html .page.course-page.student .inner .videos-container .label-bg-student .avatar-name,
+body .page.course-page.student .inner .videos-container .label-bg-student .avatar-name {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: 0.06rem;
+  flex: 1;
+}
+html .page.course-page.student .inner .videos-container .label-bg-student .avatar-stars,
+body .page.course-page.student .inner .videos-container .label-bg-student .avatar-stars {
+  background: url(./3b4bb4939b57d754174b8d1be912530f.png) no-repeat left center;
+  background-size: auto 0.11rem;
+  padding-left: 0.15rem;
+  margin-right: 0.06rem;
+  height: 0.16rem;
+  font-size: 0.12rem;
+  color: #ffffff;
+  position: relative;
+  z-index: 2;
 }
 html .page.course-page.student .inner .question-detail,
 body .page.course-page.student .inner .question-detail {
