@@ -22,14 +22,13 @@ class Renderer {
 			message: "",
 			progress : null
 		}
-		this.$base_url = "http://localhost:8080"
-		// if (DEBUG) {
-		// 	base_url = "http://localhost:8080"
-		// } else if (TEST) {
-		// 	base_url = "http://bundles.runsnailrun.com"
-		// } else {
-		// 	base_url = "https://bundles.mw019.com"
-		// }
+		if (DEBUG) {
+			this.$base_url = "http://localhost:8080"
+		} else if (TEST) {
+			this.$base_url = "https://bundlesyuntest.mx0a.com"
+		} else {
+			this.$base_url = "https://bundlesyun.mx0a.com"
+		}
 		this.__setState()
 		this.__start_updater()
 	}
