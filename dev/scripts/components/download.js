@@ -5,20 +5,21 @@ import net from '../network'
 import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
-import {TC_DEBUG, DEBUG, TEST} from "../../../env"
+import {DEBUG, TEST} from "../../../env"
 
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
-		this.$base_frame_url 	= "http://localhost:8080"
-		this.$base_course_url 	= "https://lessonsyun.mx0a.com"
-		// if (DEBUG) {
-		// 	base_url = "http://localhost:8080"
-		// } else if (TEST) {
-		// 	base_url = "http://bundles.runsnailrun.com"
-		// } else {
-		// 	base_url = "https://bundles.mw019.com"
-		// }
+		if (DEBUG) {
+			this.$base_frame_url 	= "http://localhost:8080"
+			this.$base_course_url 	= "http://localhost:8080"
+		} else if (TEST) {
+			this.$base_frame_url 	= "https://bundlesyuntest.mx0a.com"
+			this.$base_course_url 	= "https://lessonsyuntest.mx0a.com"
+		} else {
+			this.$base_frame_url 	= "https://bundlesyun.mx0a.com"
+			this.$base_course_url 	= "https://lessonsyun.mx0a.com"
+		}
 		this.state = {
 			title: "",
 			percent: 0,
