@@ -10,7 +10,8 @@ import {TC_DEBUG, DEBUG, TEST} from "../../../env"
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
-		this.$base_url = "http://localhost:8080"
+		this.$base_frame_url 	= "http://localhost:8080"
+		this.$base_course_url 	= "https://lessonsyun.mx0a.com"
 		// if (DEBUG) {
 		// 	base_url = "http://localhost:8080"
 		// } else if (TEST) {
@@ -124,7 +125,7 @@ class Download extends React.Component {
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${this.$base_url}/liveroom.json`,
+					url : `${this.$base_frame_url}/liveroom.json`,
 					pack: "liveroom"
 				}
 			}).then(result=>{
@@ -133,7 +134,8 @@ class Download extends React.Component {
 					this.__setStatus("UPDATE.DOWNLOADING_UI");
 					this.__do_update_bundle({
 						pack	: "liveroom", 
-						result	: result.server
+						result	: result.server,
+						base_url: this.$base_frame_url
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
@@ -154,7 +156,7 @@ class Download extends React.Component {
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${this.$base_url}/${lesson}.json`,
+					url : `${this.$base_course_url}/${lesson}.json`,
 					pack: "course-ui"
 				}
 			}).then(result=>{
@@ -164,8 +166,7 @@ class Download extends React.Component {
 					this.__do_update_bundle({
 						pack  	: "course-ui", 
 						result	: result.server,
-						base_url: "https://lessonsyun.mx0a.com",
-						checksum: false
+						base_url: this.$base_course_url
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
