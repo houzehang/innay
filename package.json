@@ -8,7 +8,7 @@
     "watch-render": "cross-env NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config webpack.dev.config.js",
     "watch-ui": "cross-env NODE_ENV=development ./node_modules/.bin/webpack-dev-server --config webpack.ui.dev.config.js",
     "watch": "./node_modules/.bin/run-p watch-render watch-ui",
-    "build": "npm run build-ui && npm run build-renderer && npm run build-main",
+    "build": "npm run build-renderer && npm run build-main",
     "build-renderer": "cross-env NODE_ENV=production webpack --config webpack.render.prod.config.js",
     "build-main": "cross-env NODE_ENV=production webpack --config webpack.main.prod.config.js",
     "build-ui": "cross-env NODE_ENV=production webpack --config webpack.ui.prod.config.js && node pack-ui.js",
