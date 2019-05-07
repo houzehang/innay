@@ -1,14 +1,14 @@
-import { app, screen, protocol } from 'electron';
-import log from 'electron-log';
-import path from 'path'
-import {autoUpdater} from 'electron-updater'
-import Updater from './core/Updater'
-import * as PackageManager from './core/PackageManager'
-import bridge from './core/MessageBridge'
-import WindowFactory from './core/WindowFactory'
-import { PROXY } from './core/Configure'
-import { trigger } from './core/Eventer'
-import logger from 'electron-log'
+import { app, screen, protocol }    from 'electron';
+import log                          from 'electron-log';
+import path                         from 'path'
+import {autoUpdater}                from 'electron-updater'
+import Updater                      from './core/Updater'
+import * as PackageManager          from './core/PackageManager'
+import bridge                       from './core/MessageBridge'
+import WindowFactory                from './core/WindowFactory'
+import { PROXY }                    from './core/Configure'
+import { trigger }                  from './core/Eventer'
+import logger                       from 'electron-log'
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
