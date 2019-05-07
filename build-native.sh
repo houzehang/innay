@@ -43,5 +43,5 @@ if [ "$1" = "-win" -o "$1" = "-all" ];then
 fi
 
 echo "step(4/${TOTAL_STEP}) cleaning files"
-echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : true}' > env.js;
+echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : false}' > env.js;
 rm -rf ./output
