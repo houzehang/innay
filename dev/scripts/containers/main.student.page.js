@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import Download from '../components/download'
-import CourseForStudent from './course.student.page.js'
 import CourseRecord from './course.student.replay.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
@@ -187,8 +186,6 @@ class Main extends React.Component {
     }
     
     __my_courses(){
-		console.log('this.props.commingRooms = ',this.props.commingRooms);
-		console.log('this.props.doneRooms = ',this.props.doneRooms);
 		let _commingRooms = []
 		let _doneRooms 	  = []
 
@@ -257,9 +254,6 @@ class Main extends React.Component {
 										<div className="btns-panel">
 											{room.can_enter && room.class_state == 'normal' ?<button className="start-btn" onClick={()=>{
 												this.onStartRoom(room)
-											}}></button>:""}
-											{room.can_enter && room.can_download  && room.class_state == 'normal'  ?<button className="download-btn" onClick={()=>{
-												this.onDownload(room)
 											}}></button>:""}
 											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
 											}}></button>: ""}
