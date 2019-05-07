@@ -19,6 +19,7 @@ import { setTimeout } from 'core-js';
 import context from "../context"
 import storage from "../Storage"
 import bridge from '../../../core/MessageBridge'
+import {ipcRenderer} from "electron"
 
 class Main extends React.Component {
 	constructor(props) {
@@ -43,6 +44,9 @@ class Main extends React.Component {
 		// }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
+		})
+		ipcRenderer.on("reload-data", ()=>{
+			this.__get_lesson_comming();
 		})
 		this.__check_device();
 	}
@@ -119,6 +123,7 @@ class Main extends React.Component {
 			clearInterval(this.$timer_device_check)
 			this.$timer_device_check = null;
 		}
+		ipcRenderer.removeAllListeners("reload-data")
 	}
 
 

@@ -48,13 +48,21 @@ export default class WindowFactory {
 		})
 	}
 
-	open(pack, delegates = {}, data = {}) {
+	open({ pack, delegates = {}, data = {}, unique = false, needSystemInfo = false }) {
+		if (unique) {
+			BrowserWindow.getAllWindows().forEach(win=>{
+				if (win.$$name$$ == pack) {
+					win.close()
+				}
+			})
+		}
 		const eventer 		= new EventEmitter
 		let {width, height} = Const.MAIN_WINDOW_SIZE,
 			screenSize 		= this.$screen_size,
 			ratio 			= Math.min(screenSize.width/width, screenSize.height/height)
 	
 		let _window = new BrowserWindow({
+			title: "明兮学堂",
 			width: width * ratio >> 0, 
 			height: height * ratio >> 0,
 			resizable: TC_DEBUG,
@@ -86,18 +94,21 @@ export default class WindowFactory {
 				version: app.getVersion(),
 				data
 			});
-			
-			SystemInfo.getStaticData((info)=>{
-				_window.webContents.send('systeminfo', {
-				   systeminfo: info
-				});
-			})
+			if (needSystemInfo) {
+				SystemInfo.getStaticData((info)=>{
+					_window.webContents.send('systeminfo', {
+					systeminfo: info
+					});
+				})
+				console.log("send system info")
+			}
 			eventer.emit("loaded")
 		})
 		_window.on('crashed', function (event) {
 			log.error("main window crashed", event);
 			_window.destroy()
 			eventer.emit("crashed")
+			eventer.emit("closed")
 		})
 		_window.on('closed', () => {
 			for (let key in delegates) {
@@ -106,10 +117,14 @@ export default class WindowFactory {
 			}
 			eventer.emit("closed")
 		});
-		bridge.delegate   = delegates
-		const menuBuilder = new MenuBuilder(_window);
+		_window.$$name$$  	= pack
+		bridge.delegate   	= delegates
+		const menuBuilder 	= new MenuBuilder(_window);
 		menuBuilder.buildMenu();
-		eventer.window    = _window
+		eventer.window   	= _window
+		eventer.sendMessage = (...args)=>{
+			_window.webContents.send(...args)
+		}
 		process.nextTick(()=>{
 			eventer.emit("start")
 		})

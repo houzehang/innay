@@ -30,10 +30,22 @@ app.on('ready', function () {
             updater.close()
         },100)
         logger.log("call open main ui window", PROXY, pack)
-        windowFactory.open(pack, {
-            openLiveRoom: ({pack, data})=>{
-                windowFactory.open(pack, null, data)
-            }
+        let _mainWindow = windowFactory.open({
+            pack, 
+            delegates: {
+                openLiveRoom: ({pack, data})=>{
+                    let _window = windowFactory.open({
+                        pack, data,
+                        unique: true
+                    })
+                    _window.on("closed", ()=>{
+                        _mainWindow.sendMessage("reload-data")
+                        // @todo 自动上传声网日志及程序日志
+                    })
+                }
+            },
+            needSystemInfo: true,
+            unique: true
         })
     })
 });
