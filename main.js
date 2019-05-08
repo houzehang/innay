@@ -10,7 +10,7 @@ const Const = require('./config/const.js');
 const StaticServ = require("./staticserv")
 const SystemInfo = require("systeminformation")
 // 初始化主框架
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow, dialog, Menu } = require('electron');
 const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
 
