@@ -34,14 +34,6 @@ class Main extends React.Component {
 		this.$no_morelessons_comming = false;
 		this.$no_morelessons_done = false;
 
-		this.$base_url = "http://localhost:8080"
-		// if (DEBUG) {
-		// 	base_url = "http://localhost:8080"
-		// } else if (TEST) {
-		// 	base_url = "http://bundles.runsnailrun.com"
-		// } else {
-		// 	base_url = "https://bundles.mw019.com"
-		// }
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -67,7 +59,7 @@ class Main extends React.Component {
 
 				net.checkDevice().then((res)=>{
 					this.props.hideLoading();
-					res.old_device && context.setOldDevice();
+					context.setOldDevice(res.old_device);
 					context.join_class_enabled = res.old_user || !!res.to_class;
 					
 					localStorage.setItem('OLD_USER', res.old_user & 1);
@@ -115,6 +107,7 @@ class Main extends React.Component {
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
+		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
 	}
 

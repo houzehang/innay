@@ -105,24 +105,32 @@ class Context {
 		ipcRenderer.send(...params);
 	}
 
+	restoreOldDevice() {
+		// 设置兼容旧版本的old device数据
+		let oldDevice = localStorage.getItem("IS_OLD_DEVICE")
+		if (oldDevice) {
+			console.log("copy low version old device")
+			DB.store("IS_OLD_DEVICE",1)
+			// localStorage.removeItem("IS_OLD_DEVICE")
+		}
+	}
+
 	/**
 	 * 是否为低端设备
 	 */
 	isOldDevice() {
-		if (this.$is_old_device !== undefined) {
-			return this.$is_old_device
-		}
-		let oldDevice = DB.get("IS_OLD_DEVICE")
-		this.$is_old_device = oldDevice
-		return oldDevice
+		return DB.get("IS_OLD_DEVICE")
 	}
 
 	/**
 	 * 设置为低端设备
 	 */
-	setOldDevice() {
-		DB.set("IS_OLD_DEVICE", 1)
-		this.$is_old_device = true
+	setOldDevice(isold) {
+		if (isold) {
+			DB.store("IS_OLD_DEVICE", 1)
+		} else {
+			DB.remove("IS_OLD_DEVICE")
+		}
 	}
 
 	set join_class_enabled(enabled){
