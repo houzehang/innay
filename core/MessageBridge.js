@@ -59,7 +59,7 @@ class MessageBridge {
 			let method = this.$delegate[message.method],
 				id     = message.id
 			if (!method) {
-				this.__send({id, error: 'no method'})
+				this.__send({id, error: `no method named ${message.method}`})
 				return;
 			}
 			let sender = this.$sender || this.$sender_pool[id]
@@ -69,9 +69,8 @@ class MessageBridge {
 						id, result
 					})
 				}
-			}).catch((e)=>{
-				this.__send({id, error: e.message})
-				throw e;
+			}).catch((error)=>{
+				this.__send({id, error: error.message})
 			})
 		}
 	}

@@ -21,13 +21,13 @@ class Download extends React.Component {
 			this.$base_course_url 	= "https://lessonsyun.mx0a.com"
 		}
 		this.state = {
-			title: "",
+			title: "准备更新基础库...",
 			percent: 0,
 			notice: ""
 		}
 	}
 
-	componentDidMount() {
+	__start() {
 		const room   = this.props.data
 		const params = {
 			room,
@@ -42,15 +42,29 @@ class Download extends React.Component {
 			this.__on_complete(params)
 		}).catch(error=>{
 			logger.error(error)
-			this.__setStatus("UPDATE.ERROR", error.message);
+			this.__setStatus("UPDATE.ERROR", error);
 		})
-		
+	}
+
+	__restart() {
+		this.setState({
+			title: "准备更新基础库...",
+			percent: 0,
+			notice: "",
+			error: null
+		})
+		this.__start()
+	}
+
+	componentDidMount() {
+		this.__start()
 	}
 
 	componentWillUnmount() {
 	}
 
 	__setStatus(status, message) {
+		this.setState({ error: null })
 		switch (status) {
 			case "UPDATE.BASEFRAME":
 			this.setState({ title: "准备下载基础库" })
@@ -59,7 +73,7 @@ class Download extends React.Component {
 			this.setState({ notice: "正在下载，请稍候...", percent: Math.min(1, message.percent) })
 			break
 			case "UPDATE.ERROR":
-			this.setState({ notice: `下载失败，${message}` })
+			this.setState({ error: `下载失败，${message}` })
 			break
 			case "UPDATE.DOWNLOADED_UI":
 			this.setState({ notice: "下载成功！", percent: 1 })
@@ -187,15 +201,23 @@ class Download extends React.Component {
 		return (
 			<div className="downloader">
 				<div className="info">{this.state.title}</div>
-				<div className="progress">
-					<div className="bar">
-						<div className="bar-i" style={{
-							width: `${this.state.percent*100}%`
-						}}></div>
-					</div>
-					<div className="percent">{this.state.percent*100>>0}%</div>
-				</div>
-				<div className="info notice">{this.state.notice}</div>
+				
+				{this.state.error?[
+					<div className="info notice" key="notice">{this.state.error}</div>,
+					<div className="restart-btn" key="restart" onClick={()=>{
+						this.__restart()
+					}}>重新下载</div>
+				]:[
+					<div className="progress" key="progress">
+						<div className="bar">
+							<div className="bar-i" style={{
+								width: `${this.state.percent*100}%`
+							}}></div>
+						</div>
+						<div className="percent">{this.state.percent*100>>0}%</div>
+					</div>,
+					<div className="info notice" key="notice">{this.state.notice}</div>
+				]}
 			</div>
 		)
 	}

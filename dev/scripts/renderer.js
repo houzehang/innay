@@ -62,6 +62,12 @@ class Renderer {
 			var window = remote.getCurrentWindow();
 			window.close();
 		}
+
+		G("restart-btn").onclick = function() {
+			console.log("reclick")
+			remote.app.relaunch()
+			remote.app.exit(0)
+		}
 	}
 
 	__do_update_bundle(result) {
@@ -110,6 +116,12 @@ class Renderer {
 				this.__setStatus(Const.UPDATE.LASTEST);
 				this.__on_complete()
 			}
+		}).catch(error=>{
+			logger.error(error)
+			this.__setState({
+				progress: null,
+				error	: error
+			})
 		})
 	}
 
@@ -156,19 +168,29 @@ class Renderer {
 			method	: "openMainWindow",
 			args	: "classroom-ui"
 		}).catch(err=>{
-			console.error(err)
+			logger.error(err)
+			this.__setState({
+				progress: null,
+				error	: err.message
+			})
 		})
 	}
 
 	__render() {
 		if (this.state.progress) {
-			G("progress").style.display 	= "flex"
+			G("progress").style.display = "flex"
 			G("percent").innerText 		= `${this.state.progress.percent>>0}%`
 			G("bar").style.width 		= `${this.state.progress.percent}%`
 		} else {
-			G("progress").style.display 	= "none"
+			G("progress").style.display = "none"
 		}
-		G("tips").innerText = `当前版本: ${this.state.version}, ${this.state.message}`
+		if (this.state.error) {
+			G("tips").innerText = `当前版本: ${this.state.version}, 更新出错：${this.state.error}`
+			G("restart-btn").style.display = "flex"
+		} else {
+			G("tips").innerText = `当前版本: ${this.state.version}, ${this.state.message}`
+			G("restart-btn").style.display = "none"
+		}
 	}
 }
 
