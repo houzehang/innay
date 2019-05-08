@@ -208,13 +208,14 @@ class Devices extends React.Component {
 		this.$previewing = true
 	}
 
-	onStopPreviewAndStepTo(step) {
+	onStopPreviewAndStepTo(step, complete = ()=>{}) {
 		this.$previewing = false
 		this.$client.destroyRender('local')
 		this.$client.stopPreview();
 		context.empty("#video-area")
 		setTimeout(()=>{
 			this.setState({step})
+			complete()
 		})
 	}
 
@@ -265,8 +266,9 @@ class Devices extends React.Component {
 
 	__on_step1_done({ passed }) {
 		this.onStartMicTest()
-		this.onStopPreviewAndStepTo(2)
-		this.setState({ camera_failed: !passed })
+		this.onStopPreviewAndStepTo(2, ()=>{
+			this.setState({ camera_failed: !passed })
+		})
 		net.log({"DEVICE-TEST":`camera test ${passed?"passed":"failed"}`})
 	}
 
