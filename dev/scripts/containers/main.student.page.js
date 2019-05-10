@@ -279,8 +279,8 @@ class Main extends React.Component {
 										</div>
 										<div className="box-panel-bottom">
 											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':(room.class_state=='leave'?"请假":"未到课") }</span>
-											{room.button_hf?<div className="btn-view-record" onClick={()=>{
-												this.__onStartRoom(room,true)
+											{(room.button_hf && room.button_playback_pc)?<div className="btn-view-record" onClick={()=>{
+												this.onRecordRoom(room)
 											}}>回放
 												{room.beta?<div className="beta-icon"></div>:""}
 											</div>:""}
@@ -333,7 +333,9 @@ class Main extends React.Component {
 
 	onRecordRoom(data) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let lastest_download = storage.get(`download_${data.en_name}`)
+		let version = data.version || '.1.0.0';
+		let lessonName = data.en_name + version;
+		let lastest_download = storage.get(`download_${lessonName}`)
 		if (lastest_download) {
 			let delay = new Date().getTime() - lastest_download
 			if (delay <= this.$cache_valid_time) {
