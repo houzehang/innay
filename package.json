@@ -117,6 +117,7 @@
     "md5-file": "^4.0.0",
     "mime-types": "^2.1.22",
     "mkdirp": "^0.5.1",
+    "pandora-nodejs-sdk": "^0.0.1",
     "semver": "^6.0.0",
     "systeminformation": "^4.0.11",
     "webpack-dev-server": "^3.2.1"

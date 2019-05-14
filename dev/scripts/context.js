@@ -169,6 +169,9 @@ class Context {
 	   } while (dom.parentNode)
 	   return {top, left}
 	}
+	get rkey() {
+		return "TNyv1khX-,5IOzgBWgpu"
+	}
 
 	empty(dom) {
 		if (typeof dom == "string") {
@@ -181,6 +184,10 @@ class Context {
 		} else if (dom) {
 			dom.innerHTML = ""
 		}
+	}
+
+	get lkey() {
+		return "Yu6oGz2USJb9RMgG84KalD,19Dnr5YuF0mV1QoEgBxX2"
 	}
 }
 

@@ -4,6 +4,8 @@ import "../../less/viewuser.less"
 import net from "../network"
 import * as types from '../constants/ActionTypes'
 import bridge from '../../../core/MessageBridge'
+import {remote} from 'electron';
+const logger = remote.require('electron-log')
 
 class ViewUser extends React.Component {
 	constructor(props) {
@@ -74,8 +76,10 @@ class ViewUser extends React.Component {
 					]}
 				}).then(()=>{
 					this.props.alert({ content: "清除缓存成功！" })
+					logger.log("清除缓存成功！")
 				}).catch(error=>{
 					this.props.alert({ content: "清除缓存失败，" + error.message })
+					logger.error("清除缓存失败", error)
 				})
 			}
 		})

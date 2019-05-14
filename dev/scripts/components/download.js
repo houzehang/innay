@@ -42,7 +42,7 @@ class Download extends React.Component {
 			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
 			this.__on_complete(params)
 		}).catch(error=>{
-			logger.error(error)
+			logger.error("检测基础库出错", error)
 			this.__setStatus("UPDATE.ERROR", error);
 		})
 	}
@@ -68,9 +68,9 @@ class Download extends React.Component {
 				method: "abortDownloadTask",
 				args  : {identity: this.$downloading}
 			}).then(()=>{
-				console.log("abort download task success", this.$downloading)
+				logger.log("中止任务成功", this.$downloading)
 			}).catch(error=>{
-				logger.error("abort download task error", error)
+				logger.error("中止任务失败", this.$downloading, error)
 			})
 		}
 	}
@@ -146,7 +146,7 @@ class Download extends React.Component {
 				}
 			}).catch(error=>{
 				this.$downloading = null
-				logger.error(error)
+				logger.error("下载文件出错", pack, error)
 				reject(error)
 			})
 		})

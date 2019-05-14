@@ -89,6 +89,7 @@ class Renderer {
 				},
 				[`${identity}/error`] : (error)=>{
 					this.__setStatus(Const.UPDATE.ERROR, error.message);
+					logger.error("下载工程框架出错", error)
 				},
 				[`${identity}/success`] : (data)=>{
 					this.__setStatus(Const.UPDATE.DOWNLOADED_UI);
@@ -96,8 +97,7 @@ class Renderer {
 				}
 			}
 		}).catch(err=>{
-			console.log("error happened",err)
-			logger.error(err)
+			logger.error("下载工程框架出错", err)
 		})
 	}
 
@@ -117,7 +117,7 @@ class Renderer {
 				this.__on_complete()
 			}
 		}).catch(error=>{
-			logger.error(error)
+			logger.error("检测基础框架是否有更新出错", error)
 			this.__setState({
 				progress: null,
 				error	: error
@@ -138,7 +138,7 @@ class Renderer {
 			this.__update_bundle()
 		})
 		autoUpdater.on('error', (err) => {
-			logger.error("update error",err)
+			logger.error("基础框架更新出错",err)
 			setTimeout(() => {
 				this.__update_bundle()
 			}, 2000)
@@ -168,7 +168,7 @@ class Renderer {
 			method	: "openMainWindow",
 			args	: "classroom-ui"
 		}).catch(err=>{
-			logger.error(err)
+			logger.error("开启主框架窗口出错", err)
 			this.__setState({
 				progress: null,
 				error	: err.message

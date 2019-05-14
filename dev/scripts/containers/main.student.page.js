@@ -19,7 +19,10 @@ import { setTimeout } from 'core-js';
 import context from "../context"
 import storage from "../Storage"
 import bridge from '../../../core/MessageBridge'
-import {ipcRenderer} from "electron"
+import {ipcRenderer, remote} from "electron"
+import path from "path"
+import fs from "fs"
+const LogDog = remote.require('pandora-nodejs-sdk')
 
 class Main extends React.Component {
 	constructor(props) {
@@ -37,10 +40,58 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
-		ipcRenderer.on("reload-data", ()=>{
+		ipcRenderer.on("room-closed", ()=>{
 			this.__get_lesson_comming();
+			let base = remote.app.getPath("userData")
+			this.__upload_log(path.join(base, "system.log"), "mingxi_pc_system", (line)=>{
+				let parsed = line.split(" ")
+				let time   = [parsed.shift(),parsed.shift()].join(" ")
+				return {
+					time, 
+					content	: parsed.join(" "), 
+					user	: this.props.account.id, 
+					name	: this.props.account.child_name
+				}
+			})
+			this.__upload_log(path.join(base, "agora.log"),  "mingxi_pc_agora", (line)=>{
+				let parsed = line.split(";")
+				let time   = parsed.shift()
+				return {
+					time, 
+					content: parsed.join(";"), 
+					user	: this.props.account.id, 
+					name	: this.props.account.child_name
+				}
+			})
 		})
 		this.__check_device();
+	}
+
+	__upload_log(file, repo, parser) {
+		return new Promise((resolve, reject)=>{
+			if (!fs.existsSync(file)) {
+				reject()
+				return
+			}
+			let content = fs.readFileSync(file, "utf8")
+			if (content) {
+				let lkey = context.lkey.split(","),
+					rkey = context.rkey.split(",")
+				content = content.split("\n").map(parser)
+				LogDog.send(
+					new LogDog.Auth(
+						lkey[0]+'DxyKE2vUz'+rkey[0], 
+						lkey[1]+'PVhUEGplM'+rkey[1]
+					),
+					repo,
+					content
+				).then(()=>{
+					fs.writeFileSync(file, "", "utf8")
+				}).then(resolve, reject)
+			} else {
+				reject()
+			}
+		})
 	}
 
 	__check_device(){
@@ -116,7 +167,7 @@ class Main extends React.Component {
 			clearInterval(this.$timer_device_check)
 			this.$timer_device_check = null;
 		}
-		ipcRenderer.removeAllListeners("reload-data")
+		ipcRenderer.removeAllListeners("room-closed")
 	}
 
 

@@ -6,13 +6,14 @@ import Updater                      from './core/Updater'
 import * as PackageManager          from './core/PackageManager'
 import bridge                       from './core/MessageBridge'
 import WindowFactory                from './core/WindowFactory'
-import { PROXY }                    from './core/Configure'
+import { PROXY, LOG_PATH }          from './core/Configure'
 import { trigger }                  from './core/Eventer'
 import logger                       from 'electron-log'
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
 protocol.registerStandardSchemes([ PROXY ])
+logger.transports.file.file = LOG_PATH
 
 app.on('ready', function () {
     protocol.registerBufferProtocol(PROXY,(request, callback)=>{
@@ -39,8 +40,7 @@ app.on('ready', function () {
                         unique: true
                     })
                     _window.on("closed", ()=>{
-                        _mainWindow.sendMessage("reload-data")
-                        // @todo 自动上传声网日志及程序日志
+                        _mainWindow.sendMessage("room-closed")
                     })
                 }
             },
