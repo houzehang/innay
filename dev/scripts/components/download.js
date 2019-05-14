@@ -29,7 +29,9 @@ class Download extends React.Component {
 	}
 
 	__start() {
-		const room   = this.props.data
+		const room   	= this.props.data
+		const recording = this.props.recording
+
 		const params = {
 			room,
 			token 	: net.token,
@@ -37,7 +39,9 @@ class Download extends React.Component {
 		}
 		this.__update_base_frame().then(data=>{
 			logger.log(`下载基础库成功。版本号：${data.version}`)
-			return this.__update_course_bundle(room.en_name)
+			let lesson = room.en_name
+			if (recording) lesson = lesson + `.${data.version}`.replace('..','.')
+			return this.__update_course_bundle(lesson)
 		}).then(data=>{
 			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
 			this.__on_complete(params)
@@ -209,7 +213,8 @@ class Download extends React.Component {
 					this.__do_update_bundle({
 						pack  	: "course-ui", 
 						result	: result.server,
-						base_url: this.$base_course_url
+						base_url: this.$base_course_url,
+						checksum: !this.props.recording
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
