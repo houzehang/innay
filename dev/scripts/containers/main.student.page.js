@@ -407,6 +407,10 @@ class Main extends React.Component {
 				this.onConfirmToLogout()
 			}} onChangeUser={(user)=>{
 				this.props.onChangeUserInfo(user)
+			}} alert={(...params)=>{
+				this.props.alert(...params)
+			}} confirm={(...params)=>{
+				this.props.confirm(...params)
 			}}/>
 		})
 	}

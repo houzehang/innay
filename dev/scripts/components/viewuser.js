@@ -62,20 +62,23 @@ class ViewUser extends React.Component {
 	}
 
 	__clear_cached_data() {
-		if (window.confirm("确定要清除本地缓存文件吗？")) {
-			bridge.call({
-				method	: "clearCachedData",
-				args 	: {packs: [ 
-					{ name: "course-ui" },
-					{ name: "liveroom" },
-					{ name: "classroom-ui", packageOnly: true, clearAssetsLater: true }
-				]}
-			}).then(()=>{
-				alert("清除缓存成功！")
-			}).catch(error=>{
-				alert("清除缓存失败，" + error.message)
-			})
-		}
+		this.props.confirm({
+			content: "确定要清除本地缓存文件吗？",
+			sure: ()=>{
+				bridge.call({
+					method	: "clearCachedData",
+					args 	: {packs: [ 
+						{ name: "course-ui" },
+						{ name: "liveroom" },
+						{ name: "classroom-ui", packageOnly: true, clearAssetsLater: true }
+					]}
+				}).then(()=>{
+					this.props.alert({ content: "清除缓存成功！" })
+				}).catch(error=>{
+					this.props.alert({ content: "清除缓存失败，" + error.message })
+				})
+			}
+		})
 	}
 
 	__on_change_avatar(file) {
@@ -138,6 +141,8 @@ ViewUser.propTypes = {
 	}),
 	onLogout    	: PropTypes.func.isRequired,
 	onChangeUser	: PropTypes.func.isRequired,
+	alert 			: PropTypes.func.isRequired,
+	confirm 		: PropTypes.func.isRequired
 }
 
 export default ViewUser
