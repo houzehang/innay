@@ -104,14 +104,25 @@ class Download extends React.Component {
 	}
 
 	__on_complete(data) {
-		net.getRoomInfo(data.room.channel_id).then((result) => {
-			data.students 		= result.students
-			data.channel_token	= result.channel_token
-			data.features 		= result.features
-			this.props.complete(data)
-		}, error=>{
-			this.props.error(error)
-		})
+		let recording = this.props.recording;
+		if (recording) {
+			net.getRoomInfoForRecord(data.room.channel_id).then((result)=>{				
+				data.students 		= result.students
+				data.recording 		= recording
+				this.props.complete(data)
+			}, error=>{
+				this.props.error(error)
+			})
+		}else{
+			net.getRoomInfo(data.room.channel_id).then((result) => {
+				data.students 		= result.students
+				data.channel_token	= result.channel_token
+				data.features 		= result.features
+				this.props.complete(data)
+			}, error=>{
+				this.props.error(error)
+			})
+		}
 	}
 
 	__do_update_bundle({pack, result, base_url = this.$base_url, checksum = true}) {
