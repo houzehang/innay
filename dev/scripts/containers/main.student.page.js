@@ -360,7 +360,7 @@ class Main extends React.Component {
 	onDownload(room, isRecord) {
 		this.props.alert({
 			title: "下载课程包",
-			content: <Download data={room} complete={(data)=>{
+			content: <Download data={room} recording={isRecord} complete={(data)=>{
 				this.props.hide()
 				bridge.call({
 					method	: "openLiveRoom",
