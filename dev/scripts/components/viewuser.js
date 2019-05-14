@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import "../../less/viewuser.less"
 import net from "../network"
 import * as types from '../constants/ActionTypes'
+import bridge from '../../../core/MessageBridge'
 
 class ViewUser extends React.Component {
 	constructor(props) {
@@ -60,6 +61,23 @@ class ViewUser extends React.Component {
 		this.props.onChangeUser(user)
 	}
 
+	__clear_cached_data() {
+		if (window.confirm("确定要清除本地缓存文件吗？")) {
+			bridge.call({
+				method	: "clearCachedData",
+				args 	: {packs: [ 
+					{ name: "course-ui" },
+					{ name: "liveroom" },
+					{ name: "classroom-ui", packageOnly: true, clearAssetsLater: true }
+				]}
+			}).then(()=>{
+				alert("清除缓存成功！")
+			}).catch(error=>{
+				alert("清除缓存失败，" + error.message)
+			})
+		}
+	}
+
 	__on_change_avatar(file) {
 		if (!file) return
 		net.upload_file(file).then((url)=>{
@@ -104,6 +122,9 @@ class ViewUser extends React.Component {
 					this.props.onLogout()
 				}}>退出登录</div>
 				<div className="version">当前版本：{this.state.version}</div>
+				<div className="cleardata" onClick={()=>{
+					this.__clear_cached_data()
+				}}>清除缓存</div>
 			</div>
 		)
 	}

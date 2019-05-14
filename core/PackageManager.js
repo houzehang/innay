@@ -87,6 +87,21 @@ export async function getLocalInstalledVersion({pack}) {
 	}
 }
 
+export async function clearCachedData({ packs = [] }) {
+	let dirsToDel   = []
+	packs.forEach(pack=>{
+		dirsToDel.push(path.join(PACKAGE_PATH, pack.name))
+		if (!pack.packageOnly) {
+			dirsToDel.push(path.join(ASSETS_PATH, pack.name))
+		} else if (pack.clearAssetsLater) {
+			dirsToDel.push(path.join(ASSETS_PATH, pack.name, INSTALLED_META_FILE))
+		}
+	})
+	if (dirsToDel.length > 0) {
+		await del(dirsToDel, {force: true})
+	}
+}
+
 export async function getDownloadTask({ identity }) {
 	return tasks_list[identity] || null
 }
@@ -103,7 +118,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 		tasks_list[identity].abort()
 		delete tasks_list[identity]
 	}
-	let task, aborted, error, lastPercent = 0, taskAbort
+	let task, error, lastPercent = 0, taskAbort
 	try {
 		task = got(url, { encoding: null, timeout: {socket: 60000} })
 	} catch(e) {
@@ -130,6 +145,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
         return;
 	}
 	task.on('downloadProgress', (progress) => {
+		if (task.isCanceled) return
 		let { total, transferred, percent } = progress;
 		percent = parseFloat(percent.toFixed(2));
 		if (percent > lastPercent) {
@@ -143,21 +159,13 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 				console.log("error",err)
 			})
 		}
-	}).on('request', (request) => {
-		if (aborted) {
-			request.abort()
-		}
-		taskAbort = () => {
-			request.abort()
-		};
-	});
+	})
 	tasks_list[identity] = {
         identity,
         abort: () => {
-            aborted = true
-            if (taskAbort) {
-                taskAbort()
-            }
+			if (task && !task.isCanceled) {
+				task.cancel()
+			}
         },
         task: task.then((response) => {
 			return fs.outputFile(destpath, response.body);

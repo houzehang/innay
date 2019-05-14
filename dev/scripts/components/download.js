@@ -12,7 +12,7 @@ class Download extends React.Component {
 		super(props)
 		if (DEBUG) {
 			this.$base_frame_url 	= "http://localhost:8080"
-			this.$base_course_url 	= "http://localhost:8080"
+			this.$base_course_url 	= "https://lessonsyuntest.mx0a.com"
 		} else if (TEST) {
 			this.$base_frame_url 	= "https://bundlesyuntest.mx0a.com"
 			this.$base_course_url 	= "https://lessonsyuntest.mx0a.com"
@@ -20,6 +20,7 @@ class Download extends React.Component {
 			this.$base_frame_url 	= "https://bundlesyun.mx0a.com"
 			this.$base_course_url 	= "https://lessonsyun.mx0a.com"
 		}
+		this.$downloading = null
 		this.state = {
 			title: "准备更新基础库...",
 			percent: 0,
@@ -61,9 +62,21 @@ class Download extends React.Component {
 	}
 
 	componentWillUnmount() {
+		this.$unmounted = true
+		if (this.$downloading) {
+			bridge.call({
+				method: "abortDownloadTask",
+				args  : {identity: this.$downloading}
+			}).then(()=>{
+				console.log("abort download task success", this.$downloading)
+			}).catch(error=>{
+				logger.error("abort download task error", error)
+			})
+		}
 	}
 
 	__setStatus(status, message) {
+		if (this.$unmounted) return
 		this.setState({ error: null })
 		switch (status) {
 			case "UPDATE.BASEFRAME":
@@ -115,20 +128,24 @@ class Download extends React.Component {
 				}
 			}).then((response)=>{
 				let identity = response.identity
+				this.$downloading = identity
 				bridge.delegate = {
 					[`${identity}/progress`] : ({ total, transferred, percent })=>{
 						this.__setStatus("UPDATE.DOWNLOADING", {percent});
 					},
 					[`${identity}/error`] : (error)=>{
+						this.$downloading = null
 						this.__setStatus("UPDATE.ERROR", error.message);
 						reject(error)
 					},
 					[`${identity}/success`] : ()=>{
+						this.$downloading = null
 						this.__setStatus("UPDATE.DOWNLOADED_UI")
 						resolve(result)
 					}
 				}
 			}).catch(error=>{
+				this.$downloading = null
 				logger.error(error)
 				reject(error)
 			})
@@ -201,7 +218,6 @@ class Download extends React.Component {
 		return (
 			<div className="downloader">
 				<div className="info">{this.state.title}</div>
-				
 				{this.state.error?[
 					<div className="info notice" key="notice">{this.state.error}</div>,
 					<div className="restart-btn" key="restart" onClick={()=>{
