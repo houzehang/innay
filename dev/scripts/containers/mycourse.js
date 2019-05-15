@@ -150,7 +150,7 @@ class MyCourse extends React.Component {
 										</div>
 										<div className="btns-panel">
 											{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={() => {
-												this.onStartRoom(room)
+												this.props.onStartRoom(room)
 											}}></button> : ""}
 											{!room.can_enter ? <button className = "waiting-btn"></button> : ""}
 											{room.class_state == 'normal' ? "" : <div className="leave-flag"></div>}
@@ -187,7 +187,7 @@ class MyCourse extends React.Component {
 											<div className="box-panel-bottom">
 												<span className={room.class_state == 'normal' ? 'lesson-state' : "lesson-state abnormal"} >{room.class_state == 'normal' ? '正常结束' : (room.class_state == 'leave' ? "请假" : "未到课")}</span>
 												{(room.button_hf && room.button_playback_pc) ? <div className="btn-view-record" onClick={() => {
-													this.onRecordRoom(room)
+													this.props.onRecordRoom(room)
 												}}>回放
 												{room.beta ? <div className="beta-icon"></div> : ""}
 												</div> : ""}

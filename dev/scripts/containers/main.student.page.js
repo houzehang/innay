@@ -358,7 +358,11 @@ class Main extends React.Component {
 		} else if (this.props.testing) {
 			content = <Devices />
         } else if (this.props.mycourses){
-			content = <MyCourse/>
+			content = <MyCourse onStartRoom={(room)=>{
+				this.onStartRoom(room)
+			}}  onRecordRoom={(room)=>{
+				this.onRecordRoom(room)
+			}}/>
 		} else {
 			content = this.__student_page()
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
