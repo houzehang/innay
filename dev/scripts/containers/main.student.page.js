@@ -8,9 +8,9 @@ import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
 import net from "../network"
 import { 
-	onRoomList, onCalendarData, onRoomInfo,
+    onRoomInfo,
 	onLogout, onStartCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onLessonComming,
 	onCourseRecording,
 	showLoading,
 	hideLoading
@@ -22,6 +22,7 @@ import bridge from '../../../core/MessageBridge'
 import {ipcRenderer, remote} from "electron"
 import path from "path"
 import fs from "fs"
+import MyCourse from './mycourse';
 const LogDog = remote.require('pandora-nodejs-sdk')
 
 class Main extends React.Component {
@@ -29,13 +30,6 @@ class Main extends React.Component {
 		super(props)
 		this.$detect_delay 		= 5000
 		this.$cache_valid_time 	= 60*60*1000
-		this.state 				= {
-			comming_page_selected : true
-		}
-		this.$page_comming		= 1;
-		this.$page_done 		= 1;
-		this.$no_morelessons_comming = false;
-		this.$no_morelessons_done = false;
 
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -131,9 +125,9 @@ class Main extends React.Component {
 	strToDate(str) {
 		let parsed = str.split(/[-: ]/)
 		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
-	}
-
-	__get_lesson_comming(){
+    }
+    
+    __get_lesson_comming(){
 		net.getLessonComming().then((res)=>{
 			// 计算剩余时间
 			let room = res.room;
@@ -153,8 +147,8 @@ class Main extends React.Component {
 			}
 			this.props.onLessonComming(room)
 		})
-	}
-
+    }
+    
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
@@ -234,126 +228,6 @@ class Main extends React.Component {
 		)
     }
     
-    __my_courses(){
-		let _commingRooms = []
-		let _doneRooms 	  = []
-
-		setTimeout(()=>{
-			document.getElementById('courses-comming-area') && document.getElementById('courses-comming-area').addEventListener('scroll', this.onScrollHandle.bind(this));
-			document.getElementById('courses-done-area') && document.getElementById('courses-done-area').addEventListener('scroll', this.onScrollHandle.bind(this));
-		},10);
-        return (
-			<div className="page student-page" >
-				<div className="inner">
-					<div className="student-box">
-                        <div className="my-courses">
-							<div className="nav-area">
-								<div className="btn-exit" onClick={()=>{
-									this.props.onExitMyCourses()
-									this.$no_morelessons_comming = false;
-									this.$no_morelessons_done 	 = false;
-									this.__get_lesson_comming();
-								}}></div>
-								<div className={this.state.comming_page_selected ? "switch-bar" : "switch-bar first-selected"} >
-									<div className="switch-bar-left" onClick={()=>{
-										this.setState({
-											comming_page_selected:true
-										});
-										setTimeout(()=>{
-											this.__query_courses();
-										},0);
-									}}>
-										<span>要上课程</span>
-									</div>
-									<div className="switch-bar-right" onClick={()=>{
-										this.setState({
-											comming_page_selected:false
-										});
-										setTimeout(()=>{
-											this.__query_courses();
-										},0);
-									}}>
-										<span>已上课程</span>
-									</div>
-								</div>
-								{this.props.totalDone && this.props.totalDone.length > 0 ? <div className="course-according">
-									<span className="label">课时消耗情况：</span>
-									<span className="value">{this.state.comming_page_selected ? this.props.totalComming: this.props.totalDone}</span>
-								</div>:""}
-								
-							</div>
-							{(this.props.commingRooms||[]).forEach((room,index)=>{
-								if (index == 0) {
-									room.can_download = true;
-									room.can_enter = true;
-								}
-								_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_"+index}>
-									<div className="date-tip"><div className="date-icon"></div><span>{room.class_date} {room.week_day}</span></div>
-									<div className="lesson-box">
-										<div className="cover">
-											<img src={room.avatar} alt=""/>
-										</div>
-										<div className="info">
-											<div className="name"><span>{room.name}</span></div>
-											<div className="desc">课时简介：{room.content}</div>
-											{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-											<div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability||"")}</span></div>
-											<div className="date"><span>{room.between_time}</span></div>
-										</div>
-										<div className="btns-panel">
-											{room.can_enter && room.class_state == 'normal' ?<button className="start-btn" onClick={()=>{
-												this.onStartRoom(room)
-											}}></button>:""}
-											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
-											}}></button>: ""}
-											{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
-											
-										</div>
-									</div>
-								</div>);
-								
-							})}
-							{this.state.comming_page_selected ? <div className={_commingRooms.length > 0 ? "courses-comming-area" : "courses-comming-area empty-area"} id="courses-comming-area">
-								{_commingRooms.length > 0 ?_commingRooms : <div className="empty">
-										<div className="icon"></div>
-										<span>接下来没有课程了~</span>
-									</div>}
-							</div>: <div className="courses-done-area"  id="courses-done-area">
-								{(this.props.doneRooms||[]).forEach((room,index)=>{
-									_doneRooms.push(<div className="lesson-done-box-panel" key={"done_room_"+index}>
-										<div className="box-panel-top">
-											<span className="lesson-name">{room.name}</span>
-											<span className="lesson-level">（{room.lesson_name}）</span>
-										</div>
-										<div className="box-panel-center">
-											<span className="lesson-time">{room.class_date} {room.class_time}</span>
-										</div>
-										<div className="box-panel-bottom">
-											<span className={room.class_state=='normal'?'lesson-state':"lesson-state abnormal"} >{room.class_state=='normal'?'正常结束':(room.class_state=='leave'?"请假":"未到课") }</span>
-											{(room.button_hf && room.button_playback_pc)?<div className="btn-view-record" onClick={()=>{
-												this.onRecordRoom(room)
-											}}>回放
-												{room.beta?<div className="beta-icon"></div>:""}
-											</div>:""}
-											<div className="star-icon"></div>
-											<span className="star-count">{room.star}</span>
-										</div>
-									</div>)
-								})}
-								<div className={_doneRooms.length > 0 ? "container" : "container empty-container"}>
-									{_doneRooms.length > 0 ?_doneRooms : <div className="empty">
-										<div className="icon"></div>
-										<span>已上的课程会在这里显示哦~</span>
-									</div>}
-								</div>
-							</div> }
-                        </div>
-					</div>
-				</div>
-			</div>
-		)
-    }
-
 	onStartRoom(data) {
 		if (!context.join_class_enabled) {
 			this.props.alert({
@@ -446,8 +320,6 @@ class Main extends React.Component {
 
 	onLogout() {
 		this.props.onLogout()
-		this.props.onLessonsComming([]);
-		this.props.onLessonsDone([]);
 	}
 	
 	__view_user() {
@@ -474,44 +346,7 @@ class Main extends React.Component {
 		})
 	}
 
-	__query_courses(more){
-		if (this.state.comming_page_selected) {
-			if (this.$no_morelessons_comming || this.$querying_comming_lessons) return;
-			if (more || this.$page_comming == 1) {
-				this.$querying_comming_lessons = true;
-				net.getLessonListComming({page:this.$page_comming}).then(res=>{
-					this.$querying_comming_lessons = false;
-					if (res && res.list && res.list.data && res.list.data.length > 0) {
-						this.$page_comming = Number(res.list.current_page) + 1;
-						let latest = (this.props.commingRooms||[]).concat(res.list.data||[]);
-						this.props.onLessonsComming(latest);
-						res.total && res.total.length > 0 && this.props.onLessonsTotalComming(res.total);
-					}else{
-						this.$no_morelessons_comming = true;
-					}
-				});
-			}
-		}else{
-			if (this.$no_morelessons_done || this.$querying_done_lessons) return;
-			if (more || this.$page_done == 1) {
-				this.$querying_done_lessons = true;
-				return net.getLessonListDone({page:this.$page_done}).then(res=>{
-					this.$querying_done_lessons = false;
-					if (res && res.list && res.list.data && res.list.data.length > 0) {
-						this.$page_done = Number(res.list.current_page) + 1;
-						let latest = (this.props.doneRooms||[]).concat(res.list.data||[]);
-						this.props.onLessonsDone(latest);
-						res.total && res.total.length > 0 && this.props.onLessonsTotalDone(res.total);
-					}else{
-						this.$no_morelessons_done = true;
-					}
-				});
-			}
-		}
-	}
-
 	render() {
-		let { account } = this.props 
 		let content, sidebar = ""
 		if (this.props.started) {
 			//如果是回放加载回放组件
@@ -523,7 +358,7 @@ class Main extends React.Component {
 		} else if (this.props.testing) {
 			content = <Devices />
         } else if (this.props.mycourses){
-            content = this.__my_courses();
+			content = <MyCourse/>
 		} else {
 			content = this.__student_page()
 			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
@@ -534,21 +369,11 @@ class Main extends React.Component {
 				this.__on_helper()
 			}} onEnterMyCourses={()=>{
 				this.props.onEnterMyCourses();
-				this.__query_courses();
 			}}/>
 		}
 		return (
 			<div className="full-h">{sidebar}{content}</div>
 		)
-	}
-	onScrollHandle(event) {
-		const clientHeight = event.target.clientHeight
-		const scrollHeight = event.target.scrollHeight
-		const scrollTop = event.target.scrollTop
-		const isBottom = (clientHeight + scrollTop === scrollHeight)
-		if (isBottom) {
-			this.__query_courses(true);
-		}
 	}
 }
 
@@ -564,17 +389,11 @@ const mapStateToProps = (state, ownProps) => {
         testing 	: state.main.enterTester,
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
-		commingRooms: state.main.commingRooms,
-		doneRooms   : state.main.doneRooms,
-		totalComming: state.main.totalComming,
-		totalDone	: state.main.totalDone,
 	}
 }
 
 const mapDispatchToProps = dispatch => ({
-	onRoomList     		: (rooms) => dispatch(onRoomList(rooms)),
 	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
-	onCalendarData 		: (data) => dispatch(onCalendarData(data)),
 	onLogout       		: () => dispatch(onLogout()),
 	onStartCourse  		: () => dispatch(onStartCourse()),
 	confirm 	   		: (data) => dispatch(confirm(data)),
@@ -582,14 +401,9 @@ const mapDispatchToProps = dispatch => ({
 	hide 				: () => dispatch(hide()),
     onEnterTester 		: (fromPage) => dispatch(onEnterTester(fromPage)),
     onEnterMyCourses    : ()=>dispatch(onEnterMyCourses()),
-    onExitMyCourses    : ()=>dispatch(onExitMyCourses()),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
 	onCourseRecording   : (status) => dispatch(onCourseRecording(status)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
-	onLessonsComming    : (rooms) => dispatch(onLessonsComming(rooms)),
-	onLessonsDone       : (rooms) => dispatch(onLessonsDone(rooms)),
-	onLessonsTotalComming: (rooms) => dispatch(onLessonsTotalComming(rooms)),
-	onLessonsTotalDone   : (rooms) => dispatch(onLessonsTotalDone(rooms)),
 	showLoading 		: (message) => dispatch(showLoading(message)),
 	hideLoading 		: () => dispatch(hideLoading()),
 })

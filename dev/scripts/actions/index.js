@@ -39,11 +39,6 @@ export const loginSuccess = (account) => dispatch => {
 	})
 }
 
-export const onRoomList = (rooms) => ({
-	type: types.ROOM_LIST,
-	rooms
-})
-
 export const onCalendarData = (data) => ({
 	type: types.CALENDAR_DATA,
 	data
