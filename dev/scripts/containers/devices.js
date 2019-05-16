@@ -17,6 +17,8 @@ import {
 class Devices extends React.Component {
 	constructor(props) {
 		super(props)
+		Storage.update()
+		
 		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(Const.AGORA_APPID);
 		this.$client.on('error', (err, msg)=>{
