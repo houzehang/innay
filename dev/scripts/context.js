@@ -1,6 +1,11 @@
 import storage from './Storage'
-import {ipcRenderer} from "electron"
+import {ipcRenderer,remote} from "electron"
 import DB from '../../core/DB'
+import path from "path"
+import fs from "fs"
+const LogDog 		 = remote.require('pandora-nodejs-sdk')
+const logger 		 = remote.require('electron-log')
+const USER_DATA_ROOT = remote.app.getPath("userData")
 
 class Context {
 	get dmg() {
@@ -188,6 +193,73 @@ class Context {
 
 	get lkey() {
 		return "Yu6oGz2USJb9RMgG84KalD,19Dnr5YuF0mV1QoEgBxX2"
+	}
+
+	__upload_log(file, repo, parser) {
+		return new Promise((resolve, reject)=>{
+			if (!fs.existsSync(file)) {
+				reject()
+				return
+			}
+			let content = fs.readFileSync(file, "utf8")
+			if (content) {
+				let lkey = this.lkey.split(","),
+					rkey = this.rkey.split(",")
+				content = content.split("\n").map(parser)
+				LogDog.send(
+					new LogDog.Auth(
+						lkey[0]+'DxyKE2vUz'+rkey[0], 
+						lkey[1]+'PVhUEGplM'+rkey[1]
+					),
+					repo,
+					content
+				).then(()=>{
+					fs.writeFileSync(file, "", "utf8")
+				}).then(resolve, reject)
+			} else {
+				reject()
+			}
+		})
+	}
+
+	upload_system_logs(extra = {}){
+		this.__upload_log(path.join(USER_DATA_ROOT, "system.log"), "mingxi_pc_system", (line)=>{
+			let parsed = line.split(" ")
+			let time   = [parsed.shift(),parsed.shift()].join(" ")
+			return {
+				time, 
+				content	: parsed.join(" "), 
+				...extra
+			}
+		}).then(()=>{
+			logger.log('update system logs success')
+		}).catch((error)=>{
+			logger.error('update system logs failed ', error)
+		})
+	}
+
+	upload_agora_logs(extra = {}){
+		this.__upload_log(path.join(USER_DATA_ROOT, "agora.log"),  "mingxi_pc_agora", (line)=>{
+			let parsed = line.split(";")
+			let time   = parsed.shift()
+			return {
+				time, 
+				content: parsed.join(";"), 
+				...extra
+			}
+		}).then(()=>{
+			logger.log('update system logs success')
+		}).catch((error)=>{
+			logger.error('update system logs failed ', error)
+		})
+	}
+
+	log(...args){
+		logger.log(...args)
+	}
+
+	error(...args){
+		logger.error(...args)
 	}
 }
 

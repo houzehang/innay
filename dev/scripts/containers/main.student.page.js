@@ -20,10 +20,7 @@ import context from "../context"
 import storage from "../Storage"
 import bridge from '../../../core/MessageBridge'
 import {ipcRenderer, remote} from "electron"
-import path from "path"
-import fs from "fs"
 import MyCourse from './mycourse';
-const LogDog = remote.require('pandora-nodejs-sdk')
 
 class Main extends React.Component {
 	constructor(props) {
@@ -34,65 +31,26 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
+		console.log('this.props.account.id == ',this.props.account.id)
 		ipcRenderer.on("room-closed", ()=>{
 			this.__get_lesson_comming();
-			let base = remote.app.getPath("userData")
-			this.__upload_log(path.join(base, "system.log"), "mingxi_pc_system", (line)=>{
-				let parsed = line.split(" ")
-				let time   = [parsed.shift(),parsed.shift()].join(" ")
-				return {
-					time, 
-					content	: parsed.join(" "), 
-					user	: this.props.account.id, 
-					name	: this.props.account.child_name
-				}
+			context.upload_system_logs({
+				user	: this.props.account.id, 
+				name	: this.props.account.child_name
 			})
-			this.__upload_log(path.join(base, "agora.log"),  "mingxi_pc_agora", (line)=>{
-				let parsed = line.split(";")
-				let time   = parsed.shift()
-				return {
-					time, 
-					content: parsed.join(";"), 
-					user	: this.props.account.id, 
-					name	: this.props.account.child_name
-				}
+			context.upload_agora_logs({
+				user	: this.props.account.id, 
+				name	: this.props.account.child_name
 			})
 		})
 		this.__check_device();
 	}
 
-	__upload_log(file, repo, parser) {
-		return new Promise((resolve, reject)=>{
-			if (!fs.existsSync(file)) {
-				reject()
-				return
-			}
-			let content = fs.readFileSync(file, "utf8")
-			if (content) {
-				let lkey = context.lkey.split(","),
-					rkey = context.rkey.split(",")
-				content = content.split("\n").map(parser)
-				LogDog.send(
-					new LogDog.Auth(
-						lkey[0]+'DxyKE2vUz'+rkey[0], 
-						lkey[1]+'PVhUEGplM'+rkey[1]
-					),
-					repo,
-					content
-				).then(()=>{
-					fs.writeFileSync(file, "", "utf8")
-				}).then(resolve, reject)
-			} else {
-				reject()
-			}
-		})
-	}
-
 	__check_device(){
 		let oldUser = localStorage.getItem('OLD_USER') == 1,
 			checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
-
-		if(oldUser)return;
+			
+			if(oldUser)return;
 		if(!checked){
 			this.props.showLoading("首次进入，需要为您做些优化")
 		}
