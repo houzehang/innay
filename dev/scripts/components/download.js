@@ -38,15 +38,15 @@ class Download extends React.Component {
 			account	: this.props.user,
 		}
 		this.__update_base_frame().then(data=>{
-			logger.log(`下载基础库成功。版本号：${data.version}`)
+			logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.$base_frame_url}`)
 			let lesson = room.en_name
 			if (recording) lesson = lesson + `.${data.version}`.replace('..','.')
 			return this.__update_course_bundle(lesson)
 		}).then(data=>{
-			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
+			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.$base_course_url}`)
 			this.__on_complete(params)
 		}).catch(error=>{
-			logger.error("检测基础库出错", error)
+			logger.error("检测基础库出错", error, `基础库下载地址：${this.$base_frame_url}/liveroom.json 课程包下载地址：${this.$base_course_url}/${room.en_name}.json`)
 			this.__setStatus("UPDATE.ERROR", error);
 		})
 	}
