@@ -24,6 +24,7 @@ class Devices extends React.Component {
 		this.$client.on('error', (err, msg)=>{
 			console.error("Got error msg:", err);
 			net.log({"DEVICE-TEST":`init error, code: ${err}, message: ${msg}`})
+			context.log(`device-init error, code: ${err}, message: ${msg}`)
 		});
 		this.$client.setChannelProfile(1);
 		this.$client.setClientRole(1);
@@ -77,6 +78,7 @@ class Devices extends React.Component {
 				quality = 0
 			}
 			net.log({name:"NET:STATUS", status: quality, from: "DEVICE-TEST"})
+			context.log(`device-net status: ${quality}`)
 		})
 	}
 
@@ -153,6 +155,8 @@ class Devices extends React.Component {
 			"mic"			: audio_devices, 
 			"speaker"		: speaker_devices 
 		})
+		context.log(`device-list camera:${video_devices} mic:${audio_devices} speaker:${speaker_devices}`)
+
 		return {
 			currentVideoDevice, 
 			currentVideoName,
@@ -255,6 +259,7 @@ class Devices extends React.Component {
 								return;
 							}
 							net.log({"DEVICE-TEST": "hardware test passed"})
+							context.log('device-hardware test passed')
 							this.setState({step: 1})
 						}} className="step-btn">设备信息正确，开始检测</button>
 					</div>
@@ -272,6 +277,7 @@ class Devices extends React.Component {
 			this.setState({ camera_failed: !passed })
 		})
 		net.log({"DEVICE-TEST":`camera test ${passed?"passed":"failed"}`})
+		context.log(`device-camera test ${passed?"passed":"failed"}`)
 	}
 
 	step1() {
@@ -290,6 +296,7 @@ class Devices extends React.Component {
 						Storage.store("VIDEO_DEVICE",event.target.value)
 						this.$client.setVideoDevice(event.target.value);
 						net.log({"DEVICE-TEST":`change camera id:${event.target.value}, name: ${name}`})
+						context.log(`device-change camera id:${event.target.value}, name: ${name}`)
 					}}>
 					{
 						this.state.video_devices.length > 0 ?
@@ -330,6 +337,7 @@ class Devices extends React.Component {
 		})
 		this.setState({ mic_failed: !passed })
 		net.log({"DEVICE-TEST": `mic test ${passed?"passed":"failed"}, max volumn: ${this.$max_device_volumn / 12 * 100 >> 0}%`})
+		context.log(`device-mic test ${passed?"passed":"failed"}, max volumn: ${this.$max_device_volumn / 12 * 100 >> 0}%`)
 	}
 
 	step2() {
@@ -353,6 +361,7 @@ class Devices extends React.Component {
 						Storage.store("AUDIO_DEVICE",event.target.value)
 						this.$client.setAudioRecordingDevice(event.target.value);
 						net.log({"DEVICE-TEST":`change mic id:${event.target.value}, name: ${name}`})
+						context.log(`device-change mic id:${event.target.value}, name: ${name}`)
 					}}>
 					{
 						this.state.audio_devices.length > 0 ?
@@ -392,6 +401,7 @@ class Devices extends React.Component {
 		this.$client.stopAudioPlaybackDeviceTest();
 		this.setState({ speaker_failed: !passed })
 		net.log({"DEVICE-TEST": `speaker test ${passed?"passed":"failed"}`})
+		context.log(`device-speaker test ${passed?"passed":"failed"}`)
 		let failed
 		if (this.state.camera_failed || this.state.mic_failed || !passed) {
 			failed = true
@@ -403,6 +413,7 @@ class Devices extends React.Component {
 				content: "设备检测通过，欢迎您进入明兮学堂。",
 				sure: ()=>{
 					net.log({"DEVICE-TEST": "user device test success."})
+					context.log('device-user device test success.')
 					this.__exit()
 				}
 			})
@@ -413,11 +424,13 @@ class Devices extends React.Component {
 				sure_txt: "重新检测",
 				sure: ()=>{
 					net.log({"DEVICE-TEST": "user device test failed and restart."})
+					context.log('device-user device test failed and restart.')
 					this.$playing = false
 					this.setState({step: 1, camera_failed: false, mic_failed: false, speaker_failed: false})
 				},
 				cancel: ()=>{
 					net.log({"DEVICE-TEST": "user device test failed and stepover."})
+					context.log('device-user device test failed and stepover.')
 					this.__exit()
 				}
 			})
@@ -450,6 +463,7 @@ class Devices extends React.Component {
 						Storage.store("PLAYBACK_DEVICE",event.target.value)
 						this.$client.setAudioPlaybackDevice(event.target.value);
 						net.log({"DEVICE-TEST":`change speaker id:${event.target.value}, name: ${name}`})
+						context.log(`device-change speaker id:${event.target.value}, name: ${name}`)
 					}}>
 					{
 						this.state.speaker_devices.length > 0 ?
@@ -497,6 +511,8 @@ class Devices extends React.Component {
 	}
 
 	__exit() {
+		context.upload_system_logs()
+		context.upload_agora_logs()
 		this.props.onExitTester();
 		if(this.state.check_over){
 			localStorage.setItem('DEVICE_CHECKED_ALREADY', 1);

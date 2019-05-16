@@ -34,14 +34,8 @@ class Main extends React.Component {
 		console.log('this.props.account.id == ',this.props.account.id)
 		ipcRenderer.on("room-closed", ()=>{
 			this.__get_lesson_comming();
-			context.upload_system_logs({
-				user	: this.props.account.id, 
-				name	: this.props.account.child_name
-			})
-			context.upload_agora_logs({
-				user	: this.props.account.id, 
-				name	: this.props.account.child_name
-			})
+			context.upload_system_logs()
+			context.upload_agora_logs()
 		})
 		this.__check_device();
 	}

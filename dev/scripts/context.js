@@ -224,14 +224,15 @@ class Context {
 		})
 	}
 
-	upload_system_logs(extra = {}){
+	upload_system_logs(){
 		this.__upload_log(path.join(USER_DATA_ROOT, "system.log"), "mingxi_pc_system", (line)=>{
 			let parsed = line.split(" ")
 			let time   = [parsed.shift(),parsed.shift()].join(" ")
 			return {
 				time, 
 				content	: parsed.join(" "), 
-				...extra
+				user: this.user.id,
+				name: this.user.child_name
 			}
 		}).then(()=>{
 			logger.log('update system logs success')
@@ -240,19 +241,20 @@ class Context {
 		})
 	}
 
-	upload_agora_logs(extra = {}){
+	upload_agora_logs(){
 		this.__upload_log(path.join(USER_DATA_ROOT, "agora.log"),  "mingxi_pc_agora", (line)=>{
 			let parsed = line.split(";")
 			let time   = parsed.shift()
 			return {
 				time, 
 				content: parsed.join(";"), 
-				...extra
+				user: this.user.id,
+				name: this.user.child_name
 			}
 		}).then(()=>{
-			logger.log('update system logs success')
+			logger.log('update agora logs success')
 		}).catch((error)=>{
-			logger.error('update system logs failed ', error)
+			logger.error('update agora logs failed ', error)
 		})
 	}
 
