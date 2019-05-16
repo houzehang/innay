@@ -7,6 +7,8 @@ const LogDog 		 = remote.require('pandora-nodejs-sdk')
 const logger 		 = remote.require('electron-log')
 const USER_DATA_ROOT = remote.app.getPath("userData")
 
+import { DEBUG,TC_DEBUG,TEST } from '../../env'
+
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -256,10 +258,16 @@ class Context {
 
 	log(...args){
 		logger.log(...args)
+		if(DEBUG || TC_DEBUG || TEST){
+			console.log(...args)
+		}
 	}
 
 	error(...args){
 		logger.error(...args)
+		if(DEBUG || TC_DEBUG || TEST){
+			console.error(...args)
+		}
 	}
 }
 
