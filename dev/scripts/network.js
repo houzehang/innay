@@ -1,19 +1,23 @@
 import Eventer 		from './eventer'
 import context 		from './context'
-import {DEBUG,TEST} from "../../env"
 import {remote} 	from "electron"
 import Conf 		from "../const"
 import $ 			from "jquery"
 class Network extends Eventer {
 	constructor() {
 		super()
-		if (DEBUG || TEST) {
-			this.$base_url = Conf.TEST_URL
-		} else {
-			this.$base_url = Conf.ONLINE_URL
-		}
+
 		this.$log_queue = []
 		this.__restore_token()
+	}
+
+	get baseUrl(){
+		let env_conf = window.ENV_CONF || {}
+		if (env_conf.DEBUG || env_conf.TEST) {
+			return Conf.TEST_URL
+		} else {
+			return Conf.ONLINE_URL
+		}
 	}
 
 	__restore_token() {
@@ -32,7 +36,7 @@ class Network extends Eventer {
 		return new Promise((resolve, reject)=>{
 			const formData = new FormData();
     		formData.append('upload_file',data)
-			$.ajax(this.$base_url + "/uploadfile/index", {
+			$.ajax(this.baseUrl + "/uploadfile/index", {
 				headers: { 
 					"Authorization": `Bearer ${this.$token}`
 				},
@@ -58,7 +62,7 @@ class Network extends Eventer {
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
 		return new Promise((resolve, reject)=>{
-			$.ajax(this.$base_url + url, {
+			$.ajax(this.baseUrl + url, {
 				headers: { 
 					"Authorization": `Bearer ${this.$token}`,
 					"Accept" : "application/json"
@@ -322,7 +326,7 @@ class Network extends Eventer {
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
 				if (this.$log_queue.length > 0) {
-					$.post(`${this.$base_url}/api/h5_log`,{
+					$.post(`${this.baseUrl}/api/h5_log`,{
 						logs	: this.$log_queue, 
 						user	: context.user.id, 
 						system  : this.__get_system_info()

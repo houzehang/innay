@@ -5,7 +5,6 @@ import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import path				from "path"
 import Const 			from "../../const"
-import { DEBUG } 		from "../../../env"
 import Storage  		from "../../../core/DB"
 import AgoraRtcEngine 	from '../../agora/AgoraSdk'
 import net 				from "../network"
@@ -442,7 +441,7 @@ class Devices extends React.Component {
 			this.$playing = true
 			setTimeout(()=>{
 				let filepath;
-				if (DEBUG) {
+				if ((window.ENV_CONF || {}).DEBUG) {
 					filepath = path.join(window.ENV_CONF.__dirname,'libs','AgoraSDK','music.mp3');
 				} else {
 					filepath = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','AgoraSDK','music.mp3');

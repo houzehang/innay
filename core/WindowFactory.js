@@ -92,7 +92,10 @@ export default class WindowFactory {
 			_window.webContents.send('configure', {
 				__dirname: path.resolve(__dirname,'..'), __apppath: app.getAppPath(),
 				version: app.getVersion(),
-				data
+				data,
+				TC_DEBUG, 
+				TEST, 
+				DEBUG
 			});
 			if (needSystemInfo) {
 				SystemInfo.getStaticData((info)=>{

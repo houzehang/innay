@@ -1,4 +1,4 @@
-import { TC_DEBUG, DEBUG } from '../env.js';
+import { DEBUG } from '../env.js';
 import { BrowserWindow } from 'electron';
 import bridge from './MessageBridge'
 import { EventEmitter } from 'events';

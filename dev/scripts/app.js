@@ -16,7 +16,6 @@ import thunk from 'redux-thunk'
 import {ipcRenderer} from 'electron'
 
 ipcRenderer.on('configure', (_, data)=>{
-	console.log("configure",data)
 	if (!window.ENV_CONF) {
 		window.ENV_CONF = {}
 	}
@@ -38,6 +37,7 @@ ipcRenderer.on('configure', (_, data)=>{
 		basedir = data.__dirname
 	}
 	window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
+	_next()
 })
 
 ipcRenderer.on('systeminfo', (_, data)=>{
@@ -50,15 +50,17 @@ ipcRenderer.on('systeminfo', (_, data)=>{
 	}
 })
 
-const middleware = [ thunk ];
-const store = createStore(
-	rootReducer,
-	applyMiddleware(...middleware)
-)
-store.dispatch(restoreUserInfo())
-render(
-	<Provider store={store}>
-		<App/>
-	</Provider>, 
-	document.getElementById("app")
-)
+function _next(){
+	const middleware = [ thunk ];
+	const store = createStore(
+		rootReducer,
+		applyMiddleware(...middleware)
+	)
+	store.dispatch(restoreUserInfo())
+	render(
+		<Provider store={store}>
+			<App/>
+		</Provider>, 
+		document.getElementById("app")
+	)
+}

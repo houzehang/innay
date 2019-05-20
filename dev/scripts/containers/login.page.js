@@ -8,7 +8,6 @@ import {
 import net from "../network"
 import context from "../context"
 import { ipcRenderer } from 'electron';
-import {TEACHER}   from './../../../env.js';
 
 class Login extends React.Component {
 	constructor(props) {
@@ -16,20 +15,7 @@ class Login extends React.Component {
 		this.state = {  
 			mobile: "", 
 			password: "",
-			dentity: TEACHER ? 2 : 1,
-			dentity_list: [{id: 2,name: '教师'},{id: 3,name: '班主任'}]
-		}
-
-		if (TEACHER) {
-			this.props.showLoading("正在获取身份配置...")
-			net.getLoginDentities().then((res)=>{
-				if (res && res.dentities) {
-					this.setState({dentity_list: res.dentities});
-				}
-				this.props.hideLoading()
-			},()=>{
-				this.props.hideLoading()
-			})
+			dentity: 1
 		}
 	}
 
@@ -75,18 +61,8 @@ class Login extends React.Component {
 		return (
 			<div className="full-h">
 				<div className="page login-page">
-					{/* <div className={'login-box'} > */}
-					<div className={'login-box'+(this.state.dentity == 1 ? '' : ' with-dentity')} >
+					<div className='login-box' >
 						<div className="title">登录</div>
-						{this.state.dentity == 1 ? '' :
-							<div className="input-box login-radio">
-								{this.state.dentity_list.map((element,index) => {
-									return <label key={`dentity-element${element.id}`}><input type="radio" name="dentity" value={element.id} checked={this.state.dentity == element.id?'checked':false} onChange={(event)=>{
-										this.handleChange("dentity", event)
-									}}/>&nbsp;{element.name}</label>
-								})}
-							</div>
-						}
 						<div className="input-control">
 							<div className="input-box">
 								<input type="number" onChange={(event)=>{

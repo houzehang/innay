@@ -1,5 +1,4 @@
 import Eventer 			from "./eventer"
-import {DEBUG,TEST}     from "../../env"
 import Conf 			from "../const"
 import context 			from "./context"
 import $ 				from "jquery"
@@ -28,9 +27,10 @@ class Session extends Eventer {
 	 */
 	__createWebview() {
 		let prefix
-		if (DEBUG) {
+		let env_conf = window.ENV_CONF || {}
+		if (env_conf.DEBUG) {
 			prefix = "mingxi://liveroom"
-		} else if(TEST) {
+		} else if(env_conf.TEST) {
 			prefix = Conf.TEST_URL
 		} else {
 			prefix = Conf.ONLINE_URL
