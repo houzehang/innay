@@ -80,7 +80,6 @@ class Main extends React.Component {
     }
     
     __get_lesson_comming(){
-		console.log('test----get lesson comming')
 		net.getLessonComming().then((res)=>{
 			// 计算剩余时间
 			let room = res.room;
