@@ -80,6 +80,7 @@ class Main extends React.Component {
     }
     
     __get_lesson_comming(){
+		console.log('test----get lesson comming')
 		net.getLessonComming().then((res)=>{
 			// 计算剩余时间
 			let room = res.room;
@@ -308,12 +309,16 @@ class Main extends React.Component {
 		} else if (this.props.recording) {
 			content = <CourseRecord/>;
 		} else if (this.props.testing) {
-			content = <Devices />
+			content = <Devices onExit={()=>{
+				this.__get_lesson_comming()
+			}}/>
         } else if (this.props.mycourses){
 			content = <MyCourse onStartRoom={(room)=>{
 				this.onStartRoom(room)
 			}}  onRecordRoom={(room)=>{
 				this.onRecordRoom(room)
+			}} onExit={()=>{
+				this.__get_lesson_comming()
 			}}/>
 		} else {
 			content = this.__student_page()

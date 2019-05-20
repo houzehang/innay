@@ -113,6 +113,7 @@ class MyCourse extends React.Component {
 							<div className="nav-area">
 								<div className="btn-exit" onClick={() => {
 									this.props.onExitMyCourses()
+									this.props.onExit()
 								}}></div>
 								<div className={this.state.comming_page_selected ? "switch-bar" : "switch-bar first-selected"} >
 									<div className="switch-bar-left" onClick={() => { this.__select_page(1); }}>

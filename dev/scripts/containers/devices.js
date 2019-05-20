@@ -514,6 +514,7 @@ class Devices extends React.Component {
 		context.upload_system_logs()
 		context.upload_agora_logs()
 		this.props.onExitTester();
+		this.props.onExit()
 		if(this.state.check_over){
 			localStorage.setItem('DEVICE_CHECKED_ALREADY', 1);
 		}
