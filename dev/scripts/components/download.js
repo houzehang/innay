@@ -138,6 +138,7 @@ class Download extends React.Component {
 					url			: `${base_url}/${result.url}`, 
 					md5			: result.md5,
 					version		: result.version,
+					key  		: result.lesson,
 					autoUnzip	: true,
 					checksum
 				}
@@ -201,34 +202,46 @@ class Download extends React.Component {
 	__update_course_bundle(lesson) {
 		return new Promise((resolve, reject)=>{
 			bridge.call({
-				method: "isUpdateAvailable",
+				method: "getLocalInstalledVersion",
 				args: {
-					url : `${this.$base_course_url}/${lesson}.json`,
 					pack: "course-ui"
 				}
-			}).then(result=>{
-				this.__setStatus("UPDATE.COURSE_BUNDLE");
-				if (result.available) {
-					this.__setStatus("UPDATE.DOWNLOADING_UI");
-					this.__do_update_bundle({
-						pack  	: "course-ui", 
-						result	: result.server,
-						base_url: this.$base_course_url,
-						checksum: !this.props.recording
-					}).then(data=>{
-						resolve(data)
-					}).catch(error=>{
-						reject(error)
-					})
-				} else {
-					this.__setStatus("UPDATE.LASTEST");
-					resolve(result.server)
-				}
+			}).then((localInfo)=>{
+				bridge.call({
+					method: "getServerPackageVersion",
+					args: {
+						url : `${this.$base_course_url}/${lesson}.json`,
+					}
+				}).then((serverInfo)=>{
+					serverInfo = serverInfo || {}
+					if (!localInfo||
+						localInfo.key != serverInfo.lesson ||
+						localInfo.md5 != serverInfo.md5) {
+						this.__setStatus("UPDATE.DOWNLOADING_UI");
+						this.__do_update_bundle({
+							pack  	: "course-ui", 
+							result	: serverInfo,
+							base_url: this.$base_course_url,
+							checksum: !this.props.recording
+						}).then(data=>{
+							resolve(data)
+						}).catch(error=>{
+							reject(error)
+						})
+					}else{
+						this.__setStatus("UPDATE.LASTEST");
+						resolve(serverInfo)
+					}
+				}).catch(err=>{
+					reject(err)
+				})
+				
 			}).catch(err=>{
 				reject(err)
 			})
 		})
 	}
+
 
 	render() {
 		return (

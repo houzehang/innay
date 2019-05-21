@@ -106,7 +106,7 @@ export async function getDownloadTask({ identity }) {
 	return tasks_list[identity] || null
 }
 
-export async function startDownloadTask({ pack, url, md5, version, autoUnzip, checksum }, sender) {
+export async function startDownloadTask({ pack, url, md5, version, autoUnzip, checksum, key }, sender) {
 	let filename = `v${version}${md5?("-build."+md5):""}.zip`
 	let identity = `${pack}/${filename}`,
 		destpath = `${PACKAGE_PATH}/${identity}`
@@ -195,7 +195,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 		})
 		.then(() => {
 			// write downloaded version to local
-			let metaContent = JSON.stringify({version,md5,file:filename})
+			let metaContent = JSON.stringify({version,md5,file:filename,key})
 			logger.info(`write to local package for version ${metaContent}`)
 			let metaFilePath = getLocalPackageMetaFilePath(pack)
 			try {
@@ -204,7 +204,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 				throw new Error("写入本地文件包版本号出错")
 			}
 			if (autoUnzip) {
-				return decompressZip({ pack, file: destpath }).then(()=>{
+				return decompressZip({ pack, file: destpath,key}).then(()=>{
 					logger.info(`write to local installed package for version ${metaContent}`)
 					metaFilePath = getLocalInstalledMetaFilePath(pack)
 					try {
