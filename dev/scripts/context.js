@@ -8,6 +8,23 @@ const logger 		 = remote.require('electron-log')
 const USER_DATA_ROOT = remote.app.getPath("userData")
 
 class Context {
+
+	get agoraAppId(){
+		let env_conf = window.ENV_CONF || {}
+		if(env_conf.TEST||env_conf.DEBUG){
+			return "c6a83fe7f78b490c96f69f3fdb71f682"
+		} 
+		return "d75fe75ab0404a90b2ed7e5bab216f80"
+	}
+
+	get agoraChannelKey(){
+		let env_conf = window.ENV_CONF || {}
+		if(env_conf.TEST||env_conf.DEBUG){
+			return "dfc09172cb114b06b002c2f9aa7f0d87"
+		} 
+		return "7c9b6ed9bba54dc59471cfa09e9f23ea"
+	}
+
 	get dmg() {
 		return this.$dmg
 	}

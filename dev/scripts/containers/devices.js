@@ -19,7 +19,7 @@ class Devices extends React.Component {
 		Storage.update()
 		
 		this.$client = new AgoraRtcEngine()
-		this.$client.initialize(Const.AGORA_APPID);
+		this.$client.initialize(context.agoraAppId());
 		this.$client.on('error', (err, msg)=>{
 			console.error("Got error msg:", err);
 			net.log({"DEVICE-TEST":`init error, code: ${err}, message: ${msg}`})

@@ -299,7 +299,7 @@ class Course extends React.Component {
 				teacher_id		: this.props.room.teacher_id,
 				teacher_avatar	: this.props.room.teacher_avatar,
 				channel_token	: this.props.room.channel_token,
-				agora_appid 	: Const.AGORA_APPID,
+				agora_appid 	: context.agoraAppId(),
 				userid 			: this.props.account.id
 			}
 		})

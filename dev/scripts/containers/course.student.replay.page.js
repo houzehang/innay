@@ -21,6 +21,7 @@ import {
     onQuestionDetail,
     onCourseRecording
 } from '../actions' 
+import context from '../context'
 
 import CourseBase from './course.base.page'
 const net                = require("../network")
@@ -120,7 +121,7 @@ class Course extends CourseBase {
 				teacher_id		: this.props.room.teacher_id,
 				teacher_avatar	: this.props.room.teacher_avatar,
 				channel_token	: this.props.room.channel_token,
-				agora_appid 	: Const.AGORA_APPID,
+				agora_appid 	: context.agoraAppId(),
 				userid 			: this.props.account.id,
 				version			: this.props.room.version,
 				offset_time		: this.props.room.offset_time,
