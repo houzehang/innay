@@ -107,6 +107,8 @@ export async function getDownloadTask({ identity }) {
 }
 
 export async function startDownloadTask({ pack, url, md5, version, autoUnzip, checksum, key }, sender) {
+	key = key || pack;
+
 	let filename = `v${version}${md5?("-build."+md5):""}.zip`
 	let identity = `${pack}/${filename}`,
 		destpath = `${PACKAGE_PATH}/${identity}`
