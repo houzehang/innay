@@ -221,8 +221,7 @@ class Download extends React.Component {
 						this.__do_update_bundle({
 							pack  	: "course-ui", 
 							result	: serverInfo,
-							base_url: this.$base_course_url,
-							checksum: !this.props.recording
+							base_url: this.$base_course_url
 						}).then(data=>{
 							resolve(data)
 						}).catch(error=>{
