@@ -5,26 +5,38 @@ import net from '../network'
 import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
-import {DEBUG, TEST} from "../../../env"
 
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
-		if (DEBUG) {
-			this.$base_frame_url 	= "http://localhost:8080"
-			this.$base_course_url 	= "https://lessonsyuntest.mx0a.com"
-		} else if (TEST) {
-			this.$base_frame_url 	= "https://bundlesyuntest.mx0a.com"
-			this.$base_course_url 	= "https://lessonsyuntest.mx0a.com"
-		} else {
-			this.$base_frame_url 	= "https://bundlesyun.mx0a.com"
-			this.$base_course_url 	= "https://lessonsyun.mx0a.com"
-		}
+		
 		this.$downloading = null
 		this.state = {
 			title: "准备更新基础库...",
 			percent: 0,
 			notice: ""
+		}
+	}
+
+	get baseFrameUrl(){
+		let env_conf = window.ENV_CONF || {}
+		if (env_conf.DEBUG) {
+			return "http://localhost:8080"
+		} else if (env_conf.TEST) {
+			return "https://bundlesyuntest.mx0a.com"
+		} else {
+			return "https://bundlesyun.mx0a.com"
+		}
+	}
+
+	get baseCourseUrl(){
+		let env_conf = window.ENV_CONF || {}
+		if (env_conf.DEBUG) {
+			return "https://lessonsyuntest.mx0a.com"
+		} else if (env_conf.TEST) {
+			return "https://lessonsyuntest.mx0a.com"
+		} else {
+			return "https://lessonsyun.mx0a.com"
 		}
 	}
 
@@ -38,15 +50,15 @@ class Download extends React.Component {
 			account	: this.props.user,
 		}
 		this.__update_base_frame().then(data=>{
-			logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.$base_frame_url}`)
+			logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
 			let lesson = room.en_name
 			if (recording) lesson = lesson + `.${data.version}`.replace('..','.')
 			return this.__update_course_bundle(lesson)
 		}).then(data=>{
-			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.$base_course_url}`)
+			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
 			this.__on_complete(params)
 		}).catch(error=>{
-			logger.error("检测基础库出错", error, `基础库下载地址：${this.$base_frame_url}/liveroom.json 课程包下载地址：${this.$base_course_url}/${room.en_name}.json`)
+			logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 课程包下载地址：${this.baseCourseUrl}/${room.en_name}.json`)
 			this.__setStatus("UPDATE.ERROR", error);
 		})
 	}
@@ -173,7 +185,7 @@ class Download extends React.Component {
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${this.$base_frame_url}/liveroom.json`,
+					url : `${this.baseFrameUrl}/liveroom.json`,
 					pack: "liveroom"
 				}
 			}).then(result=>{
@@ -183,7 +195,7 @@ class Download extends React.Component {
 					this.__do_update_bundle({
 						pack	: "liveroom", 
 						result	: result.server,
-						base_url: this.$base_frame_url
+						base_url: this.baseFrameUrl
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
@@ -210,7 +222,7 @@ class Download extends React.Component {
 				bridge.call({
 					method: "getServerPackageVersion",
 					args: {
-						url : `${this.$base_course_url}/${lesson}.json`,
+						url : `${this.baseCourseUrl}/${lesson}.json`,
 					}
 				}).then((serverInfo)=>{
 					serverInfo = serverInfo || {}
@@ -221,7 +233,7 @@ class Download extends React.Component {
 						this.__do_update_bundle({
 							pack  	: "course-ui", 
 							result	: serverInfo,
-							base_url: this.$base_course_url
+							base_url: this.baseCourseUrl
 						}).then(data=>{
 							resolve(data)
 						}).catch(error=>{
