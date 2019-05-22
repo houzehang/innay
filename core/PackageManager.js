@@ -120,7 +120,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 		tasks_list[identity].abort()
 		delete tasks_list[identity]
 	}
-	let task, error, lastPercent = 0, taskAbort
+	let task, error, lastPercent = 0
 	try {
 		task = got(url, { encoding: null, timeout: {socket: 60000} })
 	} catch(e) {
