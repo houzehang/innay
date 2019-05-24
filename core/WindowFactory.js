@@ -75,7 +75,7 @@ export default class WindowFactory {
 			url = WINDOW_ADAPTER[pack]
 			console.log("url",url)
 		} else {
-			url = `${PROXY}://${pack}`
+			url = `${PROXY}://${pack}${(TEST||DEBUG)?'?env=test':''}`
 		}
 		_window.loadURL(url)
 		if (TC_DEBUG || TEST) {
