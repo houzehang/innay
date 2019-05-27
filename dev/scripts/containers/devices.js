@@ -264,6 +264,9 @@ class Devices extends React.Component {
 		this.onStopPreviewAndStepTo(2)
 		this.setState({ camera_failed: !passed })
 		net.log({"DEVICE-TEST":`camera test ${passed?"passed":"failed"}`})
+		if (!passed) {
+			context.upload_agora_logs()
+		}
 	}
 
 	step1() {
@@ -322,6 +325,9 @@ class Devices extends React.Component {
 		})
 		this.setState({ mic_failed: !passed })
 		net.log({"DEVICE-TEST": `mic test ${passed?"passed":"failed"}, max volumn: ${this.$max_device_volumn / 12 * 100 >> 0}%`})
+		if (!passed) {
+			context.upload_agora_logs()
+		}
 	}
 
 	step2() {
@@ -413,6 +419,7 @@ class Devices extends React.Component {
 					this.__exit()
 				}
 			})
+			context.upload_agora_logs()
 		}
 	}
 

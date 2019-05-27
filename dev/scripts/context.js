@@ -1,5 +1,10 @@
-const storage 		= require("./Storage")
-const {ipcRenderer} = $require("electron");
+const storage 				= require("./Storage")
+const {ipcRenderer,remote} 	= $require("electron");
+const path 					= $require("path")
+const fs 					= $require("fs")
+const LogDog 		 		= remote.require('pandora-nodejs-sdk')
+const USER_DATA_ROOT 		= remote.app.getPath("userData")
+
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -132,6 +137,58 @@ class Context {
 			return true;
 		}
 		return this.$join_class_enabled;
+	}
+
+	get rkey() {
+		return "TNyv1khX-,5IOzgBWgpu"
+	}
+
+	get lkey() {
+		return "Yu6oGz2USJb9RMgG84KalD,19Dnr5YuF0mV1QoEgBxX2"
+	}
+
+	__upload_log(file, repo, parser) {
+		return new Promise((resolve, reject)=>{
+			if (!fs.existsSync(file)) {
+				reject()
+				return
+			}
+			let content = fs.readFileSync(file, "utf8")
+			if (content) {
+				let lkey = this.lkey.split(","),
+					rkey = this.rkey.split(",")
+				content = content.split("\n").map(parser)
+				LogDog.send(
+					new LogDog.Auth(
+						lkey[0]+'DxyKE2vUz'+rkey[0], 
+						lkey[1]+'PVhUEGplM'+rkey[1]
+					),
+					repo,
+					content
+				).then(()=>{
+					fs.writeFileSync(file, "", "utf8")
+				}).then(resolve, reject)
+			} else {
+				reject()
+			}
+		})
+	}
+
+	upload_agora_logs(){
+		this.__upload_log(path.join(USER_DATA_ROOT, "agora.log"),  "mingxi_pc_agora", (line)=>{
+			let parsed = line.split(";")
+			let time   = parsed.shift()
+			return {
+				time, 
+				content: parsed.join(";"), 
+				user: this.user.id,
+				name: this.user.child_name
+			}
+		}).then(()=>{
+			console.log('update agora logs success')
+		}).catch((error)=>{
+			console.error('update agora logs failed ', error)
+		})
 	}
 }
 
