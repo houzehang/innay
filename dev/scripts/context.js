@@ -4,7 +4,7 @@ const path 					= $require("path")
 const fs 					= $require("fs")
 const LogDog 		 		= remote.require('pandora-nodejs-sdk')
 const USER_DATA_ROOT 		= remote.app.getPath("userData")
-
+const Q 					= require('q')
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -148,7 +148,7 @@ class Context {
 	}
 
 	__upload_log(file, repo, parser) {
-		return new Promise((resolve, reject)=>{
+		return Q.Promise((resolve, reject)=>{
 			if (!fs.existsSync(file)) {
 				reject()
 				return
@@ -169,7 +169,7 @@ class Context {
 					fs.writeFileSync(file, "", "utf8")
 				}).then(resolve, reject)
 			} else {
-				reject()
+				reject('no more agora logs')
 			}
 		})
 	}
@@ -186,9 +186,9 @@ class Context {
 			}
 		}).then(()=>{
 			console.log('update agora logs success')
-		}).catch((error)=>{
-			console.error('update agora logs failed ', error)
-		})
+		},(error)=>{
+			console.log('update agora logs abort,', error)
+		}).done()
 	}
 }
 
