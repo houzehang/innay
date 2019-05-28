@@ -109,23 +109,15 @@ class Context {
 	}
 
 	/**
-	 * 是否为低端设备
-	 */
-	isOldDevice() {
-		if (this.$is_old_device !== undefined) {
-			return this.$is_old_device
-		}
-		let oldDevice = localStorage.getItem("IS_OLD_DEVICE")
-		this.$is_old_device = oldDevice
-		return oldDevice
-	}
-
-	/**
 	 * 设置为低端设备
 	 */
-	setOldDevice() {
-		localStorage.setItem("IS_OLD_DEVICE", 1)
-		this.$is_old_device = true
+	get oldDevice(){
+		return this.$old_device
+	}
+
+	set oldDevice(old){
+		this.$old_device = !!old
+		localStorage.setItem("IS_OLD_DEVICE", old ? 1 : 0)
 	}
 
 	set join_class_enabled(enabled){

@@ -49,7 +49,8 @@ class Course extends CourseBase {
 		
 		this.state 		= { 
 			control: !this.props.status.started,
-			process: {current:0,total:0}
+			process: {current:0,total:0},
+			blind  : context.oldDevice
 		}
 	}
 
@@ -96,6 +97,42 @@ class Course extends CourseBase {
 		})
 	}
 
+	/**
+	 * 刷新视频流显示
+	 * 低端设备不显示其他学生流
+	 */
+	updateStreams() {
+		let oldDevice = context.oldDevice
+		if (oldDevice) {
+			//不显示其他学生视频流
+			this.props.students.map((student = {})=>{
+				let id = student.id
+				if(id){
+					try{
+						this.$room.unsubscribe(id)
+						this.$room.rtc.destroyRender(id)
+					}catch(error){
+						console.error(error)
+					}
+				}
+			})
+		}else{
+			//显示其他学生视频流
+			this.props.students.map((student = {})=>{
+				let id = student.id
+				if(id && id != this.$dancing_id){
+					try{
+						this.$room.rtc.subscribe(id, {width: Const.SMALL_MODE, height: Const.SMALL_MODE, cocos: true })
+						this.$room.rtc.setRemoteVideoStreamType(id, 0)
+						this.$room.rtc.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
+					}catch(error){
+						console.error(error)
+					}
+				}
+			})
+		}
+	}
+
 	componentDidMount() {
 		this.$room.init()
 		this.$room.on("NEW_STREAM", (stream) => {
@@ -107,7 +144,7 @@ class Course extends CourseBase {
 			}
 			let self = id == this.props.account.id
 			// 如果是低端设备则不显示流信息
-			if (self || this.isChairMaster(id) || !context.isOldDevice()) {
+			if (self || this.isChairMaster(id) || !context.oldDevice) {
 				stream.play()
 			}
 			this.$session.send_message("NEW_STREAM", {
@@ -161,14 +198,14 @@ class Course extends CourseBase {
 		switch (data.type) {
 			case Const.PUT_DANCE:
 			if(this.$dancing_id) {
-				if (context.isOldDevice()) {
+				if (context.oldDevice) {
 					// 老设备需要关闭流
 					this.$room.unsubscribe(this.$dancing_id)
 					this.$room.rtc.destroyRender(this.$dancing_id)
 				}
 			}
 			this.$dancing_id = id
-			if (context.isOldDevice()) {
+			if (context.oldDevice) {
 				if (!isSelf) {
 					// 老设备需要开启流
 					this.$room.rtc.subscribe(id, {width: Const.LARGE_MODE, height: Const.LARGE_MODE, cocos: true })
@@ -187,7 +224,7 @@ class Course extends CourseBase {
 			break
 			case Const.BACK_DANCE:
 			this.$dancing_id = null
-			if (context.isOldDevice()) {
+			if (context.oldDevice) {
 				if (!isSelf) {
 					// 老设备需要关闭流
 					this.$room.unsubscribe(id)
@@ -378,17 +415,35 @@ class Course extends CourseBase {
 						}}></button>
 					</div>
 					{this.props.switches.questionList?
-						<div className="question-list">
-							<button className="question-cell cell-1" onClick={()=>{
-								this.__select_question(1);
-							}}>老师看不到我？</button>
-							<button className="question-cell cell-2" onClick={()=>{
-								this.__select_question(2);
-							}}>老师听不到我的声音？</button>
-							<button className="question-cell cell-3" onClick={()=>{
-								this.__select_question(3);
-							}}>听不到老师的声音？</button>
-						</div>	
+						<div className="question-container" onClick={()=>{
+							this.__select_question(0);
+						}}>
+							<div className="question-list">
+								<button className="question-cell cell-1" onClick={(e)=>{
+									e.stopPropagation();
+									this.__select_question(1);
+								}}>老师看不到我？</button>
+								<button className="question-cell cell-2" onClick={(e)=>{
+									e.stopPropagation();
+									this.__select_question(2);
+								}}>老师听不到我的声音？</button>
+								<button className="question-cell cell-3" onClick={(e)=>{
+									e.stopPropagation();
+									this.__select_question(3);
+								}}>听不到老师的声音？</button>
+
+								<div className="question-cell" onClick = {(e)=>{
+										e.stopPropagation();
+										let blind 		  = !this.state.blind
+										context.oldDevice = blind
+										this.setState({blind})
+										this.updateStreams()
+									}}>
+									<input type="checkbox" value = '不看其他学生' checked = {this.state.blind} onChange={()=>{}} />
+									<span>不看其他学生</span>
+								</div>
+							</div>	
+						</div>
 					:""}
 
 

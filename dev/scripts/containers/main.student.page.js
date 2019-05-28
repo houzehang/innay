@@ -44,7 +44,10 @@ class Main extends React.Component {
 		let oldUser = localStorage.getItem('OLD_USER') == 1,
 			checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
 
-		if(oldUser)return;
+		if(oldUser){
+			context.oldDevice = localStorage.getItem('IS_OLD_DEVICE') == 1;
+			return
+		};
 		if(!checked){
 			this.props.showLoading("首次进入，需要为您做些优化")
 		}
@@ -56,7 +59,7 @@ class Main extends React.Component {
 
 				net.checkDevice().then((res)=>{
 					this.props.hideLoading();
-					res.old_device && context.setOldDevice();
+					context.oldDevice = !!res.old_device
 					context.join_class_enabled = res.old_user || !!res.to_class;
 					
 					localStorage.setItem('OLD_USER', res.old_user & 1);
