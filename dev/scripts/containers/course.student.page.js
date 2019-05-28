@@ -107,7 +107,7 @@ class Course extends CourseBase {
 			}
 			let self = id == this.props.account.id
 			// 如果是低端设备则不显示流信息
-			if (self || this.isChairMaster(id) || !context.isOldDevice()) {
+			if (self || this.isChairMaster(id) || !context.oldDevice) {
 				stream.play()
 			}
 			this.$session.send_message("NEW_STREAM", {
@@ -161,14 +161,14 @@ class Course extends CourseBase {
 		switch (data.type) {
 			case Const.PUT_DANCE:
 			if(this.$dancing_id) {
-				if (context.isOldDevice()) {
+				if (context.oldDevice) {
 					// 老设备需要关闭流
 					this.$room.unsubscribe(this.$dancing_id)
 					this.$room.rtc.destroyRender(this.$dancing_id)
 				}
 			}
 			this.$dancing_id = id
-			if (context.isOldDevice()) {
+			if (context.oldDevice) {
 				if (!isSelf) {
 					// 老设备需要开启流
 					this.$room.rtc.subscribe(id, {width: Const.LARGE_MODE, height: Const.LARGE_MODE, cocos: true })
@@ -187,7 +187,7 @@ class Course extends CourseBase {
 			break
 			case Const.BACK_DANCE:
 			this.$dancing_id = null
-			if (context.isOldDevice()) {
+			if (context.oldDevice) {
 				if (!isSelf) {
 					// 老设备需要关闭流
 					this.$room.unsubscribe(id)
