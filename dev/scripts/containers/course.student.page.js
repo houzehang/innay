@@ -105,21 +105,28 @@ class Course extends CourseBase {
 		let oldDevice = context.oldDevice
 		if (oldDevice) {
 			//不显示其他学生视频流
+			let closeUsers = []
 			this.props.students.map((student = {})=>{
 				let id   = student.id
 				let self = id == this.props.account.id
 
-				if(id && !self && student.online){
+				if(id && id != this.$dancing_id && !self && student.online){
 					try{
 						this.$room.unsubscribe(id)
 						this.$room.rtc.destroyRender(id)
+						closeUsers.push(id)
 					}catch(error){
 						console.error(error)
 					}
 				}
 			})
+			if (closeUsers.length > 0) {
+				this.$session.send_message("CLOSE_USERS", { closeUsers })
+			}
+			
 		}else{
 			//显示其他学生视频流
+			let discloseUsers = []
 			this.props.students.map((student = {})=>{
 				let id   = student.id
 				let self = id == this.props.account.id
@@ -130,11 +137,15 @@ class Course extends CourseBase {
 						this.$room.rtc.setRemoteVideoStreamType(id, 1)
 						//param-1: type of renderer, 0 - local, 1 - remote, 2 - device test, 3 - video source
 						this.$room.rtc.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
+						discloseUsers.push(id)
 					}catch(error){
 						console.error(error)
 					}
 				}
 			})
+			if (discloseUsers.length > 0) {
+				this.$session.send_message("DISCLOSE_USERS", { discloseUsers })
+			}
 		}
 	}
 
