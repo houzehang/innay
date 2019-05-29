@@ -106,8 +106,10 @@ class Course extends CourseBase {
 		if (oldDevice) {
 			//不显示其他学生视频流
 			this.props.students.map((student = {})=>{
-				let id = student.id
-				if(id){
+				let id   = student.id
+				let self = id == this.props.account.id
+
+				if(id && !self && student.online){
 					try{
 						this.$room.unsubscribe(id)
 						this.$room.rtc.destroyRender(id)
@@ -119,11 +121,14 @@ class Course extends CourseBase {
 		}else{
 			//显示其他学生视频流
 			this.props.students.map((student = {})=>{
-				let id = student.id
-				if(id && id != this.$dancing_id){
+				let id   = student.id
+				let self = id == this.props.account.id
+				if(	id && id != this.$dancing_id && !self && student.online){
 					try{
 						this.$room.rtc.subscribe(id, {width: Const.SMALL_MODE, height: Const.SMALL_MODE, cocos: true })
-						this.$room.rtc.setRemoteVideoStreamType(id, 0)
+						//param-2: 0 - high, 1 - low
+						this.$room.rtc.setRemoteVideoStreamType(id, 1)
+						//param-1: type of renderer, 0 - local, 1 - remote, 2 - device test, 3 - video source
 						this.$room.rtc.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
 					}catch(error){
 						console.error(error)
