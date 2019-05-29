@@ -126,7 +126,6 @@ class Course extends CourseBase {
 			
 		}else{
 			//显示其他学生视频流
-			let discloseUsers = []
 			this.props.students.map((student = {})=>{
 				let id   = student.id
 				let self = id == this.props.account.id
@@ -137,15 +136,11 @@ class Course extends CourseBase {
 						this.$room.rtc.setRemoteVideoStreamType(id, 1)
 						//param-1: type of renderer, 0 - local, 1 - remote, 2 - device test, 3 - video source
 						this.$room.rtc.setVideoRenderDimension(1, id, Const.SMALL_MODE, Const.SMALL_MODE)
-						discloseUsers.push(id)
 					}catch(error){
 						console.error(error)
 					}
 				}
 			})
-			if (discloseUsers.length > 0) {
-				this.$session.send_message("DISCLOSE_USERS", { discloseUsers })
-			}
 		}
 	}
 
