@@ -240,7 +240,7 @@ class Devices extends React.Component {
 					</div>
 					<div className="step-btns">
 						<button onClick={()=>{
-							if (!context.join_class_enabled) {
+							if (!context.joinClassEnabled) {
 								this.props.alert({
 									content: "亲爱的宝妈您好，因我们课件的动画和交互较多，经检测您目前的设备可能不支持我们的正常上课，为了避免影响您的上课体验，请联系您的顾问老师帮您解决，感谢您的支持！",
 									sure: ()=>{}

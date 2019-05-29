@@ -4,7 +4,7 @@ const path 					= $require("path")
 const fs 					= $require("fs")
 const LogDog 		 		= remote.require('pandora-nodejs-sdk')
 const USER_DATA_ROOT 		= remote.app.getPath("userData")
-
+const Q 					= require('q')
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -112,19 +112,21 @@ class Context {
 	 * 设置为低端设备
 	 */
 	get oldDevice(){
-		return this.$old_device
+		if (this.$old_device === false) {
+			return false
+		}
+		return true
 	}
 
 	set oldDevice(old){
 		this.$old_device = !!old
-		localStorage.setItem("IS_OLD_DEVICE", old ? 1 : 0)
 	}
 
-	set join_class_enabled(enabled){
+	set joinClassEnabled(enabled){
 		this.$join_class_enabled = !!enabled;
 	}
 
-	get join_class_enabled(){
+	get joinClassEnabled(){
 		if (this.$join_class_enabled === undefined) {
 			return true;
 		}
@@ -140,7 +142,7 @@ class Context {
 	}
 
 	__upload_log(file, repo, parser) {
-		return new Promise((resolve, reject)=>{
+		return Q.Promise((resolve, reject)=>{
 			if (!fs.existsSync(file)) {
 				reject()
 				return
@@ -161,7 +163,7 @@ class Context {
 					fs.writeFileSync(file, "", "utf8")
 				}).then(resolve, reject)
 			} else {
-				reject()
+				reject('no more agora logs')
 			}
 		})
 	}
@@ -178,9 +180,9 @@ class Context {
 			}
 		}).then(()=>{
 			console.log('update agora logs success')
-		}).catch((error)=>{
-			console.error('update agora logs failed ', error)
-		})
+		},(error)=>{
+			console.log('update agora logs abort,', error)
+		}).done()
 	}
 }
 
