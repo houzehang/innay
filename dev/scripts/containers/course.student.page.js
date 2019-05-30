@@ -48,9 +48,11 @@ class Course extends CourseBase {
 		this.$view_mode = 1
 		
 		this.state 		= { 
-			control: !this.props.status.started,
-			process: {current:0,total:0},
-			blind  : context.oldDevice
+			control	   		: !this.props.status.started,
+			process	   		: {current:0,total:0},
+			blind  	   		: context.oldDevice,
+			blindAlert 		: context.oldDevice,
+			blindAlertSecond: 30
 		}
 	}
 
@@ -199,6 +201,12 @@ class Course extends CourseBase {
 		})
 		this.__init_device_doctor()
 		super.componentDidMount();
+	}
+
+
+	componentWillUnmount() {
+		this.__blind_destory()
+		super.componentWillUnmount()
 	}
 
 	__dancing_handler(data) {
@@ -352,6 +360,41 @@ class Course extends CourseBase {
 		this.$room.__resume_devices()
 	}
 
+	__blind_destory(){
+		this.setState({
+			blindAlert: false
+		})
+		if (this.$timer_blind) {
+			clearInterval(this.$timer_blind)
+			this.$timer_blind = null
+		}
+	}
+
+	__blind_alert(){
+		if (this.state.blindAlert) {
+			if (!this.$timer_blind) {
+				this.$timer_blind = setInterval(() => {
+					this.setState({
+						blindAlertSecond: this.state.blindAlertSecond - 1
+					})
+					if (this.state.blindAlertSecond <= 0) {
+						this.__blind_destory()
+					}
+				}, 1000);
+			}
+			return <div className="blind-alert">
+				<div className="tips">
+					<span>系统已自动检测您的硬件和网络，为了您的上课体验，已自动设置“不看其他学生”</span>
+					<span>点击下方帮助按钮可修改此设置</span>
+				</div>
+				<button className="close-btn" onClick={()=>{
+					this.__blind_destory()
+				}}>{`我知道了(${this.state.blindAlertSecond}s)`}</button>
+			</div>
+		}
+		return ''
+	}
+
 	render() {
 		let displayDeviceName, curDevice, devices, emptyText, tipsText;
 		if (this.props.switches.questionDetail == 1) {
@@ -422,6 +465,7 @@ class Course extends CourseBase {
 					<div className="counter icon">
 						<button className="help-btn warn-btn" onClick={()=>{
 							// this.onHelpClick()
+							this.__blind_destory()
 							this.props.onQuestionList(!this.props.switches.questionList);
 						}}></button>
 					</div>
@@ -455,9 +499,7 @@ class Course extends CourseBase {
 								</div>
 							</div>	
 						</div>
-					:""}
-
-
+					: this.__blind_alert() }
 				</div>
 			</div>
 		)

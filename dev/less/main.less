@@ -1675,6 +1675,38 @@ html,body {
 						
 					}
 				}
+				.blind-alert{
+					.view-base('blind_bg.png');
+					border-radius: 0.08rem;
+					position: fixed;
+					right: 0.2rem;
+					bottom: 0.52rem;
+					width: 2.1rem;
+					height: 1.3rem;
+					z-index: 1000;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+					padding: 0.15rem;
+					line-height: 0.2rem;
+					span{
+						font-size: 0.13rem;
+						margin-bottom: 0.04rem;
+					}
+					button{
+						width: 1.4rem;
+						height: 0.26rem;
+						font-size: 0.13rem;
+						border-radius: 0.13rem;
+						background: #565b72;
+						color: #fff;
+						
+					}
+					.tips{
+						display: flex;
+						flex-direction: column;
+					}
+				}
 				.counter {
 					position: fixed;
 					bottom: 0;
