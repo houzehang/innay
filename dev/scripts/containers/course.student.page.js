@@ -498,9 +498,10 @@ class Course extends CourseBase {
 										if (context.oldDeviceInfact && !blind) {
 											this.props.onQuestionList(false);
 											this.props.confirm({
-												content: "确认吗？",
-												sure_txt: "确定",
-												cancel_txt: "取消",
+												content: "系统通过综合分析您的硬件和网络环境，为了保证宝贝良好的上课体验，不建议您开启此设置。",
+												sure_txt: "继续开启",
+												cancel_txt: "不开启",
+												title: "温馨提示",
 												sure: ()=>{
 													execute()
 												},
