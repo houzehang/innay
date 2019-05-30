@@ -53,6 +53,7 @@ class Main extends React.Component {
 				net.checkDevice().then((res)=>{
 					this.props.hideLoading();
 					context.oldDevice 		 = !!res.old_device
+					context.oldDeviceInfact  = !!res.old_device
 					context.joinClassEnabled = !!res.to_class;
 					
 					if(res.old_user || checked) return;

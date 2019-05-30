@@ -489,10 +489,26 @@ class Course extends CourseBase {
 
 								<div className="question-cell" onClick = {(e)=>{
 										e.stopPropagation();
-										let blind 		  = !this.state.blind
-										context.oldDevice = blind
-										this.setState({blind})
-										this.updateStreams()
+										let blind 	= !this.state.blind
+										let execute = ()=>{
+											context.oldDevice = blind
+											this.setState({blind})
+											this.updateStreams()
+										}
+										if (context.oldDeviceInfact && !blind) {
+											this.props.onQuestionList(false);
+											this.props.confirm({
+												content: "确认吗？",
+												sure_txt: "确定",
+												cancel_txt: "取消",
+												sure: ()=>{
+													execute()
+												},
+												cancel: ()=>{}
+											})
+										}else{
+											execute()
+										}
 									}}>
 									<input type="checkbox" value = '不看其他学生' checked = {this.state.blind} onChange={()=>{}} />
 									<span>不看其他学生</span>

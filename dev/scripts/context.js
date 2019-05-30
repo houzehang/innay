@@ -122,6 +122,17 @@ class Context {
 		this.$old_device = !!old
 	}
 
+	get oldDeviceInfact(){
+		if (this.$old_device_infact === false) {
+			return false
+		}
+		return true
+	}
+
+	set oldDeviceInfact(old){
+		this.$old_device_infact = !!old
+	}
+
 	set joinClassEnabled(enabled){
 		this.$join_class_enabled = !!enabled;
 	}
