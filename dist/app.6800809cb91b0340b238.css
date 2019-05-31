@@ -637,6 +637,7 @@ body .sound-outer .sound-tester .step-content .music-area .progress-bar .progres
 }
 body .sound-outer .sound-tester .step-content .rangeslider {
   margin: 0;
+  height: 100%;
 }
 body .sound-outer .sound-tester .step-content .rangeslider-horizontal .rangeslider__fill {
   background: #39be4f;
@@ -4043,16 +4044,24 @@ html .page.course-page.student .course-content.cocos,
 body .page.course-page.student .course-content.cocos {
   margin: 0;
 }
-html .page.course-page.student .question-list,
-body .page.course-page.student .question-list {
+html .page.course-page.student .question-container,
+body .page.course-page.student .question-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background: rgba(0, 0, 0, 0);
+}
+html .page.course-page.student .question-container .question-list,
+body .page.course-page.student .question-container .question-list {
   overflow: hidden;
   width: 1.5rem;
-  height: 0.9rem;
+  height: 1.14rem;
   background: #fff;
   border-radius: 0.08rem;
   position: absolute;
-  right: 0;
-  bottom: 0.4rem;
+  right: 0.34rem;
+  bottom: 0.62rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -4061,8 +4070,8 @@ body .page.course-page.student .question-list {
   animation: fade_in 0.1s linear;
   animation-fill-mode: forwards;
 }
-html .page.course-page.student .question-list .question-cell,
-body .page.course-page.student .question-list .question-cell {
+html .page.course-page.student .question-container .question-list .question-cell,
+body .page.course-page.student .question-container .question-list .question-cell {
   overflow: hidden;
   font-size: 0.12rem;
   color: #000;
@@ -4071,14 +4080,58 @@ body .page.course-page.student .question-list .question-cell {
   text-align: left;
   background: rgba(0, 0, 0, 0);
   border-bottom: 0.01rem solid #f8f8f8;
+  display: flex;
+  align-items: center;
 }
-html .page.course-page.student .question-list .question-cell:last-child,
-body .page.course-page.student .question-list .question-cell:last-child {
+html .page.course-page.student .question-container .question-list .question-cell:last-child,
+body .page.course-page.student .question-container .question-list .question-cell:last-child {
   border-bottom: 0;
 }
-html .page.course-page.student .question-list .question-cell:hover,
-body .page.course-page.student .question-list .question-cell:hover {
+html .page.course-page.student .question-container .question-list .question-cell:hover,
+body .page.course-page.student .question-container .question-list .question-cell:hover {
   background: rgba(0, 0, 0, 0.1) !important;
+}
+html .page.course-page.student .question-container .question-list .question-cell span,
+body .page.course-page.student .question-container .question-list .question-cell span {
+  margin-left: 0.04rem;
+}
+html .page.course-page.student .blind-alert,
+body .page.course-page.student .blind-alert {
+  width: 3.35rem;
+  height: 2.58rem;
+  background: url(./4ecad73c2b4035f02fe9a5ef1f85fa3e.png) no-repeat center center;
+  background-size: 100% 100%;
+  border-radius: 0.08rem;
+  position: fixed;
+  right: 0.2rem;
+  bottom: 0.52rem;
+  width: 2.1rem;
+  height: 1.3rem;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.15rem;
+  line-height: 0.2rem;
+}
+html .page.course-page.student .blind-alert span,
+body .page.course-page.student .blind-alert span {
+  font-size: 0.13rem;
+  margin-bottom: 0.04rem;
+}
+html .page.course-page.student .blind-alert button,
+body .page.course-page.student .blind-alert button {
+  width: 1.4rem;
+  height: 0.26rem;
+  font-size: 0.13rem;
+  border-radius: 0.13rem;
+  background: #565b72;
+  color: #fff;
+}
+html .page.course-page.student .blind-alert .tips,
+body .page.course-page.student .blind-alert .tips {
+  display: flex;
+  flex-direction: column;
 }
 html .page.course-page.student .counter,
 body .page.course-page.student .counter {
@@ -4108,8 +4161,8 @@ body .page.course-page.student .counter .process {
 }
 html .page.course-page.student .counter .help-btn,
 body .page.course-page.student .counter .help-btn {
-  background: #fff url(./de3f23051b065b56e566f4e3e5f4792c.png) no-repeat center center;
-  background-size: 0.2rem auto;
+  background: #565b72 url(./de3f23051b065b56e566f4e3e5f4792c.png) no-repeat center center;
+  background-size: 0.13rem auto;
   width: 0.3rem !important;
   height: 0.3rem !important;
   border-radius: 50%;
@@ -4117,7 +4170,7 @@ body .page.course-page.student .counter .help-btn {
 }
 html .page.course-page.student .counter .warn-btn,
 body .page.course-page.student .counter .warn-btn {
-  background-image: url(./ef1b1ea9c9236d65de00160cfad8a652.png);
+  background-image: url(./3e15b20175e6e42ad2e3a19393edaaa6.png);
 }
 html .page.course-page.student .counter .couter-g,
 body .page.course-page.student .counter .couter-g {
