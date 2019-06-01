@@ -6,6 +6,8 @@ const AgoraRtcEngine 	= require('../agora/AgoraSdk')
 const remote 			= $require("electron").remote
 const $ 				= require("jquery")
 const net 				= require("./network")
+const context 			= require('./context')
+
 class Room extends Eventer {
 	constructor(inst) {
 		super()
@@ -86,6 +88,8 @@ class Room extends Eventer {
 		let video_devices 	= this.$client.getVideoDevices()
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
 		let playback_devices= this.$client.getAudioPlaybackDevices()
+		video_devices 		= context.filterVideoDevice(video_devices);
+		
 		if (!this.__is_device_in(video_devices,videoDevice)) {
 			videoDevice = null
 		}

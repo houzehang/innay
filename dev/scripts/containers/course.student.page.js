@@ -60,14 +60,14 @@ class Course extends CourseBase {
 		let video_devices 	= this.$room.rtc.getVideoDevices()
 		let audio_devices   = this.$room.rtc.getAudioRecordingDevices()
 		let speaker_devices = this.$room.rtc.getAudioPlaybackDevices()
-
+		video_devices 		= context.filterVideoDevice(video_devices);
 		let currentVideoDevice 	 = this.$room.rtc.getCurrentVideoDevice(),
 			currentAudioDevice 	 = this.$room.rtc.getCurrentAudioRecordingDevice(),
 			currentSpeakerDevice = this.$room.rtc.getCurrentAudioPlaybackDevice(),
-			currentVideoName, 
-			currentAudioName,
-			currentSpeakerName
-
+			currentVideoName 	 = '无可用摄像头设备', 
+			currentAudioName	 = '无可用麦克风设备',
+			currentSpeakerName	 = '无可用扬声器设备'
+		
 		for(let i=0,len=video_devices.length;i<len;i++) {
 			let item = video_devices[i]
 			if (item.deviceid == currentVideoDevice) {

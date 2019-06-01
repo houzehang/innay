@@ -64,5 +64,16 @@ module.exports = {
 		DOWNLOADING: "update downloading",
 		DOWNLOADED: "update downloaded"
 	},
-	COCOS		  : 1
+	COCOS		  : 1,
+	ILLEGAL_AUDIOS: [
+		'cyberlink webcam splitter',
+		'manycam virtual webcam',
+		'BBlivePreview',
+		'CamTwist',
+		'17GuaGua Cam',
+		'PixelMaster Video HDR',
+		'PG splitter',
+		'Built-in iSight',
+		'6room'
+	]
 };

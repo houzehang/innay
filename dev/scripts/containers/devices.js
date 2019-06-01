@@ -99,6 +99,8 @@ class Devices extends React.Component {
 		let video_devices 	= this.$client.getVideoDevices()
 		let audio_devices 	= this.$client.getAudioRecordingDevices()
 		let speaker_devices = this.$client.getAudioPlaybackDevices()
+		video_devices 		= context.filterVideoDevice(video_devices);
+
 		if (!this.__is_device_in(video_devices,currentVideoDevice)) {
 			currentVideoDevice = null
 		}
@@ -123,7 +125,9 @@ class Devices extends React.Component {
 		} else {
 			currentSpeakerDevice = this.$client.getCurrentAudioPlaybackDevice()
 		}
-		let currentVideoName, currentSpeakerName, currentAudioName
+		let currentVideoName 	= '无可用摄像头设备', 
+			currentSpeakerName	= '无可用扬声器设备', 
+			currentAudioName	= '无可用麦克风设备'
 		for(let i=0,len=video_devices.length;i<len;i++) {
 			let item = video_devices[i]
 			if (item.deviceid == currentVideoDevice) {
@@ -294,7 +298,7 @@ class Devices extends React.Component {
 							</option>
 							))
 						:
-							<option key="nothing" disabled selected>
+							<option key="nothing" disabled>
 								无可用摄像头设备
 							</option>
 					}

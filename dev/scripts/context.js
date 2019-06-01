@@ -5,6 +5,7 @@ const fs 					= $require("fs")
 const LogDog 		 		= remote.require('pandora-nodejs-sdk')
 const USER_DATA_ROOT 		= remote.app.getPath("userData")
 const Q 					= require('q')
+const Const 			    = require('../const')
 class Context {
 	get dmg() {
 		return this.$dmg
@@ -150,6 +151,19 @@ class Context {
 
 	get lkey() {
 		return "Yu6oGz2USJb9RMgG84KalD,19Dnr5YuF0mV1QoEgBxX2"
+	}
+
+	filterVideoDevice(video_devices) {
+		video_devices = video_devices.filter((cur={})=>{
+			let found = false
+			Const.ILLEGAL_AUDIOS.map((lim)=>{
+				if (new RegExp(lim.toLowerCase()).test((cur.devicename || '').toLowerCase())) {
+					found = true
+				}
+			})
+			return !found
+		})
+		return video_devices
 	}
 
 	__upload_log(file, repo, parser) {
