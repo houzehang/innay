@@ -1,9 +1,9 @@
-version: 1.1.1
+version: 1.1.3
 files:
-  - url: 明兮大语文 Setup 1.1.1.exe
-    sha512: fkttij1OJIGwSwr4JBoPcrzNw59P2N8X2U1UDQwI5fxt4kQM65ix5riRYyKToQZRu+hHFcr/GTfYDdEQT5oW0Q==
-    size: 37642282
-path: 明兮大语文 Setup 1.1.1.exe
-sha512: fkttij1OJIGwSwr4JBoPcrzNw59P2N8X2U1UDQwI5fxt4kQM65ix5riRYyKToQZRu+hHFcr/GTfYDdEQT5oW0Q==
-sha2: 6e2ade573cf57a056909886889b7dbc105c468cc78facdef6de41fc6b3ddc0e8
-releaseDate: '2019-03-26T06:08:10.213Z'
+  - url: 明兮大语文 Setup 1.1.3.exe
+    sha512: 7NHtNplHo+T7qNF9Cvi9Mmy2DDD/aRJfTaGkS+XpmPQrvq4fF6fbG0o0wOB3J+Rk3ahO80O3VfDL0xle2DSH0A==
+    size: 39740665
+path: 明兮大语文 Setup 1.1.3.exe
+sha512: 7NHtNplHo+T7qNF9Cvi9Mmy2DDD/aRJfTaGkS+XpmPQrvq4fF6fbG0o0wOB3J+Rk3ahO80O3VfDL0xle2DSH0A==
+sha2: 1d2977d5caa3871531e90b5fe891823ca17045c3684caea1ac81c74a15f87a82
+releaseDate: '2019-05-08T15:06:45.024Z'
