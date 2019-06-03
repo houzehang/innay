@@ -41,10 +41,7 @@ class Main extends React.Component {
 	}
 
 	__check_device(){
-		let oldUser = localStorage.getItem('OLD_USER') == 1,
-			checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
-			
-			if(oldUser)return;
+		let checked = localStorage.getItem('DEVICE_CHECKED_ALREADY') == 1;
 		if(!checked){
 			this.props.showLoading("首次进入，需要为您做些优化")
 		}
@@ -53,13 +50,12 @@ class Main extends React.Component {
 			if (window.ENV_CONF && window.ENV_CONF.systeminfo) {
 				clearInterval(this.$timer_device_check);
 				this.$timer_device_check = null;
-
 				net.checkDevice().then((res)=>{
 					this.props.hideLoading();
-					context.setOldDevice(res.old_device);
-					context.join_class_enabled = res.old_user || !!res.to_class;
+					context.oldDevice 		 = !!res.old_device
+					context.oldDeviceInfact  = !!res.old_device
+					context.joinClassEnabled = !!res.to_class;
 					
-					localStorage.setItem('OLD_USER', res.old_user & 1);
 					if(res.old_user || checked) return;
 					this.props.alert({
 						content: "欢迎进入明兮学堂，为了您更好的体验，请先来检测下设备吧",
@@ -181,7 +177,7 @@ class Main extends React.Component {
     }
     
 	onStartRoom(data) {
-		if (!context.join_class_enabled) {
+		if (!context.joinClassEnabled) {
 			this.props.alert({
 				content: "亲爱的宝妈您好，因我们课件的动画和交互较多，经检测您目前的设备可能不支持我们的正常上课，为了避免影响您的上课体验，请联系您的顾问老师帮您解决，感谢您的支持！",
 				sure: ()=>{}

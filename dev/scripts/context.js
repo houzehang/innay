@@ -6,7 +6,7 @@ import fs from "fs"
 const LogDog 		 = remote.require('pandora-nodejs-sdk')
 const logger 		 = remote.require('electron-log')
 const USER_DATA_ROOT = remote.app.getPath("userData")
-
+import Const from '../Const'
 class Context {
 
 	get agoraAppId(){
@@ -138,28 +138,35 @@ class Context {
 	}
 
 	/**
-	 * 是否为低端设备
-	 */
-	isOldDevice() {
-		return DB.get("IS_OLD_DEVICE")
-	}
-
-	/**
 	 * 设置为低端设备
 	 */
-	setOldDevice(isold) {
-		if (isold) {
-			DB.store("IS_OLD_DEVICE", 1)
-		} else {
-			DB.remove("IS_OLD_DEVICE")
+	get oldDevice(){
+		if (this.$old_device === false) {
+			return false
 		}
+		return true
 	}
 
-	set join_class_enabled(enabled){
+	set oldDevice(old){
+		this.$old_device = !!old
+	}
+
+	get oldDeviceInfact(){
+		if (this.$old_device_infact === false) {
+			return false
+		}
+		return true
+	}
+
+	set oldDeviceInfact(old){
+		this.$old_device_infact = !!old
+	}
+
+	set joinClassEnabled(enabled){
 		this.$join_class_enabled = !!enabled;
 	}
 
-	get join_class_enabled(){
+	get joinClassEnabled(){
 		if (this.$join_class_enabled === undefined) {
 			return true;
 		}
@@ -287,6 +294,19 @@ class Context {
 		if(env_conf.DEBUG || env_conf.TC_DEBUG || env_conf.TEST){
 			console.error(...args)
 		}
+	}
+
+	filterVideoDevice(video_devices) {
+		video_devices = video_devices.filter((cur={})=>{
+			let found = false
+			Const.ILLEGAL_AUDIOS.map((lim)=>{
+				if (new RegExp(lim.toLowerCase()).test((cur.devicename || '').toLowerCase())) {
+					found = true
+				}
+			})
+			return !found
+		})
+		return video_devices
 	}
 }
 
