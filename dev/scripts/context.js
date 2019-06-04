@@ -140,26 +140,8 @@ class Context {
 	/**
 	 * 设置为低端设备
 	 */
-	get oldDevice(){
-		if (this.$old_device === false) {
-			return false
-		}
-		return true
-	}
-
 	set oldDevice(old){
-		this.$old_device = !!old
-	}
-
-	get oldDeviceInfact(){
-		if (this.$old_device_infact === false) {
-			return false
-		}
-		return true
-	}
-
-	set oldDeviceInfact(old){
-		this.$old_device_infact = !!old
+		DB.store("IS_OLD_DEVICE",old & 1)
 	}
 
 	set joinClassEnabled(enabled){
