@@ -26,7 +26,7 @@ class Helper extends React.Component {
 					<img src={this.state.info.contact_qrcode}/>
 				</div>
 				<div className="name">{this.state.info.nickname}</div>
-				<div className="tips">遇到问题请扫码练习助教老师</div>
+				<div className="tips">遇到问题请扫码联系助教老师</div>
 			</div>
 		)
 	}
