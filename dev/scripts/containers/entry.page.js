@@ -11,7 +11,7 @@ import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
 import NetDetector from "../netdetector"
 import context from "../context"
 import * as types from '../constants/ActionTypes'
-
+const remote = $require('electron').remote;
 class Entry extends React.Component {
 	constructor(props) {
 		super(props)
@@ -33,7 +33,11 @@ class Entry extends React.Component {
 	render() {
 		const { dialog, account } = this.props
 		return <Router>
-			<div className="full-h">
+			<div className="full-h" >
+				<div className='slave' onDoubleClick={()=>{
+					var window = remote.getCurrentWindow();
+					window.webContents.openDevTools();
+				}}></div>
 				<Route exact path="/" render={
 					()=>{
 						if (!account) {
