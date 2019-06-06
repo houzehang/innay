@@ -225,6 +225,7 @@ class Download extends React.Component {
 						url : `${this.baseCourseUrl}/${lesson}.json`,
 					}
 				}).then((serverInfo)=>{
+					this.__setStatus("UPDATE.COURSE_BUNDLE");
 					serverInfo = serverInfo || {}
 					if (!localInfo||
 						localInfo.key != serverInfo.lesson ||
