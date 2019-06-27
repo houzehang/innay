@@ -1,0 +1,157 @@
+.camp-panel {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+    margin-top: -0.4rem;
+    margin-bottom: -0.15rem;
+    width: 100%;
+    .lesson-box {
+        position: relative;
+        display: flex;
+        width: 100%;
+        height: 1.57rem;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        .cover {
+            width: 1.94rem;
+            height: 1.45rem;
+            margin-right: 0.2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 0.1rem;
+            }
+        }
+        .info {
+            display: flex;
+            width: 4.3rem;
+            margin-right: 0.2rem;
+            align-items: flex-start;
+            justify-content: flex-start;
+            flex-direction: column;
+            .name {
+                color: #333333;
+                font-weight: bold;
+                display: flex;
+                align-items: flex-end;
+                height: 0.26rem;
+                span{
+                    font-size: 0.24rem;
+                    height: 0.24rem;
+                    line-height: 0.24rem;
+                }
+            }
+            .desc {
+                width: 100%;
+                height: 0.7rem;
+                // font-weight: bold;
+                color: #969696;
+                font-size: 0.18rem;
+                margin-top: 0.1rem;
+                margin-bottom: 0.07rem;
+                display: flex;
+                align-items: flex-start;
+                line-height: 0.28rem;
+                vertical-align: top;
+                overflow: scroll;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+                span{
+                    height: 0.26rem;
+                    line-height: 0.26rem;
+                    vertical-align: top;
+                }
+
+            }
+            .tag{
+                width: 100%;
+                height: 0.26rem;
+                display: flex;
+                justify-content: flex-start;
+                .date-label{
+                    color: #fff;
+                    background: #fe6969;
+                    height: 0.26rem;
+                    padding-left:0.1rem;
+                    padding-right:0.1rem;
+                    line-height: 0.26rem;
+                    text-align: center;
+                    font-size: 0.18rem;
+                    border-radius: 0.2rem;
+                    margin-right: 0.12rem;
+                    // font-weight: bold;
+                }
+                .date{
+                    width: 70%;
+                    height: 0.2rem;
+                    line-height: 0.2rem;
+                    margin-top: 0.03rem;
+                    font-size: 0.2rem;
+                    color: #ff2d2d;
+                    // font-weight: bold;
+                }
+            }
+        }
+    }
+    .btns-panel{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+        width: 1.29rem;
+        .start-btn{
+            width: 2.2rem;
+            height: 0.38rem;
+            background: #ff696a;
+            color: #fff;
+            font-size: 0.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.06rem;
+            margin-top: 0.3rem;
+            &::after {
+                content: "开始学习";
+            }
+            &[disabled] {
+                background: #b5b5b5;
+                &::after {
+                    content: "已上课";
+                }
+            }
+            &.waiting {
+                &::after {
+                    content: "上课时间未到"
+                }
+            }
+        }
+        .record-btn {
+            background: #8b460e;
+            &::after {
+                content: "课程回放";
+            }
+        }
+        .download-btn {
+            background: #3882c2;
+            &::after {
+                content: "下载课程包";
+            }
+        }
+        .waiting-btn {
+            
+            background: #b4b4b4;
+            &::after {
+                content: "等待上课";
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@ import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
+import Camp from '../components/camp'
 import * as types from '../constants/ActionTypes'
 const net = require("../network")
 import { 
@@ -425,6 +426,20 @@ class Main extends React.Component {
 		})
 	}
 
+	__view_camp() {
+		this.props.confirm({
+			nobutton: true,
+			title_hidden: true,
+			large_mod: true,
+			content: <Camp 
+				room={this.props.commingRoom} 
+				onStartLearning={()=>{
+
+				}}
+			/>
+		})
+	}
+
 	__on_helper() {
 		this.props.confirm({
 			title: "问题帮助",
@@ -494,6 +509,8 @@ class Main extends React.Component {
 			}} onEnterMyCourses={()=>{
 				this.props.onEnterMyCourses();
 				this.__query_courses();
+			}} onViewCamp={()=>{
+				this.__view_camp()
 			}}/>
 		}
 		return (
