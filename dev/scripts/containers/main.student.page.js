@@ -475,6 +475,7 @@ class Main extends React.Component {
 			content: <Camp 
 				room={this.props.campRoom} 
 				onStartLearning={()=>{
+					this.onRecordRoom(this.props.campRoom, true)
 				}}
 			/>
 		})
@@ -527,7 +528,7 @@ class Main extends React.Component {
 	render() {
 		let { account } = this.props 
 		let content, sidebar = ""
-		let flow = this.props.campRoom && this.props.commingRoom;
+		let flow =   this.props.campRoom && this.props.commingRoom;
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{
