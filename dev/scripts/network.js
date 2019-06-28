@@ -335,6 +335,10 @@ class Network extends Eventer {
 		}
 	}
 
+	getCampLesson(data={}){
+		return this.__request('/api/drainage/training/index',data,'post')
+	}
+
 	device_check() {
 	}
 }
