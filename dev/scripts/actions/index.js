@@ -246,6 +246,13 @@ export const onLessonComming = (commingRoom)=>{
 	}
 }
 
+export const onCampLesson = (campRoom)=>{
+	return {
+		type: types.CAMP_LESSON,
+		campRoom
+	}
+}
+
 export const onLessonsComming = (commingRooms)=>{
 	return {
 		type: types.LESSONS_COMMING,

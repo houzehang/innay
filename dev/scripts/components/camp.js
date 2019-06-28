@@ -32,13 +32,14 @@ class Camp extends React.Component {
                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                         <div className="tag">
                             <div className="date-label">开放时间</div>
-                            <div className="date"><span>{room.class_date}-{room.class_time}</span></div>
+                            <div className="date"><span>{room.open_date}</span></div>
                         </div>
                     </div>
                     
                 </div>
                 <div className="btns-panel">
                     <button className="start-btn" onClick={()=>{
+						this.props.onStartLearning()
                     }}></button>
                 </div>
             </div>
@@ -51,8 +52,7 @@ Camp.propTypes = {
 		avatar  	: PropTypes.string.isRequired,
 		name     	: PropTypes.string,
 		content     : PropTypes.string,
-		class_time  : PropTypes.string,
-		en_name     : PropTypes.string
+		open_date	: PropTypes.string
 	}),
 	onStartLearning	: PropTypes.func.isRequired
 }

@@ -13,7 +13,7 @@ const net = require("../network")
 import { 
 	onRoomList, onCalendarData, onRoomInfo,
 	onLogout, onStartCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,onCampLesson,
 	onCourseRecording,
 	showLoading,
 	hideLoading
@@ -95,6 +95,11 @@ class Main extends React.Component {
 				}
 			}
 			this.props.onLessonComming(room)
+
+			net.getCampLesson().then((room)=>{
+				console.log('camp room info',room);
+				this.props.onCampLesson(room);
+			})
 		})
 	}
 
@@ -111,6 +116,42 @@ class Main extends React.Component {
 		}
 	}
 
+	__camp_room(){
+		let room = this.props.campRoom;
+		if (room) {
+			return 	<div key="1" className="lesson-box flow">
+						<div className="cover">
+							<img src={room.avatar} alt=""/>
+						</div>
+						<div className="info">
+							<div className="name"><span>{room.name}</span></div>
+							<div className="desc">课时简介：{room.content||'暂无'}</div>
+							{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
+							<div className="tag">
+								<div className="tag-kind">开放时间</div>
+								<div className="date"><span>{room.open_date}</span></div>
+							</div>
+						</div>
+						
+						<div className="btns-panel">
+							<button className="start-btn flow" onClick={()=>{
+								// this.onStartRoom(room)
+							}}></button>
+						</div>
+
+						<div className="camp-flag">
+						</div>
+					</div>
+		}else{
+			return [
+				<div key="0" className="time">接下来没有课程啦～</div>,
+				<div key="1" className="no-lesson">
+					去“明兮大语文”小程序<br/>
+					和其他小朋友一起完成作业吧~
+				</div>
+			]
+		}
+	}
 
 	__student_page() {
 		let room = this.props.commingRoom;
@@ -164,13 +205,7 @@ class Main extends React.Component {
                                 ) : (
                                     <div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
                                 )
-                            ]) : ([
-                                <div key="0" className="time">接下来没有课程啦～</div>,
-                                <div key="1" className="no-lesson">
-                                    去“明兮大语文”小程序<br/>
-                                    和其他小朋友一起完成作业吧~
-                                </div>
-                            ]) }
+                            ]) : this.__camp_room() }
                         </div>
 					</div>
 				</div>
@@ -183,7 +218,7 @@ class Main extends React.Component {
 		console.log('this.props.doneRooms = ',this.props.doneRooms);
 		let _commingRooms = []
 		let _doneRooms 	  = []
-
+		
 		setTimeout(()=>{
 			document.getElementById('courses-comming-area') && document.getElementById('courses-comming-area').addEventListener('scroll', this.onScrollHandle.bind(this));
 			document.getElementById('courses-done-area') && document.getElementById('courses-done-area').addEventListener('scroll', this.onScrollHandle.bind(this));
@@ -432,9 +467,8 @@ class Main extends React.Component {
 			title_hidden: true,
 			large_mod: true,
 			content: <Camp 
-				room={this.props.commingRoom} 
+				room={this.props.campRoom} 
 				onStartLearning={()=>{
-
 				}}
 			/>
 		})
@@ -487,6 +521,7 @@ class Main extends React.Component {
 	render() {
 		let { account } = this.props 
 		let content, sidebar = ""
+		let flow = this.props.campRoom && this.props.commingRoom;
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{
@@ -500,7 +535,7 @@ class Main extends React.Component {
             content = this.__my_courses();
 		} else {
 			content = this.__student_page()
-			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
+			sidebar = <SideBar flow={flow} user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
 			}} onViewUser={()=>{
 				this.__view_user()
@@ -540,6 +575,7 @@ const mapStateToProps = (state, ownProps) => {
         testing 	: state.main.enterTester,
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
+		campRoom    : state.main.campRoom,
 		commingRooms: state.main.commingRooms,
 		doneRooms   : state.main.doneRooms,
 		totalComming: state.main.totalComming,
@@ -562,6 +598,7 @@ const mapDispatchToProps = dispatch => ({
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
 	onCourseRecording   : (status) => dispatch(onCourseRecording(status)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
+	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	onLessonsComming    : (rooms) => dispatch(onLessonsComming(rooms)),
 	onLessonsDone       : (rooms) => dispatch(onLessonsDone(rooms)),
 	onLessonsTotalComming: (rooms) => dispatch(onLessonsTotalComming(rooms)),
