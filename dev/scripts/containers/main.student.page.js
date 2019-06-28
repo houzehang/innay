@@ -130,15 +130,15 @@ class Main extends React.Component {
 							<div className="desc">课时简介：{room.content||'暂无'}</div>
 							{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
 							<div className="tag">
-								<div className="tag-kind">开放时间</div>
+								<div className="tag-kind">{room.open_tip || '开放时间'}</div>
 								<div className="date"><span>{room.open_date}</span></div>
 							</div>
 						</div>
 						
-						<div className="btns-panel">
+						<div className="btns-panel"> 
 							<button className="start-btn flow" onClick={()=>{
 								this.onRecordRoom(room, true)
-							}}></button>
+							}}>{room.start_study}</button>
 						</div>
 
 						<div className="camp-flag">
@@ -528,7 +528,7 @@ class Main extends React.Component {
 	render() {
 		let { account } = this.props 
 		let content, sidebar = ""
-		let flow =   this.props.campRoom && this.props.commingRoom;
+		let flow = 1//  this.props.campRoom && this.props.commingRoom;
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{

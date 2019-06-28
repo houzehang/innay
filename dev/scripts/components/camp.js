@@ -31,7 +31,7 @@ class Camp extends React.Component {
                         <div className="name"><span>{room.name}</span></div>
                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                         <div className="tag">
-                            <div className="date-label">开放时间</div>
+                            <div className="date-label">{room.open_tip || '开放时间'}</div>
                             <div className="date"><span>{room.open_date}</span></div>
                         </div>
                     </div>
@@ -40,7 +40,7 @@ class Camp extends React.Component {
                 <div className="btns-panel">
                     <button className="start-btn" onClick={()=>{
 						this.props.onStartLearning()
-                    }}></button>
+                    }}>{room.start_study || '开始学习'}</button>
                 </div>
             </div>
 		)
