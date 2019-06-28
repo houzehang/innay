@@ -156,6 +156,9 @@ class Course extends CourseBase {
 				case "course-process":
 					this.setState({ process: data })
 					break
+				case "course-end":
+					this.leaveCourse()
+					break
 				default:
 					if (message.type.indexOf("*") == -1) {
 						this.__on_signal_message(message)
