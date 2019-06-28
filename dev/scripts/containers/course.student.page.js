@@ -30,7 +30,7 @@ const Room 			 = require("../AgoraStream")
 const Signalize 	 = require('../AgoraSignal')
 const context 		 = require("../context")
 const Storage 		 = require('../Storage')
-
+const network 		 = require('../network')
 class Course extends CourseBase {
 	constructor(props) {
 		super(props)
@@ -51,7 +51,7 @@ class Course extends CourseBase {
 			control	   		: !this.props.status.started,
 			process	   		: {current:0,total:0},
 			blind  	   		: context.oldDevice,
-			blindAlert 		: context.oldDevice,
+			blindAlert 		: false,
 			blindAlertSecond: 30
 		}
 	}
@@ -491,6 +491,7 @@ class Course extends CourseBase {
 										e.stopPropagation();
 										let blind 	= !this.state.blind
 										let execute = ()=>{
+											network.showOthers(!blind)
 											context.oldDevice = blind
 											this.setState({blind})
 											this.updateStreams()

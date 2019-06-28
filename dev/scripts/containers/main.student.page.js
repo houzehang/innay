@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import Download from '../components/download'
 import CourseForStudent from './course.student.page.js'
 import CourseRecord from './course.student.replay.page'
+import CourserFlow from './course.student.flow.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
@@ -119,6 +120,7 @@ class Main extends React.Component {
 	__camp_room(){
 		let room = this.props.campRoom;
 		if (room) {
+			room.teachers = [room.master_teacher_id]
 			return 	<div key="1" className="lesson-box flow">
 						<div className="cover">
 							<img src={room.avatar} alt=""/>
@@ -135,7 +137,7 @@ class Main extends React.Component {
 						
 						<div className="btns-panel">
 							<button className="start-btn flow" onClick={()=>{
-								// this.onStartRoom(room)
+								this.onRecordRoom(room, true)
 							}}></button>
 						</div>
 
@@ -356,15 +358,15 @@ class Main extends React.Component {
 		this.onDownload(data, true)
 	}
 
-	__onStartRoom(data,isRecord) {
+	__onStartRoom(data,isRecord,camp) {
 		if (window.cc == undefined) {
 			$require("./libs/cocos2d-js-v1.1-min.js")
 		}
-		this.props.onRoomInfo(data)
+		this.props.onRoomInfo(data, camp)
 		if(isRecord){
 			this.props.hide()
 			setTimeout(()=>{
-				this.onEnterRoom(true)	
+				this.onEnterRoom(true,camp)	
 			},500)
 		}else{
 			this.props.confirm({
@@ -376,15 +378,19 @@ class Main extends React.Component {
 		}
 	}
 
-	onRecordRoom(data) {
+	onRecordRoom(data, camp) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		let version = data.version || '.1.0.0';
+		if (camp) {
+			version = ''
+			data.camp = true
+		}
 		let lessonName = data.en_name + version;
 		let lastest_download = storage.get(`download_${lessonName}`)
 		if (lastest_download) {
 			let delay = new Date().getTime() - lastest_download
 			if (delay <= this.$cache_valid_time) {
-				this.__onStartRoom(data,true)
+				this.__onStartRoom(data,true,camp)
 				return
 			}
 		}
@@ -394,17 +400,17 @@ class Main extends React.Component {
 				sure_txt: "去检查网络",
 				cancel_txt: "坚持上课",
 				cancel: ()=>{
-					this.__onStartRoom(data,true)
+					this.__onStartRoom(data,true,camp)
 				}
 			})
 		} else {
-			this.onDownload(data, true, true);			
+			this.onDownload(data, true, true, true);			
 		}
 	}
 
-	onDownload(data, canenter,isRecord) {
+	onDownload(data, canenter,isRecord, camp) {
 		let version = '';
-		if(isRecord){
+		if(isRecord && !camp){
 			version = data.version || '.1.0.0'
 		}
 		let lessonName  = data.en_name + version;
@@ -414,7 +420,7 @@ class Main extends React.Component {
 				// 存储最后一次下载时间
 				storage.store(`download_${lessonName}`,new Date().getTime())
 				if (canenter) {
-					this.__onStartRoom(data,isRecord)
+					this.__onStartRoom(data,isRecord,camp)
 				} else {
 					this.props.alert({
 						content: "下载完成。"
@@ -426,9 +432,9 @@ class Main extends React.Component {
 		})
 	}
 
-	onEnterRoom(isRecord) {
+	onEnterRoom(isRecord, camp) {
 		if (isRecord) {
-			this.props.onCourseRecording(true)
+			this.props.onCourseRecording(true,camp)
 		} else {
 			this.props.onStartCourse()
 		}
@@ -528,7 +534,11 @@ class Main extends React.Component {
 				this.__get_lesson_comming();
 			}}/>
 		} else if (this.props.recording) {
-			content = <CourseRecord/>;
+			if (this.props.flow) {
+				content = <CourserFlow/>
+			}else{
+				content = <CourseRecord/>
+			}
 		} else if (this.props.testing) {
 			content = <Devices />
         } else if (this.props.mycourses){
@@ -572,6 +582,7 @@ const mapStateToProps = (state, ownProps) => {
 		calendar	: state.main.calendar,
 		started 	: state.main.courseStarted,
 		recording	: state.main.recording,
+		flow    	: state.main.flow,
         testing 	: state.main.enterTester,
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
@@ -585,7 +596,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => ({
 	onRoomList     		: (rooms) => dispatch(onRoomList(rooms)),
-	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
+	onRoomInfo	   		: (data, camp) => dispatch(onRoomInfo(data, camp)),
 	onCalendarData 		: (data) => dispatch(onCalendarData(data)),
 	onLogout       		: () => dispatch(onLogout()),
 	onStartCourse  		: () => dispatch(onStartCourse()),
@@ -596,7 +607,7 @@ const mapDispatchToProps = dispatch => ({
     onEnterMyCourses    : ()=>dispatch(onEnterMyCourses()),
     onExitMyCourses    : ()=>dispatch(onExitMyCourses()),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
-	onCourseRecording   : (status) => dispatch(onCourseRecording(status)),
+	onCourseRecording   : (status, camp) => dispatch(onCourseRecording(status, camp)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
 	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	onLessonsComming    : (rooms) => dispatch(onLessonsComming(rooms)),

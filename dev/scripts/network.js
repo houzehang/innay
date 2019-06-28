@@ -341,6 +341,13 @@ class Network extends Eventer {
 
 	device_check() {
 	}
+
+	showOthers(show) {
+		return this.__request('/api/show_others',{
+			client:'pc',
+			show
+		},'post')
+	}
 }
 
 module.exports = new Network

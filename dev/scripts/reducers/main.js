@@ -64,7 +64,8 @@ const main = (state = {}, action) => {
 		case COURSE_RECORDING:
 		return {
 			...state,
-			recording: action.status
+			recording: action.status,
+			flow: action.camp
 		}
 		case LESSON_COMMING:
 		return {

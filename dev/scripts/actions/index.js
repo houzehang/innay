@@ -54,9 +54,10 @@ export const onCourseData = (data) => ({
 	data
 })
 
-export const onRoomInfo = (data) => ({
+export const onRoomInfo = (data,camp) => ({
 	type: types.ROOM_INFO,
-	data
+	data,
+	camp
 })
 
 export const onLogout = () => dispatch => {
@@ -165,9 +166,10 @@ export const onBeginCourse = ()=>({
 	type: types.COURSE_BEGIN
 })
 
-export const onCourseRecording = (status)=>({
+export const onCourseRecording = (status, camp)=>({
 	type: types.COURSE_RECORDING,
-	status
+	status,
+	camp
 })
 
 export const onEndCourse = ()=>({
