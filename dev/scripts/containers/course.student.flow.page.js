@@ -105,6 +105,62 @@ class Course extends CourseBase {
 		})
 	}
 
+	__on_signal_message(message) {
+		let data = message.message
+		switch (message.type) {
+			case "closeroom":
+				this.leaveCourse()
+				break
+			case Const.OPEN_MIC:
+			case Const.CLOSE_MIC:
+			case Const.PUT_DANCE:
+			case Const.BACK_DANCE:
+				this.$session.send_message(null, null, message)
+				break
+			case Const.OPEN_RACE:
+				this.props.onHandsupSwitch(true)
+				this.$session.send_message(null, null, message)
+				break
+			case Const.CLOSE_RACE:
+				this.props.onHandsupSwitch(false)
+				this.$session.send_message(null, null, message)
+				break
+			case "racerank":
+				// this.props.onHandsupRank(data.uid, data.rank)
+				break
+			case Const.NEXT_PAGE:
+				this.$playing = false
+				this.hideDraft()
+				// this.props.onProgressReset()
+				this.$session.send_message(null, null, message)
+				break
+			case Const.DISABLE_MAGIC:
+				// this.props.onProgressReset()
+				this.$session.send_message(null, null, message)
+				break
+			case "gift":
+				this.props.onNewGift(data)
+				this.$session.send_message(null, null, message)
+				break
+			case "progress":
+				//接收到来自学生的进度提示通知界面调整
+				if (this.props.switches.magic) {
+					// this.props.onProgressUpdate(message.from, data.percent)
+				}
+				break
+			case Const.WARN:
+				this.props.onWarn(data,true);
+				this.$session.send_message(null, null, message)
+				break;
+			case Const.WARN_RELIEVE:
+				this.props.onWarn(data,false);
+				this.$session.send_message(null, null, message)
+				break;
+			default:
+				this.$session.send_message(null, null, message)
+		}
+	}
+
 	__on_session_message(message, force) {
 		if (message.to == "app" || force) {
 			let data = message.message, result

@@ -121,6 +121,7 @@ class Main extends React.Component {
 		let room = this.props.campRoom;
 		if (room) {
 			room.teachers = [room.master_teacher_id]
+			room.students = []
 			return 	<div key="1" className="lesson-box flow">
 						<div className="cover">
 							<img src={room.avatar} alt=""/>
