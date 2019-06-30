@@ -386,6 +386,13 @@ class Main extends React.Component {
 			version = ''
 			data.camp = true
 			data.teachers = [data.master_teacher_id]
+
+			if (!data.is_enter) {
+				this.props.alert({
+					content: "该课程暂不在开放时间"
+				})
+				return;
+			}
 		}
 		let lessonName = data.en_name + version;
 		let lastest_download = storage.get(`download_${lessonName}`)
