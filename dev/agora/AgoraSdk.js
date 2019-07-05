@@ -382,6 +382,7 @@ class AgoraRtcEngine extends events_1.EventEmitter {
      */
     onRegisterDeliverFrame(infos) {
         const len = infos.length;
+        console.log("info length",len)
         for (let i = 0; i < len; i++) {
             const info = infos[i];
             const { type, uid, header, ydata, udata, vdata } = info;

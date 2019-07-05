@@ -67,6 +67,7 @@ const AgoraRender = function() {
   let vTexture;
   let texCoordBuffer;
   let surfaceBuffer;
+  let timer;
   const that = {
       view: undefined,
       mirrorView: false,
@@ -178,6 +179,13 @@ const AgoraRender = function() {
    * @param {*} vplanedata 
    */
   that.drawFrame = function({header, yUint8Array, uUint8Array, vUint8Array}) {
+    if (timer) {
+      return
+    } else {
+      timer = setTimeout(function(){
+        timer = null
+      },1000/15)
+    }
     var headerLength = 20;
     var dv = new DataView(header);
     var format = dv.getUint8(0);
