@@ -14,6 +14,9 @@ const { app, BrowserWindow, dialog, Menu } = require('electron');
 const log = require('electron-log');
 const { autoUpdater } = require("electron-updater");
 
+
+app.disableDomainBlockingFor3DAPIs()
+
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = 'info';
 
