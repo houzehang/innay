@@ -54,10 +54,9 @@ export const onCourseData = (data) => ({
 	data
 })
 
-export const onRoomInfo = (data,camp) => ({
+export const onRoomInfo = (data) => ({
 	type: types.ROOM_INFO,
-	data,
-	camp
+	data
 })
 
 export const onLogout = () => dispatch => {

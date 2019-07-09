@@ -363,7 +363,7 @@ class Main extends React.Component {
 		if (window.cc == undefined) {
 			$require("./libs/cocos2d-js-v1.1-min.js")
 		}
-		this.props.onRoomInfo(data, camp)
+		this.props.onRoomInfo(data)
 		if(isRecord){
 			this.props.hide()
 			setTimeout(()=>{
