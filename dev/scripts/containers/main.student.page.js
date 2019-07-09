@@ -205,8 +205,8 @@ class Main extends React.Component {
 
 	onRecordRoom(data) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let version = data.version || '.1.0.0';
-		let lessonName = data.en_name + version;
+		data.version 	= data.version || '.1.0.0';
+		let lessonName 	= data.en_name + data.version;
 		let lastest_download = storage.get(`download_${lessonName}`)
 		if (lastest_download) {
 			let delay = new Date().getTime() - lastest_download
