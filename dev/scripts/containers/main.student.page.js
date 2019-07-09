@@ -413,7 +413,7 @@ class Main extends React.Component {
 				}
 			})
 		} else {
-			this.onDownload(data, true, true, true);			
+			this.onDownload(data, true, true, camp);			
 		}
 	}
 
