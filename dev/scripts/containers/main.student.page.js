@@ -189,7 +189,7 @@ class Main extends React.Component {
 										{room.class_state == 'normal' ? <button className="download-btn" onClick={()=>{
 											this.onDownload(room)
 										}}></button> : "" } 
-										{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
                                 
@@ -215,7 +215,18 @@ class Main extends React.Component {
 			</div>
 		)
     }
-    
+
+	__get_room_flag(state){
+		if (state == 'leave') {
+			return <div className="leave-flag"></div>
+		}else if (state == 'back') {
+			return <div className="back-flag"></div>
+		}else if (state == 'xiuxue') {
+			return <div className="xiuxue-flag"></div>
+		}
+		return ''
+	}
+	
     __my_courses(){
 		console.log('this.props.commingRooms = ',this.props.commingRooms);
 		console.log('this.props.doneRooms = ',this.props.doneRooms);
@@ -293,7 +304,7 @@ class Main extends React.Component {
 											}}></button>:""}
 											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
 											}}></button>: ""}
-											{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+											{this.__get_room_flag(room.class_state)}
 											
 										</div>
 									</div>
