@@ -395,6 +395,39 @@ class Course extends CourseBase {
 		return ''
 	}
 
+	openStream(uid, state){
+		super.openStream(uid, state)
+		let self = uid == this.props.account.id
+		if (self) {
+			this.switchStream(state == 'open')
+		}
+	}
+
+	switchStream(status){
+		let blind 	= status == undefined ? !this.state.blind : !status
+		let execute = ()=>{
+			network.showOthers(!blind)
+			context.oldDevice = blind
+			this.setState({blind})
+			this.updateStreams()
+		}
+		if (context.oldDeviceInfact && !blind && status == undefined) {
+			this.props.onQuestionList(false);
+			this.props.confirm({
+				content: "系统通过综合分析您的硬件和网络环境，为了保证宝贝良好的上课体验，不建议您开启此设置。",
+				sure_txt: "继续开启",
+				cancel_txt: "不开启",
+				title: "温馨提示",
+				sure: ()=>{
+					execute()
+				},
+				cancel: ()=>{}
+			})
+		}else{
+			execute()
+		}
+	}
+
 	render() {
 		let displayDeviceName, curDevice, devices, emptyText, tipsText;
 		if (this.props.switches.questionDetail == 1) {
@@ -489,28 +522,7 @@ class Course extends CourseBase {
 
 								<div className="question-cell" onClick = {(e)=>{
 										e.stopPropagation();
-										let blind 	= !this.state.blind
-										let execute = ()=>{
-											network.showOthers(!blind)
-											context.oldDevice = blind
-											this.setState({blind})
-											this.updateStreams()
-										}
-										if (context.oldDeviceInfact && !blind) {
-											this.props.onQuestionList(false);
-											this.props.confirm({
-												content: "系统通过综合分析您的硬件和网络环境，为了保证宝贝良好的上课体验，不建议您开启此设置。",
-												sure_txt: "继续开启",
-												cancel_txt: "不开启",
-												title: "温馨提示",
-												sure: ()=>{
-													execute()
-												},
-												cancel: ()=>{}
-											})
-										}else{
-											execute()
-										}
+										this.switchStream()
 									}}>
 									<input type="checkbox" value = '不看其他学生' checked = {this.state.blind} onChange={()=>{}} />
 									<span>不看其他学生</span>

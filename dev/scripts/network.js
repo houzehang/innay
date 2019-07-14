@@ -198,7 +198,8 @@ class Network extends Eventer {
 	 */
 	getRoomInfo(channel_id) {
 		return this.__request("/room/channel_key", {
-			channel_id
+			channel_id,
+			device: ''
 		}, "post")
 	}
 

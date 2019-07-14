@@ -470,10 +470,23 @@ class Course extends React.Component {
 				this.props.onWarn(data,false);
 				this.$session.send_message(null, null, message)
 				break;
+				
+			case Const.OPEN_MEDDLE:
+				this.reportInfo()
+				break;
+			case "openStream":
+				this.openStream(data.uid, data.state)
+				break;
 			default:
 				this.$session.send_message(null, null, message)
 		}
 	}
+
+	reportInfo(){
+
+	}
+
+	openStream(uid, state){}
 
 	leaveCourse() {}
 
