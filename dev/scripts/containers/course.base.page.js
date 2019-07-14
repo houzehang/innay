@@ -476,6 +476,7 @@ class Course extends React.Component {
 				break;
 			case "openStream":
 				this.openStream(data.uid, data.state)
+				this.$session.send_message(null, null, message)
 				break;
 			default:
 				this.$session.send_message(null, null, message)
