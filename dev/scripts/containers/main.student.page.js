@@ -189,7 +189,7 @@ class Main extends React.Component {
 										{room.class_state == 'normal' ? <button className="download-btn" onClick={()=>{
 											this.onDownload(room)
 										}}></button> : "" } 
-										{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
                                 
@@ -215,7 +215,18 @@ class Main extends React.Component {
 			</div>
 		)
     }
-    
+
+	__get_room_flag(state){
+		if (state == 'leave') {
+			return <div className="leave-flag"></div>
+		}else if (state == 'back') {
+			return <div className="back-flag"></div>
+		}else if (state == 'xiuxue') {
+			return <div className="xiuxue-flag"></div>
+		}
+		return ''
+	}
+	
     __my_courses(){
 		console.log('this.props.commingRooms = ',this.props.commingRooms);
 		console.log('this.props.doneRooms = ',this.props.doneRooms);
@@ -293,7 +304,7 @@ class Main extends React.Component {
 											}}></button>:""}
 											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
 											}}></button>: ""}
-											{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+											{this.__get_room_flag(room.class_state)}
 											
 										</div>
 									</div>
@@ -363,7 +374,7 @@ class Main extends React.Component {
 		if (window.cc == undefined) {
 			$require("./libs/cocos2d-js-v1.1-min.js")
 		}
-		this.props.onRoomInfo(data, camp)
+		this.props.onRoomInfo(data)
 		if(isRecord){
 			this.props.hide()
 			setTimeout(()=>{
@@ -381,9 +392,7 @@ class Main extends React.Component {
 
 	onRecordRoom(data, camp) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		let version = data.version || '.1.0.0';
 		if (camp) {
-			version = ''
 			data.camp = true
 			data.teachers = [data.master_teacher_id]
 
@@ -394,27 +403,7 @@ class Main extends React.Component {
 				return;
 			}
 		}
-		let lessonName = data.en_name + version;
-		let lastest_download = storage.get(`download_${lessonName}`)
-		if (lastest_download) {
-			let delay = new Date().getTime() - lastest_download
-			if (delay <= this.$cache_valid_time) {
-				this.__onStartRoom(data,true,camp)
-				return
-			}
-		}
-		if (context.detector.offline) {
-			this.props.confirm({
-				content: "您的网络已经断开，建议您检查网络后再开始上课。",
-				sure_txt: "去检查网络",
-				cancel_txt: "坚持上课",
-				cancel: ()=>{
-					this.__onStartRoom(data,true,camp)
-				}
-			})
-		} else {
-			this.onDownload(data, true, true, true);			
-		}
+		this.onDownload(data, true, true, camp);			
 	}
 
 	onDownload(data, canenter,isRecord, camp) {
