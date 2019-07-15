@@ -56,6 +56,7 @@ module.exports = {
 	UNMUTE_ALL 	  : "#unmuteall",
 	SHOW_RANKS    : "*showranks",
 	HIDE_RANKS    : "*hideranks",
+	OPEN_MEDDLE   : "open_meddle",
 	UPDATE : {
 		AVAILABLE: "update available",
 		LASTEST  : "the lastest version",

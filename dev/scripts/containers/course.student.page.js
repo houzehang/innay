@@ -99,6 +99,43 @@ class Course extends CourseBase {
 		})
 	}
 
+	reportInfo(message){
+		this.$signal.send({
+			type:"report_device_list",
+			from: this.props.account.id,
+			to: message.from,
+			message: {
+				currentVideoDevice: this.state.currentVideoDevice,
+				currentSpeakerDevice: this.state.currentSpeakerDevice,
+				currentAudioDevice: this.state.currentAudioDevice,
+				currentVideoName: this.state.currentVideoName,
+				currentSpeakerName: this.state.currentSpeakerName,
+				currentAudioName: this.state.currentAudioName,
+				video_devices: this.state.video_devices,
+				audio_devices: this.state.audio_devices,
+				speaker_devices: this.state.speaker_devices
+			}
+		})
+	}
+
+	selectDevice(uid, kind, deviceId, deviceName){
+		if (uid == this.props.account.id) {
+			if (kind == 1) {
+				this.$room.rtc.setVideoDevice(deviceId);
+				this.setState({currentVideoDevice : deviceId, currentVideoName: deviceName})
+				Storage.store("VIDEO_DEVICE",deviceId)
+			}else if (kind == 2) {
+				this.setState({currentAudioDevice : deviceId, currentAudioName: deviceName})
+				Storage.store("AUDIO_DEVICE",deviceId)
+				this.$room.rtc.setAudioRecordingDevice(deviceId);
+			}else if (kind == 3) {
+				this.setState({currentSpeakerDevice : deviceId, currentSpeakerName: deviceName})
+				Storage.store("PLAYBACK_DEVICE",deviceId)
+				this.$room.rtc.setAudioPlaybackDevice(deviceId);
+			}
+		}
+	}
+
 	/**
 	 * 刷新视频流显示
 	 * 低端设备不显示其他学生流

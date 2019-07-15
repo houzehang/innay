@@ -472,20 +472,23 @@ class Course extends React.Component {
 				break;
 				
 			case Const.OPEN_MEDDLE:
-				this.reportInfo()
+				this.reportInfo(message)
 				break;
 			case "openStream":
 				this.openStream(data.uid, data.state)
 				this.$session.send_message(null, null, message)
+				break; 
+			case "helpToSelectDevice":
+				this.selectDevice(data.uid, data.kind, data.deviceId, data.deviceName)
 				break;
 			default:
 				this.$session.send_message(null, null, message)
 		}
 	}
 
-	reportInfo(){
+	reportInfo(){}
 
-	}
+	selectDevice(uid, kind, deviceId, deviceName){}
 
 	openStream(uid, state){}
 

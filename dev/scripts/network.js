@@ -346,7 +346,7 @@ class Network extends Eventer {
 	showOthers(show) {
 		return this.__request('/api/show_others',{
 			client:'pc',
-			show
+			show: show ? "1" : "0"
 		},'post')
 	}
 }
