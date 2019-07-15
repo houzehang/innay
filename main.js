@@ -144,6 +144,7 @@ app.on('ready', function () {
 
     screenSize = require('electron').screen.getPrimaryDisplay().size;
 });
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
 
 function createMainWindow() {
     process.env.APP_PATH = app.getAppPath();
