@@ -10,14 +10,27 @@ import Dialog from './dialog'
 import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
 import NetDetector from "../netdetector"
 import context from "../context"
-import * as types from '../constants/ActionTypes'
 const remote = $require('electron').remote;
+import bridge from '../../../core/MessageBridge'
+const logger = remote.require('electron-log')
 class Entry extends React.Component {
 	constructor(props) {
 		super(props)
 	}
 	componentDidMount() {
 		this.__start_detector()
+		console.log("did mount...")
+		// 清除本地缓存的课件资源
+		bridge.call({
+			method	: "clearCachedData",
+			args 	: {packs: [ 
+				{ name: "course-ui" }
+			]}
+		}).then(()=>{
+			logger.log("APP启动清除课程资源缓存成功！")
+		}).catch(error=>{
+			logger.error("APP启动清除程资源缓存失败", error)
+		})
 	}
 
 	componentWillUnmount() {
