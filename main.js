@@ -52,6 +52,7 @@ app.on('ready', function () {
     })
 });
 
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.on('window-all-closed', () => {
     app.quit();
 });
