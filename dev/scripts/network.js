@@ -197,9 +197,33 @@ class Network extends Eventer {
 	 * @param {*} channel_id 
 	 */
 	getRoomInfo(channel_id) {
+
+		let systemInfo = (window.ENV_CONF||{}).systeminfo || {
+			os:{},cpu:{},system:{}
+		}
+		let device_desc = ''
+		try{
+			let memory 	   = remote.process.getSystemMemoryInfo() || {total:0}
+			let os		   = '操作系统：' + (systemInfo.os.distro || '').replace(/[^a-zA-Z_0-9 ]/g,'') + ' ' + (systemInfo.os.kernal || '');
+			let cpuBrand   = 'CPU型号：' + (systemInfo.cpu.brand || '');
+ 			let cpuCores   = 'CPU核数：' + (systemInfo.cpu.physicalCores || '') + '核' + (systemInfo.cpu.cores || '') + '线程';
+			let cpuSpeed   = 'CPU主频：' + (systemInfo.cpu.speed || '') + 'Hz' + (systemInfo.cpu.speed == systemInfo.cpu.speedmax ? '' : (' - '+(systemInfo.cpu.speedmax || '') + 'Hz')); 
+			let memoray    = '系统内存：' + (Math.round((memory.total||0)/1024/1024*10)/10)+"G";
+			let deviceType = '设备型号：' + (systemInfo.system.manufacturer||'') + (systemInfo.system.model||'');
+			
+			device_desc += (os + '\n');
+			device_desc += (cpuBrand + '\n');
+			device_desc += (cpuCores + '\n');
+			device_desc += (cpuSpeed + '\n');
+			device_desc += (memoray + '\n');
+			device_desc += deviceType;
+		}catch(err){
+			console.log(err)
+		}
+
 		return this.__request("/room/channel_key", {
 			channel_id,
-			device: ''
+			device: device_desc
 		}, "post")
 	}
 
