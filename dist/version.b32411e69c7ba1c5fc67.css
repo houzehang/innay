@@ -417,6 +417,9 @@ body .mask.dialog-layer .dialog .title .close-btn {
   right: 0;
   top: 0;
 }
+body .mask.dialog-layer .dialog .title.clear {
+  background: rgba(0, 0, 0, 0);
+}
 body .mask.dialog-layer .dialog .content {
   display: block;
   margin: 0;
@@ -434,6 +437,9 @@ body .mask.dialog-layer .dialog .content .texts {
   justify-content: center;
   align-items: center;
   padding: 0.4rem;
+}
+body .mask.dialog-layer .dialog .content .texts.large {
+  padding: 0.4rem 0.3rem;
 }
 body .mask.dialog-layer .dialog .content .btns {
   display: flex;
@@ -453,6 +459,9 @@ body .mask.dialog-layer .dialog .content .btns button.ok-btn {
 body .mask.dialog-layer .dialog .content .btns button.cancel-btn {
   color: #2f80c5;
   background: #fff;
+}
+body .mask.dialog-layer .dialog.large {
+  width: 7.15rem;
 }
 body .mask.show {
   opacity: 1;
@@ -1086,6 +1095,9 @@ body .mask.dialog-layer .dialog .title .close-btn {
   right: 0;
   top: 0;
 }
+body .mask.dialog-layer .dialog .title.clear {
+  background: rgba(0, 0, 0, 0);
+}
 body .mask.dialog-layer .dialog .content {
   display: block;
   margin: 0;
@@ -1103,6 +1115,9 @@ body .mask.dialog-layer .dialog .content .texts {
   justify-content: center;
   align-items: center;
   padding: 0.4rem;
+}
+body .mask.dialog-layer .dialog .content .texts.large {
+  padding: 0.4rem 0.3rem;
 }
 body .mask.dialog-layer .dialog .content .btns {
   display: flex;
@@ -1122,6 +1137,9 @@ body .mask.dialog-layer .dialog .content .btns button.ok-btn {
 body .mask.dialog-layer .dialog .content .btns button.cancel-btn {
   color: #2f80c5;
   background: #fff;
+}
+body .mask.dialog-layer .dialog.large {
+  width: 7.15rem;
 }
 body .mask.show {
   opacity: 1;

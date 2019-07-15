@@ -779,6 +779,43 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
 .sidebar .help-area:active {
   opacity: 0.6;
 }
+.sidebar.flow {
+  top: calc(50% - 0.7rem);
+}
+.camp-entry {
+  width: 1.05rem;
+  height: 1.2rem;
+  background: #fff;
+  position: fixed;
+  bottom: 0.5rem;
+  left: 0.15rem;
+  border-top-right-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.camp-entry .camp-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex: 1;
+}
+.camp-entry .camp-area .icon {
+  width: 0.39rem;
+  height: 0.36rem;
+  background: url(./a6a9691c823ee8b808626f80c95d23c7.png) no-repeat center center;
+  background-size: 100% 100%;
+}
+.camp-entry .camp-area .txt {
+  font-size: 0.16rem;
+  color: #959bb5;
+  margin-top: 0.1rem;
+  text-align: center;
+}
 .view-user {
   display: flex;
   flex-direction: column;
@@ -885,6 +922,155 @@ body .sound-outer .sound-tester .step-content .step-btns .prev-step-btn {
   font-size: 0.18rem;
   color: #b8b8b8;
   margin-bottom: -0.2rem;
+}
+.camp-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: -0.4rem;
+  margin-bottom: -0.15rem;
+  width: 100%;
+}
+.camp-panel .lesson-box {
+  position: relative;
+  width: 100%;
+  height: 1.57rem;
+  background: #fff;
+  display: flex;
+  align-items: center;
+}
+.camp-panel .lesson-box .cover {
+  width: 1.94rem;
+  height: 1.45rem;
+  margin-right: 0.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+.camp-panel .lesson-box .cover img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.1rem;
+}
+.camp-panel .lesson-box .info {
+  display: flex;
+  width: 4.3rem;
+  margin-right: 0.2rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+}
+.camp-panel .lesson-box .info .name {
+  color: #333333;
+  font-weight: bold;
+  display: flex;
+  align-items: flex-end;
+  height: 0.26rem;
+}
+.camp-panel .lesson-box .info .name span {
+  font-size: 0.24rem;
+  height: 0.24rem;
+  line-height: 0.24rem;
+}
+.camp-panel .lesson-box .info .desc {
+  width: 100%;
+  height: 0.7rem;
+  color: #969696;
+  font-size: 0.18rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.07rem;
+  display: flex;
+  align-items: flex-start;
+  line-height: 0.28rem;
+  vertical-align: top;
+  overflow: scroll;
+}
+.camp-panel .lesson-box .info .desc::-webkit-scrollbar {
+  display: none;
+}
+.camp-panel .lesson-box .info .desc span {
+  height: 0.26rem;
+  line-height: 0.26rem;
+  vertical-align: top;
+}
+.camp-panel .lesson-box .info .tag {
+  width: 100%;
+  height: 0.26rem;
+  display: flex;
+  justify-content: flex-start;
+}
+.camp-panel .lesson-box .info .tag .date-label {
+  color: #fff;
+  background: #fe6969;
+  height: 0.26rem;
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  line-height: 0.26rem;
+  text-align: center;
+  font-size: 0.18rem;
+  border-radius: 0.2rem;
+  margin-right: 0.12rem;
+}
+.camp-panel .lesson-box .info .tag .date {
+  width: 70%;
+  height: 0.2rem;
+  line-height: 0.2rem;
+  margin-top: 0.03rem;
+  font-size: 0.2rem;
+  color: #ff2d2d;
+}
+.camp-panel .btns-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 1.29rem;
+}
+.camp-panel .btns-panel .start-btn {
+  width: 2.2rem;
+  height: 0.38rem;
+  background: #ff696a;
+  color: #fff;
+  font-size: 0.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.06rem;
+  margin-top: 0.3rem;
+}
+.camp-panel .btns-panel .start-btn::after {
+  content: "";
+}
+.camp-panel .btns-panel .start-btn[disabled] {
+  background: #b5b5b5;
+}
+.camp-panel .btns-panel .start-btn[disabled]::after {
+  content: "\5DF2\4E0A\8BFE";
+}
+.camp-panel .btns-panel .start-btn.waiting::after {
+  content: "\4E0A\8BFE\65F6\95F4\672A\5230";
+}
+.camp-panel .btns-panel .record-btn {
+  background: #8b460e;
+}
+.camp-panel .btns-panel .record-btn::after {
+  content: "\8BFE\7A0B\56DE\653E";
+}
+.camp-panel .btns-panel .download-btn {
+  background: #3882c2;
+}
+.camp-panel .btns-panel .download-btn::after {
+  content: "\4E0B\8F7D\8BFE\7A0B\5305";
+}
+.camp-panel .btns-panel .waiting-btn {
+  background: #b4b4b4;
+}
+.camp-panel .btns-panel .waiting-btn::after {
+  content: "\7B49\5F85\4E0A\8BFE";
 }
 @-webkit-keyframes round {
   0% {
@@ -1305,6 +1491,9 @@ body .mask.dialog-layer .dialog .title .close-btn {
   right: 0;
   top: 0;
 }
+body .mask.dialog-layer .dialog .title.clear {
+  background: rgba(0, 0, 0, 0);
+}
 body .mask.dialog-layer .dialog .content {
   display: block;
   margin: 0;
@@ -1322,6 +1511,9 @@ body .mask.dialog-layer .dialog .content .texts {
   justify-content: center;
   align-items: center;
   padding: 0.4rem;
+}
+body .mask.dialog-layer .dialog .content .texts.large {
+  padding: 0.4rem 0.3rem;
 }
 body .mask.dialog-layer .dialog .content .btns {
   display: flex;
@@ -1341,6 +1533,9 @@ body .mask.dialog-layer .dialog .content .btns button.ok-btn {
 body .mask.dialog-layer .dialog .content .btns button.cancel-btn {
   color: #2f80c5;
   background: #fff;
+}
+body .mask.dialog-layer .dialog.large {
+  width: 7.15rem;
 }
 body .mask.show {
   opacity: 1;
@@ -1974,6 +2169,9 @@ body .mask.dialog-layer .dialog .title .close-btn {
   right: 0;
   top: 0;
 }
+body .mask.dialog-layer .dialog .title.clear {
+  background: rgba(0, 0, 0, 0);
+}
 body .mask.dialog-layer .dialog .content {
   display: block;
   margin: 0;
@@ -1991,6 +2189,9 @@ body .mask.dialog-layer .dialog .content .texts {
   justify-content: center;
   align-items: center;
   padding: 0.4rem;
+}
+body .mask.dialog-layer .dialog .content .texts.large {
+  padding: 0.4rem 0.3rem;
 }
 body .mask.dialog-layer .dialog .content .btns {
   display: flex;
@@ -2010,6 +2211,9 @@ body .mask.dialog-layer .dialog .content .btns button.ok-btn {
 body .mask.dialog-layer .dialog .content .btns button.cancel-btn {
   color: #2f80c5;
   background: #fff;
+}
+body .mask.dialog-layer .dialog.large {
+  width: 7.15rem;
 }
 body .mask.show {
   opacity: 1;
@@ -2709,6 +2913,16 @@ html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .
 body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .waiting-btn.waiting::after {
   content: "\4E0A\8BFE\65F6\95F4\672A\5230";
 }
+html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .start-btn.flow::after,
+body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .start-btn.flow::after,
+html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .record-btn.flow::after,
+body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .record-btn.flow::after,
+html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .download-btn.flow::after,
+body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .download-btn.flow::after,
+html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .waiting-btn.flow::after,
+body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .waiting-btn.flow::after {
+  content: "";
+}
 html .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .record-btn,
 body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .record-btn {
   background: #8b460e;
@@ -2739,6 +2953,25 @@ body .page.student-page .inner .student-box .main-page .lesson-box .btns-panel .
   height: 1.02rem;
   background: url(./b05a892dc793ab88509726c04c5c90a1.png) no-repeat center center;
   background-size: 100% 100%;
+}
+html .page.student-page .inner .student-box .main-page .lesson-box.flow .camp-flag,
+body .page.student-page .inner .student-box .main-page .lesson-box.flow .camp-flag {
+  position: absolute;
+  width: 1.77rem;
+  height: 0.51rem;
+  background: url(./a4d7c57202bc0b99489d516f2a278fd8.png) no-repeat center center;
+  background-size: 100% 100%;
+  right: -0.96rem;
+  top: -0.26rem;
+}
+html .page.student-page .inner .student-box .main-page .lesson-box.flow .info .tag .date,
+body .page.student-page .inner .student-box .main-page .lesson-box.flow .info .tag .date {
+  width: 70%;
+  margin-top: 0.03rem;
+}
+html .page.student-page .inner .student-box .main-page .lesson-box.flow .info .desc,
+body .page.student-page .inner .student-box .main-page .lesson-box.flow .info .desc {
+  height: 0.8rem;
 }
 html .page.student-page .inner .student-box .my-courses,
 body .page.student-page .inner .student-box .my-courses {
@@ -2863,6 +3096,7 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .l
   border-radius: 0.2rem;
   border-bottom: 1px solid #cccccc;
   margin-bottom: 0.21rem;
+  position: relative;
 }
 html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .date-tip,
 body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .date-tip {
@@ -3094,6 +3328,25 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .l
   background: url(./b05a892dc793ab88509726c04c5c90a1.png) no-repeat center center;
   background-size: 100% 100%;
 }
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box.flow .info .tag .date,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box.flow .info .tag .date {
+  width: 70%;
+  margin-top: 0.03rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box.flow .info .desc,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .lesson-box.flow .info .desc {
+  height: 0.8rem;
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .camp-flag,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area .lesson-box-panel .camp-flag {
+  position: absolute;
+  width: 1.77rem;
+  height: 0.51rem;
+  background: url(./a4d7c57202bc0b99489d516f2a278fd8.png) no-repeat center center;
+  background-size: 100% 100%;
+  right: -0.96rem;
+  top: -0.26rem;
+}
 html .page.student-page .inner .student-box .my-courses .courses-comming-area .empty,
 body .page.student-page .inner .student-box .my-courses .courses-comming-area .empty {
   display: flex;
@@ -3119,6 +3372,10 @@ body .page.student-page .inner .student-box .my-courses .courses-comming-area .e
   font-size: 0.24rem;
   line-height: 0.24rem;
   content: "\63A5\4E0B\6765\6CA1\6709\8BFE\7A0B\4E86~";
+}
+html .page.student-page .inner .student-box .my-courses .courses-comming-area.flow,
+body .page.student-page .inner .student-box .my-courses .courses-comming-area.flow {
+  overflow: visible;
 }
 html .page.student-page .inner .student-box .my-courses .courses-done-area,
 body .page.student-page .inner .student-box .my-courses .courses-done-area {
@@ -4852,4 +5109,14 @@ body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.noth
 html .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .draft,
 body .page.course-page .inner .entities-area .teacher-area .avatars .avatar.nothing .draft {
   display: block;
+}
+html .slave,
+body .slave {
+  position: fixed;
+  width: 0.1rem;
+  height: 0.1rem;
+  background: rgba(0, 0, 0, 0);
+  z-index: 10000;
+  right: 0;
+  top: 0;
 }
