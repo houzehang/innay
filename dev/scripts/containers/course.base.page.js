@@ -388,7 +388,7 @@ class Course extends React.Component {
 					this.setState({ process: data })
 					break
 				case "openStream":
-					this.openStream(data.uid, data.state)
+					this.openStream(data.state)
 					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
@@ -489,7 +489,7 @@ class Course extends React.Component {
 
 	selectDevice(uid, kind, deviceId, deviceName){}
 
-	openStream(uid, state){}
+	openStream(state){}
 
 	leaveCourse() {}
 

@@ -432,12 +432,8 @@ class Course extends CourseBase {
 		return ''
 	}
 
-	openStream(uid, state){
-		super.openStream(uid, state)
-		let self = uid == this.props.account.id
-		if (self) {
-			this.switchStream(state == 'open')
-		}
+	openStream(state){
+		this.switchStream(state == 'open')
 	}
 
 	switchStream(status){
