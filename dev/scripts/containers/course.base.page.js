@@ -387,6 +387,9 @@ class Course extends React.Component {
 				case "course-process":
 					this.setState({ process: data })
 					break
+				case "openStream":
+					this.openStream(data.uid, data.state)
+					break;
 				default:
 					if (message.type.indexOf("*") == -1) {
 						this.__on_signal_message(message)
@@ -474,10 +477,6 @@ class Course extends React.Component {
 			case Const.OPEN_MEDDLE:
 				this.reportInfo(message)
 				break;
-			case "openStream":
-				this.openStream(data.uid, data.state)
-				this.$session.send_message(null, null, message)
-				break; 
 			case "helpToSelectDevice":
 				this.selectDevice(data.uid, data.kind, data.deviceId, data.deviceName)
 				break;
