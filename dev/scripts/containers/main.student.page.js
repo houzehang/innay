@@ -302,7 +302,7 @@ class Main extends React.Component {
 											{room.can_enter && room.can_download  && room.class_state == 'normal'  ?<button className="download-btn" onClick={()=>{
 												this.onDownload(room)
 											}}></button>:""}
-											{!room.can_enter ?<button className="waiting-btn"  onClick={()=>{
+											{!room.can_enter && room.class_state == 'normal'?<button className="waiting-btn"  onClick={()=>{
 											}}></button>: ""}
 											{this.__get_room_flag(room.class_state)}
 											
