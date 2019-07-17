@@ -333,6 +333,9 @@ class Course extends CourseBase {
 	}
 
 	__select_question(id){
+		if (id != 0) {
+			this.__init_device_doctor()
+		}
 		this.props.onQuestionDetail(id);
 		this.props.onQuestionList(false);
 	}
