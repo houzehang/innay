@@ -100,6 +100,7 @@ class Course extends CourseBase {
 	}
 
 	reportInfo(message){
+		this.__init_device_doctor()
 		this.$signal.send({
 			type:"report_device_list",
 			from: this.props.account.id,
