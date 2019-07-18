@@ -20,34 +20,48 @@ class SideBar extends React.Component {
 		if (this.props.user.dentity == types.DENTITY.STUDENT) {
 			isStudent = true
 		}
+		let flow = this.props.flow;
 		return (
-			<div className={isStudent?"sidebar":"sidebar teacher"}>
-				<div className="avatar-area center" onClick={()=>{
-					this.props.onViewUser()
-				}}>
-					<div className="avatar" style={{
-						"backgroundImage":`url(${isStudent?this.props.user.child_avatar:this.props.user.avatarurl})`
-					}}></div>
-					<div className="nickname">{isStudent?this.props.user.child_name:this.props.user.nickname}</div>
+			<div className="sidebar-container">
+				<div className={isStudent? `${flow?'sidebar flow':'sidebar'}`:"sidebar teacher"}>
+					<div className="avatar-area center" onClick={()=>{
+						this.props.onViewUser()
+					}}>
+						<div className="avatar" style={{
+							"backgroundImage":`url(${isStudent?this.props.user.child_avatar:this.props.user.avatarurl})`
+						}}></div>
+						<div className="nickname">{isStudent?this.props.user.child_name:this.props.user.nickname}</div>
+					</div>
+					{isStudent?<div className="mycourses-area center" onClick={()=>{
+						this.props.onEnterMyCourses()
+					}}>
+						<div className="mycourses-btn"></div>
+						<div className="txt">我的课程</div>
+					</div>:""}
+					<div className="device-area center" onClick={()=>{
+						this.props.onDeviceTest()
+					}}>
+						<div className="device-btn"></div>
+						<div className="txt">设备检测</div>
+					</div>
+					{isStudent?<div className="help-area center" onClick={()=>{
+						this.props.onViewHelper()
+					}}>
+						<div className="help-btn"></div>
+						<div className="txt">问题帮助</div>
+					</div>:""}
 				</div>
-				{isStudent?<div className="mycourses-area center" onClick={()=>{
-					this.props.onEnterMyCourses()
-				}}>
-					<div className="mycourses-btn"></div>
-					<div className="txt">我的课程</div>
-				</div>:""}
-				<div className="device-area center" onClick={()=>{
-					this.props.onDeviceTest()
-				}}>
-					<div className="device-btn"></div>
-					<div className="txt">设备检测</div>
-				</div>
-				{isStudent?<div className="help-area center" onClick={()=>{
-					this.props.onViewHelper()
-				}}>
-					<div className="help-btn"></div>
-					<div className="txt">问题帮助</div>
-				</div>:""}
+
+				{flow?
+					<div className='camp-entry' onClick={()=>{
+						this.props.onViewCamp()
+					}}>
+						<div className='camp-area'>
+							<div className='icon'></div>
+							<div className='txt'>训练营</div>
+						</div>
+					</div> 
+				:''}
 			</div>
 		)
 	}
@@ -64,6 +78,7 @@ SideBar.propTypes = {
 	onViewUser		: PropTypes.func.isRequired,
 	onViewHelper	: PropTypes.func.isRequired,
 	onEnterMyCourses: PropTypes.func,
+	onViewCamp		: PropTypes.func,
 }
 
 export default SideBar

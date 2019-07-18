@@ -39,13 +39,13 @@ class Dialog extends React.Component {
 		}
 		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{configure.sure_txt||"确定"}</button>)
 		return <div className="mask dialog-layer show">
-			<div className={"dialog "+(configure.classname||"")} style={configure.styles}>
-				<div className="title">
-					{configure.title || "提示"}
+			<div className={`${"dialog "+(configure.classname||"")}${configure.large_mod ? ' large' : ''}`} style={configure.styles}>
+				<div className={configure.title_hidden ? 'title clear' : 'title'} >
+					{configure.title_hidden ? '' : `${configure.title || "提示"}`}
 					{this.props.data.configure.close_hidden ? '' : <div className="close-btn" onClick={this.hide.bind(this)}></div>}
 				</div>
 				<div className={configure.nobutton?"content nobtn":"content"}>
-					<div className="texts">{configure.content}</div>
+					<div className={configure.large_mod ? "texts large" : "texts"}>{configure.content}</div>
 					{configure.nobutton?"":<div className="btns">{buttons}</div>}
 				</div>
 			</div>
@@ -82,6 +82,8 @@ Dialog.propTypes = {
 			sure		: PropTypes.func,
 			cancel		: PropTypes.func,
 			close_hidden: PropTypes.bool,
+			title_hidden: PropTypes.bool,
+			large_mod   : PropTypes.bool,
 			viewport	: PropTypes.shape({
 				width 	: PropTypes.string.isRequired,
 				height	: PropTypes.string

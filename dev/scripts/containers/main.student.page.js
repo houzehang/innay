@@ -2,15 +2,18 @@ import React from 'react';
 import { connect } from 'react-redux'
 import Download from '../components/download'
 import CourseRecord from './course.student.replay.page'
+import CourserFlow from './course.student.flow.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
 import Helper from '../components/helper'
 import net from "../network"
+import Camp from '../components/camp'
+import * as types from '../constants/ActionTypes'
 import { 
     onRoomInfo,
 	onLogout, onStartCourse,
-	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onLessonComming,
+	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,onCampLesson,
 	onCourseRecording,
 	showLoading,
 	hideLoading
@@ -93,6 +96,11 @@ class Main extends React.Component {
 				}
 			}
 			this.props.onLessonComming(room)
+
+			net.getCampLesson().then((room)=>{
+				console.log('camp room info',room);
+				this.props.onCampLesson(room);
+			})
 		})
     }
     
@@ -111,6 +119,44 @@ class Main extends React.Component {
 		ipcRenderer.removeAllListeners("room-closed")
 	}
 
+	__camp_room(){
+		let room = this.props.campRoom;
+		if (room) {
+
+			room.students = []
+			return 	<div key="1" className="lesson-box flow">
+						<div className="cover">
+							<img src={room.avatar} alt=""/>
+						</div>
+						<div className="info">
+							<div className="name"><span>{room.name}</span></div>
+							<div className="desc">课时简介：{room.content||'暂无'}</div>
+							{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
+							<div className="tag">
+								<div className="tag-kind">{room.open_tip || '开放时间'}</div>
+								<div className="date"><span>{room.open_date}</span></div>
+							</div>
+						</div>
+						
+						<div className="btns-panel">
+							<button className="start-btn flow" onClick={()=>{
+								this.onRecordRoom(room, true)
+							}}>{room.start_study}</button>
+						</div>
+
+						<div className="camp-flag">
+						</div>
+					</div>
+		}else{
+			return [
+				<div key="0" className="time">接下来没有课程啦～</div>,
+				<div key="1" className="no-lesson">
+					去“明兮大语文”小程序<br/>
+					和其他小朋友一起完成作业吧~
+				</div>
+			]
+		}
+	}
 
 	__student_page() {
 		let room = this.props.commingRoom;
@@ -142,7 +188,8 @@ class Main extends React.Component {
 										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										{room.class_state == 'normal' ? "" :<div className="leave-flag"></div>}
+										
+										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
                                 
@@ -161,20 +208,25 @@ class Main extends React.Component {
                                 ) : (
                                     <div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
                                 )
-                            ]) : ([
-                                <div key="0" className="time">接下来没有课程啦～</div>,
-                                <div key="1" className="no-lesson">
-                                    去“明兮大语文”小程序<br/>
-                                    和其他小朋友一起完成作业吧~
-                                </div>
-                            ]) }
+                            ]) : this.__camp_room() }
                         </div>
 					</div>
 				</div>
 			</div>
 		)
     }
-    
+
+	__get_room_flag(state){
+		if (state == 'leave') {
+			return <div className="leave-flag"></div>
+		}else if (state == 'back') {
+			return <div className="back-flag"></div>
+		}else if (state == 'xiuxue') {
+			return <div className="xiuxue-flag"></div>
+		}
+		return ''
+	}
+	
 	onStartRoom(data) {
 		if (!context.joinClassEnabled) {
 			this.props.alert({
@@ -191,7 +243,7 @@ class Main extends React.Component {
 		if(isRecord){
 			this.props.hide()
 			setTimeout(()=>{
-				this.onEnterRoom(true)	
+				this.onEnterRoom(true,camp)	
 			},500)
 		}else{
 			this.props.confirm({
@@ -203,7 +255,7 @@ class Main extends React.Component {
 		}
 	}
 
-	onRecordRoom(data) {
+	onRecordRoom(data, camp) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
 		data.version 	= data.version || '.1.0.0';
 		let lessonName 	= data.en_name + data.version;
@@ -248,9 +300,9 @@ class Main extends React.Component {
 		})
 	}
 
-	onEnterRoom(isRecord) {
+	onEnterRoom(isRecord, camp) {
 		if (isRecord) {
-			this.props.onCourseRecording(true)
+			this.props.onCourseRecording(true,camp)
 		} else {
 			this.props.onStartCourse()
 		}
@@ -285,6 +337,20 @@ class Main extends React.Component {
 		})
 	}
 
+	__view_camp() {
+		this.props.confirm({
+			nobutton: true,
+			title_hidden: true,
+			large_mod: true,
+			content: <Camp 
+				room={this.props.campRoom} 
+				onStartLearning={()=>{
+					this.onRecordRoom(this.props.campRoom, true)
+				}}
+			/>
+		})
+	}
+
 	__on_helper() {
 		this.props.confirm({
 			title: "问题帮助",
@@ -295,13 +361,18 @@ class Main extends React.Component {
 
 	render() {
 		let content, sidebar = ""
+		let flow = this.props.campRoom && this.props.commingRoom;
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{
 				this.__get_lesson_comming();
 			}}/>
 		} else if (this.props.recording) {
-			content = <CourseRecord/>;
+			if (this.props.flow) {
+				content = <CourserFlow/>
+			}else{
+				content = <CourseRecord/>
+			}
 		} else if (this.props.testing) {
 			content = <Devices onExit={()=>{
 				this.__get_lesson_comming()
@@ -316,7 +387,7 @@ class Main extends React.Component {
 			}}/>
 		} else {
 			content = this.__student_page()
-			sidebar = <SideBar user={this.props.account} onDeviceTest={()=>{
+			sidebar = <SideBar flow={flow} user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
 			}} onViewUser={()=>{
 				this.__view_user()
@@ -324,6 +395,8 @@ class Main extends React.Component {
 				this.__on_helper()
 			}} onEnterMyCourses={()=>{
 				this.props.onEnterMyCourses();
+			}} onViewCamp={()=>{
+				this.__view_camp()
 			}}/>
 		}
 		return (
@@ -341,9 +414,11 @@ const mapStateToProps = (state, ownProps) => {
 		calendar	: state.main.calendar,
 		started 	: state.main.courseStarted,
 		recording	: state.main.recording,
+		flow    	: state.main.flow,
         testing 	: state.main.enterTester,
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
+		campRoom    : state.main.campRoom,
 	}
 }
 
@@ -357,9 +432,9 @@ const mapDispatchToProps = dispatch => ({
     onEnterTester 		: (fromPage) => dispatch(onEnterTester(fromPage)),
     onEnterMyCourses    : ()=>dispatch(onEnterMyCourses()),
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
-	onCourseRecording   : (status) => dispatch(onCourseRecording(status)),
+	onCourseRecording   : (status, camp) => dispatch(onCourseRecording(status, camp)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
-	showLoading 		: (message) => dispatch(showLoading(message)),
+	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	hideLoading 		: () => dispatch(hideLoading()),
 })
   

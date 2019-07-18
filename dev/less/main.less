@@ -499,6 +499,11 @@ html,body {
 											content: "上课时间未到"
 										}
 									}
+									&.flow{
+										&::after {
+											content: "";
+										}
+									}
 								}
 								.record-btn {
 									background: #8b460e;
@@ -521,6 +526,31 @@ html,body {
 								}
 								.leave-flag{
 									.view-base('stu_leave.png');
+								}
+								.back-flag{
+									.view-base('stu_back.png');
+								}
+								.xiuxue-flag{
+									.view-base('stu_xiuxue.png');
+								}
+							}
+							&.flow{
+								.camp-flag{
+									position: absolute;
+									.view-base('camp_flag.png');
+									right: -0.96rem;
+									top: -0.26rem;
+								}
+								.info{
+									.tag{
+										.date{
+											width: 70%;
+											margin-top: 0.03rem;
+										}
+									}
+									.desc{
+										height: 0.8rem;
+									}
 								}
 							}
 						}
@@ -630,6 +660,7 @@ html,body {
 								border-radius: 0.2rem;
 								border-bottom: 1px solid #cccccc;
 								margin-bottom: 0.21rem;
+								position: relative;
 								.date-tip{
 									display: flex;
 									justify-content: flex-start;
@@ -810,7 +841,32 @@ html,body {
 										.leave-flag{
 											.view-base('stu_leave.png');
 										}
+										.back-flag{
+											.view-base('stu_back.png');
+										}
+										.xiuxue-flag{
+											.view-base('stu_xiuxue.png');
+										}
 									}
+									&.flow{
+										.info{
+											.tag{
+												.date{
+													width: 70%;
+													margin-top: 0.03rem;
+												}
+											}
+											.desc{
+												height: 0.8rem;
+											}
+										}
+									}
+								}
+								.camp-flag{
+									position: absolute;
+									.view-base('camp_flag.png');
+									right: -0.96rem;
+									top: -0.26rem;
 								}
 							}
 							.empty{
@@ -832,6 +888,9 @@ html,body {
 									line-height: 0.24rem;
 									content: "接下来没有课程了~"
 								}
+							}
+							&.flow{
+								overflow: visible;
 							}
 						}
 

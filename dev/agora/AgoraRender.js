@@ -380,6 +380,10 @@ const AgoraRender = function() {
   }
 
   function updateCanvas(rotation, destWidth, destHeight) {
+    if (rotation != that.initRotation) {
+      that.canvasUpdated = false
+      that.initRotation  = rotation
+    }
     if (that.canvasUpdated) {
       return;
     }

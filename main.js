@@ -16,7 +16,6 @@ protocol.registerStandardSchemes([ PROXY ])
 logger.transports.file.file = LOG_PATH
 
 app.disableDomainBlockingFor3DAPIs()
-
 app.on('ready', function () {
     protocol.registerBufferProtocol(PROXY,(request, callback)=>{
         trigger("proxy-pass", { request, callback })

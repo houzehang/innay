@@ -12,19 +12,20 @@ const room = (state = {}, action) => {
 			id: data.teacher_id
 		}
 
-		let curTime = Date.now();
-
-		let parsed = data.start_time.split(/[-: ]/)
-		let date = new Date(parsed[0], parsed[1] - 1, parsed[2] || 1, parsed[3] || 0, parsed[4] || 0, parsed[5] || 0);
-		let waiting = date.getTime() - Date.now();
-		let storedData = storage.get("STATUS_"+data.channel_id)
-		if (storedData) {
-			status = storedData
-		} else {
-			status = { duration: action.data.duration, waiting:waiting, id: data.channel_id }
+		
+		if (!data.camp) {
+			let parsed = data.start_time.split(/[-: ]/)
+			let date = new Date(parsed[0], parsed[1] - 1, parsed[2] || 1, parsed[3] || 0, parsed[4] || 0, parsed[5] || 0);
+			let waiting = date.getTime() - Date.now();
+			let storedData = storage.get("STATUS_"+data.channel_id)
+			if (storedData) {
+				status = storedData
+			} else {
+				status = { duration: action.data.duration, waiting:waiting, id: data.channel_id }
+			}
+			status = status || {}
+			status.waiting = waiting;
 		}
-		status = status || {}
-		status.waiting = waiting;
 		return {
 			...state,
 			info: action.data,

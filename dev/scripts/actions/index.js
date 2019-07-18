@@ -160,9 +160,10 @@ export const onBeginCourse = ()=>({
 	type: types.COURSE_BEGIN
 })
 
-export const onCourseRecording = (status)=>({
+export const onCourseRecording = (status, camp)=>({
 	type: types.COURSE_RECORDING,
-	status
+	status,
+	camp
 })
 
 export const onEndCourse = ()=>({
@@ -238,6 +239,13 @@ export const onLessonComming = (commingRoom)=>{
 	return {
 		type: types.LESSON_COMMING,
 		commingRoom
+	}
+}
+
+export const onCampLesson = (campRoom)=>{
+	return {
+		type: types.CAMP_LESSON,
+		campRoom
 	}
 }
 
