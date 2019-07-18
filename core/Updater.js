@@ -9,6 +9,10 @@ export default class Updater extends EventEmitter {
 		this.$dirname = dirname
 	}
 
+	get win() {
+		return this.$window
+	}
+
 	start() {
 		let updateWindow = new BrowserWindow({
 			width: 600, height: 300,
@@ -24,7 +28,6 @@ export default class Updater extends EventEmitter {
 		});
 		let url = DEBUG ? "http://localhost:3031" : `file://${this.$dirname}/dist/index.html`
 		updateWindow.loadURL(url);
-		this.$update_window = updateWindow
 		bridge.delegate = { 
 			openMainWindow: async (pack)=>{
 				this.emit("open-main-window", pack)

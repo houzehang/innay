@@ -16,8 +16,20 @@ protocol.registerStandardSchemes([ PROXY ])
 logger.transports.file.file = LOG_PATH
 
 app.disableDomainBlockingFor3DAPIs()
-
+var ActivedWindow
 app.on('ready', function () {
+    const shouldQuit = app.makeSingleInstance(() => {
+        if (ActivedWindow) {
+            if (ActivedWindow.isMinimized()) {
+                ActivedWindow.restore()
+            }
+            ActivedWindow.focus()
+        }
+    })
+    if (shouldQuit) {
+        app.quit()
+        return
+    }
     protocol.registerBufferProtocol(PROXY,(request, callback)=>{
         trigger("proxy-pass", { request, callback })
     }, error=>{
@@ -28,6 +40,7 @@ app.on('ready', function () {
     let screenSize  = screen.getPrimaryDisplay().size
     let windowFactory = new WindowFactory(screenSize)
     updater.start()
+    ActivedWindow = updater.win
     updater.on("open-main-window", (pack)=>{
         setTimeout(()=>{
             updater.close()
@@ -43,18 +56,22 @@ app.on('ready', function () {
                     })
                     _window.on("closed", ()=>{
                         _mainWindow.sendMessage("room-closed")
+                        ActivedWindow = _mainWindow.window
                     })
+                    ActivedWindow = _window.window
                 }
             },
             needSystemInfo: true,
             unique: true
         })
+        ActivedWindow = _mainWindow.window
     })
 });
 
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.on('window-all-closed', () => {
     app.quit();
+    ActivedWindow = null
 });
 
 process.on('uncaughtException', function (err) {
