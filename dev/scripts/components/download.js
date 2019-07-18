@@ -43,6 +43,7 @@ class Download extends React.Component {
 	__start() {
 		const room   	= this.props.data
 		const recording = this.props.recording
+		const camp		= this.props.camp
 
 		const params = {
 			room,
@@ -52,7 +53,7 @@ class Download extends React.Component {
 		this.__update_base_frame().then(data=>{
 			logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
 			let lesson = room.en_name
-			if (recording) lesson = lesson + `.${room.version}`.replace('..','.')
+			if (recording && !camp) lesson = lesson + `.${room.version}`.replace('..','.')
 			return this.__update_course_bundle(lesson)
 		}).then(data=>{
 			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
@@ -121,14 +122,21 @@ class Download extends React.Component {
 
 	__on_complete(data) {
 		let recording = this.props.recording;
+		let camp 	  = this.props.camp;
 		if (recording) {
-			net.getRoomInfoForRecord(data.room.channel_id).then((result)=>{				
-				data.students 		= result.students
-				data.recording 		= recording
+			if (camp) {
+				data.recording = true;
+				data.camp 	   = true;
 				this.props.complete(data)
-			}, error=>{
-				this.props.error(error)
-			})
+			}else{
+				net.getRoomInfoForRecord(data.room.channel_id).then((result)=>{				
+					data.students 		= result.students
+					data.recording 		= recording
+					this.props.complete(data)
+				}, error=>{
+					this.props.error(error)
+				})
+			}
 		}else{
 			net.getRoomInfo(data.room.channel_id).then((result) => {
 				data.students 		= result.students

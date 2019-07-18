@@ -257,34 +257,24 @@ class Main extends React.Component {
 
 	onRecordRoom(data, camp) {
 		// 判断最近1小时内是否下载过课程包，如果下载过则不提示下载
-		data.version 	= data.version || '.1.0.0';
-		let lessonName 	= data.en_name + data.version;
-		let lastest_download = storage.get(`download_${lessonName}`)
-		if (lastest_download) {
-			let delay = new Date().getTime() - lastest_download
-			if (delay <= this.$cache_valid_time) {
-				this.__onStartRoom(data,true)
-				return
+		if (camp) {
+			data.camp = true;
+			data.teachers = [data.master_teacher_id]
+
+			if (!data.is_enter) {
+				this.props.alert({
+					content: "该课程不在开放时间"
+				})
+				return;
 			}
 		}
-		if (context.detector.offline) {
-			this.props.confirm({
-				content: "您的网络已经断开，建议您检查网络后再开始上课。",
-				sure_txt: "去检查网络",
-				cancel_txt: "坚持上课",
-				cancel: ()=>{
-					this.__onStartRoom(data,true)
-				}
-			})
-		} else {
-			this.onDownload(data, true);			
-		}
+		this.onDownload(data, true, camp);			
 	}
 
-	onDownload(room, isRecord) {
+	onDownload(room, isRecord, camp) {
 		this.props.alert({
 			title: "下载课程包",
-			content: <Download data={room} recording={isRecord} complete={(data)=>{
+			content: <Download data={room} recording={isRecord} camp={camp} complete={(data)=>{
 				this.props.hide()
 				bridge.call({
 					method	: "openLiveRoom",

@@ -101,6 +101,17 @@ class MyCourse extends React.Component {
 		}, 0);
 	}
 
+	__get_room_flag(state){
+		if (state == 'leave') {
+			return <div className="leave-flag"></div>
+		}else if (state == 'back') {
+			return <div className="back-flag"></div>
+		}else if (state == 'xiuxue') {
+			return <div className="xiuxue-flag"></div>
+		}
+		return ''
+	}
+
 	render() {
 		let _commingRooms = []
 		let _doneRooms 	  = []
@@ -154,7 +165,7 @@ class MyCourse extends React.Component {
 												this.props.onStartRoom(room)
 											}}></button> : ""}
 											{!room.can_enter ? <button className = "waiting-btn"></button> : ""}
-											{room.class_state == 'normal' ? "" : <div className="leave-flag"></div>}
+											{this.__get_room_flag(room.class_state)}
 										</div>
 									</div>
 								</div>);
