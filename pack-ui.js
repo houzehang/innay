@@ -42,11 +42,11 @@ makeBundle().then((zipfile)=>{
 	console.log("step 2: create md5")
 	md5File(zipfile, (err, hash) => {
 		if (err) throw err
-		const jsonFile = path.join(__dirname,"app.json")
+		const jsonFile = path.join(process.env.BUNDLE_PATH,"app.json")
 		let info
 		if (fs.existsSync(jsonFile)) {
 			info = JSON.parse(fs.readFileSync(jsonFile, "utf8"))
-			info.hash = hash
+			info.md5  = hash
 			info.url  = `app.zip?m=${hash}`
 		} else {
 			info = { 
@@ -59,10 +59,7 @@ makeBundle().then((zipfile)=>{
 		console.log("step 3: create json")
 		fs.writeFileSync(jsonFile,JSON.stringify(info),"utf8")
 		if (shell.exec(`mv ${path.join(__dirname, `app.zip`)} ${process.env.BUNDLE_PATH}`).code == 0) {
-			if (shell.exec(`mv ${path.join(__dirname, `app.json`)} ${process.env.BUNDLE_PATH}`).code == 0) {
-				console.log("step 4: move files")
-				console.log("done!")
-			}
+			console.log("done!")
 		}
 	})
 })
