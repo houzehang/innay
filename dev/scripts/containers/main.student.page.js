@@ -426,7 +426,7 @@ const mapDispatchToProps = dispatch => ({
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
 	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	hideLoading 		: () => dispatch(hideLoading()),
-	showLoading 		: () => dispatch(showLoading())
+	showLoading 		: (message) => dispatch(showLoading(message))
 })
   
 export default connect(
