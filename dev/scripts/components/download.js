@@ -139,9 +139,10 @@ class Download extends React.Component {
 			}
 		}else{
 			net.getRoomInfo(data.room.channel_id).then((result) => {
-				data.students 		= result.students
-				data.channel_token	= result.channel_token
-				data.features 		= result.features
+				data.students 				= result.students
+				data.channel_token			= result.channel_token
+				data.rtm_signaling_token 	= result.rtm_signaling_token
+				data.features 				= result.features
 				this.props.complete(data)
 			}, error=>{
 				this.props.error(error)
