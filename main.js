@@ -15,6 +15,7 @@ if (process.env.NODE_ENV == "development") {
 protocol.registerStandardSchemes([ PROXY ])
 logger.transports.file.file = LOG_PATH
 
+app.disableDomainBlockingFor3DAPIs()
 var ActivedWindow
 app.on('ready', function () {
     const shouldQuit = app.makeSingleInstance(() => {
@@ -66,10 +67,8 @@ app.on('ready', function () {
         ActivedWindow = _mainWindow.window
     })
 });
-if (process.platform === 'darwin') {
-    app.disableDomainBlockingFor3DAPIs()
-    app.commandLine.appendSwitch('ignore-gpu-blacklist');
-}
+
+app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.on('window-all-closed', () => {
     app.quit();
     ActivedWindow = null
