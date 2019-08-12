@@ -40,7 +40,7 @@ class MyCourse extends React.Component {
 
 	componentWillUnmount() {
 		this.__reset()
-	}
+	} 
 
 	__query_courses(more) {
 		if (this.state.comming_page_selected) {
@@ -186,7 +186,7 @@ class MyCourse extends React.Component {
 									}
 								</div> 
 								: 
-								<div className="courses-done-area" id="courses-done-area">
+								<div onScroll = {(event) => {this.handleScroll(event)}} className="courses-done-area" id="courses-done-area">
 									{(this.props.doneRooms || []).forEach((room, index) => {
 										_doneRooms.push(<div className="lesson-done-box-panel" key={"done_room_" + index}>
 											<div className="box-panel-top">
