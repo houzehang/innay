@@ -25,7 +25,7 @@ class Download extends React.Component {
 		} else if (env_conf.TEST) {
 			return "https://bundlesyuntest.mx0a.com"
 		} else {
-			return "https://bundlesyun.mx0a.com"
+			return "https://bundlesossyun.mx0a.com"
 		}
 	}
 
@@ -36,7 +36,7 @@ class Download extends React.Component {
 		} else if (env_conf.TEST) {
 			return "https://lessonsyuntest.mx0a.com"
 		} else {
-			return "https://lessonsyun.mx0a.com"
+			return "https://bundlesossyun.mx0a.com"
 		}
 	}
 
