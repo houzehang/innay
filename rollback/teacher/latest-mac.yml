@@ -1,10 +1,10 @@
-version: 1.0.36
+version: 1.0.38
 files:
-  - url: 明兮大语文-1.0.36-mac.zip
-    sha512: RNBQd0g5mpWhJkefLhdx/mK/kvklEyvdb2xjD4MaxbJT3tlbaCs1Z/kkiQmlKxEfHgM6pWR2BoYH0PbOFTOnfg==
-  - url: 明兮大语文-1.0.36.dmg
-    sha512: YJ5uiyBsvInf0IvdjzaE6MxDYmAqSIOvlO9YMVUwrH8rtYQVMk4a73KvAq9vMtwmSwibfVtyf7g/07J+yoqX8w==
-    size: 62941907
-path: 明兮大语文-1.0.36-mac.zip
-sha512: RNBQd0g5mpWhJkefLhdx/mK/kvklEyvdb2xjD4MaxbJT3tlbaCs1Z/kkiQmlKxEfHgM6pWR2BoYH0PbOFTOnfg==
-releaseDate: '2019-07-11T08:39:04.752Z'
+  - url: 明兮大语文-1.0.38-mac.zip
+    sha512: imgYx3e+jjaSsSp6zqSFaw2uvB6Qg/+5gf+NF4CVSNGISgwxhQgsSsrCdqluE5cPh6XmYaTyTvRifIS/+LTULQ==
+  - url: 明兮大语文-1.0.38.dmg
+    sha512: sRKeArBwC8bfTfGBEM8ZxQX5GReAhOTuxirkyfMzwJ/aRvccCe88B9RQsuqCy8gjLs8DxOtmwbCtHn+xZ2L0DQ==
+    size: 62929006
+path: 明兮大语文-1.0.38-mac.zip
+sha512: imgYx3e+jjaSsSp6zqSFaw2uvB6Qg/+5gf+NF4CVSNGISgwxhQgsSsrCdqluE5cPh6XmYaTyTvRifIS/+LTULQ==
+releaseDate: '2019-07-25T12:26:02.853Z'
