@@ -82,7 +82,7 @@
     "install": "^0.8.8",
     "is-electron-renderer": "^2.0.1",
     "jquery": "^3.3.1",
-    "less": "^3.0.1",
+    "less": "3.9.0",
     "less-loader": "^4.1.0",
     "lodash-es": "^4.17.10",
     "mini-css-extract-plugin": "^0.5.0",
