@@ -1,9 +1,9 @@
-version: 1.0.38
+version: 1.0.39
 files:
-  - url: 明兮大语文 Setup 1.0.38.exe
-    sha512: CnqS9E5Gs5pZnCZc3ntxz4dPAM8+5qxRCTlo9Y03iXfx9hk6CjCRLttJrziBTVhBuxaq+pvJogYuRPw/QVKMqw==
-    size: 36625695
-path: 明兮大语文 Setup 1.0.38.exe
-sha512: CnqS9E5Gs5pZnCZc3ntxz4dPAM8+5qxRCTlo9Y03iXfx9hk6CjCRLttJrziBTVhBuxaq+pvJogYuRPw/QVKMqw==
-sha2: 0c766cb6f14e5f6fc7b47d4661c9ea033043286d2a9e1cd700181b4f637afaab
-releaseDate: '2019-07-25T12:24:31.600Z'
+  - url: 明兮大语文 Setup 1.0.39.exe
+    sha512: JZtwoH0tB1a95cAjPf8miOHCcYNq185n632eSwZe/vr01LT6j5+Kt0H7IyYzCpVx0D78rcLWsf2/7kweSGdJ5A==
+    size: 36608825
+path: 明兮大语文 Setup 1.0.39.exe
+sha512: JZtwoH0tB1a95cAjPf8miOHCcYNq185n632eSwZe/vr01LT6j5+Kt0H7IyYzCpVx0D78rcLWsf2/7kweSGdJ5A==
+sha2: 984c2448bc63c92b4f5f7861a616d732ec8abadd67eef04c8ef62e34698c451a
+releaseDate: '2019-08-07T14:02:36.992Z'
