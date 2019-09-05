@@ -1,7 +1,7 @@
 module.exports = {
 	//  			: "https://admintest.youshiyuwen.cn",
 	TEST_URL 			: "https://kecheng1.youshiyuwen.cn",
-	ONLINE_URL 			: "https://www.muwenyuwen.com",
+	ONLINE_URL 			: "https://www.mingxiyuwen.com",
 	TENCENT_APPID 		: 1400098973,
 	TENCENT_ACCOUNTTYPE : 28218,
 	VIDEO_T_QUALITY 	: "480P_3",
