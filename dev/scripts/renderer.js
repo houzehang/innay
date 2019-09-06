@@ -29,6 +29,11 @@ class Renderer {
 		} else {
 			this.$base_url = "https://bundlesyun.mx0a.com"
 		}
+		if (localStorage.getItem('error#certificate')) {
+			logger.error('error#certificate')
+			this.$base_url = this.$base_url.replace(/https/, 'http')
+			ipcRenderer.send('off-hire')
+		}
 		this.__setState()
 		this.__start_updater()
 	}
@@ -118,6 +123,9 @@ class Renderer {
 			}
 		}).catch(error=>{
 			logger.error("检测基础框架是否有更新出错", error)
+			if (/certificate/.test(error.toString())) {
+				localStorage.setItem('error#certificate', 1);
+			}
 			this.__setState({
 				progress: null,
 				error	: error

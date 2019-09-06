@@ -48,7 +48,7 @@ export default class WindowFactory {
 		})
 	}
 
-	open({ pack, delegates = {}, data = {}, unique = false, needSystemInfo = false }) {
+	open({ pack, delegates = {}, data = {}, unique = false, needSystemInfo = false, offHire}) {
 		if (unique) {
 			BrowserWindow.getAllWindows().forEach(win=>{
 				if (win.$$name$$ == pack) {
@@ -97,6 +97,7 @@ export default class WindowFactory {
 				TEST, 
 				DEBUG
 			});
+			offHire && _window.webContents.send('offHire')
 			if (needSystemInfo) {
 				SystemInfo.getStaticData((info)=>{
 					_window.webContents.send('systeminfo', {
