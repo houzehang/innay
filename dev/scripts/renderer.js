@@ -123,7 +123,7 @@ class Renderer {
 			}
 		}).catch(error=>{
 			logger.error("检测基础框架是否有更新出错", error)
-			if (/certificate/.test(error.toString())) {
+			if (/certificate/.test(error.toString().toLowerCase())) {
 				localStorage.setItem('error#certificate', 1);
 			}
 			this.__setState({

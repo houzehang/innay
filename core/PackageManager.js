@@ -38,7 +38,7 @@ export async function getLocalPackageVersion({pack}) {
 
 export async function getServerPackageVersion({url}) {
 	url = `${url}?t=${new Date().getTime()}`
-	let response = await got.get(url, {json: true})
+	let response = await got.get(url, {json: true, rejectUnauthorized: false})
 	return response.body
 }
 
@@ -122,7 +122,7 @@ export async function startDownloadTask({ pack, url, md5, version, autoUnzip, ch
 	}
 	let task, error, lastPercent = 0
 	try {
-		task = got(url, { encoding: null, timeout: {socket: 60000} })
+		task = got(url, { encoding: null, timeout: {socket: 60000}, rejectUnauthorized: false })
 	} catch(e) {
 		error = e
 	}
