@@ -1,10 +1,10 @@
-version: 1.0.39
+version: 1.0.40
 files:
-  - url: 明兮大语文-1.0.39-mac.zip
-    sha512: lphC5ONZSRfDQMffyFkDCJiA5MST+uoc41utqlE5zQ1DrSFfJdorS+TE7iRJvrpVRBh40x0xkLOK1dUnIZTHfA==
-  - url: 明兮大语文-1.0.39.dmg
-    sha512: JkQ97gciD8JQRyQGdia0ujuQVsVdT47AonGXg7uTjKBZOB7irMcQAE3EAiaD7THkoYt3VGbZl/qt0ISjFn1cAw==
-    size: 62947213
-path: 明兮大语文-1.0.39-mac.zip
-sha512: lphC5ONZSRfDQMffyFkDCJiA5MST+uoc41utqlE5zQ1DrSFfJdorS+TE7iRJvrpVRBh40x0xkLOK1dUnIZTHfA==
-releaseDate: '2019-08-07T14:02:03.817Z'
+  - url: 明兮大语文-1.0.40-mac.zip
+    sha512: qF1VokE4+gK+O/IlipxTovSdnpXrjLIh/m2dAm6edxJBRYNZmP/SiRjM5glzRT+bHwDYdkEt36F+IR3PaFQxNw==
+  - url: 明兮大语文-1.0.40.dmg
+    sha512: 5g/WieYM75hnPLmNkiT1PMQB+XnWrYzTvkYDwHeHfiN1PAOx1qO/QJjwiHvBhdLYlEF+5l+bAddhnnemoyAz8Q==
+    size: 62987298
+path: 明兮大语文-1.0.40-mac.zip
+sha512: qF1VokE4+gK+O/IlipxTovSdnpXrjLIh/m2dAm6edxJBRYNZmP/SiRjM5glzRT+bHwDYdkEt36F+IR3PaFQxNw==
+releaseDate: '2019-08-26T02:32:09.431Z'
