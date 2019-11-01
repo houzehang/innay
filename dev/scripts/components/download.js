@@ -21,7 +21,7 @@ class Download extends React.Component {
 	get baseFrameUrl(){
 		let env_conf = window.ENV_CONF || {}
 		if (env_conf.DEBUG) {
-			return "http://localhost:8080"
+			return "https://bundlesyuntest.mx0a.com"
 		} else if (env_conf.TEST) {
 			return "https://bundlesyuntest.mx0a.com"
 		} else {
@@ -44,24 +44,35 @@ class Download extends React.Component {
 		const room   	= this.props.data
 		const recording = this.props.recording
 		const camp		= this.props.camp
+		const homework  = this.props.homework
 
 		const params = {
 			room,
 			token 	: net.token,
 			account	: this.props.user,
 		}
-		this.__update_base_frame().then(data=>{
-			logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
-			let lesson = room.en_name
-			if (recording && !camp) lesson = lesson + `.${room.version}`.replace('..','.')
-			return this.__update_course_bundle(lesson)
-		}).then(data=>{
-			logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
-			this.__on_complete(params)
-		}).catch(error=>{
-			logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 课程包下载地址：${this.baseCourseUrl}/${room.en_name}.json`)
-			this.__setStatus("UPDATE.ERROR", error);
-		})
+		if (homework) {
+			this.__update_homework_frame().then(data=>{
+				logger.log(`下载作业资源成功。版本号：${data.version} 资源库下载地址：${this.baseFrameUrl}`)
+				this.props.complete(params)
+			}).catch(error=>{
+				logger.error("检测作业资源出错", error, `下载地址：${this.baseFrameUrl}/homework.json`)
+				this.__setStatus("UPDATE.ERROR", error);
+			})
+		} else {
+			this.__update_base_frame().then(data=>{
+				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
+				let lesson = room.en_name
+				if (recording && !camp) lesson = lesson + `.${room.version}`.replace('..','.')
+				return this.__update_course_bundle(lesson)
+			}).then(data=>{
+				logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
+				this.__on_complete(params)
+			}).catch(error=>{
+				logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 课程包下载地址：${this.baseCourseUrl}/${room.en_name}.json`)
+				this.__setStatus("UPDATE.ERROR", error);
+			})
+		}
 	}
 
 	__restart() {
@@ -185,6 +196,37 @@ class Download extends React.Component {
 				this.$downloading = null
 				logger.error("下载文件出错", pack, error)
 				reject(error)
+			})
+		})
+	}
+
+	__update_homework_frame() {
+		return new Promise((resolve, reject)=>{
+			bridge.call({
+				method: "isUpdateAvailable",
+				args: {
+					url : `${this.baseFrameUrl}/homework.json`,
+					pack: "homeworkroom"
+				}
+			}).then(result=>{
+				this.__setStatus("UPDATE.BASEFRAME");
+				if (result.available) {
+					this.__setStatus("UPDATE.DOWNLOADING_UI");
+					this.__do_update_bundle({
+						pack	: "homeworkroom", 
+						result	: result.server,
+						base_url: this.baseFrameUrl
+					}).then(data=>{
+						resolve(data)
+					}).catch(error=>{
+						reject(error)
+					})
+				} else {
+					this.__setStatus("UPDATE.LASTEST");
+					resolve(result.server)
+				}
+			}).catch(err=>{
+				reject(err)
 			})
 		})
 	}

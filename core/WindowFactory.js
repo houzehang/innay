@@ -67,7 +67,10 @@ export default class WindowFactory {
 			height: height * ratio >> 0,
 			resizable: TC_DEBUG,
 			center: true,
-			autoHideMenuBar: true
+			autoHideMenuBar: true,
+			webPreferences: {
+				webSecurity: false
+			}
 		})
 		let userAgent = _window.webContents.getUserAgent(), url
 		_window.webContents.setUserAgent(`${userAgent} KCPC v${app.getVersion()} ${pack}`);
@@ -77,6 +80,9 @@ export default class WindowFactory {
 		} else {
 			url = `${PROXY}://${pack}${(TEST||DEBUG)?'?env=test':''}`
 		}
+		// if (pack == "homeworkroom") {
+		// 	url = `http://10.1.0.53:8001`
+		// }
 		_window.loadURL(url)
 		if (TC_DEBUG || TEST) {
 			const installExtensions = () => {

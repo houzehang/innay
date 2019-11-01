@@ -72,6 +72,7 @@ class ViewUser extends React.Component {
 					args 	: {packs: [ 
 						{ name: "course-ui" },
 						{ name: "liveroom" },
+						{ name: "homeworkroom" },
 						{ name: "classroom-ui", packageOnly: true, clearAssetsLater: true }
 					]}
 				}).then(()=>{

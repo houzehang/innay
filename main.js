@@ -12,7 +12,7 @@ import logger                               from 'electron-log'
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }
-protocol.registerStandardSchemes([ PROXY ])
+protocol.registerStandardSchemes([ PROXY ], { secure: true })
 logger.transports.file.file = LOG_PATH
 
 app.disableDomainBlockingFor3DAPIs()

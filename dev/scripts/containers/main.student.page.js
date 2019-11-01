@@ -188,7 +188,9 @@ class Main extends React.Component {
 										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										
+										<button className="homework-btn" onClick={()=>{
+											this.onStartHomework(room)
+										}}></button>
 										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
@@ -225,6 +227,10 @@ class Main extends React.Component {
 			return <div className="xiuxue-flag"></div>
 		}
 		return ''
+	}
+
+	onStartHomework(data) {
+		this.onDownloadHomework(data)
 	}
 	
 	onStartRoom(data) {
@@ -269,6 +275,25 @@ class Main extends React.Component {
 			}
 		}
 		this.onDownload(data, true, camp);			
+	}
+
+	onDownloadHomework(room) {
+		this.props.alert({
+			title: "下载作业包",
+			content: <Download data={room} homework={true} complete={(data)=>{
+				this.props.hide()
+				bridge.call({
+					method	: "openLiveRoom",
+					args	: { pack: "homeworkroom", data }
+				}).catch(error=>{
+					console.error(error)
+				})
+			}} error={(error)=>{
+				
+			}} user={this.props.account}/>,
+			nobutton: true,
+			noanim	: true
+		})
 	}
 
 	onDownload(room, isRecord, camp) {
@@ -372,6 +397,8 @@ class Main extends React.Component {
 				this.onStartRoom(room)
 			}}  onRecordRoom={(room)=>{
 				this.onRecordRoom(room)
+			}} onStartHomework={(room)=>{
+				this.onStartHomework(room)
 			}} onExit={()=>{
 				this.__get_lesson_comming()
 			}}/>
