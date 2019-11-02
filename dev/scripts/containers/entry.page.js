@@ -24,7 +24,8 @@ class Entry extends React.Component {
 		bridge.call({
 			method	: "clearCachedData",
 			args 	: {packs: [ 
-				{ name: "course-ui" }
+				{ name: "course-ui" },
+				{ name: "preview-ui" }
 			]}
 		}).then(()=>{
 			logger.log("APP启动清除课程资源缓存成功！")
