@@ -45,6 +45,7 @@ class Download extends React.Component {
 		const recording = this.props.recording
 		const camp		= this.props.camp
 		const homework  = this.props.homework
+		const preview 	= this.props.preview
 
 		const params = {
 			room,
@@ -57,6 +58,18 @@ class Download extends React.Component {
 				this.props.complete(params)
 			}).catch(error=>{
 				logger.error("检测作业资源出错", error, `下载地址：${this.baseFrameUrl}/homework.json`)
+				this.__setStatus("UPDATE.ERROR", error);
+			})
+		} else if (preview) {
+			this.__update_base_frame().then(data=>{
+				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
+				let lesson = room.prepare_name
+				return this.__update_preview_bundle(lesson)
+			}).then(data=>{
+				logger.log(`下载预习课程包成功。课程名：${room.prepare_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
+				this.__on_complete(params)
+			}).catch(error=>{
+				logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 预习课程包下载地址：${this.baseCourseUrl}/${room.prepare_name}.json`)
 				this.__setStatus("UPDATE.ERROR", error);
 			})
 		} else {
@@ -256,6 +269,49 @@ class Download extends React.Component {
 					this.__setStatus("UPDATE.LASTEST");
 					resolve(result.server)
 				}
+			}).catch(err=>{
+				reject(err)
+			})
+		})
+	}
+
+	__update_preview_bundle(lesson) {
+		return new Promise((resolve, reject)=>{
+			bridge.call({
+				method: "getLocalInstalledVersion",
+				args: {
+					pack: "preview-ui"
+				}
+			}).then((localInfo)=>{
+				bridge.call({
+					method: "getServerPackageVersion",
+					args: {
+						url : `${this.baseCourseUrl}/${lesson}.json`,
+					}
+				}).then((serverInfo)=>{
+					this.__setStatus("UPDATE.COURSE_BUNDLE");
+					serverInfo = serverInfo || {}
+					if (!localInfo||
+						localInfo.key != serverInfo.lesson ||
+						localInfo.md5 != serverInfo.md5) {
+						this.__setStatus("UPDATE.DOWNLOADING_UI");
+						this.__do_update_bundle({
+							pack  	: "preview-ui", 
+							result	: serverInfo,
+							base_url: this.baseCourseUrl
+						}).then(data=>{
+							resolve(data)
+						}).catch(error=>{
+							reject(error)
+						})
+					}else{
+						this.__setStatus("UPDATE.LASTEST");
+						resolve(serverInfo)
+					}
+				}).catch(err=>{
+					reject(err)
+				})
+				
 			}).catch(err=>{
 				reject(err)
 			})

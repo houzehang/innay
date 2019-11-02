@@ -71,6 +71,7 @@ class ViewUser extends React.Component {
 					method	: "clearCachedData",
 					args 	: {packs: [ 
 						{ name: "course-ui" },
+						{ name: "preview-ui" },
 						{ name: "liveroom" },
 						{ name: "homeworkroom" },
 						{ name: "classroom-ui", packageOnly: true, clearAssetsLater: true }

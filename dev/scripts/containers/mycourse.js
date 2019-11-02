@@ -203,9 +203,10 @@ class MyCourse extends React.Component {
 												}}>回放
 												{room.beta ? <div className="beta-icon"></div> : ""}
 												</div> : ""}
-												<button onClick={()=>{
+												<div className="btn-view-review" onClick={()=>{
 													this.props.onStartHomework(room)
-												}}>review</button>
+												}}>复习</div>
+												<div className="split-ph"></div>
 												<div className="star-icon"></div>
 												<span className="star-count">{room.star}</span>
 											</div>

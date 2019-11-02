@@ -481,7 +481,7 @@ html,body {
 								justify-content: space-around;
 								width: 1.29rem;
 								height: 1.51rem;
-								.start-btn,.record-btn,.download-btn,.waiting-btn,.homework-btn {
+								.start-btn,.record-btn,.download-btn,.waiting-btn,.preview-btn {
 									width: 100%;
 									height: 0.52rem;
 									background: #ff696a;
@@ -530,11 +530,10 @@ html,body {
 										content: "等待上课";
 									}
 								}
-								.homework-btn {
-									
-									background: #b4b4b4;
+								.preview-btn {
+									background: #3882c2;
 									&::after {
-										content: "作业";
+										content: "课前预习";
 									}
 								}
 								.leave-flag{
@@ -979,11 +978,9 @@ html,body {
 										background: #f2f2f2;
 										height: 0.38rem;
 										align-items: center;
-										.btn-view-record{
-											position: absolute;
+										.btn-view-record, .btn-view-review{
 											color: #fff;
 											font-size: 0.16rem;
-											left: 1.2rem;
 											background: #19b7a8;
 											width: 0.6rem;
 											height: 0.26rem;
@@ -991,6 +988,7 @@ html,body {
 											justify-content: center;
 											align-items: center;
 											border-radius: 0.15rem;
+											margin-right: 0.1rem;
 											&:hover{
 												color: #eeeeee;
 											}
@@ -1003,15 +1001,20 @@ html,body {
 												right: -0.36rem;
 											}
 										}
+										.btn-view-review {
+											background: #feb425;
+										}
 										.lesson-state{
-											margin-left: 0.29rem;
-											width: 3.14rem;
+											margin-left: 0.3rem;
+											margin-right: 0.2rem;
 											font-size: 0.18rem;
 											color:#787878;
-											// font-weight: bold;
 											&.abnormal{
 												color: #ff2d2d;
 											}
+										}
+										.split-ph {
+											flex: 1;
 										}
 										.star-icon{
 											display: inline;
@@ -1021,6 +1024,7 @@ html,body {
 										.star-count{
 											color: #feb425;
 											font-size: 0.22rem;
+											margin-right: 0.2rem;
 										}
 									}
 								}

@@ -188,9 +188,9 @@ class Main extends React.Component {
 										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										<button className="homework-btn" onClick={()=>{
-											this.onStartHomework(room)
-										}}></button>
+										{room.preview_status == "on" ? <button className="preview-btn" onClick={()=>{
+											this.onStartPreview(room)
+										}}></button> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
@@ -227,6 +227,10 @@ class Main extends React.Component {
 			return <div className="xiuxue-flag"></div>
 		}
 		return ''
+	}
+
+	onStartPreview(data) {
+		this.onDownloadPreview(data)
 	}
 
 	onStartHomework(data) {
@@ -285,6 +289,26 @@ class Main extends React.Component {
 				bridge.call({
 					method	: "openLiveRoom",
 					args	: { pack: "homeworkroom", data }
+				}).catch(error=>{
+					console.error(error)
+				})
+			}} error={(error)=>{
+				
+			}} user={this.props.account}/>,
+			nobutton: true,
+			noanim	: true
+		})
+	}
+
+	onDownloadPreview(room) {
+		this.props.alert({
+			title: "下载课程包",
+			content: <Download data={room} preview={true} complete={(data)=>{
+				this.props.hide()
+				data.preview = true
+				bridge.call({
+					method	: "openLiveRoom",
+					args	: { pack: "liveroom", data }
 				}).catch(error=>{
 					console.error(error)
 				})
