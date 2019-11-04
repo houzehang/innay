@@ -61,6 +61,7 @@ class Download extends React.Component {
 				this.__setStatus("UPDATE.ERROR", error);
 			})
 		} else if (preview) {
+			room.prepare_name = room.en_name
 			this.__update_base_frame().then(data=>{
 				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
 				let lesson = room.prepare_name
