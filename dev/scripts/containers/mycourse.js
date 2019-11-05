@@ -164,6 +164,9 @@ class MyCourse extends React.Component {
 											{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={() => {
 												this.props.onStartRoom(room)
 											}}></button> : ""}
+											{room.can_enter && room.class_state == 'normal' && room.preview_status == "on"  && room.prepare_name ? <button className="preview-btn" onClick={()=>{
+												this.props.onStartPreview(room)
+											}}></button> : ""}
 											{!room.can_enter ? <button className = "waiting-btn"></button> : ""}
 											{this.__get_room_flag(room.class_state)}
 										</div>

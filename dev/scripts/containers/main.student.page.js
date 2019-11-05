@@ -188,7 +188,7 @@ class Main extends React.Component {
 										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
 											this.onStartRoom(room)
 										}}></button>:""}
-										{room.preview_status == "on" ? <button className="preview-btn" onClick={()=>{
+										{room.preview_status == "on" && room.prepare_name ? <button className="preview-btn" onClick={()=>{
 											this.onStartPreview(room)
 										}}></button> : ""}
 										{this.__get_room_flag(room.class_state)}
@@ -423,6 +423,8 @@ class Main extends React.Component {
 				this.onRecordRoom(room)
 			}} onStartHomework={(room)=>{
 				this.onStartHomework(room)
+			}} onStartPreview={(room)=>{
+				this.onStartPreview(room)
 			}} onExit={()=>{
 				this.__get_lesson_comming()
 			}}/>
