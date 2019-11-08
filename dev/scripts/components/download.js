@@ -36,7 +36,7 @@ class Download extends React.Component {
 		} else if (env_conf.TEST) {
 			return "https://lessonsyuntest.mx0a.com"
 		} else {
-			return "https://bundlesossyun.mx0a.com"
+			return "https://lessonsyun.mx0a.com"
 		}
 	}
 
