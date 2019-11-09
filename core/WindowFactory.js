@@ -78,7 +78,7 @@ export default class WindowFactory {
 			url = WINDOW_ADAPTER[pack]
 			console.log("url",url)
 		} else {
-			url = `${PROXY}://${pack}${(TEST||DEBUG)?'':''}`
+			url = `${PROXY}://${pack}${(TEST||DEBUG)?'?env=test':''}`
 		}
 		// if (pack == "homeworkroom") {
 		// 	url = `http://10.1.0.53:8001`
