@@ -148,6 +148,7 @@ class Download extends React.Component {
 	__on_complete(data) {
 		let recording = this.props.recording;
 		let camp 	  = this.props.camp;
+		let preview   = this.props.preview;
 		if (recording) {
 			if (camp) {
 				data.recording = true;
@@ -163,7 +164,7 @@ class Download extends React.Component {
 				})
 			}
 		}else{
-			net.getRoomInfo(data.room.channel_id).then((result) => {
+			net.getRoomInfo(data.room.channel_id, preview).then((result) => {
 				data.students 				= result.students
 				data.channel_token			= result.channel_token
 				data.rtm_signaling_token 	= result.rtm_signaling_token

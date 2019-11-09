@@ -197,8 +197,9 @@ class Network extends Eventer {
 	/**
 	 * 获取房间数据
 	 * @param {*} channel_id 
+	 * @param {*} is_preview 是否预习模式
 	 */
-	getRoomInfo(channel_id) {
+	getRoomInfo(channel_id, is_preview) {
 
 		let systemInfo = (window.ENV_CONF||{}).systeminfo || {
 			os:{},cpu:{},system:{}
@@ -225,7 +226,8 @@ class Network extends Eventer {
 
 		return this.__request("/room/channel_key", {
 			channel_id,
-			device: device_desc
+			device: device_desc,
+			is_preview
 		}, "post")
 	}
 
