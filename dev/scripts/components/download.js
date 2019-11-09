@@ -30,14 +30,14 @@ class Download extends React.Component {
 	}
 
 	get baseCourseUrl(){
-		let env_conf = window.ENV_CONF || {}
-		if (env_conf.DEBUG) {
-			return "https://lessonsyuntest.mx0a.com"
-		} else if (env_conf.TEST) {
-			return "https://lessonsyuntest.mx0a.com"
-		} else {
+		// let env_conf = window.ENV_CONF || {}
+		// if (env_conf.DEBUG) {
+		// 	return "https://lessonsyuntest.mx0a.com"
+		// } else if (env_conf.TEST) {
+		// 	return "https://lessonsyuntest.mx0a.com"
+		// } else {
 			return "https://lessonsyun.mx0a.com"
-		}
+		// }
 	}
 
 	__start() {
