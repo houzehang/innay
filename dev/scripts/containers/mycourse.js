@@ -143,8 +143,7 @@ class MyCourse extends React.Component {
 
 							</div>
 							{(this.props.commingRooms || []).forEach((room, index) => {
-								if (index == 0) {
-									room.can_download = true;
+								if (room.channel_id) {
 									room.can_enter 	  = true;
 								}
 								_commingRooms.push(<div className="lesson-box-panel" key={"comming_room_" + index}>
