@@ -14,6 +14,7 @@ import App from './containers/entry.page'
 import { restoreUserInfo } from './actions'
 import thunk from 'redux-thunk'
 import {ipcRenderer} from 'electron'
+import context from './context'
 
 ipcRenderer.on('configure', (_, data)=>{
 	if (!window.ENV_CONF) {
@@ -35,6 +36,10 @@ ipcRenderer.on('configure', (_, data)=>{
 		basedir = data.__apppath + "/dist"
 	} else {
 		basedir = data.__dirname
+	}
+	console.log("app configure", data)
+	if (data.data.usingBackupUrl) {
+		context.usingBackupUrl = true
 	}
 	window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
 	_next()

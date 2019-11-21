@@ -29,8 +29,8 @@ export default class Updater extends EventEmitter {
 		let url = DEBUG ? "http://localhost:3031" : `file://${this.$dirname}/dist/index.html`
 		updateWindow.loadURL(url);
 		bridge.delegate = { 
-			openMainWindow: async (pack)=>{
-				this.emit("open-main-window", pack)
+			openMainWindow: async ({pack, data})=>{
+				this.emit("open-main-window", {pack, data})
 			}
 		}
 		const menuBuilder = new MenuBuilder(updateWindow);

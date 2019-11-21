@@ -22,17 +22,14 @@ class Renderer {
 			message: "",
 			progress : null
 		}
+		this.$using_backup_url = false
 		if (DEBUG) {
 			this.$base_url = "http://localhost:8080"
 		} else if (TEST) {
 			this.$base_url = "https://bundlesyuntest.mx0a.com"
 		} else {
 			this.$base_url = "https://bundlesyun.mx0a.com"
-		}
-		if (localStorage.getItem('error#certificate')) {
-			logger.error('error#certificate')
-			this.$base_url = this.$base_url.replace(/https/, 'http')
-			ipcRenderer.send('off-hire')
+			this.$retry_url= "http://file.mw019.com/software"
 		}
 		this.__setState()
 		this.__start_updater()
@@ -76,11 +73,13 @@ class Renderer {
 	}
 
 	__do_update_bundle(result) {
+		let url = this.$using_backup_url ? this.$retry_url : this.$base_url
+		logger.error("开始下载框架包", result, url)
 		bridge.call({
 			method: "startDownloadTask", 
 			args: {
 				pack		: "classroom-ui", 
-				url			: `${this.$base_url}/${result.url}`, 
+				url			: `${url}/${result.url}`, 
 				md5			: result.md5,
 				version		: result.version,
 				autoUnzip	: true,
@@ -106,14 +105,16 @@ class Renderer {
 		})
 	}
 
-	__update_bundle() {
+	__update_bundle(url = this.$base_url) {
+		logger.error("检测基础框架是否有更新", url)
 		bridge.call({
 			method: "isUpdateAvailable",
 			args: {
-				url : `${this.$base_url}/app.json`,
+				url : `${url}/app.json`,
 				pack: "classroom-ui"
 			}
 		}).then(result=>{
+			logger.error("检测基础框架是否有更新成功", result)
 			if (result.available) {
 				this.__setStatus(Const.UPDATE.DOWNLOADING_UI);
 				this.__do_update_bundle(result.server)
@@ -123,13 +124,16 @@ class Renderer {
 			}
 		}).catch(error=>{
 			logger.error("检测基础框架是否有更新出错", error)
-			if (/certificate/.test(error.toString().toLowerCase())) {
-				localStorage.setItem('error#certificate', 1);
+			if (url == this.$base_url && this.$retry_url) {
+				this.$using_backup_url = true
+				logger.log("尝试使用备选域名" + this.$retry_url)
+				this.__update_bundle(this.$retry_url)
+			} else {
+				this.__setState({
+					progress: null,
+					error	: error
+				})
 			}
-			this.__setState({
-				progress: null,
-				error	: error
-			})
 		})
 	}
 
@@ -174,7 +178,7 @@ class Renderer {
 		ipcRenderer.send("render.complete")
 		bridge.call({
 			method	: "openMainWindow",
-			args	: "classroom-ui"
+			args	: {pack: "classroom-ui", data: { usingBackupUrl: this.$using_backup_url }}
 		}).catch(err=>{
 			logger.error("开启主框架窗口出错", err)
 			this.__setState({

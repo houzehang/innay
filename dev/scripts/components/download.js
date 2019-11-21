@@ -5,6 +5,7 @@ import net from '../network'
 import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
+import context from '../context'
 
 class Download extends React.Component {
 	constructor(props) {
@@ -25,7 +26,11 @@ class Download extends React.Component {
 		} else if (env_conf.TEST) {
 			return "https://bundlesyuntest.mx0a.com"
 		} else {
-			return "https://bundlesossyun.mx0a.com"
+			if (context.usingBackupUrl) {
+				return "http://file.mw019.com/software"
+			} else {
+				return "https://bundlesossyun.mx0a.com"
+			}
 		}
 	}
 
@@ -36,7 +41,11 @@ class Download extends React.Component {
 		} else if (env_conf.TEST) {
 			return "https://lessonsyuntest.mx0a.com"
 		} else {
-			return "https://lessonsyun.mx0a.com"
+			if (context.usingBackupUrl) {
+				return "http://file.mw019.com/software"
+			} else {
+				return "https://lessonsyun.mx0a.com"
+			}
 		}
 	}
 

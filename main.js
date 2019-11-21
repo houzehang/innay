@@ -41,7 +41,7 @@ app.on('ready', function () {
     let windowFactory = new WindowFactory(screenSize)
     updater.start()
     ActivedWindow = updater.win
-    updater.on("open-main-window", (pack)=>{
+    updater.on("open-main-window", ({pack, data})=>{
         setTimeout(()=>{
             updater.close()
         },100)
@@ -62,6 +62,7 @@ app.on('ready', function () {
                     ActivedWindow = _window.window
                 }
             },
+            data,
             needSystemInfo: true,
             unique: true
         })

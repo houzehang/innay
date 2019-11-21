@@ -92,6 +92,14 @@ class Context {
 		this.$storage = storage
 	}
 
+	set usingBackupUrl(state) {
+		this.$using_backup_url = state
+	}
+
+	get usingBackupUrl() {
+		return this.$using_backup_url
+	}
+
 	get video_device_id() {
 		return this.$video_device_id
 	}
