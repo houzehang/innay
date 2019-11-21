@@ -192,9 +192,9 @@ class Devices extends React.Component {
 
 	onStartMicTest() {
 		this.$client.startAudioRecordingDeviceTest(100)
-		this.$client.on('audiovolumeindication', (uid, volume, speaker, totalVolume) => {
+		this.$client.on('audiovolumeindication', (uid, volume, speaker) => {
 			if (this.state.step == 2) {
-				let volumn =  parseInt(totalVolume / 255 * 13, 10)
+				let volumn =  parseInt(speaker / 255 * 13, 10)
 				if (volumn > this.$max_device_volumn) {
 					this.$max_device_volumn = volumn
 				}

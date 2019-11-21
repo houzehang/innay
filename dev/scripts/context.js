@@ -6,7 +6,7 @@ import fs from "fs"
 const LogDog 		 = remote.require('pandora-nodejs-sdk')
 const logger 		 = remote.require('electron-log')
 const USER_DATA_ROOT = remote.app.getPath("userData")
-import Const from '../Const'
+import Const from '../const'
 class Context {
 
 	get agoraAppId(){
