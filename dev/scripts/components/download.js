@@ -27,7 +27,7 @@ class Download extends React.Component {
 			return "https://bundlesyuntest.mx0a.com"
 		} else {
 			if (context.usingBackupUrl) {
-				return "http://file.mw019.com/software"
+				return "http://bundlesossyun.mw019.com"
 			} else {
 				return "https://bundlesossyun.mx0a.com"
 			}
@@ -42,7 +42,7 @@ class Download extends React.Component {
 			return "https://lessonsyuntest.mx0a.com"
 		} else {
 			if (context.usingBackupUrl) {
-				return "http://file.mw019.com/software"
+				return "http://lessonsossyun.mw019.com"
 			} else {
 				return "https://lessonsyun.mx0a.com"
 			}

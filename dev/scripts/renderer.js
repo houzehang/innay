@@ -29,7 +29,7 @@ class Renderer {
 			this.$base_url = "https://bundlesyuntest.mx0a.com"
 		} else {
 			this.$base_url = "https://bundlesyun.mx0a.com"
-			this.$retry_url= "http://file.mw019.com/software"
+			this.$retry_url= "http://bundlesossyun.mw019.com"
 		}
 		this.__setState()
 		this.__start_updater()
