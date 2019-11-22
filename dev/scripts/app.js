@@ -38,7 +38,7 @@ ipcRenderer.on('configure', (_, data)=>{
 		basedir = data.__dirname
 	}
 	console.log("app configure", data)
-	if (data.data.usingBackupUrl) {
+	if (data.data && data.data.usingBackupUrl) {
 		context.usingBackupUrl = true
 	}
 	window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
