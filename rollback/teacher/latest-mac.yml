@@ -1,10 +1,10 @@
-version: 1.0.44
+version: 1.0.45
 files:
-  - url: 明兮大语文-1.0.44-mac.zip
-    sha512: Ovn1hD5rvhlm0tAhfWoMN2+2KDGc4K96ynAowQKKEq3KApe5ks/dwpMOML/hwmVBjctJX6uFRoSVCsKdbFXfeQ==
-  - url: 明兮大语文-1.0.44.dmg
-    sha512: vj9/6+4EAroxdu+s2teFClJNDSvhHXhLnwSXa8y1YqAKDCPQrtl7tv5Jq9S/GOxfnuwOhjS0FIy6yd+mSDGEzQ==
-    size: 82434301
-path: 明兮大语文-1.0.44-mac.zip
-sha512: Ovn1hD5rvhlm0tAhfWoMN2+2KDGc4K96ynAowQKKEq3KApe5ks/dwpMOML/hwmVBjctJX6uFRoSVCsKdbFXfeQ==
-releaseDate: '2019-11-19T02:31:14.455Z'
+  - url: 明兮大语文-1.0.45-mac.zip
+    sha512: ara/Py+Fjl95ZyhFP5rWfiBSdIU9JFY1RN2NgdufNXmOfbFxbUBiCq5cpZcWPYgaffUhqz1gfDlccKDmAAGigQ==
+  - url: 明兮大语文-1.0.45.dmg
+    sha512: YRy+llm2SjKQMuw9yNiV0YDlmGqLu3BoFuyE8Lo8kJ8b7mYC9pc5rPmeRIQjMHnDUcwtEj3H2ZpPtOMhFIPltw==
+    size: 62990052
+path: 明兮大语文-1.0.45-mac.zip
+sha512: ara/Py+Fjl95ZyhFP5rWfiBSdIU9JFY1RN2NgdufNXmOfbFxbUBiCq5cpZcWPYgaffUhqz1gfDlccKDmAAGigQ==
+releaseDate: '2019-11-29T08:32:02.769Z'
