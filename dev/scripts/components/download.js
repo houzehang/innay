@@ -177,6 +177,8 @@ class Download extends React.Component {
 				data.channel_token			= result.channel_token
 				data.rtm_signaling_token 	= result.rtm_signaling_token
 				data.features 				= result.features
+				data.star_switch 			= result.star_switch
+				data.eye_switch 			= result.eye_switch
 				this.props.complete(data)
 			}, error=>{
 				this.props.error(error)
