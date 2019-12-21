@@ -286,3 +286,9 @@ export const onQuestionDetail = (status) => ({
 	type: types.QUESTION_DETAIL,
 	status
 })
+
+export const onChangePwd = (changePwd, fromViewUser)=>({
+	type: types.CHANGE_PASSWORD,
+	changePwd,
+	fromViewUser
+})

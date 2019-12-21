@@ -1,4 +1,4 @@
-import { ROOM_LIST, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING, LESSON_COMMING, CAMP_LESSON, LESSONS_COMMING, LESSONS_DONE, LESSONS_TOTAL_COMMING,LESSONS_TOTAL_DONE} from '../constants/ActionTypes'
+import { ROOM_LIST,CHANGE_PASSWORD, CALENDAR_DATA, ROOM_INFO, START_COURSE, END_COURSE, COURSE_END, ENTER_TESTER, EXIT_TESTER, ENTER_MY_COURSES,EXIT_MY_COURSES, NET_STATUS_BAD, NET_STATUS_GOOD, COURSE_RECORDING, LESSON_COMMING, CAMP_LESSON, LESSONS_COMMING, LESSONS_DONE, LESSONS_TOTAL_COMMING,LESSONS_TOTAL_DONE} from '../constants/ActionTypes'
 
 const main = (state = {}, action) => {
 	switch (action.type) {
@@ -98,6 +98,13 @@ const main = (state = {}, action) => {
 		return {
 			...state,
 			totalDone: action.totalDone
+		}
+		case CHANGE_PASSWORD:
+		console.log('MINGXI=============action.changePwd',action.changePwd, action.fromViewUser);
+		return {
+			...state,
+			changePwd: action.changePwd,
+			fromViewUser: action.fromViewUser,
 		}
 		default:
 		return state

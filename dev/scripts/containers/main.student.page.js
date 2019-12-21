@@ -6,6 +6,7 @@ import CourserFlow from './course.student.flow.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
 import ViewUser from '../components/viewuser'
+import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
 import net from "../network"
 import Camp from '../components/camp'
@@ -16,7 +17,8 @@ import {
 	confirm, alert, hide, onChangeUserInfo, onEnterTester,onEnterMyCourses,onExitMyCourses,onLessonComming,onLessonsComming,onLessonsDone,onLessonsTotalComming,onLessonsTotalDone,onCampLesson,
 	onCourseRecording,
 	showLoading,
-	hideLoading
+	hideLoading,
+	onChangePwd
 } from '../actions'
 import { setTimeout } from 'core-js';
 import context from "../context"
@@ -67,6 +69,14 @@ class Main extends React.Component {
 						sure_txt: "设备检测",
 						close_hidden: true
 					});
+					// this.props.alert({
+					// 	content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
+					// 	sure: ()=>{
+					// 		this.__view_change_pwd()
+					// 	},
+					// 	sure_txt: "修改密码",
+					// 	close_hidden: true
+					// });
 				});
 			}
 		}, 200);
@@ -372,8 +382,15 @@ class Main extends React.Component {
 				this.props.alert(...params)
 			}} confirm={(...params)=>{
 				this.props.confirm(...params)
+			}} changePw={()=>{
+				this.__view_change_pwd(true)
 			}}/>
 		})
+	}
+
+	__view_change_pwd(fromViewUser){
+		this.props.onChangePwd(true, !!fromViewUser)
+		this.props.hide()
 	}
 
 	__view_camp() {
@@ -428,7 +445,17 @@ class Main extends React.Component {
 			}} onExit={()=>{
 				this.__get_lesson_comming()
 			}}/>
-		} else {
+        } else if (this.props.changePwd){
+			console.log('MINGXI=============on change pwd effect',this.props.fromViewUser);
+			content = <ViewChangePwd 
+			fromViewUser={this.props.fromViewUser}
+			onClose={(fromViewUser)=>{
+				this.props.onChangePwd(false, false)
+				if (fromViewUser) {
+					this.__view_user()
+				}
+			}}/>
+		}else {
 			content = this.__student_page()
 			sidebar = <SideBar flow={flow} user={this.props.account} onDeviceTest={()=>{
 				this.props.onEnterTester("main")
@@ -452,6 +479,8 @@ const mapStateToProps = (state, ownProps) => {
 	return {
 		account 	: state.login.account,
 		rooms 		: state.main.rooms,
+		changePwd   : state.main.changePwd,
+		fromViewUser: state.main.fromViewUser,
 		room 		: state.room.info,
 		gifts 		: state.room.gifts,
 		calendar	: state.main.calendar,
@@ -468,6 +497,7 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = dispatch => ({
 	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
 	onLogout       		: () => dispatch(onLogout()),
+	onChangePwd      	: (show, fromViewUser) => dispatch(onChangePwd(show, fromViewUser)),
 	onStartCourse  		: () => dispatch(onStartCourse()),
 	confirm 	   		: (data) => dispatch(confirm(data)),
 	alert 	   	   		: (data) => dispatch(alert(data)),
@@ -479,7 +509,7 @@ const mapDispatchToProps = dispatch => ({
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
 	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	hideLoading 		: () => dispatch(hideLoading()),
-	showLoading 		: (message) => dispatch(showLoading(message))
+	showLoading 		: (message) => dispatch(showLoading(message)),
 })
   
 export default connect(

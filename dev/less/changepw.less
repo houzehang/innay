@@ -1,0 +1,423 @@
+html,body {
+	color: #000;
+	width: 100%;
+	overflow: hidden;
+	height: 100%;
+	padding: 0;
+	* {
+		cursor: default;
+	}
+	.container {
+		height: 100%;
+        width: 100%;
+		z-index: 3;
+	}
+	.fixed {
+		position: fixed !important;
+		.name {
+			position: absolute;
+			width: 100%;
+			height: 0.5rem !important;
+			line-height: 0.5rem;
+			font-size: 0.18rem;
+			color: #fff;
+			background: rgba(0, 0, 0, 0.5);
+			bottom: 0;
+			left: 0;
+			text-indent: 0.14rem;
+		}
+	}
+	button {
+		-webkit-appearance: none;
+		border: 0;
+		margin: 0;
+		padding: 0;
+		box-shadow: none;
+		outline: none;
+		&:active {
+			opacity: 0.6;
+		}
+	}
+	.page {
+		width: 100%;
+		height: 100%;
+		overflow-y: scroll;
+		-webkit-overflow-scrolling: touch;
+		&::-webkit-scrollbar {
+			display: none;
+		}
+		position: relative;
+		display: flex;
+		justify-content: center;
+		flex-direction: column;
+        align-items: center;
+		.logout-btn {
+			position: absolute;
+			z-index: 10;
+			left: 0.2rem;
+			top: 0.2rem;
+			color: #fff;
+			font-size: 0.3rem;
+			padding: 0.1rem;
+			opacity: 0;
+		}
+		&.login-page {
+			background: #484f70 url(../assets/login-bg.png) no-repeat center top;
+			background-size: 9rem auto;
+			.login-box {
+				background: #fff;
+				border-top: 0.06rem solid #3882c2;
+				width: 4.44rem;
+				height: 3.3rem;
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				.title {
+					width: 3.16rem;
+					height: 0.34rem;
+					margin: 0 auto 0.3rem;
+					font-size: 0.22rem;
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+					border-bottom: 0.02rem solid #eee;
+					.box-mline{
+						width: 0.01rem;
+						height: 0.2rem;
+						border-left: 0.01rem solid #eee;
+					}
+					.none-color{
+						height: 0.34rem;
+						border-bottom: 0.01rem solid transparent;
+					}
+					.current-style{
+						height: 0.34rem;
+						color: #3882c2;
+						border-bottom: 0.02rem solid #3882c2;
+					}
+				}
+				.input-control {
+					margin-bottom: 0.22rem;
+					.input-box {
+						border: 0.01rem solid #b7b7b7;
+						height: 0.52rem;
+						display: flex;
+						align-items: center;
+						width: 3.16rem;
+						border-radius: 0.06rem;
+						background-color: #fafafa;
+						input {
+							border: 0;
+							outline: none;
+							margin: 0 0.14rem;
+							height: 0.24rem;
+							flex: 1;
+							font-size: 0.14rem;
+							color: #333;
+							border-left:0.01rem solid #eee;
+							padding-left: 0.1rem;
+							box-sizing: border-box;
+							background-color: #fafafa;
+							// .placeholder({
+							// 	color: #b7b7b7;
+							// })
+						}
+						.icon-img{
+						    margin-left: 0.14rem;
+						}
+					}
+				}
+				.code-inputbox{
+					display: flex;
+					justify-content: space-between;
+					border:0!important;
+					.input-left-box{
+						width: 62%;
+						border: 1px solid #b7b7b7;
+						height: 0.52rem;
+						display: flex;
+						align-items: center;
+						border-radius: 0.06rem;
+						input{
+							width: 80%;
+						}
+						// .icon-img{
+						// 	width: 0.19rem;
+						// 	height: 0.24rem;
+						// }
+					}
+					.code-box{
+						width: 33%;
+						height: 0.52rem;
+						text-align: center;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						border-radius: 0.06rem;
+						background-color: #b7b7b7;
+						color:#fff;
+					}
+					.open-code{
+						background: rgb(245, 165, 17);
+					}
+				}
+				//忘记密码
+				.forget-pw{
+					width: 100%;
+					margin-top: -0.18rem;
+					font-size: 0.14rem;
+					color: #666666;
+					text-align: right;
+				}
+				
+				.login-btn {
+					margin-top: 0.18rem;
+					width: 3.16rem;
+					height: 0.52rem;
+					color: #fff;
+					font-size: 0.18rem;
+					background: #3882c2;
+					color: #fff;
+					border-radius: 0.06rem;
+					&:active {
+						opacity: 1;
+					}
+					&[disabled] {
+						opacity: 0.6;
+					}
+				}
+				&.with-dentity{
+					height: 3.6rem;
+				}
+				.login-dentity{
+					width: 3rem;
+				}
+				.login-radio{
+					width: 3.16rem;
+					display: flex;
+					justify-content: flex-start;
+					align-items: center;
+					margin-bottom: 0.22rem;
+					font-size: 0.16rem;
+					label {
+						// width:0.6rem; 
+						margin-right: 0.2rem;
+						display: flex;
+						justify-content: flex-start
+					}
+				}
+			}
+		}
+		&.calendar-page {
+			background: #2d3144;
+			height: 100%;
+			overflow: hidden;
+			.calendar-inner {
+				width: 12.68rem;
+				margin: 0.16rem;
+				background: #484f70;
+				flex: 1;
+				overflow-y: scroll;
+				-webkit-overflow-scrolling: touch;
+				padding: 0.3rem 0;
+				&::-webkit-scrollbar {
+					display: none;
+				}
+			}
+			.courses {
+				font-size: 0.19rem;
+				color: #333;
+				width: 8.2rem;
+				margin: 0 auto;
+				background: #fff;
+				.title {
+					height: 0.5rem;
+					border-bottom: 1px solid #cccccc;
+					padding-left: 0.2rem;
+					.label {
+						display: flex;
+						align-items: center;
+						width: 0.7rem;
+						color: #b87947;
+						font-size: 0.17rem;
+						height: 0.48rem;
+						border-bottom: 2px solid #b87947;
+					}
+				}
+				.nothing {
+					height: 1.24rem;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					font-size: 0.2rem;
+				}
+				.row {
+					padding: 0.16rem;
+					display: flex;
+					align-items: center;
+					border-bottom: 1px solid #cccccc;
+					.cover {
+						width: 1.37rem;
+						height: 0.92rem;
+						margin-right: 0.12rem;
+						display: flex;
+						flex-direction: column;
+						justify-content: center;
+						align-items: center;
+						overflow: hidden;
+						img {
+							width: 100%;
+						}
+					}
+					.info {
+						flex: 1;
+						.name {
+							font-size: 0.19rem;
+							color: #363636;
+							line-height: 0.21rem;
+							font-weight: bold;
+							margin-bottom: 0.16rem;
+						}
+						.index {
+							margin-bottom: 0.18rem;
+						}
+						.index,.date {
+							font-size: 0.17rem;
+							color: #363636;
+							line-height: 0.19rem;
+						}
+					}
+					.start-btn,.record-btn,.download-btn,.homework-btn {
+						margin-right: 0.27rem;
+						width: 1.38rem;
+						height: 0.48rem;
+						background: #3882c2;
+						color: #fff;
+						font-size: 0.2rem;
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						border-radius: 0.06rem;
+						&::after {
+							content: "开始上课";
+						}
+						&[disabled] {
+							background: #b5b5b5;
+							&::after {
+								content: "已上课";
+							}
+						}
+					}
+					.record-btn {
+						background: #8b460e;
+						&::after {
+							content: "课程回放";
+						}
+					}
+					.download-btn {
+						background: #ff9d1f;
+						&::after {
+							content: "下载课程包";
+						}
+					}
+					.homework-btn {
+						background: #8b460e;
+						&::after {
+							content: "乐学岛";
+						}
+					}
+				}
+			}
+		}
+	
+	}
+	.slave {
+		position: fixed;
+		width: 0.1rem;
+		height: 0.1rem;
+		background:rgba(0, 0, 0, 0);
+		z-index: 10000;
+		right: 0;
+		top: 0;
+	}
+
+	// 安全验证弹框
+	.safe-mask{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top:0;
+		left:0;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.safe-container{
+			width: 4.42rem;
+			padding: 0rem 0.62rem 0.5rem 0.62rem;
+			box-sizing: border-box;
+			background: #fff;
+			border-bottom:0.02rem solid #3882c2;
+			position: relative;
+			.icon-img-box{
+				width: 0.17rem;
+				height: 0.17rem;
+				position: absolute;
+				top: 0.1rem;
+				right: 0.1rem;
+			}
+			.icon-img{
+				width: 0.17rem;
+	            height: 0.17rem;
+			}
+			.safe-title{
+				width: 100%;
+				text-align: center;
+				font-size: 0.22rem;
+				color: #3882c2;
+				margin-top: 0.3rem;
+			}
+			.pic-codewrap{
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				margin-top: 0.34rem;
+				input{
+					width: 2.08rem;
+					height: 0.5rem;
+					outline: none;
+					background-color: #fafafa;
+					border-radius: 0.06rem;
+					border: solid 0.01rem #b7b7b7;
+					font-size: 0.16rem;
+					color: #b7b7b7;
+					padding:0 0.15rem;
+					box-sizing: border-box;
+				}
+				.pic-codebox{
+					width: 1rem;
+					height: 0.48rem;
+					background-color: #fafafa;
+					border-radius: 0.06rem;
+					border: solid 0.01rem #b7b7b7;
+					.icon-img{
+						width: 100%;
+						height: 100%;
+						border-radius: 0.06rem;
+					}
+				}
+			}
+			.login-btn{
+				width: 3.16rem;
+				height: 0.52rem;
+				background-color: #3882c2;
+				border-radius: 0.06rem;
+				margin-top: 0.3rem;
+				color:#fff;
+				font-size: 0.2rem;
+			}
+		}
+	}
+}

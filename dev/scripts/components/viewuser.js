@@ -132,7 +132,7 @@ class ViewUser extends React.Component {
 				}}>退出登录</div>
 				<div className="logout-line"></div>
 				<div className="change-pw" onClick={()=>{
-					this.props.onLogout()
+					this.props.changePw()
 				}}>修改密码</div>
 				<div className="version">当前版本：{this.state.version}</div>
 				<div className="cleardata" onClick={()=>{
@@ -152,7 +152,8 @@ ViewUser.propTypes = {
 	onLogout    	: PropTypes.func.isRequired,
 	onChangeUser	: PropTypes.func.isRequired,
 	alert 			: PropTypes.func.isRequired,
-	confirm 		: PropTypes.func.isRequired
+	confirm 		: PropTypes.func.isRequired,
+	changePw        : PropTypes.func.isRequired,
 }
 
 export default ViewUser
