@@ -128,14 +128,33 @@ html,body {
 				justify-content: center;
 				align-items: center;
 				.title {
+					width: 3.16rem;
+					height: 0.34rem;
 					margin: 0 auto 0.3rem;
-					font-size: 0.24rem;
-					color: #3882c2;
+					font-size: 0.22rem;
+					display: flex;
+					justify-content: space-around;
+					align-items: center;
+					border-bottom: 0.02rem solid #eee;
+					.box-mline{
+						width: 0.01rem;
+						height: 0.2rem;
+						border-left: 0.01rem solid #eee;
+					}
+					.none-color{
+						height: 0.34rem;
+						border-bottom: 0.01rem solid transparent;
+					}
+					.current-style{
+						height: 0.34rem;
+						color: #3882c2;
+						border-bottom: 0.02rem solid #3882c2;
+					}
 				}
 				.input-control {
 					margin-bottom: 0.22rem;
 					.input-box {
-						border: 1px solid #b7b7b7;
+						border: 0.01rem solid #b7b7b7;
 						height: 0.52rem;
 						display: flex;
 						align-items: center;
@@ -145,16 +164,66 @@ html,body {
 							border: 0;
 							outline: none;
 							margin: 0 0.14rem;
-							height: 0.3rem;
+							height: 0.24rem;
 							flex: 1;
 							font-size: 0.14rem;
 							color: #333;
+							border-left:0.01rem solid #eee;
+							padding-left: 0.1rem;
+							box-sizing: border-box;
+							background-color: #fafafa;
 							.placeholder({
 								color: #b7b7b7;
 							})
 						}
+						.icon-img{
+						    margin-left: 0.14rem;
+						}
 					}
 				}
+				.code-inputbox{
+					display: flex;
+					justify-content: space-between;
+					border:0!important;
+					.input-left-box{
+						width: 62%;
+						border: 1px solid #b7b7b7;
+						height: 0.52rem;
+						display: flex;
+						align-items: center;
+						border-radius: 0.06rem;
+						input{
+							width: 80%;
+						}
+						// .icon-img{
+						// 	width: 0.19rem;
+						// 	height: 0.24rem;
+						// }
+					}
+					.code-box{
+						width: 33%;
+						height: 0.52rem;
+						text-align: center;
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						border-radius: 0.06rem;
+						background-color: #b7b7b7;
+						color:#fff;
+					}
+					.open-code{
+						background: rgb(245, 165, 17);
+					}
+				}
+				//忘记密码
+				.forget-pw{
+					width: 100%;
+					margin-top: -0.18rem;
+					font-size: 0.14rem;
+					color: #666666;
+					text-align: right;
+				}
+				
 				.login-btn {
 					margin-top: 0.18rem;
 					width: 3.16rem;
@@ -2419,5 +2488,83 @@ html,body {
 		z-index: 10000;
 		right: 0;
 		top: 0;
+	}
+
+	// 安全验证弹框
+	.safe-mask{
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top:0;
+		left:0;
+		background: rgba(0, 0, 0, 0.8);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.safe-container{
+			width: 4.42rem;
+			padding: 0rem 0.62rem 0.5rem 0.62rem;
+			box-sizing: border-box;
+			background: #fff;
+			border-bottom:0.02rem solid #3882c2;
+			position: relative;
+			.icon-img-box{
+				width: 0.17rem;
+				height: 0.17rem;
+				position: absolute;
+				top: 0.1rem;
+				right: 0.1rem;
+			}
+			.icon-img{
+				width: 0.17rem;
+	            height: 0.17rem;
+			}
+			.safe-title{
+				width: 100%;
+				text-align: center;
+				font-size: 0.22rem;
+				color: #3882c2;
+				margin-top: 0.3rem;
+			}
+			.pic-codewrap{
+				width: 100%;
+				display: flex;
+				justify-content: space-between;
+				margin-top: 0.34rem;
+				input{
+					width: 2.08rem;
+					height: 0.5rem;
+					outline: none;
+					background-color: #fafafa;
+					border-radius: 0.06rem;
+					border: solid 0.01rem #b7b7b7;
+					font-size: 0.16rem;
+					color: #b7b7b7;
+					padding:0 0.15rem;
+					box-sizing: border-box;
+				}
+				.pic-codebox{
+					width: 1rem;
+					height: 0.48rem;
+					background-color: #fafafa;
+					border-radius: 0.06rem;
+					border: solid 0.01rem #b7b7b7;
+					.icon-img{
+						width: 100%;
+						height: 100%;
+						border-radius: 0.06rem;
+					}
+				}
+			}
+			.login-btn{
+				width: 3.16rem;
+				height: 0.52rem;
+				background-color: #3882c2;
+				border-radius: 0.06rem;
+				margin-top: 0.3rem;
+				color:#fff;
+				font-size: 0.2rem;
+			}
+		}
 	}
 }

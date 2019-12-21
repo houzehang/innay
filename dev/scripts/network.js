@@ -76,7 +76,7 @@ class Network extends Eventer {
 					}
 				},
 				success: (res)=>{
-					resolve(res.data)
+					resolve(res.data || res)
 				},
 				error: (res)=>{
 					if (res.responseJSON) {
@@ -137,6 +137,46 @@ class Network extends Eventer {
 	 */
 	getLoginDentities (data) {
 		return this.__request("/api/dentities", data, "post")
+	}
+
+	/**
+	 * 获取登录验证码------
+	 * @param {*} data 
+	 */
+	getLoginCode (data) {
+		return this.__request("/user/send_sms_for_client", data, "post")
+	}
+
+    /**
+	 * 获取/刷新图形验证码接口
+	 * 
+	 */
+	getNewCodeimg () {
+		return this.__request("/captcha/api/mini")
+	}
+
+    /**
+	* 新登录
+	* @param {*} data 
+	*/
+   newLogin (data) {
+	   return this.__request("/user/sms_login_for_client", data, "post")
+   }
+
+   /**
+	* 忘记密码
+	* @param {*} data 
+	*/
+	forgetPassword (data) {
+		return this.__request("/user/forget_password_for_client", data, "post")
+	}
+
+	/**
+	* 检测密码是否为默认密码------
+	* @param {*} data 
+	*/
+	checkPwIsDefault (data) {
+		return this.__request("/user/check_password_default", data, "post")
 	}
 
 	/**

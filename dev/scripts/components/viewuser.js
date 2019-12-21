@@ -130,6 +130,10 @@ class ViewUser extends React.Component {
 				<div className="logout-btn" onClick={()=>{
 					this.props.onLogout()
 				}}>退出登录</div>
+				<div className="logout-line"></div>
+				<div className="change-pw" onClick={()=>{
+					this.props.onLogout()
+				}}>修改密码</div>
 				<div className="version">当前版本：{this.state.version}</div>
 				<div className="cleardata" onClick={()=>{
 					this.__clear_cached_data()
