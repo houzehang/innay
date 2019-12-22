@@ -208,14 +208,14 @@ class Login extends React.Component {
 											onFocus={this.inputOnFocus}/>
 										</div>
 										<button className={this.state.mobile.length==11?'code-box open-code':'code-box'}
-											disabled={this.state.mobile.length==11?false:true}
-											style={{display: this.state.showCountBtn==false?'block':'none'}}
+											disabled={this.state.mobile.length!=11}
+											style={{display: this.state.showCountBtn?'none':'block'}}
 									        onClick={()=>{
 												this.openSafeMask()
 											}}
 									    >发送验证码</button>
 										<button className="code-box open-code"
-										    style={{display: this.state.showCountBtn==true?'block':'none'}}
+										    style={{display: this.state.showCountBtn?'block':'none'}}
 										>{this.state.totalNum}s可重发</button>
 									</div>
 								</div>
