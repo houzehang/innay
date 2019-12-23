@@ -7,10 +7,9 @@ html,body {
 	* {
 		cursor: default;
 	}
-	.container {
+	.channgepwd-container {
 		height: 100%;
         width: 100%;
-		z-index: 3;
 	}
 	.fixed {
 		position: fixed !important;
@@ -61,19 +60,20 @@ html,body {
 			padding: 0.1rem;
 			opacity: 0;
 		}
-		&.login-page {
+		&.changepwd-page {
 			background: #484f70 url(../assets/login-bg.png) no-repeat center top;
 			background-size: 9rem auto;
-			.login-box {
+			.changepwd-box {
 				background: #fff;
 				border-top: 0.06rem solid #3882c2;
 				width: 4.44rem;
-				height: 3.3rem;
 				position: relative;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
-				align-items: center;
+                align-items: center;
+                padding:  0.3rem 0;
+                box-sizing: border-box;
 				.title {
 					width: 3.16rem;
 					height: 0.34rem;
@@ -123,7 +123,10 @@ html,body {
 							// .placeholder({
 							// 	color: #b7b7b7;
 							// })
-						}
+                        }
+                        .newpwd-input{
+                            border:0;
+                        }
 						.icon-img{
 						    margin-left: 0.14rem;
 						}

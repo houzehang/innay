@@ -139,9 +139,9 @@ class ViewChangePwd extends React.Component {
 
 	render() {
 		return (
-			<div className="container">
-				<div className="page login-page">
-					<div className='login-box' >
+			<div className="channgepwd-container">
+				<div className="page changepwd-page">
+					<div className='changepwd-box' >
 						<div className="title">
 							<div className="none-color">修改密码</div>
 						</div>
@@ -181,7 +181,7 @@ class ViewChangePwd extends React.Component {
                             <div className="input-control">
                                 <div className="input-box">
                                     {/* <img className="icon-img" src={require('../../assets/phone-icon.png')}/> */}
-                                    <input type="text" onChange={(event)=>{
+                                    <input type="text" className="newpwd-input" onChange={(event)=>{
                                         this.handleChange("password", event)
                                     }} name="password" value={this.state.password} placeholder="请设置密码(6-20位字符，支持字母或数字)"
                                     onBlur={this.inputOnBlur}
@@ -193,9 +193,9 @@ class ViewChangePwd extends React.Component {
 							this.onSubmit()
 						}}>提交</button>
 					
-						<button className="login-btn" onClick={()=>{
+						{/* <button className="login-btn" onClick={()=>{
 							this.onExit()
-						}}>退出</button>
+						}}>退出</button> */}
 					</div>
 				</div>
 
