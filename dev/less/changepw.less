@@ -59,7 +59,18 @@ html,body {
 			font-size: 0.3rem;
 			padding: 0.1rem;
 			opacity: 0;
-		}
+        }
+        .icon-img-box{
+            width: 0.17rem;
+            height: 0.17rem;
+            position: absolute;
+            top: 0.1rem;
+            right: 0.1rem;
+        }
+        .icon-img{
+            width: 0.17rem;
+            height: 0.17rem;
+        }
 		&.changepwd-page {
 			background: #484f70 url(../assets/login-bg.png) no-repeat center top;
 			background-size: 9rem auto;
@@ -126,6 +137,7 @@ html,body {
                         }
                         .newpwd-input{
                             border:0;
+                            margin: 0;
                         }
 						.icon-img{
 						    margin-left: 0.14rem;
@@ -159,20 +171,13 @@ html,body {
 						align-items: center;
 						justify-content: center;
 						border-radius: 0.06rem;
-						background-color: #b7b7b7;
-						color:#fff;
+                        background-color: #b7b7b7;
+                        font-size: 0.14rem;
+                        color:#fff;
 					}
 					.open-code{
 						background: rgb(245, 165, 17);
 					}
-				}
-				//忘记密码
-				.forget-pw{
-					width: 100%;
-					margin-top: -0.18rem;
-					font-size: 0.14rem;
-					color: #666666;
-					text-align: right;
 				}
 				
 				.login-btn {
@@ -213,128 +218,6 @@ html,body {
 				}
 			}
 		}
-		&.calendar-page {
-			background: #2d3144;
-			height: 100%;
-			overflow: hidden;
-			.calendar-inner {
-				width: 12.68rem;
-				margin: 0.16rem;
-				background: #484f70;
-				flex: 1;
-				overflow-y: scroll;
-				-webkit-overflow-scrolling: touch;
-				padding: 0.3rem 0;
-				&::-webkit-scrollbar {
-					display: none;
-				}
-			}
-			.courses {
-				font-size: 0.19rem;
-				color: #333;
-				width: 8.2rem;
-				margin: 0 auto;
-				background: #fff;
-				.title {
-					height: 0.5rem;
-					border-bottom: 1px solid #cccccc;
-					padding-left: 0.2rem;
-					.label {
-						display: flex;
-						align-items: center;
-						width: 0.7rem;
-						color: #b87947;
-						font-size: 0.17rem;
-						height: 0.48rem;
-						border-bottom: 2px solid #b87947;
-					}
-				}
-				.nothing {
-					height: 1.24rem;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					font-size: 0.2rem;
-				}
-				.row {
-					padding: 0.16rem;
-					display: flex;
-					align-items: center;
-					border-bottom: 1px solid #cccccc;
-					.cover {
-						width: 1.37rem;
-						height: 0.92rem;
-						margin-right: 0.12rem;
-						display: flex;
-						flex-direction: column;
-						justify-content: center;
-						align-items: center;
-						overflow: hidden;
-						img {
-							width: 100%;
-						}
-					}
-					.info {
-						flex: 1;
-						.name {
-							font-size: 0.19rem;
-							color: #363636;
-							line-height: 0.21rem;
-							font-weight: bold;
-							margin-bottom: 0.16rem;
-						}
-						.index {
-							margin-bottom: 0.18rem;
-						}
-						.index,.date {
-							font-size: 0.17rem;
-							color: #363636;
-							line-height: 0.19rem;
-						}
-					}
-					.start-btn,.record-btn,.download-btn,.homework-btn {
-						margin-right: 0.27rem;
-						width: 1.38rem;
-						height: 0.48rem;
-						background: #3882c2;
-						color: #fff;
-						font-size: 0.2rem;
-						display: flex;
-						justify-content: center;
-						align-items: center;
-						border-radius: 0.06rem;
-						&::after {
-							content: "开始上课";
-						}
-						&[disabled] {
-							background: #b5b5b5;
-							&::after {
-								content: "已上课";
-							}
-						}
-					}
-					.record-btn {
-						background: #8b460e;
-						&::after {
-							content: "课程回放";
-						}
-					}
-					.download-btn {
-						background: #ff9d1f;
-						&::after {
-							content: "下载课程包";
-						}
-					}
-					.homework-btn {
-						background: #8b460e;
-						&::after {
-							content: "乐学岛";
-						}
-					}
-				}
-			}
-		}
-	
 	}
 	.slave {
 		position: fixed;

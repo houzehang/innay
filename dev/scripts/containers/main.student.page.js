@@ -32,7 +32,9 @@ class Main extends React.Component {
 		super(props)
 		this.$detect_delay 		= 5000
 		this.$cache_valid_time 	= 60*60*1000
-
+        this.state ={
+			showChangePwdMask   : false
+		}
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
@@ -69,14 +71,7 @@ class Main extends React.Component {
 						sure_txt: "设备检测",
 						close_hidden: true
 					});
-					// this.props.alert({
-					// 	content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
-					// 	sure: ()=>{
-					// 		this.__view_change_pwd()
-					// 	},
-					// 	sure_txt: "修改密码",
-					// 	close_hidden: true
-					// });
+				
 				});
 			}
 		}, 200);
@@ -112,6 +107,40 @@ class Main extends React.Component {
 				this.props.onCampLesson(room);
 			})
 		})
+	}
+	
+	__isOldPassWord(){
+		net.checkPwIsDefault().then(res=>{
+			if(res.status && this.state.showChangePwdMask){
+				this.props.alert({
+					content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
+					sure: ()=>{
+						this.__view_change_pwd()
+					},
+					sure_txt: "修改密码",
+					close_hidden: true
+				});
+			}
+		})
+	}
+
+	__remindChangePwd(){
+		this.__remindTime()
+		this.__isOldPassWord()
+	}
+	__remindTime(){
+		let remindTime = new Date().getTime()
+		let nowTime    = localStorage.getItem("FIRSTTIME") 
+		let sevenDay   = 24*60*60*1000*7
+		if(remindTime-nowTime > sevenDay) {
+			this.setState({
+				showChangePwdMask: true
+			})
+		} else{
+			this.setState({
+				showChangePwdMask: false
+			})
+		} 
     }
     
 	componentDidMount() {  
@@ -432,6 +461,7 @@ class Main extends React.Component {
 		} else if (this.props.testing) {
 			content = <Devices onExit={()=>{
 				this.__get_lesson_comming()
+				this.__remindChangePwd()
 			}}/>
         } else if (this.props.mycourses){
 			content = <MyCourse onStartRoom={(room)=>{
@@ -446,7 +476,6 @@ class Main extends React.Component {
 				this.__get_lesson_comming()
 			}}/>
         } else if (this.props.changePwd){
-			console.log('MINGXI=============on change pwd effect',this.props.fromViewUser);
 			content = <ViewChangePwd 
 			fromViewUser={this.props.fromViewUser}
 			onClose={(fromViewUser)=>{

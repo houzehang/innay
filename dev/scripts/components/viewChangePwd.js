@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { 
 	loginSuccess, doLogin, 
 	showLoading, hideLoading,
-	alert
+	alert,
 } from '../actions'
 import net from "../network"
 import context from "../context"
@@ -31,15 +31,15 @@ class ViewChangePwd extends React.Component {
 	}
 
 	onExit(){
-		console.log('MINGXI=============fromViewUser is: ',this.props.fromViewUser);
 		this.props.onClose(!!this.props.fromViewUser)
+		let nowTime = new Date().getTime()
+		localStorage.setItem("FIRSTTIME",nowTime)
 	}
 
 	onSubmit() {
 		let mobile 		= this.state.mobile
 		let password 	= this.state.password
 	    let code        = this.state.code
-		let dentity 	= this.state.dentity
 
 		if(!mobile || !code || !password){
             this.props.alert({
@@ -50,14 +50,16 @@ class ViewChangePwd extends React.Component {
 
 		this.props.showLoading("正在提交...")
 		
-        net.login({
-            mobile, password, dentity
+        net.forgetPassword({
+			mobile, password, code ,
+			sms_type : "pc_password"
         }).then((res)=>{
             net.token 		= res.token
             net.sigtoken 	= res.signaling_token
             context.user 	= res.user
             this.props.hideLoading()
-            this.props.loginSuccess(res.user)
+			this.props.loginSuccess(res.user)
+			this.props.onClose()
         },()=>{
             this.props.hideLoading()
         })
@@ -97,19 +99,14 @@ class ViewChangePwd extends React.Component {
 			})
 		})
 	}
-	//关闭安全弹框
-	closeSafeMask(){
-		this.setState({
-			showSafeMaskFlag: false
-		})
-	}
+
 	//图形验证码登录
 	picLogin(){
         net.getLoginCode({
 			mobile  : this.state.mobile,
 			key     : this.state.picCodeKey,
 			captcha : this.state.piccode,
-			sms_type: 'pc_login'
+			sms_type: 'pc_password'
 		}).then(res=>{
 			this.closeSafeMask()
 		    this.setState({
@@ -142,6 +139,9 @@ class ViewChangePwd extends React.Component {
 			<div className="channgepwd-container">
 				<div className="page changepwd-page">
 					<div className='changepwd-box' >
+					    <div className="icon-img-box" onClick={()=>{this.onExit()}}>
+							<img className="icon-img" src={require('../../assets/close-safemask.png')}/>
+						</div>
 						<div className="title">
 							<div className="none-color">修改密码</div>
 						</div>
@@ -151,7 +151,7 @@ class ViewChangePwd extends React.Component {
                                     <img className="icon-img" src={require('../../assets/phone-icon.png')}/>
                                     <input type="tel" maxLength="11" onChange={(event)=>{
                                         this.handleChange("mobile", event)
-                                    }} name="mobile" value={this.state.mobile} placeholder="请输入手机号"
+                                    }} name="mobile" value={this.state.mobile  || ""} placeholder="请输入手机号"
                                     onBlur={this.inputOnBlur}
                                     onFocus={this.inputOnFocus}/>
                                 </div>
@@ -162,7 +162,7 @@ class ViewChangePwd extends React.Component {
                                         <img className="icon-img"  src={require('../../assets/pass-icon.png')}/>
                                         <input type="tel" maxLength="4" onChange={(event)=>{
                                             this.handleChange("code", event)
-                                        }}  name="code" value={this.state.code} placeholder="请输入短信验证码"
+                                        }}  name="code" value={this.state.code  || ""} placeholder="请输入短信验证码"
                                         onBlur={this.inputOnBlur}
                                         onFocus={this.inputOnFocus}/>
                                     </div>
@@ -181,9 +181,9 @@ class ViewChangePwd extends React.Component {
                             <div className="input-control">
                                 <div className="input-box">
                                     {/* <img className="icon-img" src={require('../../assets/phone-icon.png')}/> */}
-                                    <input type="text" className="newpwd-input" onChange={(event)=>{
+                                    <input type="password" className="newpwd-input" onChange={(event)=>{
                                         this.handleChange("password", event)
-                                    }} name="password" value={this.state.password} placeholder="请设置密码(6-20位字符，支持字母或数字)"
+                                    }} name="password" value={this.state.password || ""} placeholder="请设置密码(6-20位字符，支持字母或数字)"
                                     onBlur={this.inputOnBlur}
                                     onFocus={this.inputOnFocus}/>
                                 </div>
@@ -192,10 +192,6 @@ class ViewChangePwd extends React.Component {
 						<button className="login-btn" onClick={()=>{
 							this.onSubmit()
 						}}>提交</button>
-					
-						{/* <button className="login-btn" onClick={()=>{
-							this.onExit()
-						}}>退出</button> */}
 					</div>
 				</div>
 
@@ -209,7 +205,7 @@ class ViewChangePwd extends React.Component {
 						<div className="pic-codewrap">
 							<input type="tel" maxLength="11" onChange={(event)=>{
 								this.handleChange("piccode", event)
-							}} name="piccode" value={this.state.piccode} placeholder="请输入右边图中的验证码"
+							}} name="piccode" value={this.state.piccode || ""} placeholder="请输入右边图中的验证码"
 							onBlur={this.inputOnBlur}
 							onFocus={this.inputOnFocus}/>
 							<div className="pic-codebox" onClick={()=>{this.getCode()}}>
@@ -229,12 +225,10 @@ ViewChangePwd.propTypes = {
 }
 
 const mapDispatchToProps = dispatch => ({
-	loginSuccess : (account) => dispatch(loginSuccess(account)),
-	showLoading  : (message) => dispatch(showLoading(message)),
-	hideLoading  : () => dispatch(hideLoading()),
-	alert: (configure) => {
-		dispatch(alert(configure))
-	}
+	loginSuccess : (account)   => dispatch(loginSuccess(account)),
+	showLoading  : (message)   => dispatch(showLoading(message)),
+	hideLoading  : ()          => dispatch(hideLoading()),
+	alert        : (configure) => dispatch(alert(configure)),
 })
   
 export default connect(

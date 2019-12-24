@@ -3,11 +3,13 @@ import { connect } from 'react-redux'
 import { 
 	loginSuccess, doLogin, 
 	showLoading, hideLoading,
-	alert
+	alert,
+	onShowTost
 } from '../actions'
 import net from "../network"
 import context from "../context"
 import { ipcRenderer } from 'electron';
+import Toast from './toast'
 
 class Login extends React.Component {
 	constructor(props) {
@@ -64,7 +66,6 @@ class Login extends React.Component {
 		
 		this.props.showLoading("正在登录...")
 		if(this.state.currentType == "password"){
-			console.log("密码登录哦")
 			net.login({
 				mobile, password, dentity
 			}).then((res)=>{
@@ -112,12 +113,18 @@ class Login extends React.Component {
 	
 	//打开安全弹框
 	openSafeMask(){
-		this.setState({
-			showSafeMaskFlag: true
-		})
-		this.getCode()
+		if(!(/^1[3456789]\d{9}$/.test(this.state.mobile))){ 
+			this.props.onShowTost({
+				content: "手机号格式不正确！"
+			}) 
+			return false; 
+		} else{
+			this.setState({
+				showSafeMaskFlag: true
+			})
+			this.getCode()
+		}
 	}
-
 	//获取图形验证码
 	getCode(){
 		net.getNewCodeimg().then((res)=>{
@@ -159,6 +166,9 @@ class Login extends React.Component {
 					})
 				}
 			},1000);
+			this.props.onShowTost({
+				content: "验证码已发送您的手机，十分钟内输入有效！"
+			})
 		})
 	}
 
@@ -170,6 +180,7 @@ class Login extends React.Component {
 	}
 
 	render() {
+		const { showToastState } = this.props
 		return (
 			<div className="full-h">
 				<div className="page login-page">
@@ -220,11 +231,12 @@ class Login extends React.Component {
 									</div>
 								</div>
 							</div>:
+							// 密码登录
 							<div>
 								<div className="input-control">
 									<div className="input-box">
 										<img className="icon-img" src={require('../../assets/phone-icon.png')}/>
-										<input type="tel" onChange={(event)=>{
+										<input type="tel" maxLength="11" onChange={(event)=>{
 											this.handleChange("mobile", event)
 										}} name="mobile" value={this.state.mobile} placeholder="请输入手机号"
 										onBlur={this.inputOnBlur}
@@ -270,21 +282,27 @@ class Login extends React.Component {
 						<button className="login-btn" onClick={()=>{this.picLogin()}}>确认登录</button>
 					</div>
 				</div>
+				{showToastState.showing?<Toast data={showToastState} /> : ''}
 			</div>
 		)
 	}
 }
 
-const mapDispatchToProps = dispatch => ({
-	loginSuccess : (account) => dispatch(loginSuccess(account)),
-	showLoading  : (message) => dispatch(showLoading(message)),
-	hideLoading  : () => dispatch(hideLoading()),
-	alert: (configure) => {
-		dispatch(alert(configure))
+const mapStateToProps = (state, ownProps) => {
+	return {
+		showToastState : state.toast
 	}
+}
+const mapDispatchToProps = dispatch => ({
+	loginSuccess : (account)   => dispatch(loginSuccess(account)),
+	showLoading  : (message)   => dispatch(showLoading(message)),
+	hideLoading  : ()          => dispatch(hideLoading()),
+	alert        : (configure) => dispatch(alert(configure)),
+	onShowTost   : (configure) => dispatch(onShowTost(configure))
+
 })
   
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(Login)

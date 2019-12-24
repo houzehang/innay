@@ -175,8 +175,24 @@ class Network extends Eventer {
 	* 检测密码是否为默认密码------
 	* @param {*} data 
 	*/
-	checkPwIsDefault (data) {
-		return this.__request("/user/check_password_default", data, "post")
+	checkPwIsDefault() {
+		return new Promise((resolve, reject)=>{
+			$.ajax(this.baseUrl + "/user/check_password_default", {
+				headers: { 
+					"Authorization": `Bearer ${this.$token}`
+				},
+				method: "POST",
+				processData: false,
+        		contentType: false,
+				success: (response)=>{
+					if (response.data) {
+						resolve(response.data)
+					} else {
+						reject()
+					}
+				}
+			})
+		})
 	}
 
 	/**

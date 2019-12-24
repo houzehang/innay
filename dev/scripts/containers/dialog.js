@@ -32,7 +32,6 @@ class Dialog extends React.Component {
 
 	render() {
 		let buttons = []
-		console.log("this.props.data",this.props.data)
 		const { type,configure } = this.props.data
 		if (type == "confirm") {
 			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{configure.cancel_txt||"取消"}</button>)

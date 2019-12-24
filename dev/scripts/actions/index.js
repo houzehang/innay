@@ -292,3 +292,8 @@ export const onChangePwd = (changePwd, fromViewUser)=>({
 	changePwd,
 	fromViewUser
 })
+
+export const onShowTost = (configure)=>({
+	type: types.SHOW_TOAST,
+	configure
+})
