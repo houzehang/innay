@@ -6,10 +6,12 @@ import {
 	loginSuccess, doLogin, 
 	showLoading, hideLoading,
 	alert,
+	onShowTost
 } from '../actions'
 import net from "../network"
 import context from "../context"
 import { ipcRenderer } from 'electron';
+import Toast from '../containers/toast'
 
 class ViewChangePwd extends React.Component {
 	constructor(props) {
@@ -21,13 +23,23 @@ class ViewChangePwd extends React.Component {
 			dentity         : 1,
 			showCountBtn    : false,
 			totalNum        : 60,
-			timer           : null
+			timer           : null,
+			submitBtn       : false
 		}
 	}
 
 	handleChange(name, event) {
 		let value = event.target.value
 		this.setState({ [name]: value })
+		if(this.state.mobile && this.state.password && this.state.code){
+			this.setState({
+				submitBtn : true
+			})
+		}else{
+			this.setState({
+				submitBtn : false
+			})
+		}
 	}
 
 	onExit(){
@@ -42,9 +54,9 @@ class ViewChangePwd extends React.Component {
 	    let code        = this.state.code
 
 		if(!mobile || !code || !password){
-            this.props.alert({
+            this.props.onShowTost({
                 content: "请输入完整信息进行提交！"
-            })
+			})
             return
 		}
 
@@ -58,8 +70,12 @@ class ViewChangePwd extends React.Component {
             net.sigtoken 	= res.signaling_token
             context.user 	= res.user
             this.props.hideLoading()
-			this.props.loginSuccess(res.user)
-			this.props.onClose()
+			this.props.onShowTost({
+				content : "密码修改成功！"
+			})
+			setTimeout(()=>{
+				this.props.loginSuccess(res.user)
+			},3000)
         },()=>{
             this.props.hideLoading()
         })
@@ -82,10 +98,17 @@ class ViewChangePwd extends React.Component {
 	
 	//打开安全弹框
 	openSafeMask(){
-		this.setState({
-			showSafeMaskFlag: true
-		})
-		this.getCode()
+		if(!(/^1[3456789]\d{9}$/.test(this.state.mobile))){ 
+			this.props.onShowTost({
+				content: "手机号格式不正确！"
+			}) 
+			return false; 
+		} else{
+			this.setState({
+				showSafeMaskFlag: true
+			})
+			this.getCode()
+		}
 	}
 
 	//获取图形验证码
@@ -97,6 +120,13 @@ class ViewChangePwd extends React.Component {
 				picCodeDataImg : res.img,
 				picCodeKey     : res.key
 			})
+		})
+	}
+
+	//关闭安全弹框
+	closeSafeMask(){
+		this.setState({
+			showSafeMaskFlag: false
 		})
 	}
 
@@ -125,6 +155,9 @@ class ViewChangePwd extends React.Component {
 				}
 			},1000);
 		})
+		this.props.onShowTost({
+			content: "验证码已发送您的手机，十分钟内输入有效！"
+		})
 	}
 
 	//忘记密码
@@ -135,6 +168,7 @@ class ViewChangePwd extends React.Component {
 	}
 
 	render() {
+		const { showToastState } = this.props
 		return (
 			<div className="channgepwd-container">
 				<div className="page changepwd-page">
@@ -189,7 +223,7 @@ class ViewChangePwd extends React.Component {
                                 </div>
                             </div>
 						</div>
-						<button className="login-btn" onClick={()=>{
+						<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
 							this.onSubmit()
 						}}>提交</button>
 					</div>
@@ -215,6 +249,8 @@ class ViewChangePwd extends React.Component {
 						<button className="login-btn" onClick={()=>{this.picLogin()}}>确认登录</button>
 					</div>
 				</div>
+
+				{showToastState.showing?<Toast data={showToastState} /> : ''}
 			</div>
 		)
 	}
@@ -224,14 +260,21 @@ ViewChangePwd.propTypes = {
 	onClose: PropTypes.func.isRequired
 }
 
+const mapStateToProps = (state, ownProps) => {
+	return {
+		showToastState : state.toast
+	}
+}
+
 const mapDispatchToProps = dispatch => ({
 	loginSuccess : (account)   => dispatch(loginSuccess(account)),
 	showLoading  : (message)   => dispatch(showLoading(message)),
 	hideLoading  : ()          => dispatch(hideLoading()),
 	alert        : (configure) => dispatch(alert(configure)),
+	onShowTost   : (configure) => dispatch(onShowTost(configure))
 })
   
 export default connect(
-	null,
+	mapStateToProps,
 	mapDispatchToProps
 )(ViewChangePwd)

@@ -24,13 +24,23 @@ class Login extends React.Component {
 			showSafeMaskFlag: false,
 			showCountBtn    : false,
 			totalNum        : 60,
-			timer           : null
+			timer           : null,
+			submitBtn       : false
 		}
 	}
 
 	handleChange(name, event) {
 		let value = event.target.value
 		this.setState({ [name]: value })
+		if(this.state.mobile && this.state.password || this.state.mobile && this.state.code){
+			this.setState({
+				submitBtn : true
+			})
+		}else{
+			this.setState({
+				submitBtn : false
+			})
+		}
 	}
 
 	onLogin() {
@@ -40,29 +50,18 @@ class Login extends React.Component {
 		let dentity 	= this.state.dentity
 
 		if(this.state.currentType == 'code' && (!mobile || !code)){
-			// if (!mobile || !code) {
-				this.props.alert({
-					content: "请输入手机号或验证码！"
-				})
-				return
-			// }
+			this.props.onShowTost({
+				content: "请输入手机号或验证码！"
+			})
+			return
 		}
 
 		if(this.state.currentType == 'password' && (!mobile || !password)){
-			// if (!mobile || !code) {
-				this.props.alert({
-					content: "请输入手机号或密码！"
-				})
-				return
-			// }
+			this.props.onShowTost({
+				content: "请输入手机号或密码！"
+			})
+			return
 		}
-
-		// if (!mobile || !password) {
-		// 	this.props.alert({
-		// 		content: "请输入手机号或密码！"
-		// 	})
-		// 	return
-		// }
 		
 		this.props.showLoading("正在登录...")
 		if(this.state.currentType == "password"){
@@ -93,7 +92,6 @@ class Login extends React.Component {
 				this.props.hideLoading()
 			})
 		}
-		
 	}
 
 	inputOnBlur(){
@@ -256,7 +254,7 @@ class Login extends React.Component {
 								<div className="forget-pw" onClick={()=>{this.forgetPassWord()}}>忘记密码</div>
 							</div>
 						}
-						<button className="login-btn" onClick={()=>{
+						<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
 							this.onLogin()
 						}}>立即登录</button>
 					</div>
