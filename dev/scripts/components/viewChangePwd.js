@@ -24,7 +24,8 @@ class ViewChangePwd extends React.Component {
 			showCountBtn    : false,
 			totalNum        : 60,
 			timer           : null,
-			submitBtn       : false
+			submitBtn       : false,
+			sendCodeBtnText : "获取验证码"
 		}
 	}
 
@@ -143,13 +144,16 @@ class ViewChangePwd extends React.Component {
 			})
 			this.state.timer = setInterval(()=>{
 				this.setState({
-					totalNum : this.state.totalNum - 1
+					totalNum : this.state.totalNum - 1,
+					countBtn : false,
+					sendCodeBtnText : "重新发送"
 				})
 				if(this.state.totalNum<=0){
 					clearInterval(this.state.timer);
 					this.setState({
 						totalNum     : 60,
-						showCountBtn : false
+						showCountBtn : false,
+						countBtn     : true
 					})
 				}
 			},1000);
@@ -198,8 +202,8 @@ class ViewChangePwd extends React.Component {
                                         onClick={()=>{
                                             this.openSafeMask()
                                         }}
-                                    >发送验证码</button>
-                                    <button className="code-box open-code"
+                                    >{this.state.sendCodeBtnText}</button>
+                                    <button className={this.state.countBtn?"code-box open-code":"code-box"}
                                         style={{display: this.state.showCountBtn==true?'block':'none'}}
                                     >{this.state.totalNum}s可重发</button>
                                 </div>
