@@ -4,8 +4,9 @@ import {
 	loginSuccess, doLogin, 
 	showLoading, hideLoading,
 	alert,
-	onShowTost
+	onShowTost, onChangePwd
 } from '../actions'
+import ViewChangePwd from '../components/viewChangePwd'
 import net from "../network"
 import context from "../context"
 import { ipcRenderer } from 'electron';
@@ -50,16 +51,16 @@ class Login extends React.Component {
 		let dentity 	= this.state.dentity
 
 		if(this.state.currentType == 'code' && (!mobile || !code)){
-			this.props.onShowTost({
-				content: "请输入手机号或验证码！"
-			})
+			// this.props.onShowTost({
+			// 	content: "请输入手机号或验证码！"
+			// })
 			return
 		}
 
 		if(this.state.currentType == 'password' && (!mobile || !password)){
-			this.props.onShowTost({
-				content: "请输入手机号或密码！"
-			})
+			// this.props.onShowTost({
+			// 	content: "请输入手机号或密码！"
+			// })
 			return
 		}
 		
@@ -172,13 +173,14 @@ class Login extends React.Component {
 
 	//忘记密码
 	forgetPassWord(){
-		this.setState({
-			currentType: "code"
-		})
+		// this.setState({
+		// 	currentType: "code"
+		// })
+		this.props.onChangePwd(true,true)
 	}
 
 	render() {
-		const { showToastState } = this.props
+		const { showToastState, changePwd, fromViewUser } = this.props
 		return (
 			<div className="full-h">
 				<div className="page login-page">
@@ -281,6 +283,12 @@ class Login extends React.Component {
 					</div>
 				</div>
 				{showToastState.showing?<Toast data={showToastState} /> : ''}
+				{changePwd?<ViewChangePwd onClose={()=>{
+					this.props.onChangePwd(false, false)
+					if (fromViewUser) {
+						this.__view_user()
+					}
+			    }}/> : ''}
 			</div>
 		)
 	}
@@ -288,7 +296,9 @@ class Login extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
 	return {
-		showToastState : state.toast
+		showToastState : state.toast,
+		changePwd      : state.main.changePwd,
+		fromViewUser   : state.main.fromViewUser,
 	}
 }
 const mapDispatchToProps = dispatch => ({
@@ -296,8 +306,8 @@ const mapDispatchToProps = dispatch => ({
 	showLoading  : (message)   => dispatch(showLoading(message)),
 	hideLoading  : ()          => dispatch(hideLoading()),
 	alert        : (configure) => dispatch(alert(configure)),
-	onShowTost   : (configure) => dispatch(onShowTost(configure))
-
+	onShowTost   : (configure) => dispatch(onShowTost(configure)),
+    onChangePwd  : (show, fromViewUser) => dispatch(onChangePwd(show, fromViewUser)),
 })
   
 export default connect(

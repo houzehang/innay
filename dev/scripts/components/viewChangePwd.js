@@ -6,7 +6,7 @@ import {
 	loginSuccess, doLogin, 
 	showLoading, hideLoading,
 	alert,
-	onShowTost
+	onShowTost, onChangePwd
 } from '../actions'
 import net from "../network"
 import context from "../context"
@@ -54,9 +54,6 @@ class ViewChangePwd extends React.Component {
 	    let code        = this.state.code
 
 		if(!mobile || !code || !password){
-            this.props.onShowTost({
-                content: "请输入完整信息进行提交！"
-			})
             return
 		}
 
@@ -75,6 +72,7 @@ class ViewChangePwd extends React.Component {
 			})
 			setTimeout(()=>{
 				this.props.loginSuccess(res.user)
+				this.props.onChangePwd(false,false)
 			},3000)
         },()=>{
             this.props.hideLoading()
@@ -160,13 +158,6 @@ class ViewChangePwd extends React.Component {
 		})
 	}
 
-	//忘记密码
-	forgetPassWord(){
-		this.setState({
-			currentType: "code"
-		})
-	}
-
 	render() {
 		const { showToastState } = this.props
 		return (
@@ -237,7 +228,7 @@ class ViewChangePwd extends React.Component {
 						
 						<div className="safe-title">安全验证</div>
 						<div className="pic-codewrap">
-							<input type="tel" maxLength="11" onChange={(event)=>{
+							<input type="tel" maxLength="4" onChange={(event)=>{
 								this.handleChange("piccode", event)
 							}} name="piccode" value={this.state.piccode || ""} placeholder="请输入右边图中的验证码"
 							onBlur={this.inputOnBlur}
@@ -271,7 +262,8 @@ const mapDispatchToProps = dispatch => ({
 	showLoading  : (message)   => dispatch(showLoading(message)),
 	hideLoading  : ()          => dispatch(hideLoading()),
 	alert        : (configure) => dispatch(alert(configure)),
-	onShowTost   : (configure) => dispatch(onShowTost(configure))
+	onShowTost   : (configure) => dispatch(onShowTost(configure)),
+	onChangePwd  : (show, fromViewUser) => dispatch(onChangePwd(show, fromViewUser)),
 })
   
 export default connect(
