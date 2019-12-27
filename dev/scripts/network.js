@@ -76,7 +76,7 @@ class Network extends Eventer {
 					}
 				},
 				success: (res)=>{
-					resolve(res.data || res)
+					resolve(res.data)
 				},
 				error: (res)=>{
 					if (res.responseJSON) {
