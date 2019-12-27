@@ -26,7 +26,8 @@ class Login extends React.Component {
 			showCountBtn    : false,
 			totalNum        : 60,
 			timer           : null,
-			submitBtn       : false
+			submitBtn       : false,
+			sendCodeBtnText : "发送验证码"
 		}
 	}
 
@@ -119,7 +120,8 @@ class Login extends React.Component {
 			return false; 
 		} else{
 			this.setState({
-				showSafeMaskFlag: true
+				showSafeMaskFlag: true,
+
 			})
 			this.getCode()
 		}
@@ -155,13 +157,16 @@ class Login extends React.Component {
 			})
 			this.state.timer = setInterval(()=>{
 				this.setState({
-					totalNum : this.state.totalNum - 1
+					totalNum : this.state.totalNum - 1,
+					countBtn : false,
+					sendCodeBtnText : "重新发送"
 				})
 				if(this.state.totalNum<=0){
 					clearInterval(this.state.timer);
 					this.setState({
 						totalNum     : 60,
-						showCountBtn : false
+						showCountBtn : false,
+						countBtn     : true
 					})
 				}
 			},1000);
@@ -224,8 +229,8 @@ class Login extends React.Component {
 									        onClick={()=>{
 												this.openSafeMask()
 											}}
-									    >发送验证码</button>
-										<button className="code-box open-code"
+									    >{this.state.sendCodeBtnText}</button>
+										<button className={this.state.countBtn?"code-box open-code":"code-box"}
 										    style={{display: this.state.showCountBtn?'block':'none'}}
 										>{this.state.totalNum}s可重发</button>
 									</div>
