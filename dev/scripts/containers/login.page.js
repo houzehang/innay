@@ -27,22 +27,23 @@ class Login extends React.Component {
 			totalNum        : 60,
 			timer           : null,
 			submitBtn       : false,
-			sendCodeBtnText : "发送验证码"
+			sendCodeBtnText : "获取验证码"
 		}
 	}
 
 	handleChange(name, event) {
-		let value = event.target.value
-		this.setState({ [name]: value })
-		if(this.state.mobile && this.state.password || this.state.mobile && this.state.code){
-			this.setState({
-				submitBtn : true
-			})
-		}else{
-			this.setState({
-				submitBtn : false
-			})
-		}
+		let value = event.target.value.trim()
+		this.setState({ [name]: value },()=>{
+			if(this.state.mobile && this.state.code || this.state.mobile && this.state.password){
+				this.setState({
+					submitBtn : true
+				})
+			}else{
+				this.setState({
+					submitBtn : false
+				})
+			}
+		})
 	}
 
 	onLogin() {
@@ -291,7 +292,7 @@ class Login extends React.Component {
 				{changePwd?<ViewChangePwd onClose={()=>{
 					this.props.onChangePwd(false, false)
 					if (fromViewUser) {
-						this.__view_user()
+						// this.__view_user()
 					}
 			    }}/> : ''}
 			</div>

@@ -30,16 +30,17 @@ class ViewChangePwd extends React.Component {
 
 	handleChange(name, event) {
 		let value = event.target.value
-		this.setState({ [name]: value })
-		if(this.state.mobile && this.state.password && this.state.code){
-			this.setState({
-				submitBtn : true
-			})
-		}else{
-			this.setState({
-				submitBtn : false
-			})
-		}
+		this.setState({ [name]: value },()=>{
+			if(this.state.mobile && this.state.password && this.state.code){
+				this.setState({
+					submitBtn : true
+				})
+			}else{
+				this.setState({
+					submitBtn : false
+				})
+			}
+		})
 	}
 
 	onExit(){
@@ -152,9 +153,9 @@ class ViewChangePwd extends React.Component {
 					})
 				}
 			},1000);
-		})
-		this.props.onShowTost({
-			content: "验证码已发送您的手机，十分钟内输入有效！"
+			this.props.onShowTost({
+				content: "验证码已发送您的手机，十分钟内输入有效！"
+			})
 		})
 	}
 
