@@ -129,18 +129,18 @@ class Main extends React.Component {
 		this.__isOldPassWord()
 	}
 	__remindTime(){
-		// let remindTime = new Date().getTime()
-		// let nowTime    = localStorage.getItem("FIRSTTIME") 
-		// let sevenDay   = 24*60*60*1000*7
-		// if(remindTime-nowTime > sevenDay) {
+		let remindTime = new Date().getTime()
+		let nowTime    = localStorage.getItem("FIRSTTIME") 
+		let sevenDay   = 24*60*60*1000*7
+		if(remindTime-nowTime > sevenDay) {
 			this.setState({
 				showChangePwdMask: true
 			})
-		// } else{
-		// 	this.setState({
-		// 		showChangePwdMask: false
-		// 	})
-		// } 
+		} else{
+			this.setState({
+				showChangePwdMask: false
+			})
+		} 
     }
     
 	componentDidMount() {  
