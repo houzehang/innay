@@ -152,7 +152,18 @@ class Network extends Eventer {
 	 * 
 	 */
 	getNewCodeimg () {
-		return this.__request("/captcha/api/mini")
+		return new Promise((resolve, reject)=>{
+			$.ajax(this.baseUrl + "/captcha/api/mini", {
+				headers: { 
+					"Authorization": `Bearer ${this.$token}`
+				},
+				processData: false,
+        		contentType: false,
+				success: (response)=>{
+					resolve(response)
+				}
+			})
+		})
 	}
 
     /**
