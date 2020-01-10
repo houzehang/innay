@@ -1099,9 +1099,10 @@ acorn@^6.0.2, acorn@^6.0.5:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-6.1.1.tgz#7d25ae05bb8ad1f9b699108e1094ecd7884adc1f"
 
-agora-electron-sdk@^2.3.2:
+agora-electron-sdk@2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/agora-electron-sdk/-/agora-electron-sdk-2.3.2.tgz#00eee314be67687d009cc7f3d00efd95976d6f01"
+  integrity sha512-m6aoV8Wmc1vqZNq7ct4wMtrB17I9jyaEP5tdH9r1BmfLSyKjmKA1tlrwWHwK9opW+6iD0ejVFJO7HbnD9yF0Lg==
   dependencies:
     chalk "^2.4.1"
     download "^7.1.0"
