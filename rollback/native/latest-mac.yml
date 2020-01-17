@@ -1,10 +1,10 @@
-version: 1.2.0
+version: 1.2.1
 files:
-  - url: 明兮大语文-1.2.0-mac.zip
-    sha512: aW1Mj9OWRkV8wKysjsi1fWfh+DHwBIREPPVjxRE7P7XPU+DxMohvdH6LuFWh3Ev3vQDtS58IQegdXmu1IyJlIg==
-  - url: 明兮大语文-1.2.0.dmg
-    sha512: iklFGRxY+TxD8e9HBhLeUXpjXxkp4ZHR9y/hkOoWxP+myUlSBQ5E62ZShGlZWFN1W1dzMKMROZcyf3D42P60ig==
-    size: 68283469
-path: 明兮大语文-1.2.0-mac.zip
-sha512: aW1Mj9OWRkV8wKysjsi1fWfh+DHwBIREPPVjxRE7P7XPU+DxMohvdH6LuFWh3Ev3vQDtS58IQegdXmu1IyJlIg==
-releaseDate: '2019-07-19T03:59:22.564Z'
+  - url: 明兮大语文-1.2.1-mac.zip
+    sha512: Zzm1z+GmGJrpbi47vDFI+5zrwKANukeJMsIWzacuIP+rLH/TuuBVXwDPRav8GWWevrVb7djZuo9WYTQSPEONMg==
+  - url: 明兮大语文-1.2.1.dmg
+    sha512: 6bV0uRzTTEDWjrqbfykqrTL6bLKqLOnCTmQsc7fnX5rFceN2XV/mIU7+OTaPaLdaVftnb4XEAZ5i87fDLdDdIA==
+    size: 68388735
+path: 明兮大语文-1.2.1-mac.zip
+sha512: Zzm1z+GmGJrpbi47vDFI+5zrwKANukeJMsIWzacuIP+rLH/TuuBVXwDPRav8GWWevrVb7djZuo9WYTQSPEONMg==
+releaseDate: '2019-11-09T12:16:33.945Z'
