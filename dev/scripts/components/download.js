@@ -29,7 +29,7 @@ class Download extends React.Component {
 			if (context.usingBackupUrl) {
 				return "http://bundlesossyun.mw019.com"
 			} else {
-				return "https://bundlesossyun.mx0a.com"
+				return "https://bundlesyun.mx0a.com"
 			}
 		}
 	}
