@@ -10,6 +10,7 @@ import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
 import net from "../network"
 import Camp from '../components/camp'
+import "../../less/mainright.less"
 import * as types from '../constants/ActionTypes'
 import { 
     onRoomInfo,
@@ -205,18 +206,19 @@ class Main extends React.Component {
 		}
 		
 		return (
-			<div className="page student-page">
+			<div className="page student-pages">
 				<div className="inner">
 					<div className="student-box">
                         <div className="main-page">
-						    <div className="student-icon"></div>
                             { room ? ([
                                 <div key="1" className="lesson-box">
                                     <div className="cover">
-                                        <img src={room.avatar} alt=""/>
+									    <div className="cover-img"> 
+                                          <img src={room.avatar} alt=""/>
+										</div>
+										<div className="name">{room.name}</div>
                                     </div>
                                     <div className="info">
-                                        <div className="name"><span>{room.name}</span></div>
                                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                                         {/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
                                         <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability)}</span></div>
@@ -224,12 +226,15 @@ class Main extends React.Component {
                                     </div>
 									
                                     <div className="btns-panel">
-										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
+										{room.can_enter && room.class_state == 'normal' ?<img className="start-imgbtn" src={require('../../assets/attend-class.png')} onClick={()=>{
 											this.onStartRoom(room)
-										}}></button>:""}
-										{room.preview_status == "on" && room.prepare_name ? <button className="preview-btn" onClick={()=>{
+										}} alt=""/>:""}
+										{/* <img className="preview-imgbtn" src={require('../../assets/preview-btn.png')} onClick={()=>{
 											this.onStartPreview(room)
-										}}></button> : ""}
+										}} alt=""/> */}
+										{room.preview_status == "on" && room.prepare_name ? <img className="preview-imgbtn" src={require('../../assets/preview-btn.png')} onClick={()=>{
+											this.onStartPreview(room)
+										}} alt=""/> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
