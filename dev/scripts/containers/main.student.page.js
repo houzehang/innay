@@ -226,15 +226,15 @@ class Main extends React.Component {
                                     </div>
 									
                                     <div className="btns-panel">
-										{room.can_enter && room.class_state == 'normal' ?<img className="start-imgbtn" src={require('../../assets/attend-class.png')} onClick={()=>{
+										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
+											<img src={require('../../assets/attend-class.png')} onClick={()=>{
 											this.onStartRoom(room)
-										}} alt=""/>:""}
-										{/* <img className="preview-imgbtn" src={require('../../assets/preview-btn.png')} onClick={()=>{
+										}} alt=""/>
+										</div>:""}
+										
+										{room.preview_status == "on" && room.prepare_name ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
 											this.onStartPreview(room)
-										}} alt=""/> */}
-										{room.preview_status == "on" && room.prepare_name ? <img className="preview-imgbtn" src={require('../../assets/preview-btn.png')} onClick={()=>{
-											this.onStartPreview(room)
-										}} alt=""/> : ""}
+										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
