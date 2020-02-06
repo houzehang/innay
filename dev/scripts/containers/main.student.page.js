@@ -10,7 +10,7 @@ import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
 import net from "../network"
 import Camp from '../components/camp'
-import "../../less/mainright.less"
+import "../../less/mainpage.less"
 import * as types from '../constants/ActionTypes'
 import { 
     onRoomInfo,
