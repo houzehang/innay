@@ -264,11 +264,11 @@ class Login extends React.Component {
 						}
 						<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
 							this.onLogin()
-						}}>立即登录</button>
+						}}></button>
 					</div>
 				</div>
 
-				<div className="safe-mask" style={{display:this.state.showSafeMaskFlag?'flex':'none'}}>
+				<div className="safe-mask-main" style={{display:this.state.showSafeMaskFlag?'flex':'none'}}>
 					<div className="safe-container">
 						<div className="icon-img-box" onClick={()=>{this.closeSafeMask()}}>
 							<img className="icon-img" src={require('../../assets/close-safemask.png')}/>
@@ -276,16 +276,20 @@ class Login extends React.Component {
 						
 						<div className="safe-title">安全验证</div>
 						<div className="pic-codewrap">
-							<input type="tel" maxLength="11" onChange={(event)=>{
+						    <div className="input-left-box">
+								<img className="icon-img"  src={require('../../assets/icon-changepwd.png')}/>
+								<input type="tel" maxLength="11" onChange={(event)=>{
 								this.handleChange("piccode", event)
-							}} name="piccode" value={this.state.piccode} placeholder="请输入右边图中的验证码"
-							onBlur={this.inputOnBlur}
-							onFocus={this.inputOnFocus}/>
+								}} name="piccode" value={this.state.piccode} placeholder="请输入右边图中的验证码"
+								onBlur={this.inputOnBlur}
+								onFocus={this.inputOnFocus}/>
+						    </div>
+							
 							<div className="pic-codebox" onClick={()=>{this.getCode()}}>
 								<img className="icon-img" src={this.state.picCodeDataImg}/>
 							</div>
 						</div>
-						<button className="login-btn" onClick={()=>{this.picLogin()}}>确认登录</button>
+						<button className="login-btn" onClick={()=>{this.picLogin()}}></button>
 					</div>
 				</div>
 				{showToastState.showing?<Toast data={showToastState} /> : ''}

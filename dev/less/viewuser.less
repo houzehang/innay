@@ -12,8 +12,9 @@
 		}
 	}
 	.avatar {
-		width: 0.84rem;
-		height: 0.84rem;
+		width: 1rem;
+		height: 1rem;
+		border: 0.03rem solid #fdd24f;
 		border-radius: 50%;
 		overflow: hidden;
 		background-repeat: no-repeat;
@@ -28,20 +29,22 @@
 	.nickname {
 		margin-top: 0.14rem;
 		margin-bottom: 0.36rem;
-		width: 1.7rem;
-		height: 0.38rem;
-		border: 1px solid #b8b8b8;
-		border-radius: 0.02rem;
-		padding-left: 0.1rem;
+		width: 3.3rem;
+		height: 0.6rem;
+		background-color: #edf5ff;
+		border-radius: 0.3rem;
+		padding-left: 0.2rem;
+		padding-right: 0.1rem;
+		box-sizing: border-box;
 		font-size: 0.2rem;
 		color: #333333;
 		display: flex;
 		align-items: center;
 		.edit-btn {
-			width: 0.38rem;
-			height: 0.38rem;
+			width: 0.7rem;
+			height: 0.4rem;
 			background: url(../assets/edit-nickname.png) no-repeat center center;
-			background-size: 0.19rem auto;
+			background-size: 100% 100%;
 		}
 		.text {
 			flex: 1;
@@ -57,13 +60,14 @@
 			color: #333333;
 			font-size: 0.2rem;
 			outline: none;
+			background-color: #edf5ff;
 		}
 	}
 	.logout-btn {
 		position: absolute;
-		font-size: 0.16rem;
-		color: #333333;
-		left: 0.28rem;
+		font-size: 0.2rem;
+		color: #666;
+		left: 0.2rem;
 		bottom: 0.18rem;
 		text-decoration: none;
 		&:active {
@@ -72,18 +76,19 @@
 	}
 	.logout-line {
 		position: absolute;
-		color: #333333;
-		left: 0.98rem;
-		bottom: 0.25rem;
+		color: #666;
+		left: 1.05rem;
+		bottom: 0.3rem;
 		width: 0.01rem;
 		height: 0.15rem;
-		background: #333333;
+		background: #666;
+		z-index: 333;
 	}
 	.change-pw {
 		position: absolute;
-		font-size: 0.16rem;
-		color: #333333;
-		left: 1.06rem;
+		font-size: 0.2rem;
+		color: #666;
+		left: 1.11rem;
 		bottom: 0.18rem;
 		text-decoration: none;
 		// border-left: 0.01rem solid #484f70;
@@ -94,17 +99,17 @@
 		}
 	}
 	.version {
-		font-size: 0.15rem;
+		font-size: 0.2rem;
 		color: #cacaca;
 		position: absolute;
-		right: 1rem;
+		right: 1.05rem;
 		bottom: 0.18rem;
 	}
 	.cleardata {
-		font-size: 0.15rem;
+		font-size: 0.2rem;
 		color: #cacaca;
 		position: absolute;
-		right: 0.28rem;
+		right: 0.2rem;
 		bottom: 0.18rem;
 		text-decoration: underline;
 		cursor: pointer;

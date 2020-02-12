@@ -221,7 +221,7 @@ class ViewChangePwd extends React.Component {
 						</div>
 						<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
 							this.onSubmit()
-						}}>提交</button>
+						}}></button>
 					</div>
 				</div>
 

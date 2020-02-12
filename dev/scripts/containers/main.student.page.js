@@ -10,6 +10,7 @@ import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
 import net from "../network"
 import Camp from '../components/camp'
+import Const from '../../const'
 import "../../less/mainpage.less"
 import * as types from '../constants/ActionTypes'
 import { 
@@ -112,16 +113,18 @@ class Main extends React.Component {
 	
 	__isOldPassWord(){
 		net.checkPwIsDefault().then(res=>{
-			if(res.status && this.state.showChangePwdMask){
-				this.props.alert({
+			// if(res.status && this.state.showChangePwdMask){
+				this.props.confirm({
+					title: "温馨提示",
 					content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
 					sure: ()=>{
 						this.__view_change_pwd()
 					},
 					sure_txt: "修改密码",
-					close_hidden: true
+					close_hidden: true,
+					style: Const.EBTN_STYLE_CONFIG.kChangePwd
 				});
-			}
+			// }
 		})
 	}
 
@@ -194,7 +197,7 @@ class Main extends React.Component {
 					去“明兮大语文”小程序<br/>
 					和其他小朋友一起完成作业吧~
 				</div>
-			]
+			] 
 		}
 	}
 
@@ -418,7 +421,8 @@ class Main extends React.Component {
 				this.props.confirm(...params)
 			}} changePw={()=>{
 				this.__view_change_pwd(true)
-			}}/>
+			}}/>,
+			linestyle: Const.LINE_CONFIRM_TITLE.lineTitle
 		})
 	}
 

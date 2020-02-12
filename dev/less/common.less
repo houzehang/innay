@@ -53,30 +53,41 @@ body {
 			.dialog {
 				display: block;
 				border: 0;
-				width: 4.38rem;
+				width: 4.7rem;
 				background: #fff;
-				border-radius: 0.1rem;
+				border-radius: 0.3rem;
 				box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.29);
 				overflow: hidden;
 				height: auto;
 				transform: scale(0);
 				transition: all 200ms 0s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 				.title {
-					height: 0.4rem;
-					background: #eeeeee;
-					font-size: 0.2rem;
-					color: #000232;
-					line-height: 0.4rem;
-					padding-left: 0.17rem;
+					width: 4.7rem;
+					height: 0.8rem;
+					font-size: 0.28rem;
+					color: #fbab22;
+					line-height: 0.9rem;
+					text-align: center;
 					position: relative;
+					border-bottom: 0.01rem solid #d2d2d2;
+					.title-text{
+						width: 1.2rem;
+						height: 100%;
+						border-bottom: 0.02rem solid #fbab22;
+						position: absolute;
+						top:50%;
+						left:50%;
+						margin-left: -0.6rem;
+						margin-top: -0.4rem;
+					}
 					.close-btn {
-						width: 0.4rem;
-						height: 0.4rem;
+						width: 0.2rem;
+						height: 0.2rem;
 						background: url(../assets/alert-close.png) no-repeat center center;
 						background-size: 0.16rem auto;
 						position: absolute;
-						right: 0;
-						top: 0;
+						right: 0.2rem;
+						top: 0.2rem;
 					}
 					&.clear{
 						background: rgba(0, 0, 0, 0)
@@ -92,12 +103,13 @@ body {
 					}
 					.texts {
 						line-height: 2;
-						font-size: 0.18rem;
-						color: #333333;
+						font-size: 0.2rem;
+						color: #666;
 						display: flex;
 						justify-content: center;
 						align-items: center;
 						padding: 0.4rem;
+						// border-top: 0.01rem solid #d2d2d2;
 						&.large{
 							padding: 0.4rem 0.3rem;
 						}
@@ -106,18 +118,42 @@ body {
 						display: flex;
 						justify-content: space-around;
 						button {
-							width: 1.24rem;
-							height: 0.38rem;
-							font-size: 0.2rem;
-							border-radius: 0.03rem;
-							border: 1px solid #2f80c5;
+							width: 1.5rem;
+							height: 0.6rem;
+							color: #fff;
 							&.ok-btn {
-								background: #2f80c5;
-								color: #fff;
+								background:url("../assets/check-okbtn.png") no-repeat;
+								background-size: 100% 100%;
+								&.check-jump{
+									background: url("../assets/check-jump.png") no-repeat;
+									background-size: 100% 100%;
+								}
+								&.changepwd{
+									width: 2.4rem;
+									height: 0.6rem;
+									margin-left: -3.8rem;
+									background: url("../assets/change-pwdbtn.png") no-repeat;
+									background-size: 100% 100%;
+								}
+								&.end-class{
+									background: url("../assets/btn-endclass.png") no-repeat;
+									background-size: 100% 100%;
+								}
 							}
 							&.cancel-btn {
-								color: #2f80c5;
-								background: #fff;
+								background: url("../assets/btn-cancel.png") no-repeat;
+								background-size: 100% 100%;
+								&.check-again{
+									background:url("../assets/check-reply.png") no-repeat;
+									background-size: 100% 100%;
+								}
+								&.none{
+									background:none;
+								}
+								&.leave-class{
+									background:url("../assets/btn-leaveclass.png") no-repeat;
+									background-size: 100% 100%;
+								}
 							}
 						}
 					}
@@ -229,7 +265,7 @@ body {
 			position: relative;
 			p{
 				background: rgba(0,0,0,.6);
-				border-radius: 0.1rem;
+				border-radius: 0.2rem;
 				color:#fff;
 				font-size: 0.14rem;
 				padding: 0.14rem 0.26rem;

@@ -78,5 +78,14 @@ module.exports = {
 		'PG splitter',
 		'Built-in iSight',
 		'6room'
-	]
+	],
+	EBTN_STYLE_CONFIG :{
+		kNormal: 	 ['ok', 'cancel'],
+		kDeviceTest: ['check-jump', 'check-again'],
+		kChangePwd:  ['changepwd','none'],
+		kClassExit:  ['leave-class','end-class']
+	},
+	LINE_CONFIRM_TITLE:{
+		lineTitle:   ['title-text']
+	}
 };

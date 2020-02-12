@@ -8,7 +8,7 @@
 	margin: -0.2rem 0;
 	.progress {
 		margin: 0 auto;
-		margin-top: 0.1rem;
+		margin-top: 0.2rem;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -26,19 +26,19 @@
 			background: #eee;
 			.bar-i {
 				border-radius: 0.2rem;
-				background: #3882c2;
+				background: #39bffe;
 				height: 100%;
 				width: 0%;
 			}
 		}
 	}
 	.info {
-		font-size: 0.16rem;
+		font-size: 0.2rem;
 		text-align: center;
 		&.notice {
 			margin-top: 0.1rem;
 			line-height: 1.5;
-			font-size: 0.14rem;
+			font-size: 0.2rem;
 			color: #666;
 		}
 	}
@@ -51,11 +51,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background: rgb(56, 130, 194);
+		background: url('../assets/btn-reload.png') no-repeat;
+        background-size: 100% 100%;
 		cursor: pointer;
 		margin-top: 0.15rem;
 		&:hover {
-			background: rgba(56, 130, 194, 0.8);
+			opacity: 0.5;
 		}
 	}
 }
