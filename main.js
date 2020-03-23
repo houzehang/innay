@@ -17,8 +17,12 @@ logger.transports.file.file = LOG_PATH
 
 app.disableDomainBlockingFor3DAPIs()
 var ActivedWindow, offHire
-app.on('ready', function () {
-    const shouldQuit = app.makeSingleInstance(() => {
+
+let gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
         if (ActivedWindow) {
             if (ActivedWindow.isMinimized()) {
                 ActivedWindow.restore()
@@ -26,49 +30,48 @@ app.on('ready', function () {
             ActivedWindow.focus()
         }
     })
-    if (shouldQuit) {
-        app.quit()
-        return
-    }
-    protocol.registerBufferProtocol(PROXY,(request, callback)=>{
-        trigger("proxy-pass", { request, callback })
-    }, error=>{
-        logger.error(error)
-    })
-    bridge.delegate = PackageManager
-    let updater     = new Updater(__dirname)
-    let screenSize  = screen.getPrimaryDisplay().size
-    let windowFactory = new WindowFactory(screenSize)
-    updater.start()
-    ActivedWindow = updater.win
-    updater.on("open-main-window", ({pack, data})=>{
-        setTimeout(()=>{
-            updater.close()
-        },100)
-        logger.log("call open main ui window", PROXY, pack, offHire)
-        let _mainWindow = windowFactory.open({
-            pack, 
-            delegates: {
-                openLiveRoom: ({pack, data})=>{
-                    let _window = windowFactory.open({
-                        pack, data,
-                        unique: true,
-                        offHire
-                    })
-                    _window.on("closed", ()=>{
-                        _mainWindow.sendMessage("room-closed")
-                        ActivedWindow = _mainWindow.window
-                    })
-                    ActivedWindow = _window.window
-                }
-            },
-            data,
-            needSystemInfo: true,
-            unique: true
+
+    app.on('ready', function () {
+        protocol.registerBufferProtocol(PROXY,(request, callback)=>{
+            trigger("proxy-pass", { request, callback })
+        }, error=>{
+            logger.error(error)
         })
-        ActivedWindow = _mainWindow.window
-    })
-});
+        bridge.delegate = PackageManager
+        let updater     = new Updater(__dirname)
+        let screenSize  = screen.getPrimaryDisplay().size
+        let windowFactory = new WindowFactory(screenSize)
+        updater.start()
+        ActivedWindow = updater.win
+        updater.on("open-main-window", ({pack, data})=>{
+            setTimeout(()=>{
+                updater.close()
+            },100)
+            logger.log("call open main ui window", PROXY, pack, offHire)
+            let _mainWindow = windowFactory.open({
+                pack, 
+                delegates: {
+                    openLiveRoom: ({pack, data})=>{
+                        let _window = windowFactory.open({
+                            pack, data,
+                            unique: true,
+                            offHire
+                        })
+                        _window.on("closed", ()=>{
+                            _mainWindow.sendMessage("room-closed")
+                            ActivedWindow = _mainWindow.window
+                        })
+                        ActivedWindow = _window.window
+                    }
+                },
+                data,
+                needSystemInfo: true,
+                unique: true
+            })
+            ActivedWindow = _mainWindow.window
+        })
+    });
+}
 
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.on('window-all-closed', () => {
