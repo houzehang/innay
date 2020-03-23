@@ -8,3 +8,4 @@ import toast from './toast'
 export default combineReducers({
 	dialog, login, main, room, toast
 })
+     

@@ -112,8 +112,9 @@ class Course extends React.Component {
 	}
 
 	componentDidMount() {
+		//
 		context.detector.uncheck()
-
+		//step2 
 		this.$room.rtc.on("networkquality", (uid, tx, rx) => {
 			console.log("网络状态：", uid, tx, rx)
 			if (uid == 0) {

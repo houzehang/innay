@@ -46,6 +46,7 @@ const room = (state = {}, action) => {
 		let info = {...state.info}
 		info.channel_token = action.data.channel_token
 		info.features = action.data.features
+		console.log(action.data.students,"action.data.students")
 		return {
 			...state,
 			info,

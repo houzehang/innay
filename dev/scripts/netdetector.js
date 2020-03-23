@@ -13,6 +13,7 @@ class NetDetector extends Eventer {
 		this.$check_timer		= null
 		this.$check_closed 		= true
 		this.$waring_threshold  = 2
+		console.log(this,"NetDetector---thiss")
 	}
 
 	get waring_threshold(){

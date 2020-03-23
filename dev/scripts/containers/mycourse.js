@@ -53,6 +53,7 @@ class MyCourse extends React.Component {
 					if (res && res.list && res.list.data && res.list.data.length > 0) {
 						this.$page_comming = Number(res.list.current_page) + 1;
 						let latest 		   = (this.props.commingRooms || []).concat(res.list.data || []);
+						console.log("latest 最新",this.props.commingRooms,"=======",res.list.data )
 						this.props.onLessonsComming(latest);
 						res.total && res.total.length > 0 && this.props.onLessonsTotalComming(res.total);
 					} else {

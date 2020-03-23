@@ -40,7 +40,6 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
-		console.log('this.props.account.id == ',this.props.account.id)
 		ipcRenderer.on("room-closed", ()=>{
 			this.__get_lesson_comming();
 			context.upload_system_logs()
@@ -102,6 +101,7 @@ class Main extends React.Component {
 					room.minutes= minutes
 				}
 			}
+			console.log(room,"get room====")
 			this.props.onLessonComming(room)
 
 			net.getCampLesson().then((room)=>{
@@ -150,6 +150,7 @@ class Main extends React.Component {
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
+	    console.log(this.props.account,"this.props.accounts")
 		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
 	}
@@ -456,6 +457,7 @@ class Main extends React.Component {
 	render() {
 		let content, sidebar = ""
 		let flow = this.props.campRoom && this.props.commingRoom;
+		
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{
@@ -507,6 +509,7 @@ class Main extends React.Component {
 				this.__view_camp()
 			}}/>
 		}
+		console.log("this.props.started",this.props.changePwd)
 		return (
 			<div className="full-h">{sidebar}{content}</div>
 		)
@@ -533,7 +536,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
+	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),//没有使用
 	onLogout       		: () => dispatch(onLogout()),
 	onChangePwd      	: (show, fromViewUser) => dispatch(onChangePwd(show, fromViewUser)),
 	onStartCourse  		: () => dispatch(onStartCourse()),
@@ -545,7 +548,7 @@ const mapDispatchToProps = dispatch => ({
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
 	onCourseRecording   : (status, camp) => dispatch(onCourseRecording(status, camp)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
-	onCampLesson        : (room) => dispatch(onCampLesson(room)),
+	onCampLesson        : (room) => dispatch(onCampLesson(room)),//训练营
 	hideLoading 		: () => dispatch(hideLoading()),
 	showLoading 		: (message) => dispatch(showLoading(message)),
 })

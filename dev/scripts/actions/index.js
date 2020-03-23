@@ -186,7 +186,8 @@ export const onCourseStartingTick = ()=>({
 	type: types.COURSE_STARTING_TICK
 })
 
-export const onEnterTester = (page)=>({
+export const onEnterTester = (page)=>(console.log(page,"device 接收到的page==="),
+{
 	type: types.ENTER_TESTER,
 	page
 })
