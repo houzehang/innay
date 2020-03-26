@@ -9,6 +9,35 @@ import WindowFactory                        from './core/WindowFactory'
 import { PROXY, LOG_PATH }                  from './core/Configure'
 import { trigger }                          from './core/Eventer'
 import logger                               from 'electron-log'
+
+import * as Sentry from '@sentry/electron';
+// Sentry.init({dsn: 'https://<key>@sentry.io/<project>'});
+Sentry.configureScope(scope => {
+    scope.setExtra('battery', 0.7);
+    scope.setTag('user_mode', 'admin');
+    scope.setUser({ id: '4711' });
+    // scope.clear();
+});
+   
+// Add a breadcrumb for future events
+Sentry.addBreadcrumb({
+    message: 'My Breadcrumb',
+// ...
+});
+
+// Capture exceptions, messages or manual events
+Sentry.captureMessage('Hello, world!');
+Sentry.captureException(new Error('Good bye'));
+Sentry.captureEvent({
+message: 'Manual',
+    stacktrace: [
+        // ...
+    ],
+});
+// myUndefinedFunction();
+console.log('MINGXI_DEBUG_LOG>>>>>>>>>sentry inited','');
+
+
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }

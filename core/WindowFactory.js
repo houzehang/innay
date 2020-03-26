@@ -69,7 +69,8 @@ export default class WindowFactory {
 			center: true,
 			autoHideMenuBar: true,
 			webPreferences: {
-				webSecurity: false
+				webSecurity: false,
+				preload: path.join(__dirname, 'sentry.js')
 			}
 		})
 		let userAgent = _window.webContents.getUserAgent(), url
