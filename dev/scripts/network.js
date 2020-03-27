@@ -1,23 +1,13 @@
 import Eventer 		from './eventer'
 import context 		from './context'
 import {remote} 	from "electron"
-import Conf 		from "../const"
-import $ 			from "jquery"
+import NetUtil	  	from "./utils/NetUtil"
 class Network extends Eventer {
 	constructor() {
 		super()
 
 		this.$log_queue = []
 		this.__restore_token()
-	}
-
-	get baseUrl(){
-		let env_conf = window.ENV_CONF || {}
-		if (env_conf.DEBUG || env_conf.TEST) {
-			return Conf.TEST_URL
-		} else {
-			return Conf.ONLINE_URL
-		}
 	}
 
 	__restore_token() {
@@ -33,67 +23,63 @@ class Network extends Eventer {
 	}
 
 	upload_file(data) {
-		return new Promise((resolve, reject)=>{
-			const formData = new FormData();
-    		formData.append('upload_file',data)
-			$.ajax(this.baseUrl + "/uploadfile/index", {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`
-				},
-				method: "POST",
-				data: formData,
-				processData: false,
-        		contentType: false,
-				success: (response)=>{
-					if (response.data && response.data.url) {
-						resolve(response.data.url)
-					} else {
-						reject()
-					}
-				},
-				error: ()=>{
-					alert("啊哦，文件上传失败~")
+		const formData = new FormData();
+		formData.append('upload_file',data)
+		return NetUtil.quest('/uploadfile/index', {
+			headers: { 
+				"Authorization": `Bearer ${this.$token}`
+			},
+			method: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: (resolve, reject, response)=>{
+				if (response.data && response.data.url) {
+					resolve(response.data.url)
+				} else {
 					reject()
 				}
-			})
+			},
+			error: (resolve, reject)=>{
+				alert("啊哦，文件上传失败~")
+				reject()
+			}
 		})
 	}
 
 	__request(url, data = {}, method="get") {
 		data.client = "pc"
-		return new Promise((resolve, reject)=>{
-			$.ajax(this.baseUrl + url, {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`,
-					"Accept" : "application/json"
-				},
-				method : method.toUpperCase(),
-				data,
-				dataType: "json",
-				statusCode: {
-					403: ()=>{
-						this.trigger("LOGIN_NEEDED")
-					}
-				},
-				success: (res)=>{
-					resolve(res.data)
-				},
-				error: (res)=>{
-					if (res.responseJSON) {
-						alert(res.responseJSON.message)
-					}
-					if (res.status == 401) {
-						//登录
-						this.trigger("LOGOUT_NEEDED")
-						reject()
-						return
-					}
-					if (!res.responseJSON) {
-						alert("啊哦，网络出问题啦~")
-					}
-					reject()
+		return NetUtil.quest(url, {
+			headers: { 
+				"Authorization": `Bearer ${this.$token}`,
+				"Accept" : "application/json"
+			},
+			method : method.toUpperCase(),
+			data,
+			dataType: "json",
+			statusCode: {
+				403: ()=>{
+					this.trigger("LOGIN_NEEDED")
 				}
-			})
+			},
+			success: (resolve, reject, res)=>{
+				resolve(res.data)
+			},
+			error: (resolve, reject, res)=>{
+				if (res.responseJSON) {
+					alert(res.responseJSON.message)
+				}
+				if (res.status == 401) {
+					//登录
+					this.trigger("LOGOUT_NEEDED")
+					reject()
+					return
+				}
+				if (!res.responseJSON) {
+					alert("啊哦，网络出问题啦~")
+				}
+				reject()
+			}
 		})
 	}
 
@@ -152,17 +138,15 @@ class Network extends Eventer {
 	 * 
 	 */
 	getNewCodeimg () {
-		return new Promise((resolve, reject)=>{
-			$.ajax(this.baseUrl + "/captcha/api/mini", {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`
-				},
-				processData: false,
-        		contentType: false,
-				success: (response)=>{
-					resolve(response)
-				}
-			})
+		return NetUtil.quest('/captcha/api/mini', {
+			headers: { 
+				"Authorization": `Bearer ${this.$token}`
+			},
+			processData: false,
+			contentType: false,
+			success: (resolve, reject, response)=>{
+				resolve(response)
+			}
 		})
 	}
 
@@ -187,22 +171,20 @@ class Network extends Eventer {
 	* @param {*} data 
 	*/
 	checkPwIsDefault() {
-		return new Promise((resolve, reject)=>{
-			$.ajax(this.baseUrl + "/user/check_password_default", {
-				headers: { 
-					"Authorization": `Bearer ${this.$token}`
-				},
-				method: "POST",
-				processData: false,
-        		contentType: false,
-				success: (response)=>{
-					if (response.data) {
-						resolve(response.data)
-					} else {
-						reject()
-					}
+		return NetUtil.quest('/user/check_password_default', {
+			headers: { 
+				"Authorization": `Bearer ${this.$token}`
+			},
+			method: "POST",
+			processData: false,
+			contentType: false,
+			success: (resolve, reject, response)=>{
+				if (response.data) {
+					resolve(response.data)
+				} else {
+					reject()
 				}
-			})
+			}
 		})
 	}
 
@@ -420,7 +402,7 @@ class Network extends Eventer {
 		if (!this.$log_delay) {
 			this.$log_delay = setInterval(()=>{
 				if (this.$log_queue.length > 0) {
-					$.post(`${this.baseUrl}/api/h5_log`,{
+					NetUtil.post('/api/h5_log',{
 						logs	: this.$log_queue, 
 						user	: context.user.id, 
 						system  : this.__get_system_info()
