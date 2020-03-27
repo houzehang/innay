@@ -95,9 +95,18 @@ export default class WindowFactory {
 			installExtensions()
 			_window.webContents.openDevTools();
 		}
+
+		let baseUrl
+		if (DEBUG || TEST) {
+			baseUrl = Const.TEST_URL
+		} else {
+			baseUrl = Const.ONLINE_URL
+		}
+		_window.customData = {baseUrl};
 		_window.webContents.on('did-finish-load', () => {
 			_window.webContents.send('configure', {
-				__dirname: path.resolve(__dirname,'..'), __apppath: app.getAppPath(),
+				__dirname: path.resolve(__dirname,'..'), 
+				__apppath: app.getAppPath(),
 				version: app.getVersion(),
 				data,
 				TC_DEBUG, 
