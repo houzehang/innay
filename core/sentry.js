@@ -1,8 +1,5 @@
 "use strict";
-let electron = require("electron");
-const remote = electron.remote;
-var Sentry	 = remote.require('@sentry/electron');
-
+let Sentry = require('@sentry/electron')
 Sentry.init({
     dsn: 'http://09043f5505ec455986f34ef1611285f6@localhost:9000/3',
     debug: true,
