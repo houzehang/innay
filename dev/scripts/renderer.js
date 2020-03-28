@@ -25,8 +25,8 @@ class Renderer {
 		this.$using_backup_url = false
 		if (DEBUG) {
 			//todo: remote test code
-			// this.$base_url = "http://localhost:8080"
-			this.$base_url = "https://bundlesyuntest.mx0a.com"
+			this.$base_url = "http://localhost:8080"
+			// this.$base_url = "https://bundlesyuntest.mx0a.com"
 		} else if (TEST) {
 			this.$base_url = "https://bundlesyuntest.mx0a.com"
 		} else {
