@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackIncludeAssetsPlugin = require('html-webpack-include-assets-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const dependencies = require('./package.json').dependencies;
-
+require('./server')
 module.exports = {
   devtool: 'inline-source-map',
   mode: 'development',
