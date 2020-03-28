@@ -13,9 +13,15 @@ import context from "../context"
 const remote = $require('electron').remote;
 import bridge from '../../../core/MessageBridge'
 const logger = remote.require('electron-log')
+import $ from "jquery"
+const shell = $require('electron').shell;
+
 class Entry extends React.Component {
 	constructor(props) {
 		super(props)
+		this.state = {
+			packageUrlList: null
+		}
 	}
 	componentDidMount() {
 		this.__start_detector()
@@ -46,11 +52,29 @@ class Entry extends React.Component {
 	
 	render() {
 		const { dialog, account } = this.props
+		let packageUrlDivs = []
 		return <Router>
 			<div className="full-h" >
 				<div className='slave' onDoubleClick={()=>{
 					var window = remote.getCurrentWindow();
 					window.webContents.openDevTools();
+				}}></div>
+				<div className='slave-l' onDoubleClick={()=>{
+					let url = 'https://mingxi-software.oss-cn-beijing.aliyuncs.com/domain/domain.json'
+					$.ajax(url, {
+						headers: { 
+							"Accept" : "application/json"
+						},
+						method : "GET",
+						data: {},
+						dataType: "json",
+						success: (res)=>{
+							let packageUrlList = res.packageUrlList
+							this.setState({
+								packageUrlList
+							})
+						}
+					})
 				}}></div>
 				<Route exact path="/" render={
 					()=>{
@@ -62,6 +86,26 @@ class Entry extends React.Component {
 					}
 				}></Route>
 				{dialog.showing ? <Dialog data={dialog}/> : ""}
+				{
+					this.state.packageUrlList && this.state.packageUrlList.length >0 ? <div className='package-url-panel' onDoubleClick={()=>{
+						this.setState({
+							packageUrlList: []
+						})
+					}}>
+						{
+							this.state.packageUrlList.forEach((url, index)=>{
+								packageUrlDivs.push(<div className="package-item" onClick={()=>{
+									shell.openExternal(url)
+								}} key={`package-item-${index}`}>
+									{url}
+								</div>)
+							})
+						}
+						{packageUrlDivs}
+					</div> 
+					: 
+					""
+				}
 			</div>
 		</Router>
 	}
