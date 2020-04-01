@@ -157,10 +157,10 @@ class AgoraRtcEngine extends events_1.EventEmitter {
             fire('audiodevicestatechanged', deviceId, deviceType, deviceState);
             fire('audioDeviceStateChanged', deviceId, deviceType, deviceState);
         });
-        // this.rtcEngine.onEvent('audiomixingfinished', function() {
-        //   fire('audiomixingfinished');
-        //   fire('audioMixingFinished');
-        // });
+        this.rtcEngine.onEvent('audiomixingfinished', function() {
+          fire('audiomixingfinished');
+          fire('audioMixingFinished');
+        });
         this.rtcEngine.onEvent('audioMixingStateChanged', function (state, err) {
             fire('audioMixingStateChanged', state, err);
         });
