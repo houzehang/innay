@@ -60,7 +60,7 @@ class Entry extends React.Component {
 					window.webContents.openDevTools();
 				}}></div>
 				<div className='slave-l' onDoubleClick={()=>{
-					let url = 'https://mingxi-software.oss-cn-beijing.aliyuncs.com/domain/domain.json'
+					let url = 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain.json'
 					$.ajax(url, {
 						headers: { 
 							"Accept" : "application/json"
@@ -69,10 +69,13 @@ class Entry extends React.Component {
 						data: {},
 						dataType: "json",
 						success: (res)=>{
-							let packageUrlList = res.packageUrlList
+							let packageUrlList = process.platform === 'darwin' ? res.mac : res.win;
 							this.setState({
 								packageUrlList
 							})
+						},
+						error: (...args)=>{
+							console.log('domain.json was missing at',url)
 						}
 					})
 				}}></div>
