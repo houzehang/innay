@@ -100,7 +100,7 @@ class Entry extends React.Component {
 								packageUrlDivs.push(<div className="package-item" onClick={()=>{
 									shell.openExternal(url)
 								}} key={`package-item-${index}`}>
-									{url}
+									{decodeURI(url)}
 								</div>)
 							})
 						}
