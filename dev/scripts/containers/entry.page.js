@@ -60,7 +60,7 @@ class Entry extends React.Component {
 					window.webContents.openDevTools();
 				}}></div>
 				<div className='slave-l' onDoubleClick={()=>{
-					let url = 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain.json'
+					let url = `https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain.json?t=${Date.now()}`
 					$.ajax(url, {
 						headers: { 
 							"Accept" : "application/json"
