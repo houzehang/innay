@@ -8,7 +8,7 @@ import '../less/version.less'
 import {remote, ipcRenderer} from 'electron';
 import Const from '../const'
 import bridge from '../../core/MessageBridge'
-import { DEBUG, TEST } from '../../env'
+import DomainUtil from '../scripts/utils/DomainUtil'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
 const logger 		= remote.require('electron-log')
 const G = (id) => {
@@ -22,19 +22,12 @@ class Renderer {
 			message: "",
 			progress : null
 		}
-		this.$using_backup_url = false
-		if (DEBUG) {
-			//todo: remote test code
-			this.$base_url = "http://localhost:8080"
-			// this.$base_url = "https://bundlesyuntest.mx0a.com"
-		} else if (TEST) {
-			this.$base_url = "https://bundlesyuntest.mx0a.com"
-		} else {
-			this.$base_url = "https://bundlesyun.mx0a.com"
-			this.$retry_url= "http://bundlesossyun.mw019.com"
-		}
-		this.__setState()
-		this.__start_updater()
+		this.$using_backup_url  = false
+		DomainUtil.domains  	= Const.DOMAIN_LIST_DEFAULT
+		this.__setState(this.state)
+		DomainUtil.pull(()=>{
+			this.__start_updater()
+		})
 	}
 
 	__setStatus(status, data) {
@@ -74,8 +67,7 @@ class Renderer {
 		}
 	}
 
-	__do_update_bundle(result) {
-		let url = this.$using_backup_url ? this.$retry_url : this.$base_url
+	__do_update_bundle(result, url) {
 		logger.error("开始下载框架包", result, url)
 		bridge.call({
 			method: "startDownloadTask", 
@@ -107,7 +99,13 @@ class Renderer {
 		})
 	}
 
-	__update_bundle(url = this.$base_url) {
+	__update_bundle(retry) {
+		let	url = DomainUtil.availibleDomain('static', retry)
+		if (!url) {
+			logger.log('[debug-domain]','没有可用的static域名')
+			return false;
+		}
+		logger.log('[debug-domain]','使用static域名',url)
 		logger.error("检测基础框架是否有更新", url)
 		bridge.call({
 			method: "isUpdateAvailable",
@@ -119,24 +117,21 @@ class Renderer {
 			logger.error("检测基础框架是否有更新成功", result)
 			if (result.available) {
 				this.__setStatus(Const.UPDATE.DOWNLOADING_UI);
-				this.__do_update_bundle(result.server)
+				this.__do_update_bundle(result.server, url)
 			} else {
 				this.__setStatus(Const.UPDATE.LASTEST);
 				this.__on_complete()
 			}
 		}).catch(error=>{
 			logger.error("检测基础框架是否有更新出错", error)
-			if (url == this.$base_url && this.$retry_url) {
-				this.$using_backup_url = true
-				logger.log("尝试使用备选域名" + this.$retry_url)
-				this.__update_bundle(this.$retry_url)
-			} else {
+			if (!this.__update_bundle(true)) {
 				this.__setState({
 					progress: null,
 					error	: error
 				})
-			}
+			} 
 		})
+		return true
 	}
 
 	__start_updater() {
@@ -149,13 +144,22 @@ class Renderer {
 			this.__setStatus(Const.UPDATE.AVAILABLE);
 		})
 		autoUpdater.on('update-not-available', () => {
+			logger.log('[debug-domain]','热更新检测完成，无需更新')
 			this.__update_bundle()
 		})
 		autoUpdater.on('error', (err) => {
 			logger.error("基础框架更新出错",err)
-			setTimeout(() => {
-				this.__update_bundle()
-			}, 2000)
+			logger.log("检测是否有备用热更域名")
+			let nextAvailibleDomain = DomainUtil.availibleDomain('updater', true)
+			if (nextAvailibleDomain) {
+				logger.log('[debug-domain]','正在尝试下一个热更新域名:',nextAvailibleDomain)
+				autoUpdater.setFeedURL(nextAvailibleDomain)
+				autoUpdater.checkForUpdates();
+			} else {
+				setTimeout(() => {
+					this.__update_bundle()
+				}, 2000)
+			}
 		})
 		autoUpdater.on('download-progress', (progress) => {
 			this.__setStatus(Const.UPDATE.DOWNLOADING, progress);
@@ -202,7 +206,7 @@ class Renderer {
 			G("tips").innerText = `当前版本: ${this.state.version}, 更新出错：${this.state.error}`
 			G("restart-btn").style.display = "flex"
 		} else {
-			G("tips").innerText = `当前版本: ${this.state.version}, ${this.state.message}`
+			G("tips").innerText = `当前版本: ${this.state.version}${this.state.message ? ',' : ''} ${this.state.message}`
 			G("restart-btn").style.display = "none"
 		}
 	}

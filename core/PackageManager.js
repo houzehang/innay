@@ -36,6 +36,12 @@ export async function getLocalPackageVersion({pack}) {
 	}
 }
 
+export async function getDomains({url}) {
+	url = `${url}?t=${new Date().getTime()}`
+	let response = await got.get(url, {json: true, rejectUnauthorized: false})
+	return response.body
+}
+
 export async function getServerPackageVersion({url}) {
 	url = `${url}?t=${new Date().getTime()}`
 	let response = await got.get(url, {json: true, rejectUnauthorized: false})

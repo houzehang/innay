@@ -5,8 +5,7 @@ import net from '../network'
 import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
-import context from '../context'
-
+import DomainUtil from '../utils/DomainUtil'
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
@@ -17,82 +16,71 @@ class Download extends React.Component {
 			percent: 0,
 			notice: ""
 		}
+		this.$domain_course = DomainUtil.availibleDomain('course');
 	}
 
-	get baseFrameUrl(){
-		let env_conf = window.ENV_CONF || {}
-		if (env_conf.DEBUG) {
-			return "https://bundlesyuntest.mx0a.com"
-		} else if (env_conf.TEST) {
-			return "https://bundlesyuntest.mx0a.com"
-		} else {
-			if (context.usingBackupUrl) {
-				return "http://bundlesossyun.mw019.com"
-			} else {
-				return "https://bundlesyun.mx0a.com"
-			}
+	__start(retry) {
+		const room   		= this.props.data
+		const recording 	= this.props.recording
+		const camp			= this.props.camp
+		const homework  	= this.props.homework
+		const preview 		= this.props.preview
+		const baseFrameUrl 	= DomainUtil.availibleDomain('frame',retry)
+		if (!baseFrameUrl) {
+			this.__setStatus("UPDATE.ERROR",new Error('检测基础库出错，无可用域名'))
+			return
 		}
-	}
-
-	get baseCourseUrl(){
-		let env_conf = window.ENV_CONF || {}
-		if (env_conf.DEBUG) {
-			return "https://lessonsyuntest.mx0a.com"
-		} else if (env_conf.TEST) {
-			return "https://lessonsyuntest.mx0a.com"
-		} else {
-			if (context.usingBackupUrl) {
-				return "http://lessonsossyun.mw019.com"
-			} else {
-				return "https://lessonsyun.mx0a.com"
-			}
-		}
-	}
-
-	__start() {
-		const room   	= this.props.data
-		const recording = this.props.recording
-		const camp		= this.props.camp
-		const homework  = this.props.homework
-		const preview 	= this.props.preview
-
 		const params = {
 			room,
 			token 	: net.token,
 			account	: this.props.user,
 		}
+		let stepForward = false
 		if (homework) {
-			this.__update_homework_frame().then(data=>{
-				logger.log(`下载作业资源成功。版本号：${data.version} 资源库下载地址：${this.baseFrameUrl}`)
+			this.__update_homework_frame(baseFrameUrl).then(data=>{
+				logger.log(`下载作业资源成功。版本号：${data.version} 资源库下载地址：${baseFrameUrl}`)
 				this.props.complete(params)
 			}).catch(error=>{
-				logger.error("检测作业资源出错", error, `下载地址：${this.baseFrameUrl}/homework.json`)
+				logger.error("检测作业资源出错", error, `下载地址：${baseFrameUrl}/homework.json`)
 				this.__setStatus("UPDATE.ERROR", error);
+				this.__start(true)
 			})
 		} else if (preview) {
-			this.__update_base_frame().then(data=>{
-				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
+			this.__update_base_frame(baseFrameUrl).then(data=>{
+				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${baseFrameUrl}`)
 				let lesson = room.prepare_name
+				stepForward = true
 				return this.__update_preview_bundle(lesson)
 			}).then(data=>{
-				logger.log(`下载预习课程包成功。课程名：${room.prepare_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
+				logger.log(`下载预习课程包成功。课程名：${room.prepare_name}, 版本号：${data.version}`)
 				this.__on_complete(params)
 			}).catch(error=>{
-				logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 预习课程包下载地址：${this.baseCourseUrl}/${room.prepare_name}.json`)
 				this.__setStatus("UPDATE.ERROR", error);
+				if (!stepForward) {
+					logger.error("检测基础库出错", error, `基础库下载地址：${baseFrameUrl}/liveroom.json 预习课程包:${room.prepare_name}.json`)
+					this.__start(true)
+				} else {
+					logger.error("检测预习课程包出错", error)
+				}
 			})
 		} else {
-			this.__update_base_frame().then(data=>{
-				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${this.baseFrameUrl}`)
+			this.__update_base_frame(baseFrameUrl).then(data=>{
+				logger.log(`下载基础库成功。版本号：${data.version} 基础库下载地址：${baseFrameUrl}`)
 				let lesson = room.en_name
 				if (recording && !camp) lesson = lesson + `.${room.version}`.replace('..','.')
+				stepForward = true
 				return this.__update_course_bundle(lesson)
 			}).then(data=>{
-				logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version} 课程包下载地址：${this.baseCourseUrl}`)
+				logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
 				this.__on_complete(params)
 			}).catch(error=>{
-				logger.error("检测基础库出错", error, `基础库下载地址：${this.baseFrameUrl}/liveroom.json 课程包下载地址：${this.baseCourseUrl}/${room.en_name}.json`)
 				this.__setStatus("UPDATE.ERROR", error);
+				if (!stepForward) {
+					logger.error("检测基础库出错", error, `基础库下载地址：${baseFrameUrl}/liveroom.json 课程包：${room.en_name}.json`)
+					this.__start(true)
+				} else {
+					logger.error("检测课程包出错", error)
+				}
 			})
 		}
 	}
@@ -225,12 +213,12 @@ class Download extends React.Component {
 		})
 	}
 
-	__update_homework_frame() {
+	__update_homework_frame(baseFrameUrl) {
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${this.baseFrameUrl}/homework.json`,
+					url : `${baseFrameUrl}/homework.json`,
 					pack: "homeworkroom"
 				}
 			}).then(result=>{
@@ -240,7 +228,7 @@ class Download extends React.Component {
 					this.__do_update_bundle({
 						pack	: "homeworkroom", 
 						result	: result.server,
-						base_url: this.baseFrameUrl
+						base_url: baseFrameUrl
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
@@ -256,12 +244,12 @@ class Download extends React.Component {
 		})
 	}
 
-	__update_base_frame() {
+	__update_base_frame(baseFrameUrl) {
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${this.baseFrameUrl}/liveroom.json`,
+					url : `${baseFrameUrl}/liveroom.json`,
 					pack: "liveroom"
 				}
 			}).then(result=>{
@@ -271,7 +259,7 @@ class Download extends React.Component {
 					this.__do_update_bundle({
 						pack	: "liveroom", 
 						result	: result.server,
-						base_url: this.baseFrameUrl
+						base_url: baseFrameUrl
 					}).then(data=>{
 						resolve(data)
 					}).catch(error=>{
@@ -287,7 +275,7 @@ class Download extends React.Component {
 		})
 	}
 
-	__update_preview_bundle(lesson) {
+	__update_preview_bundle(lesson, baseCourseUrl) {
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "getLocalInstalledVersion",
@@ -298,7 +286,7 @@ class Download extends React.Component {
 				bridge.call({
 					method: "getServerPackageVersion",
 					args: {
-						url : `${this.baseCourseUrl}/${lesson}.json`,
+						url : `${baseCourseUrl}/${lesson}.json`,
 					}
 				}).then((serverInfo)=>{
 					this.__setStatus("UPDATE.COURSE_BUNDLE");
@@ -310,7 +298,7 @@ class Download extends React.Component {
 						this.__do_update_bundle({
 							pack  	: "preview-ui", 
 							result	: serverInfo,
-							base_url: this.baseCourseUrl
+							base_url: baseCourseUrl
 						}).then(data=>{
 							resolve(data)
 						}).catch(error=>{
@@ -338,34 +326,44 @@ class Download extends React.Component {
 					pack: "course-ui"
 				}
 			}).then((localInfo)=>{
-				bridge.call({
-					method: "getServerPackageVersion",
-					args: {
-						url : `${this.baseCourseUrl}/${lesson}.json`,
+				let __downloadPackage = (retry)=>{
+					let baseCourseUrl = DomainUtil.availibleDomain('course', retry)
+					if (!baseCourseUrl) {
+						let errorMessage = 'no avalible domain for course retrying'
+						logger.log('[debug-domain] errorMessage', errorMessage)
+						reject(new Error(errorMessage))
+						return
 					}
-				}).then((serverInfo)=>{
-					this.__setStatus("UPDATE.COURSE_BUNDLE");
-					serverInfo = serverInfo || {}
-					if (!localInfo||
-						localInfo.key != serverInfo.lesson ||
-						localInfo.md5 != serverInfo.md5) {
-						this.__setStatus("UPDATE.DOWNLOADING_UI");
-						this.__do_update_bundle({
-							pack  	: "course-ui", 
-							result	: serverInfo,
-							base_url: this.baseCourseUrl
-						}).then(data=>{
-							resolve(data)
-						}).catch(error=>{
-							reject(error)
-						})
-					}else{
-						this.__setStatus("UPDATE.LASTEST");
-						resolve(serverInfo)
-					}
-				}).catch(err=>{
-					reject(err)
-				})
+					bridge.call({
+						method: "getServerPackageVersion",
+						args: {
+							url : `${baseCourseUrl}/${lesson}.json`,
+						}
+					}).then((serverInfo)=>{
+						this.__setStatus("UPDATE.COURSE_BUNDLE");
+						serverInfo = serverInfo || {}
+						if (!localInfo||
+							localInfo.key != serverInfo.lesson ||
+							localInfo.md5 != serverInfo.md5) {
+							this.__setStatus("UPDATE.DOWNLOADING_UI");
+							this.__do_update_bundle({
+								pack  	: "course-ui", 
+								result	: serverInfo,
+								base_url: baseCourseUrl
+							}).then(data=>{
+								resolve(data)
+							}).catch(error=>{
+								reject(error)
+							})
+						}else{
+							this.__setStatus("UPDATE.LASTEST");
+							resolve(serverInfo)
+						}
+					}).catch(err=>{
+						__downloadPackage(true)
+					})
+				}
+				__downloadPackage()
 				
 			}).catch(err=>{
 				reject(err)

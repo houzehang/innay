@@ -116,6 +116,14 @@ class Context {
 		this.$audio_device_id = audio_device_id
 	}
 
+	get domains(){
+		return this.$domains || Const.DOMAIN_LIST_DEFAULT
+	}
+	
+	set domains(domains){
+		this.$domains = domains 
+	}
+
 	addDownloaded(url, file) {
 		if (!this.$local_files) {
 			this.$local_files = {}
