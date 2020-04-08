@@ -297,3 +297,8 @@ export const onShowTost = (configure)=>({
 	type: types.SHOW_TOAST,
 	configure
 })
+
+export const onShowGlobalMsg = (globalMsg)=>({
+	type: types.SHOW_GLOBAL_MSG,
+	globalMsg
+})

@@ -5,6 +5,7 @@ import CourseRecord from './course.student.replay.page'
 import CourserFlow from './course.student.flow.page'
 import Devices from './devices'
 import SideBar from '../components/sidebar'
+import GlobalMsg from '../components/globalMsg'
 import ViewUser from '../components/viewuser'
 import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
@@ -18,7 +19,8 @@ import {
 	onCourseRecording,
 	showLoading,
 	hideLoading,
-	onChangePwd
+	onChangePwd,
+	onShowGlobalMsg
 } from '../actions'
 import { setTimeout } from 'core-js';
 import context from "../context"
@@ -33,7 +35,8 @@ class Main extends React.Component {
 		this.$detect_delay 		= 5000
 		this.$cache_valid_time 	= 60*60*1000
         this.state ={
-			showChangePwdMask   : false
+			showChangePwdMask   : false,
+			timeDiff:	0
 		}
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -80,31 +83,48 @@ class Main extends React.Component {
 	strToDate(str) {
 		let parsed = str.split(/[-: ]/)
 		return new Date(parsed[0], parsed[1] - 1, parsed[2]||1, parsed[3]||0, parsed[4]||0, parsed[5]||0)
-    }
+	}
+
+	__serverTime(){
+		return new Date().getTime() + this.state.timeDiff
+	}
     
     __get_lesson_comming(){
-		net.getLessonComming().then((res)=>{
-			// 计算剩余时间
-			let room = res.room;
-			if (room) {
-				let date = this.strToDate(room.start_time)
-				let left = date.getTime() - new Date().getTime()
-				room.left = left
-				if (left > 0) {
-					let days  	= left / 1000 / 60 / 60 / 24 >> 0
-					left       -= days * 1000 * 60 * 60 * 24
-					let hours 	= left / 1000 / 60 / 60 >> 0
-					let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
-					room.days   = days
-					room.hours  = hours
-					room.minutes= minutes
+		net.getServerTime().then((res) => {
+			this.setState({ time: res.time * 1000 });
+			this.setState({ timeDiff: res.time * 1000 - Date.now() });
+			net.getLessonComming().then((res)=>{
+				// 计算剩余时间
+				let room = res.room;
+				if (room) {
+					//1.转换成UI展示所需格式的时间
+					let date = this.strToDate(room.start_time)
+					let left = date.getTime() - this.__serverTime()
+					room.left = left
+					if (left > 0) {
+						let days  	= left / 1000 / 60 / 60 / 24 >> 0
+						left       -= days * 1000 * 60 * 60 * 24
+						let hours 	= left / 1000 / 60 / 60 >> 0
+						let minutes = (left - hours * 60 * 60 * 1000)/1000/60 >> 0
+						room.days   = days
+						room.hours  = hours
+						room.minutes= minutes
+					}
+					//2.判断是否需要自动下载，自动进课
+					//todo: remove test code
+					room.followup = true
+					let followup = room.followup
+					if (followup) {
+						this.onDownload(room)
+						this.props.onShowGlobalMsg('9分18秒后将自动进入教室')
+					}
 				}
-			}
-			this.props.onLessonComming(room)
-
-			net.getCampLesson().then((room)=>{
-				console.log('camp room info',room);
-				this.props.onCampLesson(room);
+				this.props.onLessonComming(room)
+	
+				net.getCampLesson().then((room)=>{
+					console.log('camp room info',room);
+					this.props.onCampLesson(room);
+				})
 			})
 		})
 	}
@@ -201,7 +221,8 @@ class Main extends React.Component {
 		let room = this.props.commingRoom;
 		if (room) {
 			room.can_enter = true
-			room.can_download = true
+			//todo: remove test code
+			room.followup  = true
 		}
 		
 		return (
@@ -360,16 +381,22 @@ class Main extends React.Component {
 	}
 
 	onDownload(room, isRecord, camp) {
+		let followUp = room.followup
 		this.props.alert({
 			title: "下载课程包",
 			content: <Download data={room} recording={isRecord} camp={camp} complete={(data)=>{
-				this.props.hide()
-				bridge.call({
-					method	: "openLiveRoom",
-					args	: { pack: "liveroom", data }
-				}).catch(error=>{
-					console.error(error)
-				})
+				if (followUp) {
+					//...
+					console.log('MINGXI_DEBUG_LOG>>>>>>>>>down load over','');
+				} else {
+					this.props.hide()
+					bridge.call({
+						method	: "openLiveRoom",
+						args	: { pack: "liveroom", data }
+					}).catch(error=>{
+						console.error(error)
+					})
+				}
 			}} error={(error)=>{
 				
 			}} user={this.props.account}/>,
@@ -445,8 +472,11 @@ class Main extends React.Component {
 	}
 
 	render() {
-		let content, sidebar = ""
+		let content, sidebar = "", globalMsg;
 		let flow = this.props.campRoom && this.props.commingRoom;
+		if (this.props.globalMsg) {
+			globalMsg = <GlobalMsg></GlobalMsg>
+		}
 		if (this.props.started) {
 			//如果是回放加载回放组件
 			content = <CourseForStudent onLeaveRoom={()=>{
@@ -499,7 +529,7 @@ class Main extends React.Component {
 			}}/>
 		}
 		return (
-			<div className="full-h">{sidebar}{content}</div>
+		<div className="full-h">{sidebar}{content}{globalMsg}</div>
 		)
 	}
 }
@@ -520,6 +550,7 @@ const mapStateToProps = (state, ownProps) => {
 		mycourses   : state.main.enterMyCourses,
 		commingRoom : state.main.commingRoom,
 		campRoom    : state.main.campRoom,
+		globalMsg   : state.main.globalMsg,
 	}
 }
 
@@ -539,6 +570,7 @@ const mapDispatchToProps = dispatch => ({
 	onCampLesson        : (room) => dispatch(onCampLesson(room)),
 	hideLoading 		: () => dispatch(hideLoading()),
 	showLoading 		: (message) => dispatch(showLoading(message)),
+	onShowGlobalMsg 	: (message) => dispatch(onShowGlobalMsg(message))
 })
   
 export default connect(
