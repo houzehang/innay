@@ -75,11 +75,11 @@ html,body {
             height: 0.17rem;
         }
 		&.changepwd-page {
-			background: #484f70 url(../assets/login-bg.png) no-repeat center top;
-			background-size: 9rem auto;
+			background: url(../assets/login-newbg.png) no-repeat;
+			background-size: 100% 100%;
 			.changepwd-box {
 				background: #fff;
-				border-top: 0.06rem solid #3882c2;
+				border-radius: 0.2rem;
 				width: 4.44rem;
 				position: relative;
 				display: flex;
@@ -104,7 +104,8 @@ html,body {
 					}
 					.none-color{
 						height: 0.34rem;
-						border-bottom: 0.01rem solid transparent;
+						border-bottom: 0.02rem solid #fbab22;
+						color: #fbab22;
 					}
 					.current-style{
 						height: 0.34rem;
@@ -115,35 +116,39 @@ html,body {
 				.input-control {
 					margin-bottom: 0.22rem;
 					.input-box {
-						border: 0.01rem solid #b7b7b7;
-						height: 0.52rem;
+						height: 0.6rem;
 						display: flex;
 						align-items: center;
 						width: 3.16rem;
-						border-radius: 0.06rem;
-						background-color: #fafafa;
+						border-radius: 0.3rem;
+						background: #edf5ff;
+						padding: 0 0.02rem;
+						box-sizing: border-box;
 						input {
 							border: 0;
 							outline: none;
 							margin: 0 0.14rem;
-							height: 0.24rem;
-							flex: 1;
-							font-size: 0.14rem;
+							height: 0.2rem;
+							flex:1;
+							font-size: 0.16rem;
 							color: #333;
-							border-left:0.01rem solid #eee;
+							border-left:0.01rem solid #999;
 							padding-left: 0.1rem;
 							box-sizing: border-box;
-							background-color: #fafafa;
+							background: #edf5ff;
 							// .placeholder({
 							// 	color: #b7b7b7;
 							// })
-                        }
+						}
                         .newpwd-input{
+							width: 2rem!important;
                             border:0;
                             margin: 0;
                         }
 						.icon-img{
-						    margin-left: 0.14rem;
+							margin-left: 0.14rem;
+							width: 0.2rem;
+							height: 0.26rem;
 						}
 					}
 				}
@@ -151,15 +156,17 @@ html,body {
 					display: flex;
 					justify-content: space-between;
 					border:0!important;
+					background: #fff!important;
 					.input-left-box{
-						width: 62%;
-						border: 1px solid #b7b7b7;
+						width: 2.02rem!important;
 						height: 0.52rem;
 						display: flex;
 						align-items: center;
-						border-radius: 0.06rem;
+						border-radius: 0.35rem;
+						background: #edf5ff;
 						input{
 							width: 80%;
+							color:#333;
 						}
 						// .icon-img{
 						// 	width: 0.19rem;
@@ -174,24 +181,26 @@ html,body {
 						align-items: center;
 						justify-content: center;
 						border-radius: 0.06rem;
-                        background-color: #b7b7b7;
-                        font-size: 0.14rem;
-                        color:#fff;
+						background: url('../assets/btn-countdown-gray.png') no-repeat;
+						background-size: 100% 100%;
+						font-size: 0.16rem;
+						color:#fff;
 					}
 					.open-code{
-						background: rgb(245, 165, 17);
+						color: #a66900;
+						background: url('../assets/btn-countdown.png') no-repeat;
+						background-size: 100% 100%;
 					}
 				}
 				
 				.login-btn {
-					margin-top: 0.18rem;
-					width: 3.16rem;
-					height: 0.52rem;
-					color: #fff;
-					font-size: 0.18rem;
-					background: #3882c2; 
-					color: #fff;
-					border-radius: 0.06rem;
+					width: 2.4rem;
+					height: 0.6rem;
+					background: url('../assets/btn-submit.png') no-repeat;
+					background-size: 100% 100%;
+					display: block;
+					margin: 0 auto;
+					margin-top: 0.2rem;
 					&:active {
 						opacity: 1;
 					}
@@ -200,14 +209,13 @@ html,body {
 					}
 				}
 				.not-btn{
-					margin-top: 0.18rem;
-					width: 3.16rem;
-					height: 0.52rem;
-					color: #fff;
-					font-size: 0.18rem;
-					background: #b7b7b7;
-					color: #fff;
-					border-radius: 0.06rem;
+					width: 2.4rem;
+					height: 0.6rem;
+					display: block;
+					margin: 0 auto;
+					margin-top: 0.2rem;
+					background: url('../assets/btn-submit-gray.png') no-repeat;
+					background-size: 100% 100%;
 					&:active {
 						opacity: 1;
 					}
@@ -282,7 +290,7 @@ html,body {
 				width: 100%;
 				text-align: center;
 				font-size: 0.22rem;
-				color: #3882c2;
+				color: #fbab22;
 				margin-top: 0.3rem;
 			}
 			.pic-codewrap{

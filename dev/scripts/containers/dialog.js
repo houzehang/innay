@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { ipcRenderer } from 'electron';
 import Hotkey from '../../hotkey'
-
+import Const from '../../const'
+import { text } from 'body-parser';
 class Dialog extends React.Component {
 	constructor(props) {
 		super(props)
@@ -32,15 +33,20 @@ class Dialog extends React.Component {
 
 	render() {
 		let buttons = []
-		const { type,configure } = this.props.data
+		const { type,configure} 	= this.props.data
+		let styleInfo    			= configure.style || Const.EBTN_STYLE_CONFIG.kNormal
+		let classNameBtnOk	   		= `ok-btn ${styleInfo[0]}`
+		let classNameBtnCancel 		= `cancel-btn ${styleInfo[1]}`
+		let styleLine               = configure.linestyle || Const.LINE_CONFIRM_TITLE.lineTitle
+        let showLine                = `${styleLine[0]}` 
 		if (type == "confirm") {
-			buttons.push(<button className="cancel-btn" key="cancel-btn" onClick={this.hide.bind(this)}>{configure.cancel_txt||"取消"}</button>)
+			buttons.push(<button className={classNameBtnCancel} key="cancel-btn" onClick={this.hide.bind(this)}></button>)
 		}
-		buttons.push(<button className="ok-btn" key="ok-btn" onClick={this.sure.bind(this)}>{configure.sure_txt||"确定"}</button>)
+		buttons.push(<button className={classNameBtnOk} key="ok-btn" onClick={this.sure.bind(this)}></button>)
 		return <div className="mask dialog-layer show">
 			<div className={`${"dialog "+(configure.classname||"")}${configure.large_mod ? ' large' : ''}`} style={configure.styles}>
 				<div className={configure.title_hidden ? 'title clear' : 'title'} >
-					{configure.title_hidden ? '' : `${configure.title || "提示"}`}
+					{configure.title=="个人信息"?<div className={showLine}>{configure.title_hidden ? '' : `${configure.title || "提示"}`}</div>:configure.title_hidden ? '' : `${configure.title || "提示"}`}
 					{this.props.data.configure.close_hidden ? '' : <div className="close-btn" onClick={this.hide.bind(this)}></div>}
 				</div>
 				<div className={configure.nobutton?"content nobtn":"content"}>
@@ -86,10 +92,11 @@ Dialog.propTypes = {
 			viewport	: PropTypes.shape({
 				width 	: PropTypes.string.isRequired,
 				height	: PropTypes.string
-			})
+			}),
+			style		: PropTypes.strings
 		}),
 		type 	: PropTypes.string,
-		showing : PropTypes.bool
+		showing : PropTypes.bool,
 	})
 }
 

@@ -95,5 +95,14 @@ module.exports = {
 		updater: [
 			{url: "http://file.mw019.com/software"
 		}]
+	},
+	EBTN_STYLE_CONFIG :{
+		kNormal: 	 ['ok', 'cancel'],
+		kDeviceTest: ['check-jump', 'check-again'],
+		kChangePwd:  ['changepwd','none'],
+		kClassExit:  ['leave-class','end-class']
+	},
+	LINE_CONFIRM_TITLE:{
+		lineTitle:   ['title-text']
 	}
 };

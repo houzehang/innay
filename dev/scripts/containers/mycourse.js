@@ -53,6 +53,7 @@ class MyCourse extends React.Component {
 					if (res && res.list && res.list.data && res.list.data.length > 0) {
 						this.$page_comming = Number(res.list.current_page) + 1;
 						let latest 		   = (this.props.commingRooms || []).concat(res.list.data || []);
+						console.log("latest 最新",this.props.commingRooms,"=======",res.list.data )
 						this.props.onLessonsComming(latest);
 						res.total && res.total.length > 0 && this.props.onLessonsTotalComming(res.total);
 					} else {
@@ -118,14 +119,14 @@ class MyCourse extends React.Component {
 
 		return (
 			<div className="page student-page" >
+				<div className="btn-exit" onClick={() => {
+					this.props.onExitMyCourses()
+					this.props.onExit()
+				}}></div>
 				<div className="inner">
 					<div className="student-box">
 						<div className="my-courses">
 							<div className="nav-area">
-								<div className="btn-exit" onClick={() => {
-									this.props.onExitMyCourses()
-									this.props.onExit()
-								}}></div>
 								<div className={this.state.comming_page_selected ? "switch-bar" : "switch-bar first-selected"} >
 									<div className="switch-bar-left" onClick={() => { this.__select_page(1); }}>
 										<span>要上课程</span>
@@ -202,12 +203,12 @@ class MyCourse extends React.Component {
 												<span className={room.class_state == 'normal' ? 'lesson-state' : "lesson-state abnormal"} >{room.class_state == 'normal' ? '正常结束' : (room.class_state == 'leave' ? "请假" : "未到课")}</span>
 												{(room.button_hf && room.button_playback_pc) ? <div className="btn-view-record" onClick={() => {
 													this.props.onRecordRoom(room)
-												}}>回放
+												}}>
 												{room.beta ? <div className="beta-icon"></div> : ""}
 												</div> : ""}
 												<div className="btn-view-review" onClick={()=>{
 													this.props.onStartHomework(room)
-												}}>复习</div>
+												}}></div>
 												<div className="split-ph"></div>
 												<div className="star-icon"></div>
 												<span className="star-count">{room.star}</span>

@@ -2,7 +2,7 @@
 @import url(~normalize.css/normalize.css);
 @import url(./common.less);
 
-@keyframes warn_anim {
+@keyframes warnanim {
     // 100% {
     //     transform: scale(1) rotate(0);
     //     transform: scale(1) rotate(0)
@@ -129,11 +129,12 @@ html,body {
 			opacity: 0;
 		}
 		&.login-page {
-			background: #484f70 url(../assets/login-bg.png) no-repeat center top;
-			background-size: 9rem auto;
+			background: url(../assets/login-newbg.png) no-repeat ;
+			background-size: 100% 100%;
 			.login-box {
 				background: #fff;
-				border-top: 0.06rem solid #3882c2;
+				box-shadow: 0px 3px 10px 0px rgba(3, 118, 165, 0.35);
+	            border-radius: 0.2rem;
 				width: 4.44rem;
 				height: 3.3rem;
 				position: relative;
@@ -161,94 +162,98 @@ html,body {
 					}
 					.current-style{
 						height: 0.34rem;
-						color: #3882c2;
-						border-bottom: 0.02rem solid #3882c2;
+						color: #fbab22;
+						border-bottom: 0.02rem solid #fbab22;
 					}
 				}
 				.input-control {
 					margin-bottom: 0.22rem;
 					.input-box {
-						border: 0.01rem solid #b7b7b7;
 						height: 0.52rem;
 						display: flex;
 						align-items: center;
 						width: 3.16rem;
-						border-radius: 0.06rem;
-						background-color: #fafafa;
+						border-radius: 0.35rem;
+						background-color: #edf5ff;
 						input {
 							border: 0;
 							outline: none;
 							margin: 0 0.14rem;
-							height: 0.24rem;
+							height: 0.2rem;
 							flex: 1;
-							font-size: 0.14rem;
+							font-size: 0.16rem;
 							color: #333;
-							border-left:0.01rem solid #eee;
+							border-left:0.01rem solid #999;
 							padding-left: 0.1rem;
 							box-sizing: border-box;
-							background-color: #fafafa;
+							background-color: #edf5ff;
 							.placeholder({
-								color: #b7b7b7;
+								color: #999;
 							})
 						}
 						.icon-img{
-						    margin-left: 0.14rem;
+							margin-left: 0.14rem;
+							width: 0.2rem;
+							height: 0.26rem;
+						}
+					}
+					.code-inputbox{
+						display: flex;
+						justify-content: space-between;
+						border:0!important;
+						background: #fff;
+						.input-left-box{
+							width: 2.02rem!important;
+							height: 0.52rem;
+							display: flex;
+							align-items: center;
+							border-radius: 0.35rem;
+							background-color: #edf5ff;
+							input{
+								width: 80%;
+								color: #333;
+							}
+							// .icon-img{
+							// 	width: 0.19rem;
+							// 	height: 0.24rem;
+							// }
+						}
+						.code-box{
+							width: 33%;
+							height: 0.52rem;
+							text-align: center;
+							display: flex;
+							align-items: center;
+							justify-content: center;
+							border-radius: 0.06rem;
+							background: url('../assets/btn-countdown-gray.png') no-repeat;
+							background-size: 100% 100%;
+							font-size: 0.14rem;
+							color:#fff;
+						}
+						.open-code{
+							color: #a66900;
+							background: url('../assets/btn-countdown.png') no-repeat;
+							background-size: 100% 100%;
 						}
 					}
 				}
-				.code-inputbox{
-					display: flex;
-					justify-content: space-between;
-					border:0!important;
-					.input-left-box{
-						width: 62%;
-						border: 1px solid #b7b7b7;
-						height: 0.52rem;
-						display: flex;
-						align-items: center;
-						border-radius: 0.06rem;
-						input{
-							width: 80%;
-						}
-						// .icon-img{
-						// 	width: 0.19rem;
-						// 	height: 0.24rem;
-						// }
-					}
-					.code-box{
-						width: 33%;
-						height: 0.52rem;
-						text-align: center;
-						display: flex;
-						align-items: center;
-						justify-content: center;
-						border-radius: 0.06rem;
-						background-color: #b7b7b7;
-						font-size: 0.14rem;
-						color:#fff;
-					}
-					.open-code{
-						background: rgb(245, 165, 17);
-					}
-				}
+				
 				//忘记密码
 				.forget-pw{
 					width: 100%;
 					margin-top: -0.18rem;
 					font-size: 0.14rem;
-					color: #666666;
+					color: #999;
 					text-align: right;
 				}
 				
 				.login-btn {
 					margin-top: 0.18rem;
-					width: 3.16rem;
-					height: 0.52rem;
-					color: #fff;
-					font-size: 0.18rem;
-					background: #3882c2;
-					color: #fff;
-					border-radius: 0.06rem;
+					width: 2.3rem;
+					height: 0.6rem;
+					background: url('../assets/btn-login.png') no-repeat;
+					background-size: 100% 100%;
 					&:active {
 						opacity: 1;
 					}
@@ -258,13 +263,10 @@ html,body {
 				}
 				.not-btn{
 					margin-top: 0.18rem;
-					width: 3.16rem;
-					height: 0.52rem;
-					color: #fff;
-					font-size: 0.18rem;
-					background: #b7b7b7;
-					color: #fff;
-					border-radius: 0.06rem;
+					width: 2.3rem;
+					height: 0.6rem;
+					background: url('../assets/btn-login-gray.png') no-repeat;
+					background-size: 100% 100%;
 					&:active {
 						opacity: 1;
 					}
@@ -417,8 +419,17 @@ html,body {
 		}
 		&.student-page {
 			transition: all 300ms 0s ease-in-out;
-			background: #2d3144;
+			background: url('../assets/student-bg.png') no-repeat;
+        	background-size: 100% 100%;
 			flex-direction: column;
+			.btn-exit{
+				width: 0.6rem!important;
+                height: 0.6rem!important;
+				position: fixed;
+				.view-base("page-back.png");
+				top: 0.3rem;
+				left: 0.4rem;
+			}
 			.inner {
 				width: 12.72rem;
 				margin: 0.1rem 0.15rem;
@@ -427,16 +438,14 @@ html,body {
 				justify-content: center;
 				align-items: center;
 				flex: 1;
-				background: #484f70;
 				.student-box {
-					background: #3b415f;
 					border-radius: 0.2rem;
 					display: flex;
 					flex-direction: column;
 					justify-content: center;
 					align-items: center;
-					width: 9.15rem;
-					height: 6.68rem;
+					width: 9.5rem;
+					height: 9.68rem;
 					.main-page{
 						.student-icon {
 							width: 100%;
@@ -457,7 +466,7 @@ html,body {
 							}
 						}
 						.no-lesson {
-							width: 8.19rem;
+							width: 3rem;
 							background: #fff;
 							padding: 0.16rem;
 							justify-content: center;
@@ -467,12 +476,13 @@ html,body {
 							font-size: 0.16rem;
 							line-height: 1.5;
 							border-radius: 0.2rem;
-							margin-top: 0.2rem;
+							margin-top: 0.5rem;
+							margin-left: 1.4rem;
 						}
 						.lesson-box {
 							position: relative;
 							display: flex;
-							width: 8.19rem;
+							width: 9.5rem;
 							height: 1.57rem;
 							background: #fff;
 							padding: 0.2rem;
@@ -497,7 +507,7 @@ html,body {
 							}
 							.info {
 								display: flex;
-								width: 4.3rem;
+								width: 5.2rem;
 								height: 1.57rem;
 								margin-right: 0.2rem;
 								align-items: flex-start;
@@ -675,6 +685,7 @@ html,body {
 						flex-direction: column;
 						justify-content: flex-start;
 						align-items: center;
+						margin-top: 0.6rem;
 						.nav-area{
 							position: relative;
 							display: flex;
@@ -684,18 +695,11 @@ html,body {
 							height: 0.93rem;
 							width: 100%;
 							margin-bottom: 0.31rem;
-							.btn-exit{
-								position: absolute;
-								.view-base("stu_btn_back.png");
-								top: 0.37rem;
-								left: 0.54rem;
-							}
 							.switch-bar{
 								display: flex;
-								width: 3.4rem;
-								height: 0.63rem;
+								width: 3.8rem;
+								height: 0.7rem;
 								border-radius: 0.32rem;
-								border: 0.01rem solid #feb425;
 								font-size: 0.28rem;
 								font-weight: bold;
 								line-height: 100%;
@@ -704,6 +708,7 @@ html,body {
 									border-top-left-radius: inherit;
 									border-bottom-left-radius: inherit;
 									background: #feb425;
+									box-shadow: 0rem 0.08rem 0rem 0rem#f69c00;
 									width: 50%;
 									height: 100%;
 									color: #fff;
@@ -718,6 +723,7 @@ html,body {
 									background: #fff;
 									height: 100%;
 									color: #666666;
+									box-shadow: 0rem 0.08rem 0rem 0rem#b4b4b4;
 									display: flex;
 									align-items: center;
 									justify-content: center;
@@ -725,10 +731,12 @@ html,body {
 								&.first-selected{
 									.switch-bar-left{
 										background: #fff;
+										box-shadow: 0rem 0.08rem 0rem 0rem#b4b4b4;
 										color: #666666;
 									}
 									.switch-bar-right{
 										background: #feb425;
+										box-shadow: 0rem 0.08rem 0rem 0rem#f69c00;
 										color: #fff;
 									}
 								}
@@ -751,8 +759,8 @@ html,body {
 							}
 						}
 						.courses-comming-area{
-							width: 8.51rem;
-							height: 5.24rem;
+							width: 9.5rem;
+							height: 9.24rem;
 							overflow: scroll;
 							&.empty-area{
 								display: flex;
@@ -793,6 +801,7 @@ html,body {
 									// font-weight: bold;
 								}
 								.lesson-box {
+									width: 9.5rem;
 									position: relative;
 									display: flex;
 									display: flex;
@@ -815,7 +824,7 @@ html,body {
 									}
 									.info {
 										display: flex;
-										width: 4.3rem;
+										width: 5.2rem;
 										height: 1.57rem;
 										margin-right: 0.2rem;
 										align-items: flex-start;
@@ -908,54 +917,40 @@ html,body {
 										width: 1.29rem;
 										height: 1.51rem;
 										.start-btn,.record-btn,.download-btn,.waiting-btn,.preview-btn{
-											width: 100%;
-											height: 0.52rem;
-											background: #ff696a;
+											width: 1.5rem;
+											height: 0.6rem;
 											color: #fff;
 											font-size: 0.2rem;
 											display: flex;
 											justify-content: center;
 											align-items: center;
 											border-radius: 0.06rem;
-											&::after {
-												content: "开始上课";
-											}
+											background: url('../assets/btn-start.png') no-repeat;
+											background-size: 100% 100%;
 											&[disabled] {
-												background: #b5b5b5;
-												&::after {
-													content: "已上课";
-												}
+												background: url('../assets/btn-alreadyclass.png') no-repeat;
+												background-size: 100% 100%;
 											}
 											&.waiting {
-												&::after {
-													content: "上课时间未到"
-												}
+												background: url('../assets/btn-classtime.png') no-repeat;
+												background-size: 100% 100%;
 											}
 										}
 										.record-btn {
-											background: #8b460e;
-											&::after {
-												content: "课程回放";
-											}
+											background: url('../assets/btn-classreplay.png') no-repeat;
+											background-size: 100% 100%;
 										}
 										.download-btn {
-											background: #3882c2;
-											&::after {
-												content: "下载课程包";
-											}
+											background: url('../assets/btn-loadpackage.png') no-repeat;
+											background-size: 100% 100%;
 										}
 										.waiting-btn {
-											
-											background: #b4b4b4;
-											&::after {
-												content: "等待上课";
-											}
+											background: url('../assets/btn-wait.png') no-repeat;
+											background-size: 100% 100%;
 										}
 										.preview-btn {
-											background: #3882c2;
-											&::after {
-												content: "课前预习";
-											}
+											background: url('../assets/btn-classpreview.png') no-repeat;
+											background-size: 100% 100%;
 										}
 										.leave-flag{
 											.view-base('stu_leave.png');
@@ -1014,7 +1009,7 @@ html,body {
 						}
 
 						.courses-done-area{
-							height: 5.24rem;
+							height: 9.24rem;
 							width: 8.7rem;
 							position: relative;
 							overflow: scroll;
@@ -1047,7 +1042,7 @@ html,body {
 									margin-bottom: 0.21rem;
 									position: relative;
 									.box-panel-top{
-										height: 0.24rem;
+										height: 0.26rem;
 										margin-left: 0.29rem;
 										margin-bottom: 0.24rem;
 										margin-top: 0.3rem;
@@ -1089,7 +1084,8 @@ html,body {
 											position: relative;
 											color: #fff;
 											font-size: 0.16rem;
-											background: #19b7a8;
+											background: url('../assets/btn-record.png') no-repeat;
+											background-size: 100% 100% ;
 											width: 0.6rem;
 											height: 0.26rem;
 											display: flex;
@@ -1110,7 +1106,8 @@ html,body {
 											}
 										}
 										.btn-view-review {
-											background: #feb425;
+											background: url('../assets/btn-review.png') no-repeat;
+											background-size: 100% 100%;
 										}
 										.lesson-state{
 											margin-left: 0.3rem;
@@ -2556,7 +2553,7 @@ html,body {
 	}
 
 	// 安全验证弹框
-	.safe-mask{
+	.safe-mask-main{
 		width: 100%;
 		height: 100%;
 		position: fixed;
@@ -2568,11 +2565,12 @@ html,body {
 		align-items: center;
 		.safe-container{
 			width: 4.42rem;
-			padding: 0rem 0.62rem 0.5rem 0.62rem;
+			padding: 0rem 0.32rem 0.5rem 0.32rem;
 			box-sizing: border-box;
 			background: #fff;
 			border-bottom:0.02rem solid #3882c2;
 			position: relative;
+			border-radius: 0.2rem;
 			.icon-img-box{
 				width: 0.17rem;
 				height: 0.17rem;
@@ -2588,7 +2586,7 @@ html,body {
 				width: 100%;
 				text-align: center;
 				font-size: 0.22rem;
-				color: #3882c2;
+				color: #fbab22;
 				margin-top: 0.3rem;
 			}
 			.pic-codewrap{
@@ -2596,21 +2594,37 @@ html,body {
 				display: flex;
 				justify-content: space-between;
 				margin-top: 0.34rem;
-				input{
-					width: 2.08rem;
-					height: 0.5rem;
-					outline: none;
-					background-color: #fafafa;
-					border-radius: 0.06rem;
-					border: solid 0.01rem #b7b7b7;
-					font-size: 0.16rem;
-					color: #b7b7b7;
-					padding:0 0.15rem;
+				.input-left-box{
+					width: 2.6rem;
+					height: 0.6rem;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					background: #edf5ff;
+					border-radius: 0.32rem;
+					padding: 0 0.2rem;
 					box-sizing: border-box;
+					.icon-img{
+						width: 0.2rem;
+						height: 0.24rem;
+					}
+					input{
+					    flex:1;
+						outline: none;
+						border:none;
+						background-color: #edf5ff;
+						border-left: 0.01rem solid #999;
+						font-size: 0.16rem;
+						color: #999;
+						padding:0 0.05rem;
+						box-sizing: border-box;
+						margin-left: 0.1rem;
+					}
 				}
+				
 				.pic-codebox{
 					width: 1rem;
-					height: 0.48rem;
+					height: 0.54rem;
 					background-color: #fafafa;
 					border-radius: 0.06rem;
 					border: solid 0.01rem #b7b7b7;
@@ -2622,13 +2636,13 @@ html,body {
 				}
 			}
 			.login-btn{
-				width: 3.16rem;
-				height: 0.52rem;
-				background-color: #3882c2;
-				border-radius: 0.06rem;
+				width: 2.4rem;
+				height: 0.6rem;
+				background: url('../assets/btn-confirm.png') no-repeat;
+				background-size: 100% 100%;
+				display:block;
+				margin: 0 auto;
 				margin-top: 0.3rem;
-				color:#fff;
-				font-size: 0.2rem;
 			}
 		}
 	}

@@ -264,7 +264,7 @@ class Devices extends React.Component {
 							net.log({"DEVICE-TEST": "hardware test passed"})
 							context.log('device-hardware test passed')
 							this.setState({step: 1})
-						}} className="step-btn">设备信息正确，开始检测</button>
+						}} className="step-btn check-correct"></button>
 					</div>
 				</div>
 			)
@@ -291,7 +291,11 @@ class Devices extends React.Component {
 			<div className="step-content">
 				<div className="step-title">确认摄像头能够正常显示，如有问题切换设备试试</div>
 				<div className="selector">
-					设备：<div className="select-box">{this.state.currentVideoName}</div>
+					设备：<div className="select-box">{this.state.currentVideoName}
+						<div className="select-icon">
+						    <img src={require('../../assets/tester-select.png')}/>
+						</div>
+					</div>
 					<select className="select" value={this.state.currentVideoDevice} onChange={(event)=>{
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
@@ -319,10 +323,10 @@ class Devices extends React.Component {
 				<div className="step-btns">
 					<button onClick={()=>{
 						this.__on_step1_done({ passed: false })
-					}} className="step-btn no-pass">不能看到图像</button>
+					}} className="step-btn no-pass cantsee-image"></button>
 					<button onClick={()=>{
 						this.__on_step1_done({ passed: true })
-					}} className="step-btn">能清晰看到图像</button>
+					}} className="step-btn clear-image"></button>
 					<button onClick={()=>{
 						this.onStopPreviewAndStepTo(0)
 						this.setState({step: 0})
@@ -356,7 +360,11 @@ class Devices extends React.Component {
 			<div className="step-content">
 				<div className="step-title">说几句话确认音量有变化，如有问题切换设备试试</div>
 				<div className="selector">
-					设备：<div className="select-box">{this.state.currentAudioName}</div>
+					设备：<div className="select-box">{this.state.currentAudioName}
+					    <div className="select-icon">
+						    <img src={require('../../assets/tester-select.png')}/>
+						</div>
+					</div>
 					<select className="select" value={this.state.currentAudioDevice} onChange={(event)=>{
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
@@ -387,10 +395,10 @@ class Devices extends React.Component {
 				<div className="step-btns">
 					<button onClick={()=>{
     					this.__on_step2_done({passed: false})
-					}} className="step-btn no-pass">看不到音量变化</button>
+					}} className="step-btn no-pass no-voice"></button>
 					<button onClick={()=>{
     					this.__on_step2_done({passed: true})
-					}} className="step-btn">能看到音量变化</button>
+					}} className="step-btn see-voice"></button>
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
 						this.setState({step: 1})
@@ -423,8 +431,8 @@ class Devices extends React.Component {
 		} else {
 			this.props.confirm({
 				content: "设备检测存在异常，请联系课程顾问帮您解决。",
-				cancel_txt: "跳过检测",
-				sure_txt: "重新检测",
+				cancel_txt: "",
+				sure_txt: "",
 				sure: ()=>{
 					net.log({"DEVICE-TEST": "user device test failed and restart."})
 					context.log('device-user device test failed and restart.')
@@ -435,7 +443,8 @@ class Devices extends React.Component {
 					net.log({"DEVICE-TEST": "user device test failed and stepover."})
 					context.log('device-user device test failed and stepover.')
 					this.__exit()
-				}
+				},
+				style: Const.EBTN_STYLE_CONFIG.kDeviceTest
 			})
 			context.upload_agora_logs()
 		}
@@ -459,7 +468,11 @@ class Devices extends React.Component {
 			<div className="step-content">
 				<div className="step-title">调整音量确认能听到音乐，如有问题切换设备试试</div>
 				<div className="selector">
-					设备：<div className="select-box">{this.state.currentSpeakerName}</div>
+					设备：<div className="select-box">{this.state.currentSpeakerName}
+						<div className="select-icon">
+						    <img src={require('../../assets/tester-select.png')}/>
+						</div>
+					</div>
 					<select className="select" value={this.state.currentSpeakerDevice} onChange={(event)=>{
 						var index = event.nativeEvent.target.selectedIndex;
 						var name  = event.nativeEvent.target[index].text
@@ -497,12 +510,12 @@ class Devices extends React.Component {
 					</div>
 				</div>
 				<div className="step-btns">
-					<button className="step-btn no-pass" onClick={()=>{
+					<button className="step-btn no-pass no-hear" onClick={()=>{
 						this.__on_step3_done({passed: false})
-					}}>听不到测试音</button>
-					<button className="step-btn" onClick={()=>{
+					}}></button>
+					<button className="step-btn can-hear" onClick={()=>{
 						this.__on_step3_done({passed: true})
-					}}>能听到测试音</button>
+					}}></button>
 					<button onClick={()=>{
 						this.$playing = false
 						this.$client.stopAudioPlaybackDeviceTest();

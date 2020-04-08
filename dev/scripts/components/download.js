@@ -380,7 +380,7 @@ class Download extends React.Component {
 					<div className="info notice" key="notice">{this.state.error}</div>,
 					<div className="restart-btn" key="restart" onClick={()=>{
 						this.__restart()
-					}}>重新下载</div>
+					}}></div>
 				]:[
 					<div className="progress" key="progress">
 						<div className="bar">

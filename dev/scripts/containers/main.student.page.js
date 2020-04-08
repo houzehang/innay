@@ -11,6 +11,8 @@ import ViewChangePwd from '../components/viewChangePwd'
 import Helper from '../components/helper'
 import net from "../network"
 import Camp from '../components/camp'
+import Const from '../../const'
+import "../../less/mainpage.less"
 import * as types from '../constants/ActionTypes'
 import { 
     onRoomInfo,
@@ -41,7 +43,6 @@ class Main extends React.Component {
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
 		})
-		console.log('this.props.account.id == ',this.props.account.id)
 		ipcRenderer.on("room-closed", ()=>{
 			this.__get_lesson_comming();
 			context.upload_system_logs()
@@ -131,16 +132,18 @@ class Main extends React.Component {
 	
 	__isOldPassWord(){
 		net.checkPwIsDefault().then(res=>{
-			if(res.status && this.state.showChangePwdMask){
-				this.props.alert({
+			// if(res.status && this.state.showChangePwdMask){
+				this.props.confirm({
+					title: "温馨提示",
 					content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
 					sure: ()=>{
 						this.__view_change_pwd()
 					},
 					sure_txt: "修改密码",
-					close_hidden: true
+					close_hidden: true,
+					style: Const.EBTN_STYLE_CONFIG.kChangePwd
 				});
-			}
+			// }
 		})
 	}
 
@@ -166,6 +169,7 @@ class Main extends React.Component {
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
+	    console.log(this.props.account,"this.props.accounts")
 		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
 	}
@@ -213,7 +217,7 @@ class Main extends React.Component {
 					去“明兮大语文”小程序<br/>
 					和其他小朋友一起完成作业吧~
 				</div>
-			]
+			] 
 		}
 	}
 
@@ -226,18 +230,19 @@ class Main extends React.Component {
 		}
 		
 		return (
-			<div className="page student-page">
+			<div className="page student-pages">
 				<div className="inner">
 					<div className="student-box">
                         <div className="main-page">
-						    <div className="student-icon"></div>
                             { room ? ([
                                 <div key="1" className="lesson-box">
                                     <div className="cover">
-                                        <img src={room.avatar} alt=""/>
+									    <div className="cover-img"> 
+                                          <img src={room.avatar} alt=""/>
+										</div>
+										<div className="name">{room.name}</div>
                                     </div>
                                     <div className="info">
-                                        <div className="name"><span>{room.name}</span></div>
                                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                                         {/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
                                         <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability)}</span></div>
@@ -245,12 +250,15 @@ class Main extends React.Component {
                                     </div>
 									
                                     <div className="btns-panel">
-										{room.can_enter && room.class_state == 'normal' ? <button className="start-btn" onClick={()=>{
+										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
+											<img src={require('../../assets/attend-class.png')} onClick={()=>{
 											this.onStartRoom(room)
-										}}></button>:""}
-										{room.preview_status == "on" && room.prepare_name ? <button className="preview-btn" onClick={()=>{
+										}} alt=""/>
+										</div>:""}
+										
+										{room.preview_status == "on" && room.prepare_name ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
 											this.onStartPreview(room)
-										}}></button> : ""}
+										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
                                 </div>,
@@ -440,7 +448,8 @@ class Main extends React.Component {
 				this.props.confirm(...params)
 			}} changePw={()=>{
 				this.__view_change_pwd(true)
-			}}/>
+			}}/>,
+			linestyle: Const.LINE_CONFIRM_TITLE.lineTitle
 		})
 	}
 
@@ -528,6 +537,7 @@ class Main extends React.Component {
 				this.__view_camp()
 			}}/>
 		}
+		console.log("this.props.started",this.props.changePwd)
 		return (
 		<div className="full-h">{sidebar}{content}{globalMsg}</div>
 		)
@@ -555,7 +565,7 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = dispatch => ({
-	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),
+	onRoomInfo	   		: (data) => dispatch(onRoomInfo(data)),//没有使用
 	onLogout       		: () => dispatch(onLogout()),
 	onChangePwd      	: (show, fromViewUser) => dispatch(onChangePwd(show, fromViewUser)),
 	onStartCourse  		: () => dispatch(onStartCourse()),
@@ -567,7 +577,7 @@ const mapDispatchToProps = dispatch => ({
 	onChangeUserInfo 	: (user) => dispatch(onChangeUserInfo(user)),
 	onCourseRecording   : (status, camp) => dispatch(onCourseRecording(status, camp)),
 	onLessonComming     : (room) => dispatch(onLessonComming(room)),
-	onCampLesson        : (room) => dispatch(onCampLesson(room)),
+	onCampLesson        : (room) => dispatch(onCampLesson(room)),//训练营
 	hideLoading 		: () => dispatch(hideLoading()),
 	showLoading 		: (message) => dispatch(showLoading(message)),
 	onShowGlobalMsg 	: (message) => dispatch(onShowGlobalMsg(message))
