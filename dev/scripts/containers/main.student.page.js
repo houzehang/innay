@@ -113,12 +113,12 @@ class Main extends React.Component {
 					}
 					//2.判断是否需要自动下载，自动进课
 					//todo: remove test code
-					room.followup = true
-					let followup = room.followup
-					if (followup) {
-						this.onDownload(room)
-						this.props.onShowGlobalMsg('9分18秒后将自动进入教室')
-					}
+					// room.followup = true
+					// let followup = room.followup
+					// if (followup) {
+						// this.onDownload(room)
+						// this.props.onShowGlobalMsg('9分18秒后将自动进入教室')
+					// }
 				}
 				this.props.onLessonComming(room)
 	
@@ -226,7 +226,7 @@ class Main extends React.Component {
 		if (room) {
 			room.can_enter = true
 			//todo: remove test code
-			room.followup  = true
+			// room.followup  = true
 		}
 		
 		return (
