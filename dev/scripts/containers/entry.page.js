@@ -15,6 +15,7 @@ import bridge from '../../../core/MessageBridge'
 const logger = remote.require('electron-log')
 import $ from "jquery"
 const shell = $require('electron').shell;
+import {TEST, DEBUG } from '../../../env';
 
 class Entry extends React.Component {
 	constructor(props) {
@@ -27,6 +28,10 @@ class Entry extends React.Component {
 		this.__start_detector()
 		console.log("did mount...")
 		// 清除本地缓存的课件资源
+		if (DEBUG || TEST) {
+			logger.log('Debug模式不清除课程资源')
+			return;
+		}
 		bridge.call({
 			method	: "clearCachedData",
 			args 	: {packs: [ 
