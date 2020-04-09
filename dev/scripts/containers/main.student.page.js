@@ -150,7 +150,6 @@ class Main extends React.Component {
 	componentDidMount() {  
 		this.__get_lesson_comming();
 		context.user = this.props.account
-	    console.log(this.props.account,"this.props.accounts")
 		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
 	}
@@ -166,7 +165,6 @@ class Main extends React.Component {
 	__camp_room(){
 		let room = this.props.campRoom;
 		if (room) {
-
 			room.students = []
 			return 	<div key="1" className="lesson-box flow">
 						<div className="cover">
@@ -187,7 +185,6 @@ class Main extends React.Component {
 								this.onRecordRoom(room, true)
 							}}>{room.start_study}</button>
 						</div>
-
 						<div className="camp-flag">
 						</div>
 					</div>

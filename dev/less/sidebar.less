@@ -1,11 +1,11 @@
 @import url(base.less);
 .sidebar {
 	width: 1.15rem;
-	height: 5.09rem;
+	height: 5.59rem;
 	position: fixed;
 	left: 0rem;
 	top: 50%;
-	margin-top: -5.09/2rem;
+	margin-top: -5.6/2rem;
 	background: #fff;
 	border-top-right-radius: 0.2rem;
 	border-bottom-right-radius: 0.2rem;
@@ -17,6 +17,8 @@
 	border: solid 0.06rem #fdd24f;
 	border-left: 0rem;
 	border-radius: 0rem 0.4rem 0.4rem 0rem;
+	padding: 0.2rem 0;
+	box-sizing: border-box;
 	.center {
 		display: flex;
 		justify-content: center;
@@ -33,7 +35,7 @@
 	.avatar-area {
 		width: 0.78rem;
 		height: 1.48rem;
-		border-bottom: 1px solid #dddddd;
+		border-bottom: 1px solid #eee;
 		&:active {
 			opacity: 0.6;
 		}
@@ -65,8 +67,8 @@
 	}
 	.mycourses-area {
 		width: 0.78rem;
-		height: 1.14rem;
-		border-bottom: 1px solid #dddddd;
+		height: 1.34rem;
+		border-bottom: 1px solid #eee;
 		.mycourses-btn {
 			.view-base("stu_icon_mycourse.png");
 		}
@@ -76,8 +78,8 @@
 	}
 	.device-area {
 		width: 0.78rem;
-		height: 1.14rem;
-		border-bottom: 1px solid #dddddd;
+		height: 1.34rem;
+		border-bottom: 1px solid #eee;
 		.device-btn {
 			.view-base("sidebar-device.png");
 		}
@@ -86,7 +88,7 @@
 		}
 	}
 	.help-area {
-		flex: 1;
+		height: 1.34rem;
 		.help-btn {
 			.view-base("sidebar-help.png");
 		}
