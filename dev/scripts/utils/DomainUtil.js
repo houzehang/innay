@@ -8,7 +8,7 @@ const logger       = remote.require('electron-log')
 class DomainUtil {
     constructor(){
 		DB.update()
-		this.$domains = JSON.parse(DB.get('DOMAINS') || {})
+		this.$domains = JSON.parse(DB.get('DOMAINS') || '{}')
     }
 
     get domains(){
@@ -53,6 +53,9 @@ class DomainUtil {
 			let detail = this.$domains[kind]
 			let found   = null
 			let backup  = null
+			if (!detail) {
+				return null;
+			}
 			let useThis = (item)=>{
 				item.used   = true
 				item.active = true
