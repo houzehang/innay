@@ -67,8 +67,8 @@ html,body {
             width: 0.17rem;
             height: 0.17rem;
             position: absolute;
-            top: 0.1rem;
-            right: 0.1rem;
+            top: 0.17rem;
+            right: 0.17rem;
         }
         .icon-img{
             width: 0.17rem;
@@ -79,7 +79,7 @@ html,body {
 			background-size: 100% 100%;
 			.changepwd-box {
 				background: #fff;
-				border-radius: 0.2rem;
+				border-radius: 0.33rem;
 				width: 4.44rem;
 				position: relative;
 				display: flex;
@@ -93,6 +93,7 @@ html,body {
 					height: 0.34rem;
 					margin: 0 auto 0.3rem;
 					font-size: 0.22rem;
+					font-weight: 600;
 					display: flex;
 					justify-content: space-around;
 					align-items: center;
@@ -104,7 +105,7 @@ html,body {
 					}
 					.none-color{
 						height: 0.34rem;
-						border-bottom: 0.02rem solid #fbab22;
+						border-bottom: 0.03rem solid #fbab22;
 						color: #fbab22;
 					}
 					.current-style{
@@ -116,7 +117,7 @@ html,body {
 				.input-control {
 					margin-bottom: 0.22rem;
 					.input-box {
-						height: 0.6rem;
+						height: 0.55rem;
 						display: flex;
 						align-items: center;
 						width: 3.16rem;
@@ -175,7 +176,7 @@ html,body {
 					}
 					.code-box{
 						width: 33%;
-						height: 0.52rem;
+						height: 0.5rem;
 						text-align: center;
 						display: flex;
 						align-items: center;
@@ -183,11 +184,12 @@ html,body {
 						border-radius: 0.06rem;
 						background: url('../assets/btn-countdown-gray.png') no-repeat;
 						background-size: 100% 100%;
-						font-size: 0.16rem;
+						font-size: 0.17rem;
 						color:#fff;
 					}
 					.open-code{
 						color: #a66900;
+						font-size: 0.17rem;
 						background: url('../assets/btn-countdown.png') no-repeat;
 						background-size: 100% 100%;
 					}
@@ -210,7 +212,7 @@ html,body {
 				}
 				.not-btn{
 					width: 2.4rem;
-					height: 0.6rem;
+					height: 0.57rem;
 					display: block;
 					margin: 0 auto;
 					margin-top: 0.2rem;
@@ -270,17 +272,18 @@ html,body {
 		align-items: center;
 		.safe-container{
 			width: 4.42rem;
-			padding: 0rem 0.62rem 0.5rem 0.62rem;
+			padding: 0rem 0.32rem 0.3rem 0.32rem;
 			box-sizing: border-box;
 			background: #fff;
 			border-bottom:0.02rem solid #3882c2;
 			position: relative;
+			border-radius: 0.2rem;
 			.icon-img-box{
 				width: 0.17rem;
 				height: 0.17rem;
 				position: absolute;
-				top: 0.1rem;
-				right: 0.1rem;
+				top: 0.17rem;
+				right: 0.17rem;
 			}
 			.icon-img{
 				width: 0.17rem;
@@ -298,21 +301,37 @@ html,body {
 				display: flex;
 				justify-content: space-between;
 				margin-top: 0.34rem;
-				input{
-					width: 2.08rem;
-					height: 0.5rem;
-					outline: none;
-					background-color: #fafafa;
-					border-radius: 0.06rem;
-					border: solid 0.01rem #b7b7b7;
-					font-size: 0.16rem;
-					color: #000;
-					padding:0 0.15rem;
+				.input-left-box{
+					width: 2.6rem;
+					height: 0.55rem;
+					display: flex;
+					justify-content: space-between;
+					align-items: center;
+					background: #edf5ff;
+					border-radius: 0.32rem;
+					padding: 0 0.2rem;
 					box-sizing: border-box;
+					.icon-img{
+						width: 0.2rem;
+						height: 0.24rem;
+					}
+					input{
+					    flex:1;
+						outline: none;
+						border:none;
+						background-color: #edf5ff;
+						border-left: 0.01rem solid #999;
+						font-size: 0.16rem;
+						color: #999;
+						padding:0 0.05rem;
+						box-sizing: border-box;
+						margin-left: 0.1rem;
+					}
 				}
+				
 				.pic-codebox{
 					width: 1rem;
-					height: 0.48rem;
+					height: 0.5rem;
 					background-color: #fafafa;
 					border-radius: 0.06rem;
 					border: solid 0.01rem #b7b7b7;
@@ -324,13 +343,13 @@ html,body {
 				}
 			}
 			.login-btn{
-				width: 3.16rem;
-				height: 0.52rem;
-				background-color: #3882c2;
-				border-radius: 0.06rem;
+				width: 2.4rem;
+				height: 0.6rem;
+				background: url('../assets/btn-confirm.png') no-repeat;
+				background-size: 100% 100%;
+				display:block;
+				margin: 0 auto;
 				margin-top: 0.3rem;
-				color:#fff;
-				font-size: 0.2rem;
 			}
 		}
 	}
