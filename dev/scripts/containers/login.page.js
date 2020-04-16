@@ -27,6 +27,7 @@ class Login extends React.Component {
 			totalNum        : 60,
 			timer           : null,
 			submitBtn       : false,
+			submitcode      : false,
 			sendCodeBtnText : "获取验证码"
 		}
 	}
@@ -34,13 +35,22 @@ class Login extends React.Component {
 	handleChange(name, event) {
 		let value = event.target.value.trim()
 		this.setState({ [name]: value },()=>{
-			if(this.state.mobile && this.state.code || this.state.mobile && this.state.password){
+			if(this.state.mobile && this.state.code){
 				this.setState({
 					submitBtn : true
 				})
 			}else{
 				this.setState({
 					submitBtn : false
+				})
+			}
+			if(this.state.mobile && this.state.password){
+				this.setState({
+					submitcode : true
+				})
+			}else{
+				this.setState({
+					submitcode : false
 				})
 			}
 		})
@@ -236,6 +246,11 @@ class Login extends React.Component {
 										>{this.state.totalNum}s可重发</button>
 									</div>
 								</div>
+								<div className="submit-wrap">
+									<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
+										this.onLogin()
+									}}></button>
+								</div>
 							</div>:
 							// 密码登录
 							<div>
@@ -260,11 +275,13 @@ class Login extends React.Component {
 									</div>
 								</div>
 								<div className="forget-pw" onClick={()=>{this.forgetPassWord()}}>忘记密码</div>
+								<div className="submit-wrap">
+									<button className={this.state.submitcode?"login-btn":"not-btn"} onClick={()=>{
+										this.onLogin()
+									}}></button>
+								</div>
 							</div>
-						}
-						<button className={this.state.submitBtn?"login-btn":"not-btn"} onClick={()=>{
-							this.onLogin()
-						}}></button>
+						}			
 					</div>
 				</div>
 

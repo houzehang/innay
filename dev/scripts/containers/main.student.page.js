@@ -113,7 +113,7 @@ class Main extends React.Component {
 	
 	__isOldPassWord(){
 		net.checkPwIsDefault().then(res=>{
-			// if(res.status && this.state.showChangePwdMask){
+			if(res.status && this.state.showChangePwdMask){
 				this.props.confirm({
 					title: "温馨提示",
 					content: "系统检测您现在使用的默认密码，为了账户的安全，建议进行修改。",
@@ -124,7 +124,7 @@ class Main extends React.Component {
 					close_hidden: true,
 					style: Const.EBTN_STYLE_CONFIG.kChangePwd
 				});
-			// }
+			}
 		})
 	}
 
