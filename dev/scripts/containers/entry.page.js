@@ -10,12 +10,12 @@ import Dialog from './dialog'
 import { alert, confirm, onNetStatusBad, onNetStatusGood } from '../actions'
 import NetDetector from "../netdetector"
 import context from "../context"
-const remote = $require('electron').remote;
+import electron from 'electron'
 import bridge from '../../../core/MessageBridge'
-const logger = remote.require('electron-log')
+import logger from 'electron-log'
 import $ from "jquery"
-const shell = $require('electron').shell;
 import {TEST, DEBUG } from '../../../env';
+const shell = electron.shell;
 
 class Entry extends React.Component {
 	constructor(props) {
