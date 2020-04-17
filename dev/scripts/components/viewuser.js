@@ -36,17 +36,29 @@ class ViewUser extends React.Component {
 			return
 		}
 		if (this.state.username != this.$origin_username) {
-			if (confirm("是否确定修改昵称？")) {
-				net.changeUserInfo({
-					child_name: this.state.username
-				}).then((response)=>{
-					if (response.status) {
-						this.__change_user()
-					}
-				})
-			} else {
-				this.setState({username: this.$origin_username})
-			}
+			this.props.confirm({
+				content: "是否确定修改昵称？",
+				sure: ()=>{
+					net.changeUserInfo({
+						child_name: this.state.username
+					}).then((response)=>{
+						if (response.status) {
+							this.__change_user()
+						}
+					})
+				}
+			})
+			// if (confirm("是否确定修改昵称？")) {
+			// 	net.changeUserInfo({
+			// 		child_name: this.state.username
+			// 	}).then((response)=>{
+			// 		if (response.status) {
+			// 			this.__change_user()
+			// 		}
+			// 	})
+			// } else {
+			// 	this.setState({username: this.$origin_username})
+			// }
 		}
 		this.setState({editmode: false})
 	}
