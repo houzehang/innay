@@ -4,6 +4,7 @@ import DB          from '../../../core/DB'
 import bridge 	   from '../../../core/MessageBridge'
 import Const 	   from '../../../config/const'
 const logger       = remote.require('electron-log')
+import {TEST, DEBUG } from '../../../env';
 
 class DomainUtil {
     constructor(){
@@ -35,7 +36,7 @@ class DomainUtil {
 		bridge.call({
 			method: "getDomains",
 			args: {
-                url:Const.DOMAIN_URL
+                url: (TEST || DEBUG) ? Const.DOMAIN_URL_TEST : Const.DOMAIN_URL
             }
 		}).then((serverInfo)=>{
 			clearTimeout(this.$timer_pulling_domain)

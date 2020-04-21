@@ -78,8 +78,26 @@ module.exports = {
 		'Built-in iSight',
 		'6room'
 	],
-	DOMAIN_URL: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list.json',
+	DOMAIN_URL: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_online.json',
+	DOMAIN_URL_TEST: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_test.json',
 	DOMAIN_LIST_DEFAULT: {
+		static:[
+			{url: "http://localhost:8080"}
+		],
+		frame: [
+			{url: "https://bundlesyuntest.mx0a.com"}
+		],
+		query:[
+			{url: "http://kecheng1.youshiyuwen.cn"}
+		],
+		course:[
+			{url: "https://lessonsyuntest.mx0a.com"}
+		],
+		updater: [
+			{url: "http://file.mw019.com/software"
+		}]
+	},
+	DOMAIN_LIST_DEFAULT_TEST: {
 		static:[
 			{url: "http://localhost:8080"}
 		],

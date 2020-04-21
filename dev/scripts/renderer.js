@@ -11,6 +11,7 @@ import bridge from '../../core/MessageBridge'
 import DomainUtil from '../scripts/utils/DomainUtil'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
 const logger 		= remote.require('electron-log')
+import {TEST, DEBUG } from '../../env';
 const G = (id) => {
 	return document.getElementById(id)
 }
@@ -22,9 +23,10 @@ class Renderer {
 			message: "",
 			progress : null
 		}
-		this.$using_backup_url  = false
-		DomainUtil.domains  	= Const.DOMAIN_LIST_DEFAULT
+		// default domains from location
+		DomainUtil.domains = (TEST || DEBUG) ? Const.DOMAIN_LIST_DEFAULT_TEST : Const.DOMAIN_LIST_DEFAULT
 		this.__setState(this.state)
+		// update domains json config from oss
 		DomainUtil.pull(()=>{
 			this.__start_updater()
 		})
@@ -184,7 +186,7 @@ class Renderer {
 		ipcRenderer.send("render.complete")
 		bridge.call({
 			method	: "openMainWindow",
-			args	: {pack: "classroom-ui", data: { usingBackupUrl: this.$using_backup_url }}
+			args	: {pack: "classroom-ui", data: {}}
 		}).catch(err=>{
 			logger.error("开启主框架窗口出错", err)
 			this.__setState({
