@@ -89,16 +89,19 @@ module.exports = {
 	 */
 	DOMAIN_LIST_DEFAULT: {
 		static:[
-			{url: "http://localhost:8080"}
+			{url: "https://bundlesyun.mx0a.com"},
+			{url: "http://bundlesossyun.mw019.com"}
 		],
 		frame: [
-			{url: "https://bundlesyuntest.mx0a.com"}
+			{url: "https://bundlesyun.mx0a.com"},
+			{url: "http://bundlesossyun.mw019.com"}
 		],
 		query:[
-			{url: "http://kecheng1.youshiyuwen.cn"}
+			{url: "https://www.mingxiyuwen.com"}
 		],
 		course:[
-			{url: "https://lessonsyuntest.mx0a.com"}
+			{url: "https://lessonsyun.mx0a.com"},
+			{url: "http://lessonsossyun.mw019.com"}
 		],
 		updater: [
 			{url: "http://file.mw019.com/software"
@@ -106,7 +109,7 @@ module.exports = {
 	},
 	DOMAIN_LIST_DEFAULT_TEST: {
 		static:[
-			{url: "http://localhost:8080"}
+			{url: "https://bundlesyuntest.mx0a.com"}
 		],
 		frame: [
 			{url: "https://bundlesyuntest.mx0a.com"}
