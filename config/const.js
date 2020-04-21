@@ -80,6 +80,13 @@ module.exports = {
 	],
 	DOMAIN_URL: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_online.json',
 	DOMAIN_URL_TEST: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_test.json',
+	/**
+	 * static: 	[app.json & app.zip]
+	 * frame: 	[liveroom.json & liveroom.zip / homework.json & homework.zip]
+	 * query: 	[http request]
+	 * course: 	[like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]
+	 * updater: [electron pacakge ***.exe & ***.dmg]
+	 */
 	DOMAIN_LIST_DEFAULT: {
 		static:[
 			{url: "http://localhost:8080"}
