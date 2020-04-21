@@ -275,7 +275,7 @@ class Download extends React.Component {
 		})
 	}
 
-	__update_preview_bundle(lesson, baseCourseUrl) {
+	__update_preview_bundle(lesson) {
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "getLocalInstalledVersion",
@@ -283,34 +283,45 @@ class Download extends React.Component {
 					pack: "preview-ui"
 				}
 			}).then((localInfo)=>{
-				bridge.call({
-					method: "getServerPackageVersion",
-					args: {
-						url : `${baseCourseUrl}/${lesson}.json`,
+				
+				let __downloadPackage = (retry)=>{
+					let baseCourseUrl = DomainUtil.availibleDomain('course', retry)
+					if (!baseCourseUrl) {
+						let errorMessage = `no avalible domain for course-preview[${lesson}] retrying`
+						logger.log('[debug-domain] errorMessage', errorMessage)
+						reject(new Error(errorMessage))
+						return
 					}
-				}).then((serverInfo)=>{
-					this.__setStatus("UPDATE.COURSE_BUNDLE");
-					serverInfo = serverInfo || {}
-					if (!localInfo||
-						localInfo.key != serverInfo.lesson ||
-						localInfo.md5 != serverInfo.md5) {
-						this.__setStatus("UPDATE.DOWNLOADING_UI");
-						this.__do_update_bundle({
-							pack  	: "preview-ui", 
-							result	: serverInfo,
-							base_url: baseCourseUrl
-						}).then(data=>{
-							resolve(data)
-						}).catch(error=>{
-							reject(error)
-						})
-					}else{
-						this.__setStatus("UPDATE.LASTEST");
-						resolve(serverInfo)
-					}
-				}).catch(err=>{
-					reject(err)
-				})
+					bridge.call({
+						method: "getServerPackageVersion",
+						args: {
+							url : `${baseCourseUrl}/${lesson}.json`,
+						}
+					}).then((serverInfo)=>{
+						this.__setStatus("UPDATE.COURSE_BUNDLE");
+						serverInfo = serverInfo || {}
+						if (!localInfo||
+							localInfo.key != serverInfo.lesson ||
+							localInfo.md5 != serverInfo.md5) {
+							this.__setStatus("UPDATE.DOWNLOADING_UI");
+							this.__do_update_bundle({
+								pack  	: "preview-ui", 
+								result	: serverInfo,
+								base_url: baseCourseUrl
+							}).then(data=>{
+								resolve(data)
+							}).catch(error=>{
+								reject(error)
+							})
+						}else{
+							this.__setStatus("UPDATE.LASTEST");
+							resolve(serverInfo)
+						}
+					}).catch(err=>{
+						__downloadPackage(true)
+					})
+				}
+				__downloadPackage()
 				
 			}).catch(err=>{
 				reject(err)
