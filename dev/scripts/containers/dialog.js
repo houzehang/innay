@@ -32,6 +32,9 @@ class Dialog extends React.Component {
 	}
 
 	render() {
+		if (this.props.data.configure.hidden) {
+			// return ''
+		}
 		let buttons = []
 		const { type,configure} 	= this.props.data
 		let styleInfo    			= configure.style || Const.EBTN_STYLE_CONFIG.kNormal
@@ -43,7 +46,7 @@ class Dialog extends React.Component {
 			buttons.push(<button className={classNameBtnCancel} key="cancel-btn" onClick={this.hide.bind(this)}></button>)
 		}
 		buttons.push(<button className={classNameBtnOk} key="ok-btn" onClick={this.sure.bind(this)}></button>)
-		return <div className="mask dialog-layer show">
+		return <div className={`mask dialog-layer ${this.props.data.configure.hidden ? ' hide' : ' show'}`}>
 			<div className={`${"dialog "+(configure.classname||"")}${configure.large_mod ? ' large' : ''}`} style={configure.styles}>
 				<div className={configure.title_hidden ? 'title clear' : 'title'} >
 					{configure.title=="个人信息"?<div className={showLine}>{configure.title_hidden ? '' : `${configure.title || "提示"}`}</div>:configure.title_hidden ? '' : `${configure.title || "提示"}`}
@@ -93,7 +96,8 @@ Dialog.propTypes = {
 				width 	: PropTypes.string.isRequired,
 				height	: PropTypes.string
 			}),
-			style		: PropTypes.strings
+			style		: PropTypes.strings,
+			hidden		: PropTypes.bool
 		}),
 		type 	: PropTypes.string,
 		showing : PropTypes.bool,

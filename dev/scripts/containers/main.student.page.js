@@ -13,6 +13,8 @@ import net from "../network"
 import Camp from '../components/camp'
 import Const from '../../const'
 import "../../less/mainpage.less"
+import fs from 'fs'
+import path from 'path'
 import * as types from '../constants/ActionTypes'
 import { 
     onRoomInfo,
@@ -30,6 +32,7 @@ import storage from "../Storage"
 import bridge from '../../../core/MessageBridge'
 import {ipcRenderer, remote} from "electron"
 import MyCourse from './mycourse';
+import { test } from 'shelljs';
 
 class Main extends React.Component {
 	constructor(props) {
@@ -39,8 +42,11 @@ class Main extends React.Component {
         this.state ={
 			showChangePwdMask   : false,
 			timeDiff:	0,
-			progress: 1,
-			audioOn: false
+			progress: 0.1,
+			audioOn: true,
+			relaxTime: '',
+			audio_url: '',
+			relaxDone5To10: false
 		}
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -50,6 +56,8 @@ class Main extends React.Component {
 			context.upload_system_logs()
 			context.upload_agora_logs()
 		})
+		this.$audio_bg  = React.createRef()
+		this.$audio_tip = React.createRef()
 		this.__check_device();
 	}
 
@@ -91,7 +99,20 @@ class Main extends React.Component {
 	__serverTime(){
 		return new Date().getTime() + this.state.timeDiff
 	}
-    
+	
+	__stop_relax(room){
+		let relaxKey = `RELAX_REC_${room.channel_id}`
+		this.$audio_bg.pause()
+		this.$audio_tip.pause()
+		this.$timer_relax && clearInterval(this.$timer_relax)
+		this.$timer_relax_3_to_5 && clearInterval(this.$timer_relax_3_to_5)
+		this.setState({
+			relaxTime: '',
+			progress: 0
+		})
+		localStorage.setItem(relaxKey, '1')
+	}
+
     __get_lesson_comming(){
 		net.getServerTime().then((res) => {
 			this.setState({ time: res.time * 1000 });
@@ -101,9 +122,28 @@ class Main extends React.Component {
 				let room = res.room;
 				if (room) {
 					//1.转换成UI展示所需格式的时间
-					let date = this.strToDate(room.start_time)
-					let left = date.getTime() - this.__serverTime()
-					room.left = left
+					//todo: remove test code
+					// room.start_time  = '2020-04-22 23:19'
+					room.follow		 = true
+
+					let relaxKey 	= `RELAX_REC_${room.channel_id}`
+					let relaxTmKey  = `RELAX_TOTAL_${room.channel_id}`
+					let relaxShown	= localStorage.getItem(relaxKey) == '1'
+					let date 		= this.strToDate(room.start_time)
+					let startTime 	= date.getTime()
+					
+					let left 		= startTime - this.__serverTime()
+					let totalHist   = localStorage.getItem(relaxTmKey)
+					let total       = parseInt(totalHist || left)
+					!totalHist && localStorage.setItem(relaxTmKey, left.toString())
+					localStorage.setItem(relaxTmKey, left.toString())
+					let __secondToDate = (result)=>{
+						var h = Math.floor(result / 3600) < 10 ? '0'+Math.floor(result / 3600) : Math.floor(result / 3600);
+						var m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60));
+						var s = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60));
+						return result = (h + ":" + m + ":" + s).replace(/^00:/,'');
+					}
+					room.left 	 	= left
 					if (left > 0) {
 						let days  	= left / 1000 / 60 / 60 / 24 >> 0
 						left       -= days * 1000 * 60 * 60 * 24
@@ -112,17 +152,66 @@ class Main extends React.Component {
 						room.days   = days
 						room.hours  = hours
 						room.minutes= minutes
+
+						//relax time
+						if (room.follow && !relaxShown) {
+							let __handler_relax  = ()=>{
+								let left 	 = startTime - this.__serverTime()
+								let progress = Math.max(1, 100 * (1 - left / total)) 
+								if (left <= 3 * 60 * 1000) {
+									this.__stop_relax(room)
+									
+									this.props.hide()
+									this.onStartRoom(room)
+									
+									return false;
+								}
+								let relaxTime = __secondToDate(left / 1000)
+								this.setState({
+									relaxTime,
+									progress
+								})
+
+								//state1: 5-10分钟
+								let hit5To10  = left >= 5 * 60 * 1000 && left < 10 * 60 * 1000
+								let hit3To5   = left >= 3 * 60 * 1000 && left < 5 * 60 * 1000
+								if (hit5To10 && !this.$relax_done_5_to_10) {
+									this.$relax_done_5_to_10 = true
+									this.$audio_tip.src = this.__get_audio('relax_xiuxi.mp3')
+									this.$audio_tip.play()
+								}
+								//state1: 3-5分钟
+								if (hit3To5 && !this.$relax_done_3_to_5) {
+									this.$relax_done_3_to_5 = true
+									this.$audio_tip.src = this.__get_audio('relax_shangke.mp3')
+									this.$audio_tip.play()
+									this.$timer_relax_3_to_5 = setInterval(() => {
+										this.$audio_tip.play()
+									}, 20 * 1000);
+								}
+								return true
+							}
+							this.$timer_relax = setInterval(() => {
+								__handler_relax()
+							}, 1000);
+							if (!__handler_relax()) {
+								return;
+							} 
+							//后台自动下载
+							this.onStartRoom(room, true)
+							//背景音乐
+							this.$audio_bg.src = this.__get_audio('relax_background.mp3')
+							if (this.state.audioOn) {
+								this.$audio_bg.play()
+							}
+						}
+					} else if (room.follow && !relaxShown) {
+						//如果没有弹出过relax，直接进入教室
+						localStorage.setItem(relaxKey, '1')
+						this.onStartRoom(room)
 					}
-					//2.判断是否需要自动下载，自动进课
-					//todo: remove test code
-					// room.followup = true
-					// let followup = room.followup
-					// if (followup) {
-						// this.onDownload(room)
-						// this.props.onShowGlobalMsg('9分18秒后将自动进入教室')
-					// }
+					this.props.onLessonComming(room)
 				}
-				this.props.onLessonComming(room)
 	
 				net.getCampLesson().then((room)=>{
 					console.log('camp room info',room);
@@ -130,6 +219,14 @@ class Main extends React.Component {
 				})
 			})
 		})
+	}
+
+	__get_audio(name){
+		let soundUrl 	= path.resolve('./dev/assets', name)
+		const blob 		= fs.readFileSync(soundUrl)
+		const base64 	= Buffer.from(blob).toString('base64')
+		const uri 		= 'data:audio/mp3;base64,' + base64
+		return uri
 	}
 	
 	__isOldPassWord(){
@@ -173,11 +270,6 @@ class Main extends React.Component {
 		context.user = this.props.account
 		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
-		// setInterval(() => {
-		// 	this.setState({
-		// 		progress: ++this.state.progress
-		// 	})			
-		// }, 100);
 	}
 
 	componentWillUnmount() {
@@ -230,7 +322,7 @@ class Main extends React.Component {
 		if (room) {
 			room.can_enter = true
 			//todo: remove test code
-			// room.followup  = true
+			// room.follow  = true
 		}
 		let relaxBubbleSize = 1
 		let addon			= 0.01
@@ -282,40 +374,60 @@ class Main extends React.Component {
 
 		return (
 			<div className="page student-pages">
+				<audio src='' autoPlay={'autoplay'} ref={(ref)=>{
+					this.$audio_bg = ref
+				}}/>
+				<audio src="" autoPlay={'autoplay'} ref={(ref)=>{
+					this.$audio_tip = ref
+				}}/>
 				<div className="inner">
 					<div className="student-box">
-						<div className="relax-bubble">
-							<div className="tip-label">{"课间休息还有10分钟哦～"}</div>
-							<div className={"btn-audio"+(this.state.audioOn ? "": " off")} onClick={
-								()=>{
-									this.setState({
-										audioOn: !this.state.audioOn
-									})
-								}
-							}></div>
-							<div className="anim-sprite"></div>
-							<div className="col-md-25 col-sm-50">
-								<div className="tox-progress">
-									<div className="progress-inner">
-										<div className="time-number">
-											<span>{"09:32"}</span>
+						{this.state.relaxTime ? 	<div className="relax-bubble">
+								<div className="tip-label">{`课间休息还有${(()=>{
+									let relaxTime = this.state.relaxTime
+									let detail    = relaxTime.split(':')
+									let hours	  = detail.length == 2 ? 0 : parseInt(detail[0])
+									let minutes	  = detail.length == 2 ? parseInt(detail[0]) : parseInt(detail[1])  
+									let seconds	  = detail.length == 2 ? parseInt(detail[1]) : parseInt(detail[2]) 
+									return (hours > 0 ? `${hours}小时`: '') + minutes + '分' + seconds + '秒'
+									
+								})()}哦～`}</div>
+								<div className={"btn-audio"+(this.state.audioOn ? "": " off")} onClick={
+									()=>{
+										let targetState = !this.state.audioOn
+										this.setState({
+											audioOn: targetState
+										})
+										if (targetState) {
+											this.$audio_bg.play()
+										} else {
+											this.$audio_bg.pause()
+										}
+									}
+								}></div>
+								<div className="anim-sprite"></div>
+								<div className="col-md-25 col-sm-50">
+									<div className="tox-progress">
+										<div className="progress-inner">
+											<div className={"time-number"+(this.state.relaxTime.length <= 5 ? "" : " small")}>
+												<span>{this.state.relaxTime}</span>
+											</div>
+											<div className="radial-outer"></div>
+											<div className="radial-mask-1" style={styRadialMask1}>
+												<div className="dot"></div>
+											</div>
+											<div className="radial-mask-2" style={styRadialMask2}>
+												<div className="dot" style={styDot2}></div>
+												<div className="dot2"></div>
+											</div>
+											<div className="radial-mask-3" style={styRadialMask3}>
+												<div className="dot"></div>
+											</div>
+											<div className="radial-inner"  style={styRadialInner}></div>
 										</div>
-										<div className="radial-outer"></div>
-										<div className="radial-mask-1" style={styRadialMask1}>
-											<div className="dot"></div>
-										</div>
-										<div className="radial-mask-2" style={styRadialMask2}>
-											<div className="dot" style={styDot2}></div>
-											<div className="dot2"></div>
-										</div>
-										<div className="radial-mask-3" style={styRadialMask3}>
-											<div className="dot"></div>
-										</div>
-										<div className="radial-inner"  style={styRadialInner}></div>
 									</div>
 								</div>
-							</div>
-						</div>
+							</div> : ''}
                         <div className="main-page">
                             { room ? ([
                                 <div key="1" className="lesson-box">
@@ -335,11 +447,12 @@ class Main extends React.Component {
                                     <div className="btns-panel">
 										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
 											<img src={require('../../assets/attend-class.png')} onClick={()=>{
+											this.__stop_relax(room)
 											this.onStartRoom(room)
 										}} alt=""/>
 										</div>:""}
 										
-										{room.preview_status == "on" && room.prepare_name ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
+										{room.preview_status == "on" && room.prepare_name && !room.follow ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
 											this.onStartPreview(room)
 										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
@@ -388,7 +501,8 @@ class Main extends React.Component {
 		this.onDownloadHomework(data)
 	}
 	
-	onStartRoom(data) {
+	onStartRoom(data, withoutJoining) {
+		console.log('MINGXI_DEBUG_LOG>>>>>>>>>onStartRoom',withoutJoining);
 		if (!context.joinClassEnabled) {
 			this.props.alert({
 				content: "亲爱的宝妈您好，因我们课件的动画和交互较多，经检测您目前的设备可能不支持我们的正常上课，为了避免影响您的上课体验，请联系您的顾问老师帮您解决，感谢您的支持！",
@@ -396,7 +510,7 @@ class Main extends React.Component {
 			});
 			return;
 		}
-		this.onDownload(data)
+		this.onDownload(data, false, false, withoutJoining)
 	}
 
 	__onStartRoom(data,isRecord) {
@@ -471,28 +585,29 @@ class Main extends React.Component {
 		})
 	}
 
-	onDownload(room, isRecord, camp) {
-		let followUp = room.followup
+	onDownload(room, isRecord, camp, withoutJoining) {
+		let follow = room.follow
+		let content = <Download data={room} recording={isRecord} camp={camp} complete={(data)=>{
+			if (follow && withoutJoining) {
+				console.log('MINGXI_DEBUG_LOG>>>>>>>>>download over but without joining','');
+			} else {
+				this.props.hide()
+				bridge.call({
+					method	: "openLiveRoom",
+					args	: { pack: "liveroom", data }
+				}).catch(error=>{
+					console.error(error)
+				})
+			}
+		}} error={(error)=>{
+			
+		}} user={this.props.account}/>
 		this.props.alert({
 			title: "下载课程包",
-			content: <Download data={room} recording={isRecord} camp={camp} complete={(data)=>{
-				if (followUp) {
-					//...
-					console.log('MINGXI_DEBUG_LOG>>>>>>>>>down load over','');
-				} else {
-					this.props.hide()
-					bridge.call({
-						method	: "openLiveRoom",
-						args	: { pack: "liveroom", data }
-					}).catch(error=>{
-						console.error(error)
-					})
-				}
-			}} error={(error)=>{
-				
-			}} user={this.props.account}/>,
+			content,
 			nobutton: true,
-			noanim	: true
+			noanim	: true,
+			hidden: !!withoutJoining
 		})
 	}
 

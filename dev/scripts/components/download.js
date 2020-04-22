@@ -17,6 +17,7 @@ class Download extends React.Component {
 			notice: ""
 		}
 		this.$domain_course = DomainUtil.availibleDomain('course');
+		console.log('MINGXI_DEBUG_LOG>>>>>>>>>init download','');
 	}
 
 	__start(retry) {
