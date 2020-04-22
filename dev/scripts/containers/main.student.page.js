@@ -38,7 +38,9 @@ class Main extends React.Component {
 		this.$cache_valid_time 	= 60*60*1000
         this.state ={
 			showChangePwdMask   : false,
-			timeDiff:	0
+			timeDiff:	0,
+			progress: 1,
+			audioOn: false
 		}
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -171,6 +173,11 @@ class Main extends React.Component {
 		context.user = this.props.account
 		context.restoreOldDevice()
 		net.reportSystemBaseInfo()
+		// setInterval(() => {
+		// 	this.setState({
+		// 		progress: ++this.state.progress
+		// 	})			
+		// }, 100);
 	}
 
 	componentWillUnmount() {
@@ -225,11 +232,90 @@ class Main extends React.Component {
 			//todo: remove test code
 			// room.followup  = true
 		}
-		
+		let relaxBubbleSize = 1
+		let addon			= 0.01
+		let progress 		= this.state.progress
+		let thickness 		= 0.05
+		let current 		= progress;
+		let styRadialMask1  = {
+			borderTopLeftRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			borderTopRightRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			width:`${(relaxBubbleSize + addon)}rem`, 
+			height:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			top:`${(-(relaxBubbleSize + addon))}rem`, 
+			left:`${(-addon / 2)}rem`, 
+			visibility:`${current <= 50 ? 'visible' : 'hidden'}`,
+		}
+		let styRadialMask2 	= {
+			borderTopLeftRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			borderTopRightRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			width:`${(relaxBubbleSize + addon)}rem`, 
+			height:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			top:`${(-(relaxBubbleSize + relaxBubbleSize / 2  + addon * 2))}rem`, 
+			left:`${(-addon / 2)}rem`, 
+			// visibility:`${current > 50 && current <100 ? 'visible' : 'hidden'}`,
+		}
+		let styDot2 = {
+			visibility:`${current > 50 && current <100 ? 'visible' : 'hidden'}`
+		}
+		let styRadialMask3 = {
+			borderTopLeftRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			borderTopRightRadius:`${(relaxBubbleSize / 2 + addon)}rem`, 
+			width:`${(relaxBubbleSize)}rem`, 		 
+			height:`${(relaxBubbleSize / 2)}rem`, 		 
+			top:`${-2.022||(-(relaxBubbleSize * 2 + addon * 2))}rem`,  
+			visibility:`${current > 50 ? 'visible' : 'hidden'}`
+		}
+		let styRadialInner = {
+			width:`${(relaxBubbleSize - thickness * 2)}rem`, 
+			height:`${(relaxBubbleSize - (thickness * 2) + addon)}rem`, 
+			top:`${-2.476||(-(relaxBubbleSize * 2.49 - thickness + addon * 3))}rem`, 
+			left:`${0.0474||thickness}rem`,
+		}
+
+		if (progress > 50) {
+			styRadialMask1.transform = `rotate(270deg)`
+			styRadialMask2.transform = `rotate(${90 + (progress * 3.6)}deg)`
+		} else {
+			styRadialMask1.transform = `rotate(${90 + (progress * 3.6)}deg)`
+		}
+
 		return (
 			<div className="page student-pages">
 				<div className="inner">
 					<div className="student-box">
+						<div className="relax-bubble">
+							<div className="tip-label">{"课间休息还有10分钟哦～"}</div>
+							<div className={"btn-audio"+(this.state.audioOn ? "": " off")} onClick={
+								()=>{
+									this.setState({
+										audioOn: !this.state.audioOn
+									})
+								}
+							}></div>
+							<div className="anim-sprite"></div>
+							<div className="col-md-25 col-sm-50">
+								<div className="tox-progress">
+									<div className="progress-inner">
+										<div className="time-number">
+											<span>{"09:32"}</span>
+										</div>
+										<div className="radial-outer"></div>
+										<div className="radial-mask-1" style={styRadialMask1}>
+											<div className="dot"></div>
+										</div>
+										<div className="radial-mask-2" style={styRadialMask2}>
+											<div className="dot" style={styDot2}></div>
+											<div className="dot2"></div>
+										</div>
+										<div className="radial-mask-3" style={styRadialMask3}>
+											<div className="dot"></div>
+										</div>
+										<div className="radial-inner"  style={styRadialInner}></div>
+									</div>
+								</div>
+							</div>
+						</div>
                         <div className="main-page">
                             { room ? ([
                                 <div key="1" className="lesson-box">
