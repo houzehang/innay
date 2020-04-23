@@ -217,7 +217,7 @@ class Login extends React.Component {
 								debugIp: ip
 							})
 							this.props.onShowTost({
-								content: "已切换至 - "+this.state.debugIp
+								content: "已切换至 - "+ip
 							})
 							setTimeout(() => {
 								remote.getCurrentWindow().reload()
@@ -233,7 +233,7 @@ class Login extends React.Component {
 								debugIp: ip
 							})
 							this.props.onShowTost({
-								content: "已切换至 - "+this.state.debugIp
+								content: "已切换至 - "+ip
 							})
 							setTimeout(() => {
 								remote.getCurrentWindow().reload()
@@ -249,7 +249,7 @@ class Login extends React.Component {
 								debugIp: ip
 							})
 							this.props.onShowTost({
-								content: "已切换至 - "+this.state.debugIp
+								content: "已切换至 - "+ip
 							})
 							setTimeout(() => {
 								remote.getCurrentWindow().reload()
