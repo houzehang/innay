@@ -21,6 +21,10 @@ mac:
   asarUnpack: "**/music.mp3"
   category: public.app-category.tools
   icon: icns/mac-icon.icns
+  entitlements: entitlements/entitlements.mac.plist
+  extendInfo: 
+    NSCameraUsageDescription: "明兮需要您的摄像头权限，这样老师才能看到小朋友哦~"
+    NSMicrophoneUsageDescription: "明兮需要您的麦克风权限，这样老师才能听到小朋友哦~"
 
 # nsis:
 #   oneClick: false
