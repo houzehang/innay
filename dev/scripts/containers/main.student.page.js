@@ -37,6 +37,9 @@ import { test } from 'shelljs';
 const AUDIO_BACKGROUND 	= require('./../../assets/relax_background.mp3')
 const AUDIO_SHANGKE 	= require('./../../assets/relax_shangke.mp3')
 const AUDIO_XIUXI		= require('./../../assets/relax_xiuxi.mp3')
+console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_BACKGROUND',AUDIO_BACKGROUND);
+console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_SHANGKE',AUDIO_SHANGKE);
+console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_XIUXI',AUDIO_XIUXI);
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
