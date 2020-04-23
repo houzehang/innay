@@ -34,6 +34,9 @@ import {ipcRenderer, remote} from "electron"
 import MyCourse from './mycourse';
 import { test } from 'shelljs';
 
+const AUDIO_BACKGROUND 	= require('./../../assets/relax_background.mp3')
+const AUDIO_SHANGKE 	= require('./../../assets/relax_shangke.mp3')
+const AUDIO_XIUXI		= require('./../../assets/relax_xiuxi.mp3')
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
@@ -177,13 +180,13 @@ class Main extends React.Component {
 								let hit3To5   = left >= 3 * 60 * 1000 && left < 5 * 60 * 1000
 								if (hit5To10 && !this.$relax_done_5_to_10) {
 									this.$relax_done_5_to_10 = true
-									this.$audio_tip.src = this.__get_audio('relax_xiuxi.mp3')
+									this.$audio_tip.src = this.__get_audio('xiuxi')
 									this.$audio_tip.play()
 								}
 								//state1: 3-5分钟
 								if (hit3To5 && !this.$relax_done_3_to_5) {
 									this.$relax_done_3_to_5 = true
-									this.$audio_tip.src = this.__get_audio('relax_shangke.mp3')
+									this.$audio_tip.src = this.__get_audio('shangke')
 									this.$audio_tip.play()
 									this.$timer_relax_3_to_5 = setInterval(() => {
 										this.$audio_tip.play()
@@ -200,7 +203,7 @@ class Main extends React.Component {
 							//后台自动下载
 							this.onStartRoom(room, true)
 							//背景音乐
-							this.$audio_bg.src = this.__get_audio('relax_background.mp3')
+							this.$audio_bg.src = this.__get_audio('background')
 							if (this.state.audioOn) {
 								this.$audio_bg.play()
 							}
@@ -222,7 +225,12 @@ class Main extends React.Component {
 	}
 
 	__get_audio(name){
-		let soundUrl 	= path.resolve('./dev/assets', name)
+		let soundUrl = {
+			background: AUDIO_BACKGROUND,
+			xiugxi: AUDIO_BACKGROUND,
+			shangke: AUDIO_BACKGROUND,
+		}[name]
+		
 		const blob 		= fs.readFileSync(soundUrl)
 		const base64 	= Buffer.from(blob).toString('base64')
 		const uri 		= 'data:audio/mp3;base64,' + base64
