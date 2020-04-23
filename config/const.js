@@ -1,5 +1,6 @@
 module.exports = {
-	TEST_URL 			: "http://kecheng1.youshiyuwen.cn",
+	// TEST_URL 			: "http://kecheng1.youshiyuwen.cn",
+	TEST_URL 			: "http://steven.mx0a.com",
 	// TEST_URL 			: "http://crm.mx0a.com",
 	// TEST_URL 			: "http://jt.mx0a.com",
 	ONLINE_URL 			: "https://www.mingxiyuwen.com",
