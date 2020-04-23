@@ -230,8 +230,8 @@ class Main extends React.Component {
 	__get_audio(name){
 		let soundUrl = {
 			background: AUDIO_BACKGROUND,
-			xiugxi: AUDIO_BACKGROUND,
-			shangke: AUDIO_BACKGROUND,
+			xiugxi: AUDIO_XIUXI,
+			shangke: AUDIO_SHANGKE,
 		}[name]
 		
 		return soundUrl
