@@ -9,7 +9,7 @@ import {
 import ViewChangePwd from '../components/viewChangePwd'
 import net from "../network"
 import context from "../context"
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import Toast from './toast'
 
 class Login extends React.Component {
@@ -28,7 +28,8 @@ class Login extends React.Component {
 			timer           : null,
 			submitBtn       : false,
 			submitcode      : false,
-			sendCodeBtnText : "获取验证码"
+			sendCodeBtnText : "获取验证码",
+			debugIp			: localStorage.getItem('debug_ip')
 		}
 	}
 
@@ -197,8 +198,65 @@ class Login extends React.Component {
 
 	render() {
 		const { showToastState, changePwd, fromViewUser } = this.props
+		let serverSelected = 0
+		let debugIp = this.state.debugIp || ""
+		if (/steven/.test(debugIp)) {
+			serverSelected = 1
+		} else if (/mingxiyuwen/.test(debugIp)) {
+			serverSelected = 2
+		}
 		return (
 			<div className="full-h">
+				{this.state.debugIp || (window.ENV_CONF||{}).DEBUG ||(window.ENV_CONF||{}).TEST ? <div className="choose-server">
+					<div className={`server-btn ${serverSelected == 0 ? 'sel' : ''}`} onClick={
+						()=>{
+							if (serverSelected == 0) return
+							let ip = "http://kecheng1.youshiyuwen.cn"
+							localStorage.setItem('debug_ip',ip)
+							this.setState({
+								debugIp: ip
+							})
+							this.props.onShowTost({
+								content: "已切换至 - "+this.state.debugIp
+							})
+							setTimeout(() => {
+								remote.getCurrentWindow().reload()
+							}, 500);
+						}
+					}>kecheng1</div>
+					<div className={`server-btn ${serverSelected == 1 ? 'sel' : ''}`} onClick={
+						()=>{
+							if (serverSelected == 1) return
+							let ip = "http://steven.mx0a.com"
+							localStorage.setItem('debug_ip',ip)
+							this.setState({
+								debugIp: ip
+							})
+							this.props.onShowTost({
+								content: "已切换至 - "+this.state.debugIp
+							})
+							setTimeout(() => {
+								remote.getCurrentWindow().reload()
+							}, 500);
+						}
+					}>steven</div>
+					<div className={`server-btn ${serverSelected == 2 ? 'sel' : ''}`} onClick={
+						()=>{
+							if (serverSelected == 2) return
+							let ip = "https://www.mingxiyuwen.com"
+							localStorage.setItem('debug_ip',ip)
+							this.setState({
+								debugIp: ip
+							})
+							this.props.onShowTost({
+								content: "已切换至 - "+this.state.debugIp
+							})
+							setTimeout(() => {
+								remote.getCurrentWindow().reload()
+							}, 500);
+						}
+					}>online</div>
+				</div> :""}
 				<div className="page login-page">
 					<div className='login-box' >
 						<div className="title">
