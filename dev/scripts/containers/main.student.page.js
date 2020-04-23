@@ -24,7 +24,8 @@ import {
 	showLoading,
 	hideLoading,
 	onChangePwd,
-	onShowGlobalMsg
+	onShowGlobalMsg,
+	onShowTost
 } from '../actions'
 import { setTimeout } from 'core-js';
 import context from "../context"
@@ -785,7 +786,8 @@ const mapDispatchToProps = dispatch => ({
 	onCampLesson        : (room) => dispatch(onCampLesson(room)),//训练营
 	hideLoading 		: () => dispatch(hideLoading()),
 	showLoading 		: (message) => dispatch(showLoading(message)),
-	onShowGlobalMsg 	: (message) => dispatch(onShowGlobalMsg(message))
+	onShowGlobalMsg 	: (message) => dispatch(onShowGlobalMsg(message)),
+	onShowTost   		: (configure) => dispatch(onShowTost(configure))
 })
   
 export default connect(

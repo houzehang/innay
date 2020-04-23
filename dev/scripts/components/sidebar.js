@@ -26,6 +26,7 @@ class SideBar extends React.Component {
 				<div className={isStudent? `${flow?'sidebar flow':'sidebar'}`:"sidebar teacher"}>
 					<div className="avatar-area center" onClick={()=>{
 						this.props.onViewUser()
+						
 					}}>
 						<div className="avatar" style={{
 							"backgroundImage":`url(${isStudent?this.props.user.child_avatar:this.props.user.avatarurl})`
