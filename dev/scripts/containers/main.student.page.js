@@ -129,8 +129,8 @@ class Main extends React.Component {
 				if (room) {
 					//1.转换成UI展示所需格式的时间
 					//todo: remove test code
-					// room.start_time  = '2020-04-22 23:19'
-					room.follow		 = true
+					// room.start_time  = '2020-04-23 11:38'
+					// room.follow		= true
 
 					let relaxKey 	= `RELAX_REC_${room.channel_id}`
 					let relaxTmKey  = `RELAX_TOTAL_${room.channel_id}`
@@ -234,10 +234,7 @@ class Main extends React.Component {
 			shangke: AUDIO_BACKGROUND,
 		}[name]
 		
-		const blob 		= fs.readFileSync(soundUrl)
-		const base64 	= Buffer.from(blob).toString('base64')
-		const uri 		= 'data:audio/mp3;base64,' + base64
-		return uri
+		return soundUrl
 	}
 	
 	__isOldPassWord(){
@@ -385,10 +382,10 @@ class Main extends React.Component {
 
 		return (
 			<div className="page student-pages">
-				<audio src='' autoPlay={'autoplay'} ref={(ref)=>{
+				<audio src='' crossOrigin='anonymous' autoPlay={'autoplay'} ref={(ref)=>{
 					this.$audio_bg = ref
 				}}/>
-				<audio src="" autoPlay={'autoplay'} ref={(ref)=>{
+				<audio src="" crossOrigin='anonymous' autoPlay={'autoplay'} ref={(ref)=>{
 					this.$audio_tip = ref
 				}}/>
 				<div className="inner">

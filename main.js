@@ -74,7 +74,7 @@ if (!gotTheLock) {
         })
     });
 }
-
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.on('window-all-closed', () => {
     app.quit();
