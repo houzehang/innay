@@ -142,7 +142,6 @@ class Main extends React.Component {
 					let totalHist   = localStorage.getItem(relaxTmKey)
 					let total       = parseInt(totalHist || left)
 					!totalHist && localStorage.setItem(relaxTmKey, left.toString())
-					localStorage.setItem(relaxTmKey, left.toString())
 					let __secondToDate = (result)=>{
 						var h = Math.floor(result / 3600) < 10 ? '0'+Math.floor(result / 3600) : Math.floor(result / 3600);
 						var m = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60));

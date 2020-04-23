@@ -196,6 +196,19 @@ class Login extends React.Component {
 		this.props.onChangePwd(true,true)
 	}
 
+	__select_server(ip){
+		localStorage.setItem('debug_ip',ip)
+		this.setState({
+			debugIp: ip
+		})
+		this.props.onShowTost({
+			content: `已切换至 - ${ip}`
+		})
+		setTimeout(() => {
+			remote.getCurrentWindow().reload()
+		}, 500);
+	}
+
 	render() {
 		const { showToastState, changePwd, fromViewUser } = this.props
 		let serverSelected = 0
@@ -208,54 +221,18 @@ class Login extends React.Component {
 		return (
 			<div className="full-h">
 				{this.state.debugIp || (window.ENV_CONF||{}).DEBUG ||(window.ENV_CONF||{}).TEST ? <div className="choose-server">
-					<div className={`server-btn ${serverSelected == 0 ? 'sel' : ''}`} onClick={
-						()=>{
-							if (serverSelected == 0) return
-							let ip = "http://kecheng1.youshiyuwen.cn"
-							localStorage.setItem('debug_ip',ip)
-							this.setState({
-								debugIp: ip
-							})
-							this.props.onShowTost({
-								content: "已切换至 - "+ip
-							})
-							setTimeout(() => {
-								remote.getCurrentWindow().reload()
-							}, 500);
-						}
-					}>kecheng1</div>
-					<div className={`server-btn ${serverSelected == 1 ? 'sel' : ''}`} onClick={
-						()=>{
-							if (serverSelected == 1) return
-							let ip = "http://steven.mx0a.com"
-							localStorage.setItem('debug_ip',ip)
-							this.setState({
-								debugIp: ip
-							})
-							this.props.onShowTost({
-								content: "已切换至 - "+ip
-							})
-							setTimeout(() => {
-								remote.getCurrentWindow().reload()
-							}, 500);
-						}
-					}>steven</div>
-					<div className={`server-btn ${serverSelected == 2 ? 'sel' : ''}`} onClick={
-						()=>{
-							if (serverSelected == 2) return
-							let ip = "https://www.mingxiyuwen.com"
-							localStorage.setItem('debug_ip',ip)
-							this.setState({
-								debugIp: ip
-							})
-							this.props.onShowTost({
-								content: "已切换至 - "+ip
-							})
-							setTimeout(() => {
-								remote.getCurrentWindow().reload()
-							}, 500);
-						}
-					}>online</div>
+					<div className={`server-btn ${serverSelected == 0 ? 'sel' : ''}`} onClick={()=>{
+						if (serverSelected == 0) return
+						this.__select_server("http://kecheng1.youshiyuwen.cn")
+					}}>kecheng1</div>
+					<div className={`server-btn ${serverSelected == 1 ? 'sel' : ''}`} onClick={()=>{
+						if (serverSelected == 1) return
+						this.__select_server("http://steven.mx0a.com")
+					}}>steven</div>
+					<div className={`server-btn ${serverSelected == 2 ? 'sel' : ''}`} onClick={()=>{
+						if (serverSelected == 2) return
+						this.__select_server("https://www.mingxiyuwen.com")
+					}}>online</div>
 				</div> :""}
 				<div className="page login-page">
 					<div className='login-box' >
