@@ -16,6 +16,7 @@ import "../../less/mainpage.less"
 import fs from 'fs'
 import path from 'path'
 import * as types from '../constants/ActionTypes'
+import Toast from './toast'
 import { 
     onRoomInfo,
 	onLogout, onStartCourse,
@@ -38,9 +39,6 @@ import { test } from 'shelljs';
 const AUDIO_BACKGROUND 	= require('./../../assets/relax_background.mp3')
 const AUDIO_SHANGKE 	= require('./../../assets/relax_shangke.mp3')
 const AUDIO_XIUXI		= require('./../../assets/relax_xiuxi.mp3')
-console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_BACKGROUND',AUDIO_BACKGROUND);
-console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_SHANGKE',AUDIO_SHANGKE);
-console.log('MINGXI_DEBUG_LOG>>>>>>>>>AUDIO_XIUXI',AUDIO_XIUXI);
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
@@ -731,21 +729,30 @@ class Main extends React.Component {
 			}}/>
 		}else {
 			content = this.__student_page()
+			let __forbidden = ()=>{
+				if (this.state.relaxTime) {
+					this.props.onShowTost({
+						content: "马上就要上课啦，不要走开哦～"
+					}) 
+					return true
+				}
+				return false
+			}
 			sidebar = <SideBar flow={flow} user={this.props.account} onDeviceTest={()=>{
-				this.props.onEnterTester("main")
+				!__forbidden() && this.props.onEnterTester("main")
 			}} onViewUser={()=>{
-				this.__view_user()
+				!__forbidden() && this.__view_user()
 			}} onViewHelper={()=>{
-				this.__on_helper()
+				!__forbidden() && this.__on_helper()
 			}} onEnterMyCourses={()=>{
-				this.props.onEnterMyCourses();
+				!__forbidden() && this.props.onEnterMyCourses();
 			}} onViewCamp={()=>{
-				this.__view_camp()
+				!__forbidden() && this.__view_camp()
 			}}/>
 		}
 		console.log("this.props.started",this.props.changePwd)
 		return (
-		<div className="full-h">{sidebar}{content}{globalMsg}</div>
+		<div className="full-h">{sidebar}{content}{globalMsg}{this.props.showToastState.showing?<Toast data={this.props.showToastState} /> : ''}</div>
 		)
 	}
 }
@@ -767,6 +774,7 @@ const mapStateToProps = (state, ownProps) => {
 		commingRoom : state.main.commingRoom,
 		campRoom    : state.main.campRoom,
 		globalMsg   : state.main.globalMsg,
+		showToastState : state.toast
 	}
 }
 
