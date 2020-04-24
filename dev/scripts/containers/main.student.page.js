@@ -457,11 +457,12 @@ class Main extends React.Component {
 									
                                     <div className="btns-panel">
 										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
-											<div className="light"></div>
-											<img src={require('../../assets/attend-class.png')} onClick={()=>{
+											<img className='start' src={require('../../assets/attend-class.png')} onClick={()=>{
+
 											this.__stop_relax(room)
 											this.onStartRoom(room)
 										}} alt=""/>
+											<img className='foot' src={require('../../assets/foot.png')} alt=""/>
 										</div>:""}
 										
 										{room.preview_status == "on" && room.prepare_name && !room.follow ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
