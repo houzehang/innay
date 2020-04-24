@@ -106,7 +106,8 @@ class Main extends React.Component {
 	}
 	
 	__stop_relax(room){
-		let relaxKey = `RELAX_REC_${room.channel_id}`
+		let relaxKey 	= `RELAX_REC_${room.channel_id}`
+		let relaxTmKey 	= `RELAX_TOTAL_${room.channel_id}`
 		this.$audio_bg.pause()
 		this.$audio_tip.pause()
 		this.$timer_relax && clearInterval(this.$timer_relax)
@@ -116,6 +117,7 @@ class Main extends React.Component {
 			progress: 0
 		})
 		localStorage.setItem(relaxKey, '1')
+		localStorage.removeItem(relaxTmKey)
 	}
 
     __get_lesson_comming(){
@@ -128,7 +130,7 @@ class Main extends React.Component {
 				if (room) {
 					//1.转换成UI展示所需格式的时间
 					//todo: remove test code
-					// room.start_time  = '2020-04-23 11:38'
+					// room.start_time  = '2020-04-24 11:53'
 					// room.follow		= true
 
 					let relaxKey 	= `RELAX_REC_${room.channel_id}`
@@ -187,6 +189,7 @@ class Main extends React.Component {
 								//state1: 3-5分钟
 								if (hit3To5 && !this.$relax_done_3_to_5) {
 									this.$relax_done_3_to_5 = true
+									this.$audio_tip.pause()
 									this.$audio_tip.src = this.__get_audio('shangke')
 									this.$audio_tip.play()
 									this.$timer_relax_3_to_5 = setInterval(() => {
@@ -395,7 +398,7 @@ class Main extends React.Component {
 									let hours	  = detail.length == 2 ? 0 : parseInt(detail[0])
 									let minutes	  = detail.length == 2 ? parseInt(detail[0]) : parseInt(detail[1])  
 									let seconds	  = detail.length == 2 ? parseInt(detail[1]) : parseInt(detail[2]) 
-									return (hours > 0 ? `${hours}小时`: '') + minutes + '分' + seconds + '秒'
+									return (hours > 0 ? `${hours}小时`: '') + minutes + '分'// + seconds + '秒'
 									
 								})()}哦～`}</div>
 								<div className={"btn-audio"+(this.state.audioOn ? "": " off")} onClick={
@@ -463,23 +466,7 @@ class Main extends React.Component {
 										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
-                                </div>,
-                                
-                                room.left > 0 ? (
-                                    <div key="0" className="time">上课倒计时：
-                                    {
-                                        room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
-                                    }
-                                    {
-                                        room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
-                                    }
-                                    {
-                                        room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
-                                    }
-                                    </div>
-                                ) : (
-                                    <div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
-                                )
+                                </div>
                             ]) : this.__camp_room() }
                         </div>
 					</div>
@@ -608,6 +595,8 @@ class Main extends React.Component {
 		}} error={(error)=>{
 			
 		}} user={this.props.account}/>
+		this.props.hide()
+		this.__stop_relax()
 		this.props.alert({
 			title: "下载课程包",
 			content,
