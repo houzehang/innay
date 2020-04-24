@@ -108,8 +108,6 @@ class Main extends React.Component {
 	
 	__stop_relax(room){
 		if (room && room.follow) {
-			let relaxKey 	= `RELAX_REC_${room.channel_id}`
-			let relaxTmKey 	= `RELAX_TOTAL_${room.channel_id}`
 			this.$audio_bg.pause()
 			this.$audio_tip.pause()
 			this.$timer_relax && clearInterval(this.$timer_relax)
@@ -119,8 +117,6 @@ class Main extends React.Component {
 				progress: 0,
 				tipJoing: false
 			})
-			localStorage.setItem(relaxKey, '1')
-			localStorage.removeItem(relaxTmKey)
 		}
 	}
 
@@ -602,11 +598,17 @@ class Main extends React.Component {
 	}
 
 	onDownload(room, isRecord, camp, withoutJoining) {
-		let follow = room.follow
+		let follow 	= room.follow
 		let content = <Download data={room} recording={isRecord} camp={camp} complete={(data)=>{
 			if (follow && withoutJoining) {
-				console.log('MINGXI_DEBUG_LOG>>>>>>>>>download over but without joining','');
+				console.log('download over but without joining');
 			} else {
+				if (follow) {
+					let relaxKey 	= `RELAX_REC_${room.channel_id}`
+					let relaxTmKey 	= `RELAX_TOTAL_${room.channel_id}`
+					localStorage.setItem(relaxKey, '1')
+					localStorage.removeItem(relaxTmKey)
+				}
 				this.props.hide()
 				bridge.call({
 					method	: "openLiveRoom",
