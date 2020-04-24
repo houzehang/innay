@@ -52,6 +52,7 @@
                 transform: scale(0.9);
             }
         }
+
         .cutebaby-box{
             width: 100%;
             height: 1rem;
@@ -72,7 +73,7 @@
             display: block;
             margin: 0 auto;
         }
-        .info{
+        .info-preload{
             font-size: 0.24rem;
             margin-top: 1.2rem;
             color: rgb(254, 206, 48);
@@ -103,24 +104,24 @@
             console.log('[TAG]', first+firstsub, second+([...args].length > 0 ? secondsub : ''), ...args);
         } 
         </script> 
-    </head>
+    <link href="./vendor.2f547b56db66e8538ba7.css" rel="stylesheet"><link href="./app.2f547b56db66e8538ba7.css" rel="stylesheet"></head>
     <body>
         <div id="app" class="full-h">
             <div class="preload-text">
                 <div class="preload-bg"></div>
                 <div class="preload-mask"></div>
                 <div class="cutebaby-box">
-                    <img src="http://localhost:3030/e501009fd94ed2c5d5176afdc4698422.png" alt="">
+                    <img src="./e501009fd94ed2c5d5176afdc4698422.png" alt="">
                 </div>
                 <script>
                 if (localStorage.getItem("ENTERED")) {
-                    document.write("<span class='info'>正在返回明兮学堂...</span>")
+                    document.write("<span class='info-preload'>正在返回明兮学堂...</span>")
                     localStorage.removeItem("ENTERED")
                 } else {
-                    document.write("<span class='info'>即将进入明兮学堂...</span>")
+                    document.write("<span class='info-preload'>即将进入明兮学堂...</span>")
                 }
                 </script>
             </div>
         </div>
-    <script type="text/javascript" src="http://localhost:3030/app.js"></script></body>
+    <script type="text/javascript" src="./vendor.2f547b56db66e8538ba7.js"></script><script type="text/javascript" src="./app.2f547b56db66e8538ba7.js"></script></body>
 </html>
