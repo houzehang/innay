@@ -388,7 +388,7 @@ class Main extends React.Component {
 
 		return (
 			<div className="page student-pages">
-				<audio src='' crossOrigin='anonymous' autoPlay={'autoplay'} ref={(ref)=>{
+				<audio src='' crossOrigin='anonymous' loop="loop" autoPlay={'autoplay'} ref={(ref)=>{
 					this.$audio_bg = ref
 				}}/>
 				<audio src="" crossOrigin='anonymous' autoPlay={'autoplay'} ref={(ref)=>{
