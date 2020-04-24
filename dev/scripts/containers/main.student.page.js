@@ -106,18 +106,20 @@ class Main extends React.Component {
 	}
 	
 	__stop_relax(room){
-		let relaxKey 	= `RELAX_REC_${room.channel_id}`
-		let relaxTmKey 	= `RELAX_TOTAL_${room.channel_id}`
-		this.$audio_bg.pause()
-		this.$audio_tip.pause()
-		this.$timer_relax && clearInterval(this.$timer_relax)
-		this.$timer_relax_3_to_5 && clearInterval(this.$timer_relax_3_to_5)
-		this.setState({
-			relaxTime: '',
-			progress: 0
-		})
-		localStorage.setItem(relaxKey, '1')
-		localStorage.removeItem(relaxTmKey)
+		if (room && room.follow) {
+			let relaxKey 	= `RELAX_REC_${room.channel_id}`
+			let relaxTmKey 	= `RELAX_TOTAL_${room.channel_id}`
+			this.$audio_bg.pause()
+			this.$audio_tip.pause()
+			this.$timer_relax && clearInterval(this.$timer_relax)
+			this.$timer_relax_3_to_5 && clearInterval(this.$timer_relax_3_to_5)
+			this.setState({
+				relaxTime: '',
+				progress: 0
+			})
+			localStorage.setItem(relaxKey, '1')
+			localStorage.removeItem(relaxTmKey)
+		}
 	}
 
     __get_lesson_comming(){
@@ -455,6 +457,7 @@ class Main extends React.Component {
 									
                                     <div className="btns-panel">
 										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
+											<div className="light"></div>
 											<img src={require('../../assets/attend-class.png')} onClick={()=>{
 											this.__stop_relax(room)
 											this.onStartRoom(room)

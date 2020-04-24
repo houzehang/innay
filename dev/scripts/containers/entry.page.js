@@ -16,7 +16,7 @@ import logger from 'electron-log'
 import $ from "jquery"
 import {TEST, DEBUG } from '../../../env';
 const shell = electron.shell;
-
+const remote = electron.remote
 class Entry extends React.Component {
 	constructor(props) {
 		super(props)
