@@ -396,7 +396,7 @@ class Main extends React.Component {
 					this.$audio_tip = ref
 				}}/>
 				<div className="inner">
-					<div className="student-box">
+					<div className={"student-box" + (this.state.relaxTime ? " lower" : "")}>
 						{this.state.relaxTime ? 	<div className="relax-bubble">
 								<div className="tip-label">{`课间休息还有${(()=>{
 									let relaxTime = this.state.relaxTime
@@ -474,7 +474,23 @@ class Main extends React.Component {
 										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
 									</div>
-                                </div>
+                                </div>,
+                                
+                                this.state.relaxTime ?"":(room.left > 0 ? (
+                                    <div key="0" className="time">上课倒计时：
+                                    {
+                                        room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
+                                    }
+                                    {
+                                        room.hours > 0 ? <label><span>{room.hours}</span>小时</label> : ""
+                                    }
+                                    {
+                                        room.minutes > 0 ? <label><span>{room.minutes}</span>分钟</label> : ""
+                                    }
+                                    </div>
+                                ) : (
+                                    <div key="0" className="time">老师开始讲课啦，赶快进入教室哦！</div>
+                                ))
                             ]) : this.__camp_room() }
                         </div>
 					</div>
