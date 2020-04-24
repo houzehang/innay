@@ -192,6 +192,14 @@
                                     height: 0.72rem;
                                     margin-bottom: 0.04rem;
                                     z-index: 1;
+                                    &.breath{
+                                        @keyframes scale-anim {
+											0%   { transform: scale(1); }
+											50%  { transform: scale(1.1); }
+											100% { transform: scale(1); }
+										}
+										animation: scale-anim 2500ms ease-in-out 0s infinite;
+                                    }
                                 }
                                 .foot{
                                     width: 1rem;

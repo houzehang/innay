@@ -51,7 +51,8 @@ class Main extends React.Component {
 			audioOn: true,
 			relaxTime: '',
 			audio_url: '',
-			relaxDone5To10: false
+			relaxDone5To10: false,
+			tipJoing: false
 		}
 		net.on("LOGOUT_NEEDED", ()=>{
 			this.onLogout()
@@ -115,7 +116,8 @@ class Main extends React.Component {
 			this.$timer_relax_3_to_5 && clearInterval(this.$timer_relax_3_to_5)
 			this.setState({
 				relaxTime: '',
-				progress: 0
+				progress: 0,
+				tipJoing: false
 			})
 			localStorage.setItem(relaxKey, '1')
 			localStorage.removeItem(relaxTmKey)
@@ -197,6 +199,10 @@ class Main extends React.Component {
 									this.$timer_relax_3_to_5 = setInterval(() => {
 										this.$audio_tip.play()
 									}, 20 * 1000);
+									//呼吸动作
+									this.setState({
+										tipJoing: true
+									})
 								}
 								return true
 							}
@@ -332,8 +338,6 @@ class Main extends React.Component {
 		let room = this.props.commingRoom;
 		if (room) {
 			room.can_enter = true
-			//todo: remove test code
-			// room.follow  = true
 		}
 		let relaxBubbleSize = 1
 		let addon			= 0.01
@@ -457,7 +461,7 @@ class Main extends React.Component {
 									
                                     <div className="btns-panel">
 										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
-											<img className='start' src={require('../../assets/attend-class.png')} onClick={()=>{
+											<img className={'start'+(this.state.tipJoing ? " breath" : "")} src={require('../../assets/attend-class.png')} onClick={()=>{
 
 											this.__stop_relax(room)
 											this.onStartRoom(room)
