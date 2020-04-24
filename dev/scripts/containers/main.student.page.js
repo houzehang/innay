@@ -209,16 +209,15 @@ class Main extends React.Component {
 							this.$timer_relax = setInterval(() => {
 								__handler_relax()
 							}, 1000);
-							if (!__handler_relax()) {
-								return;
+							if (__handler_relax()) {
+								//后台自动下载
+								this.onStartRoom(room, true)
+								//背景音乐
+								this.$audio_bg.src = this.__get_audio('background')
+								if (this.state.audioOn) {
+									this.$audio_bg.play()
+								}
 							} 
-							//后台自动下载
-							this.onStartRoom(room, true)
-							//背景音乐
-							this.$audio_bg.src = this.__get_audio('background')
-							if (this.state.audioOn) {
-								this.$audio_bg.play()
-							}
 						}
 					} else if (room.follow && !relaxShown) {
 						//如果没有弹出过relax，直接进入教室
