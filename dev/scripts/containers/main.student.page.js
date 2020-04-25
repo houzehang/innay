@@ -222,7 +222,10 @@ class Main extends React.Component {
                                     <div className="info">
                                         <div className="desc">课时简介：{room.content||'暂无'}</div>
                                         {/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
-                                        <div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升："+(room.ability)}</span></div>
+                                        <div className="tag">
+											<div className="tag-kind">{room.label}</div>
+											<div className="tag-effect">{"学习能力提升："+(room.ability)}</div>
+										</div>
                                         <div className="date"><span>{room.class_date} {room.class_time}</span></div>
                                     </div>
 									

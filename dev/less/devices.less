@@ -6,8 +6,8 @@ body {
 	}
 	.sound-outer {
 		height: 100%;
-		background: url('../assets/../assets/login-newbg.png') no-repeat;
-		background-size: 100% 100%;
+		background: url('../assets/login-newbg.png') no-repeat center;
+		background-size: center 100%;
 		overflow: hidden;
 		display: flex;
 		align-items: center;
@@ -308,6 +308,7 @@ body {
 				.video-area {
 					width: 2.1rem;
 					height: 2.1rem;
+					border-radius: 0.14rem;
 					margin: 0.25rem auto; 
 					overflow: hidden;
 				}
@@ -318,7 +319,7 @@ body {
 					margin: 0.25rem auto; 
 					.mic-icon {
 						width: 0.41rem;
-						height: 0.6rem;
+						height: 0.61rem;
 						background: url(../assets/tester-speaker.png) no-repeat center center;
 						background-size: 100% auto;
 						margin-right: 0.26rem;
@@ -383,12 +384,21 @@ body {
 				.rangeslider-horizontal .rangeslider__handle:after {
 					display: none;
 				}
+				.step-wrap{
+					width: 6rem;
+					display: flex;
+				}
 				.step-btns {
 					width: 100%;
 					position: relative;
 					display: flex;
 					justify-content: center;
 					align-items: center;
+					.stepbtn-box{
+						width: 4.2rem;
+						display: flex;
+						justify-content: space-between;
+					}
 					.step-btn {
 						padding: 0 0.2rem;
 						width: 3.7rem;
@@ -399,15 +409,12 @@ body {
 
 						&.no-pass {
 							background: #b2b2b2;
-							margin-right: 0.4rem;
-							margin-left: 0.6rem;
 						}
 						&.cantsee-image{
 							width: 2rem;
 							height: 0.7rem;
 							background: url('../assets/check-cantsee.png') no-repeat;
 							background-size: 100% 100%;
-							margin-left: 0.8rem;
 						}
 						&.clear-image{
 							width: 2rem;
