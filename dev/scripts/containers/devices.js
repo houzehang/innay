@@ -194,7 +194,7 @@ class Devices extends React.Component {
 		this.$client.startAudioRecordingDeviceTest(100)
 		this.$client.on('audiovolumeindication', (uid, volume, speaker) => {
 			if (this.state.step == 2) {
-				let volumn =  parseInt(speaker / 255 * 13, 10)
+				let volumn =  parseInt(volume / 255 * 13, 10)
 				if (volumn > this.$max_device_volumn) {
 					this.$max_device_volumn = volumn
 				}
@@ -557,8 +557,8 @@ class Devices extends React.Component {
 				</div>
 				<div className="steps">
 					<div className="line l0"></div>
-					<div className="line l1"></div>
-					<div className="line l2"></div>
+					<div className={`line l1${this.state.camera_failed ? " failed" : ""}`}></div>
+					<div className={`line l2${this.state.mic_failed ? " failed" : ""}`}></div>
 					<div className="step step-0">
 						<div className="step-name">
 							<i className="icon"></i>

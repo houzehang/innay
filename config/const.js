@@ -131,7 +131,7 @@ module.exports = {
 	},
 	EBTN_STYLE_CONFIG :{
 		kNormal: 	 ['ok', 'cancel'],
-		kDeviceTest: ['check-jump', 'check-again'],
+		kDeviceTest: ['check-again','check-jump'],
 		kChangePwd:  ['changepwd','none'],
 		kClassExit:  ['leave-class','end-class']
 	},

@@ -43,6 +43,7 @@ body {
 				font-size: 0.2rem;
 				color: #fbab22;
 				text-align: center;
+				font-weight: bold;
 			}
 			.network-bar {
 				height: 0.02rem;
@@ -105,7 +106,12 @@ body {
 			&.s-1,&.s-2,&.s-3 {
 				.steps {
 					.l0 {
-						background: #ffac29;
+						background: rgb(254,201,49);
+						height: 0.028rem;
+						margin-top: -0.014rem;
+						&.failed{
+							background: rgb(250,75,81);
+						}
 					}
 					.step {
 						&.step-1 {
@@ -125,7 +131,12 @@ body {
 			&.s-2,&.s-3 {
 				.steps {
 					.l1 {
-						background: #ffac29;
+						background: rgb(254,201,49);
+						height: 0.028rem;
+						margin-top: -0.014rem;
+						&.failed{
+							background: rgb(250,75,81);
+						}
 					}
 					.step {
 						&.step-2 {
@@ -145,7 +156,12 @@ body {
 			&.s-3 {
 				.steps {
 					.l2 {
-						background: #ffac29;
+						background: rgb(254,201,49);
+						height: 0.028rem;
+						margin-top: -0.014rem;
+						&.failed{
+							background: rgb(250,75,81);
+						}
 					}
 					.step {
 						&.step-3 {
@@ -170,7 +186,8 @@ body {
 				position: relative;
 				.line {
 					width: 1.56rem;
-					height: 2px;
+					height: 0.028rem;
+					margin-top: -0.014rem;
 					background: #b2b2b2;
 					position: absolute;
 					top: 0.88rem;
@@ -233,6 +250,7 @@ body {
 				flex-direction: column;
 				justify-content: center;
 				align-items: center;
+				height: 4.36rem;
 				.step-title {
 					font-size: 0.18rem;
 					color: #333333;
