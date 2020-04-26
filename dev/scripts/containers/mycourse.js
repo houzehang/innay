@@ -154,7 +154,8 @@ class MyCourse extends React.Component {
 											<img src={room.avatar} alt="" />
 										</div>
 										<div className="info">
-											<div className="name"><span>{room.name}</span></div>
+											<div className="name"><span>{room.name}</span><span className
+											="small">{'（'+(room.lesson_name || '-')+'）'}</span></div>
 											<div className="desc">课时简介：{room.content}</div>
 											{/* <div className="index"><span>老师：{room.teacher_name}</span></div> */}
 											<div className="tag"><div className="tag-kind">{room.label}</div><span className="tag-effect">{"学习力提升：" + (room.ability || "")}</span></div>

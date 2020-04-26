@@ -14,6 +14,7 @@
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    user-select: none;
     &.student-pages {
         transition: all 300ms 0s ease-in-out;
         background: url('../assets/student-bg.png') no-repeat center;
@@ -124,7 +125,9 @@
                                 align-items: flex-start;
                                 line-height: 0.28rem;
                                 vertical-align: top;
-                                overflow: scroll;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
                                 &::-webkit-scrollbar {
                                     display: none;
                                 }
@@ -158,7 +161,9 @@
                                     height: 0.26rem;
                                     line-height: 0.29rem;
                                     font-size: 0.16rem;
-                                    overflow: scroll;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                    white-space: nowrap;
                                     color: #969696;
                                 }
                             }
@@ -264,6 +269,11 @@
                                 &::after {
                                     content: "课前预习";
                                 }
+                            }
+                            .flag{
+                                position: absolute;
+                                top: 0.2rem;
+                                right: 0.5rem;
                             }
                             .leave-flag{
                                 .view-base('stu_leave.png');
@@ -471,7 +481,9 @@
                                         align-items: flex-start;
                                         line-height: 0.28rem;
                                         vertical-align: top;
-                                        overflow: scroll;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                        white-space: nowrap;
                                         &::-webkit-scrollbar {
                                             display: none;
                                         }

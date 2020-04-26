@@ -499,12 +499,12 @@ class Main extends React.Component {
 
 	__get_room_flag(state){
 		if (state == 'leave') {
-			return <div className="leave-flag"></div>
+			return <div className="flag leave-flag"></div>
 		}else if (state == 'back') {
-			return <div className="back-flag"></div>
+			return <div className="flag back-flag"></div>
 		}else if (state == 'xiuxue') {
-			return <div className="xiuxue-flag"></div>
 		}
+		return <div className="flag xiuxue-flag"></div>
 		return ''
 	}
 
@@ -769,7 +769,9 @@ class Main extends React.Component {
 		}
 		console.log("this.props.started",this.props.changePwd)
 		return (
-		<div className="full-h">{sidebar}{content}{globalMsg}{this.props.showToastState.showing?<Toast data={this.props.showToastState} /> : ''}</div>
+		<div className="full-h" onDragStart={(e)=>{
+			e.preventDefault()
+		}}>{sidebar}{content}{globalMsg}{this.props.showToastState.showing?<Toast data={this.props.showToastState} /> : ''}</div>
 		)
 	}
 }

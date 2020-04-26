@@ -700,7 +700,7 @@ html,body {
 							justify-content: flex-end;
 							align-items: center;
 							flex-direction: column;
-							height: 0.93rem;
+							height: 1.01rem;
 							width: 100%;
 							margin-bottom: 0.31rem;
 							.switch-bar{
@@ -714,15 +714,17 @@ html,body {
 								text-align: center;
 								.switch-bar-left{
 									border-top-left-radius: inherit;
-									border-bottom-left-radius: inherit;
-									background: #feb425;
-									box-shadow: 0rem 0.08rem 0rem 0rem#f69c00;
-									width: 50%;
-									height: 100%;
-									color: #a66900;
+									border-bottom-left-radius : inherit;
 									display: flex;
 									align-items: center;
 									justify-content: center;
+									.view-base('btn-comming-lesson.png');
+									width: 50%;
+									height: 0.72rem;
+									color: #a66900;
+									&>span{
+										margin-top: 0;
+									}
 								}
 								.switch-bar-right{
 									border-top-right-radius: inherit;
@@ -731,21 +733,34 @@ html,body {
 									background: #fff;
 									height: 100%;
 									color: #666666;
-									box-shadow: 0rem 0.08rem 0rem 0rem#b4b4b4;
+									box-shadow: 0rem 0.067rem 0rem 0rem#b4b4b4;
 									display: flex;
 									align-items: center;
 									justify-content: center;
+									&>span{
+										margin-top: 0.06rem;
+									}
 								}
 								&.first-selected{
 									.switch-bar-left{
 										background: #fff;
-										box-shadow: 0rem 0.08rem 0rem 0rem#b4b4b4;
+										box-shadow: 0rem 0.067rem 0rem 0rem#b4b4b4;
+										height: 100%;
 										color: #666666;
+										&>span{
+											margin-top: 0.06rem;
+										}
 									}
 									.switch-bar-right{
-										background: #feb425;
-										box-shadow: 0rem 0.08rem 0rem 0rem#f69c00;
+										// background: #feb425;
+										.view-base('btn-done-lesson.png');
+										box-shadow: none;
 										color: #a66900;
+										width: 50%;
+										height: 0.72rem;
+										&>span{
+											margin-top: 0;
+										}
 									}
 								}
 							}
@@ -848,6 +863,9 @@ html,body {
 												font-size: 0.24rem;
 												height: 0.24rem;
 												line-height: 0.24rem;
+											}
+											.small{
+												font-size: 0.2rem;
 											}
 										}
 										.desc {
