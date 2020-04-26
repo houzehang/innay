@@ -8,7 +8,7 @@ import '../less/version.less'
 import {remote, ipcRenderer} from 'electron';
 import Const from '../const'
 import bridge from '../../core/MessageBridge'
-import DomainUtil from '../scripts/utils/DomainUtil'
+import DomainMgr from '../../core/DomainMgr'
 const autoUpdater 	= remote.require('electron-updater').autoUpdater
 const logger 		= remote.require('electron-log')
 import {TEST, DEBUG } from '../../env';
@@ -24,10 +24,10 @@ class Renderer {
 			progress : null
 		}
 		// default domains from location
-		DomainUtil.domains = (TEST || DEBUG) ? Const.DOMAIN_LIST_DEFAULT_TEST : Const.DOMAIN_LIST_DEFAULT
+		DomainMgr.domains = (TEST || DEBUG) ? Const.DOMAIN_LIST_DEFAULT_TEST : Const.DOMAIN_LIST_DEFAULT
 		this.__setState(this.state)
 		// update domains json config from oss
-		DomainUtil.pull(()=>{
+		DomainMgr.pull(()=>{
 			this.__start_updater()
 		})
 	}
@@ -102,7 +102,7 @@ class Renderer {
 	}
 
 	__update_bundle(retry) {
-		let	url = DomainUtil.availibleDomain('static', retry)
+		let	url = DomainMgr.availibleDomain('static', retry)
 		if (!url) {
 			logger.log('[debug-domain]','没有可用的static域名')
 			return false;
@@ -152,7 +152,7 @@ class Renderer {
 		autoUpdater.on('error', (err) => {
 			logger.error("基础框架更新出错",err)
 			logger.log("检测是否有备用热更域名")
-			let nextAvailibleDomain = DomainUtil.availibleDomain('updater', true)
+			let nextAvailibleDomain = DomainMgr.availibleDomain('updater', true)
 			if (nextAvailibleDomain) {
 				logger.log('[debug-domain]','正在尝试下一个热更新域名:',nextAvailibleDomain)
 				autoUpdater.setFeedURL(nextAvailibleDomain)

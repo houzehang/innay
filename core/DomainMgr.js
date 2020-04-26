@@ -1,16 +1,21 @@
 
 import {remote}    from 'electron';
-import DB          from '../../../core/DB'
-import bridge 	   from '../../../core/MessageBridge'
-import Const 	   from '../../../config/const'
-const logger       = remote.require('electron-log')
-import {TEST, DEBUG } from '../../../env';
+import DB          from './DB'
+import bridge 	   from './MessageBridge'
+import Const 	   from '../config/const'
+import logger      from 'electron-log'
+import {TEST, DEBUG } from '../env';
 
-class DomainUtil {
+class DomainMgr {
     constructor(){
 		DB.update()
 		this.$domains = JSON.parse(DB.get('DOMAINS') || '{}')
-    }
+		this.$types = {}
+	}
+	
+	get types(){
+		return this.$types
+	}
 
     get domains(){
         return this.$domains
@@ -90,4 +95,4 @@ class DomainUtil {
 		return null;
 	}
 }
-export default new DomainUtil
+export default new DomainMgr

@@ -11,6 +11,7 @@ import fs from 'fs-extra'
 import mime from 'mime-types'
 import bridge from './MessageBridge'
 import { EventEmitter } from 'events';
+import DomainMgr from './DomainMgr'
 
 export default class WindowFactory {
 	constructor(screenSize) {
@@ -95,13 +96,8 @@ export default class WindowFactory {
 			_window.webContents.openDevTools();
 		}
 
-		let baseUrl
-		if (DEBUG || TEST) {
-			baseUrl = Const.TEST_URL
-		} else {
-			baseUrl = Const.ONLINE_URL
-		}
-		_window.customData = {baseUrl};
+		let domainMgr = DomainMgr
+		_window.customData = {domainMgr};
 		_window.webContents.on('did-finish-load', () => {
 			_window.webContents.send('configure', {
 				__dirname: path.resolve(__dirname,'..'), 

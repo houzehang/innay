@@ -5,7 +5,7 @@ import net from '../network'
 import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
-import DomainUtil from '../utils/DomainUtil'
+import DomainMgr from '../../../core/DomainMgr'
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
@@ -16,7 +16,7 @@ class Download extends React.Component {
 			percent: 0,
 			notice: ""
 		}
-		this.$domain_course = DomainUtil.availibleDomain('course');
+		this.$domain_course = DomainMgr.availibleDomain('course');
 		console.log('MINGXI_DEBUG_LOG>>>>>>>>>init download','');
 	}
 
@@ -26,7 +26,7 @@ class Download extends React.Component {
 		const camp			= this.props.camp
 		const homework  	= this.props.homework
 		const preview 		= this.props.preview
-		const baseFrameUrl 	= DomainUtil.availibleDomain('frame',retry)
+		const baseFrameUrl 	= DomainMgr.availibleDomain('frame',retry)
 		if (!baseFrameUrl) {
 			this.__setStatus("UPDATE.ERROR",new Error('检测基础库出错，无可用域名'))
 			return
@@ -286,7 +286,7 @@ class Download extends React.Component {
 			}).then((localInfo)=>{
 				
 				let __downloadPackage = (retry)=>{
-					let baseCourseUrl = DomainUtil.availibleDomain('course', retry)
+					let baseCourseUrl = DomainMgr.availibleDomain('course', retry)
 					if (!baseCourseUrl) {
 						let errorMessage = `no avalible domain for course-preview[${lesson}] retrying`
 						logger.log('[debug-domain] errorMessage', errorMessage)
@@ -339,7 +339,7 @@ class Download extends React.Component {
 				}
 			}).then((localInfo)=>{
 				let __downloadPackage = (retry)=>{
-					let baseCourseUrl = DomainUtil.availibleDomain('course', retry)
+					let baseCourseUrl = DomainMgr.availibleDomain('course', retry)
 					if (!baseCourseUrl) {
 						let errorMessage = 'no avalible domain for course retrying'
 						logger.log('[debug-domain] errorMessage', errorMessage)
