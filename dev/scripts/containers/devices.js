@@ -321,12 +321,14 @@ class Devices extends React.Component {
 				</div>
 				<div className="video-area" id="video-area" ref={el=>this.$video_area=el}></div>
 				<div className="step-btns">
-					<button onClick={()=>{
-						this.__on_step1_done({ passed: false })
-					}} className="step-btn no-pass cantsee-image"></button>
-					<button onClick={()=>{
-						this.__on_step1_done({ passed: true })
-					}} className="step-btn clear-image"></button>
+					<div className="stepbtn-box">
+						<button onClick={()=>{
+							this.__on_step1_done({ passed: false })
+						}} className="step-btn no-pass cantsee-image"></button>
+						<button onClick={()=>{
+							this.__on_step1_done({ passed: true })
+						}} className="step-btn clear-image"></button>
+					</div>
 					<button onClick={()=>{
 						this.onStopPreviewAndStepTo(0)
 						this.setState({step: 0})
@@ -393,12 +395,14 @@ class Devices extends React.Component {
 					{Steps}
 				</div>
 				<div className="step-btns">
-					<button onClick={()=>{
-    					this.__on_step2_done({passed: false})
-					}} className="step-btn no-pass no-voice"></button>
-					<button onClick={()=>{
-    					this.__on_step2_done({passed: true})
-					}} className="step-btn see-voice"></button>
+					<div className="stepbtn-box">
+						<button onClick={()=>{
+							this.__on_step2_done({passed: false})
+						}} className="step-btn no-pass no-voice"></button>
+						<button onClick={()=>{
+							this.__on_step2_done({passed: true})
+						}} className="step-btn see-voice"></button>
+					</div>
 					<button onClick={()=>{
     					this.$client.stopAudioRecordingDeviceTest();
 						this.setState({step: 1})
@@ -510,12 +514,14 @@ class Devices extends React.Component {
 					</div>
 				</div>
 				<div className="step-btns">
-					<button className="step-btn no-pass no-hear" onClick={()=>{
-						this.__on_step3_done({passed: false})
-					}}></button>
-					<button className="step-btn can-hear" onClick={()=>{
-						this.__on_step3_done({passed: true})
-					}}></button>
+					<div className="stepbtn-box">
+						<button className="step-btn no-pass no-hear" onClick={()=>{
+							this.__on_step3_done({passed: false})
+						}}></button>
+						<button className="step-btn can-hear" onClick={()=>{
+							this.__on_step3_done({passed: true})
+						}}></button>
+					</div>
 					<button onClick={()=>{
 						this.$playing = false
 						this.$client.stopAudioPlaybackDeviceTest();
