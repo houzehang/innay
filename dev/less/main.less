@@ -722,45 +722,31 @@ html,body {
 									width: 50%;
 									height: 0.72rem;
 									color: #a66900;
-									&>span{
-										margin-top: 0;
-									}
 								}
 								.switch-bar-right{
 									border-top-right-radius: inherit;
 									border-bottom-right-radius : inherit;
+									.view-base('btn_w_right.png');
 									width: 50%;
-									background: #fff;
-									height: 100%;
+									height: 0.72rem;
 									color: #666666;
-									box-shadow: 0rem 0.067rem 0rem 0rem#b4b4b4;
 									display: flex;
 									align-items: center;
 									justify-content: center;
-									&>span{
-										margin-top: 0.06rem;
-									}
 								}
 								&.first-selected{
 									.switch-bar-left{
-										background: #fff;
-										box-shadow: 0rem 0.067rem 0rem 0rem#b4b4b4;
-										height: 100%;
+										.view-base('btn_w_left.png');
+										width: 50%;
+										height: 0.72rem;
 										color: #666666;
-										&>span{
-											margin-top: 0.06rem;
-										}
 									}
 									.switch-bar-right{
-										// background: #feb425;
 										.view-base('btn-done-lesson.png');
 										box-shadow: none;
 										color: #a66900;
 										width: 50%;
 										height: 0.72rem;
-										&>span{
-											margin-top: 0;
-										}
 									}
 								}
 							}

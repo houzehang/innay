@@ -382,7 +382,7 @@ class Main extends React.Component {
 			styRadialMask1.transform = `rotate(${90 + (progress * 3.6)}deg)`
 		}
 
-		let showBubble = room.class_state !== 'xiuxue' && this.state.relaxTime
+		let showBubble = (room||{}).class_state !== 'xiuxue' && this.state.relaxTime
 
 		return (
 			<div className="page student-pages">
