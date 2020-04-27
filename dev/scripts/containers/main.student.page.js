@@ -382,6 +382,8 @@ class Main extends React.Component {
 			styRadialMask1.transform = `rotate(${90 + (progress * 3.6)}deg)`
 		}
 
+		let showBubble = room.class_state !== 'xiuxue' && this.state.relaxTime
+
 		return (
 			<div className="page student-pages">
 				<audio src='' crossOrigin='anonymous' loop="loop" autoPlay={'autoplay'} ref={(ref)=>{
@@ -391,7 +393,7 @@ class Main extends React.Component {
 					this.$audio_tip = ref
 				}}/>
 				<div className="inner">
-					<div className={"student-box" + (this.state.relaxTime ? " lower" : "")}>
+					<div className={"student-box" + (showBubble ? " lower" : "")}>
 						{this.state.relaxTime ? 	<div className="relax-bubble">
 								<div className="tip-label">{`课间休息还有${(()=>{
 									let relaxTime = this.state.relaxTime
@@ -474,7 +476,7 @@ class Main extends React.Component {
 									</div>
                                 </div>,
                                 
-                                this.state.relaxTime ?"":(room.left > 0 ? (
+                                showBubble ?"":(room.left > 0 ? (
                                     <div key="0" className="time">上课倒计时：
                                     {
                                         room.days > 0 ? <label><span>{room.days}</span>天</label> : ""
@@ -504,7 +506,6 @@ class Main extends React.Component {
 			return <div className="flag back-flag"></div>
 		}else if (state == 'xiuxue') {
 		}
-		return <div className="flag xiuxue-flag"></div>
 		return ''
 	}
 
