@@ -67,6 +67,7 @@ class DomainMgr {
     }
     
 	availibleDomain(kind, retry){
+		logger.log('search availibleDomain kind', kind, retry)
 		if (kind == 'query' && localStorage.getItem('debug_ip')) {
 			return localStorage.getItem('debug_ip')
 		}
@@ -88,6 +89,7 @@ class DomainMgr {
 				let condition = retry ? (!active && !used) : active
 				if (!retry && !backup) {
 					backup = ()=>{
+						logger.log('[debug-domain]','use back up',item.url)
 						return useThis(item)
 					}
 				}
@@ -101,6 +103,7 @@ class DomainMgr {
                 }
 			}
 			this.__snyc_domains()
+			logger.log('found:',found)
 			if (!found && !retry && backup) {
 				return backup()
 			}

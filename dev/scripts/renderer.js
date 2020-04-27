@@ -104,7 +104,7 @@ class Renderer {
 	__update_bundle(retry) {
 		let	url = DomainMgr.availibleDomain('bundles', retry)
 		if (!url) {
-			logger.log('[debug-domain]','没有可用的bundles域名')
+			logger.log('[debug-domain]','没有可用的bundles域名',retry)
 			return false;
 		}
 		logger.log('[debug-domain]','使用static域名',url)

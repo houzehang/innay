@@ -72,7 +72,7 @@ class Download extends React.Component {
 				stepForward = true
 				return this.__update_course_bundle(lesson)
 			}).then(data=>{
-				logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`)
+				logger.log(`下载课程包成功。课程名：${room.en_name}, 版本号：${data.version}`,room)
 				this.__on_complete(params)
 			}).catch(error=>{
 				this.__setStatus("UPDATE.ERROR", error);
@@ -341,7 +341,7 @@ class Download extends React.Component {
 				let __downloadPackage = (retry)=>{
 					let baseCourseUrl = DomainMgr.availibleDomain('lessons', retry)
 					if (!baseCourseUrl) {
-						let errorMessage = 'no avalible domain for course retrying'
+						let errorMessage = `no avalible domain for course ${lesson} retrying`
 						logger.log('[debug-domain] errorMessage', errorMessage)
 						reject(new Error(errorMessage))
 						return
