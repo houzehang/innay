@@ -89,7 +89,7 @@ module.exports = {
 	 * bundles: 	[app.json & app.zip]
 	 * frame: 		[liveroom.json & liveroom.zip / homework.json & homework.zip]
 	 * query: 		[http request]
-	 * course: 		[like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]
+	 * lessons      [like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]
 	 * software: 	[electron pacakge ***.exe & ***.dmg]
 	 */
 	DOMAIN_LIST_DEFAULT: {
