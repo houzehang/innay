@@ -160,7 +160,7 @@ class Main extends React.Component {
 						room.minutes= minutes
 
 						//relax time
-						if (room.follow && !relaxShown) {
+						if (room.follow && !relaxShown && room.class_state != 'xiuxue') {
 							let __handler_relax  = ()=>{
 								let left 	 = startTime - this.__serverTime()
 								let progress = Math.max(1, 100 * (1 - left / total)) 
@@ -468,7 +468,7 @@ class Main extends React.Component {
 											<img className='foot' src={require('../../assets/foot.png')} alt=""/>
 										</div>:""}
 										
-										{room.preview_status == "on" && room.prepare_name && !room.follow ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
+										{room.preview_status == "on" && room.prepare_name && !room.follow && (room||{}).class_state != 'xiuxue' ? <div className="preview-imgbtn"><img src={require('../../assets/preview-btn.png')} onClick={()=>{
 											this.onStartPreview(room)
 										}} alt=""/></div> : ""}
 										{this.__get_room_flag(room.class_state)}
@@ -504,6 +504,7 @@ class Main extends React.Component {
 		}else if (state == 'back') {
 			return <div className="flag back-flag"></div>
 		}else if (state == 'xiuxue') {
+			return <div className="flag xiuxue-flag"></div>
 		}
 		return ''
 	}
