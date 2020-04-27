@@ -135,7 +135,7 @@ class MyCourse extends React.Component {
 										<span>已上课程</span>
 									</div>
 								</div>
-								{this.props.totalDone && this.props.totalDone.length > 0 ? 
+								{0 && this.props.totalDone && this.props.totalDone.length > 0 ? 
 									<div className="course-according">
 										<span className="label">课时消耗情况：</span>
 										<span className="value">{this.state.comming_page_selected ? this.props.totalComming : this.props.totalDone}</span>
