@@ -83,17 +83,17 @@ module.exports = {
 		'Built-in iSight',
 		'6room'
 	],
-	DOMAIN_URL: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_online.json',
-	DOMAIN_URL_TEST: 'https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/domain_list_test.json',
+	DOMAIN_URL: 'https://mingxicn.oss-cn-beijing.aliyuncs.com/master.json',
+	DOMAIN_URL_TEST: 'http://kechengassets.mx0a.com/steven.json',
 	/**
-	 * static: 	[app.json & app.zip]
-	 * frame: 	[liveroom.json & liveroom.zip / homework.json & homework.zip]
-	 * query: 	[http request]
-	 * course: 	[like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]
-	 * updater: [electron pacakge ***.exe & ***.dmg]
+	 * bundles: 	[app.json & app.zip]
+	 * frame: 		[liveroom.json & liveroom.zip / homework.json & homework.zip]
+	 * query: 		[http request]
+	 * course: 		[like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]
+	 * software: 	[electron pacakge ***.exe & ***.dmg]
 	 */
 	DOMAIN_LIST_DEFAULT: {
-		static:[
+		bundles:[
 			{url: "https://bundlesyun.mx0a.com"},
 			{url: "http://bundlesossyun.mw019.com"}
 		],
@@ -104,16 +104,16 @@ module.exports = {
 		query:[
 			{url: "https://www.mingxiyuwen.com"}
 		],
-		course:[
+		lessons:[
 			{url: "https://lessonsyun.mx0a.com"},
 			{url: "http://lessonsossyun.mw019.com"}
 		],
-		updater: [
+		software: [
 			{url: "http://file.mw019.com/software"
 		}]
 	},
 	DOMAIN_LIST_DEFAULT_TEST: {
-		static:[
+		bundles:[
 			{url: "https://bundlesyuntest.mx0a.com"}
 		],
 		frame: [
@@ -122,10 +122,10 @@ module.exports = {
 		query:[
 			{url: "http://kecheng1.youshiyuwen.cn"}
 		],
-		course:[
+		lessons:[
 			{url: "https://lessonsyuntest.mx0a.com"}
 		],
-		updater: [
+		software: [
 			{url: "http://file.mw019.com/software"
 		}]
 	},

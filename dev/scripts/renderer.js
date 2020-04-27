@@ -102,9 +102,9 @@ class Renderer {
 	}
 
 	__update_bundle(retry) {
-		let	url = DomainMgr.availibleDomain('static', retry)
+		let	url = DomainMgr.availibleDomain('bundles', retry)
 		if (!url) {
-			logger.log('[debug-domain]','没有可用的static域名')
+			logger.log('[debug-domain]','没有可用的bundles域名')
 			return false;
 		}
 		logger.log('[debug-domain]','使用static域名',url)
@@ -152,7 +152,7 @@ class Renderer {
 		autoUpdater.on('error', (err) => {
 			logger.error("基础框架更新出错",err)
 			logger.log("检测是否有备用热更域名")
-			let nextAvailibleDomain = DomainMgr.availibleDomain('updater', true)
+			let nextAvailibleDomain = DomainMgr.availibleDomain('software', true)
 			if (nextAvailibleDomain) {
 				logger.log('[debug-domain]','正在尝试下一个热更新域名:',nextAvailibleDomain)
 				autoUpdater.setFeedURL(nextAvailibleDomain)

@@ -16,7 +16,7 @@ class Download extends React.Component {
 			percent: 0,
 			notice: ""
 		}
-		this.$domain_course = DomainMgr.availibleDomain('course');
+		this.$domain_course = DomainMgr.availibleDomain('lessons');
 		console.log('MINGXI_DEBUG_LOG>>>>>>>>>init download','');
 	}
 
@@ -286,7 +286,7 @@ class Download extends React.Component {
 			}).then((localInfo)=>{
 				
 				let __downloadPackage = (retry)=>{
-					let baseCourseUrl = DomainMgr.availibleDomain('course', retry)
+					let baseCourseUrl = DomainMgr.availibleDomain('lessons', retry)
 					if (!baseCourseUrl) {
 						let errorMessage = `no avalible domain for course-preview[${lesson}] retrying`
 						logger.log('[debug-domain] errorMessage', errorMessage)
@@ -339,7 +339,7 @@ class Download extends React.Component {
 				}
 			}).then((localInfo)=>{
 				let __downloadPackage = (retry)=>{
-					let baseCourseUrl = DomainMgr.availibleDomain('course', retry)
+					let baseCourseUrl = DomainMgr.availibleDomain('lessons', retry)
 					if (!baseCourseUrl) {
 						let errorMessage = 'no avalible domain for course retrying'
 						logger.log('[debug-domain] errorMessage', errorMessage)
