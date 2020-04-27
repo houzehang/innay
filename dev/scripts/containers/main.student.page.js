@@ -462,8 +462,7 @@ class Main extends React.Component {
                                     <div className="btns-panel">
 										{room.can_enter && room.class_state == 'normal' ?<div className="start-imgbtn">
 											<img className={'start'+(this.state.tipJoing ? " breath" : "")} src={require('../../assets/attend-class.png')} onClick={()=>{
-
-											this.__stop_relax(room)
+											// this.__stop_relax(room)
 											this.onStartRoom(room)
 										}} alt=""/>
 											<img className='foot' src={require('../../assets/foot.png')} alt=""/>
