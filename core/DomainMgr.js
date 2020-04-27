@@ -27,8 +27,20 @@ class DomainMgr {
 
 	pull(callback){
 		let nextStep = (domains)=>{
+			console.log('MINGXI_DEBUG_LOG>>>>>>>>>domains',domains);
 			if (domains) {
-				this.$domains = domains
+				let result = {}
+				for (const key in domains) {
+					let element = domains[key] || [];
+					result[key] = element.map((url)=>{
+						return {
+							url
+						}
+					})		
+				}
+				console.log('MINGXI_DEBUG_LOG>>>>>>>>>result',result);
+
+				this.$domains = result
 				this.__snyc_domains()
 			}
 			callback()
@@ -55,6 +67,9 @@ class DomainMgr {
     }
     
 	availibleDomain(kind, retry){
+		if (kind == 'query' && localStorage.getItem('debug_ip')) {
+			return localStorage.getItem('debug_ip')
+		}
 		try {
 			let detail = this.$domains[kind]
 			let found   = null

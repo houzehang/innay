@@ -2,6 +2,7 @@ import Eventer 			from "./eventer"
 import Conf 			from "../const"
 import context 			from "./context"
 import $ 				from "jquery"
+import DomainMgr 		from "./../../core/DomainMgr"
 class Session extends Eventer {
 	constructor(inst) {
 		super()
@@ -30,11 +31,9 @@ class Session extends Eventer {
 		let env_conf = window.ENV_CONF || {}
 		if (env_conf.DEBUG) {
 			prefix = "mingxi://liveroom"
-		} else if(env_conf.TEST) {
-			prefix = Conf.TEST_URL
 		} else {
-			prefix = Conf.ONLINE_URL
-		}
+			prefix = DomainMgr.availibleDomain('query')
+		} 
 		$.get(`${prefix}?from=app&t=`+new Date().getTime(),(response)=>{
 			if (this.$inst.isMaster()) {
 				window.CANVAS_LOCATION = `${prefix}?from=app`

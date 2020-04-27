@@ -2,18 +2,14 @@
 import Conf from "../../const"
 import $ 	from "jquery"
 import Util from './Util'
+import DomainMgr from './../../../core/DomainMgr'
 class NetUtil extends Util{
     constructor(){
         super()
     }
 
     get baseUrl(){
-		let env_conf = window.ENV_CONF || {}
-		if (env_conf.DEBUG || env_conf.TEST) {
-			return Conf.TEST_URL
-		} else {
-			return Conf.ONLINE_URL
-		}
+        return DomainMgr.availibleDomain('query')
 	}
 
     post(url, data={}){
