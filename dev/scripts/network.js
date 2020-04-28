@@ -102,13 +102,6 @@ class Network extends Eventer {
 	}
 
 	/**
-	 * 获取服务器时间
-	 */
-	servcerTime() {
-		return this.__request("/api/time")
-	}
-
-	/**
 	 * 用户登录
 	 * @param {*} data 
 	 */
@@ -329,7 +322,7 @@ class Network extends Eventer {
 	 * 获取当前时间
 	 */
 	getServerTime() {
-		return this.__request('/api/time')
+		return this.__request('/api/time1')
 	}
 
 	/**

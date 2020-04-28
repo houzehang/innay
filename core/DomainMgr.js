@@ -66,6 +66,17 @@ class DomainMgr {
 		DB.store('DOMAINS', JSON.stringify(this.$domains))
     }
     
+	clearDoaminMarks(kind){
+		let detail = this.domains[kind]
+		if (detail) {
+			detail.map((item)=>{
+				console.log('MINGXI_DEBUG_LOG>>>>>>>>>clear kind',kind);
+				item.active = false;
+				item.used 	= false
+			})
+		}
+	}
+	
 	availibleDomain(kind, retry){
 		logger.log('search availibleDomain kind', kind, retry)
 		if (kind == 'query' && localStorage.getItem('debug_ip') && !retry) {

@@ -49,7 +49,10 @@ class NetUtil extends Util{
                         if (this.__use_new_base_domain()) {
                             return this.quest(url, data)
                         } else {
-                            alert('no more availible domains for query',url)
+                            if (confirm('域名异常，重新尝试？')) {
+                                DomainMgr.clearDoaminMarks('query')
+                                return this.quest(url, data)
+                            } 
                         }
                     }
                     data.error && data.error(resolve, reject, ...args)
