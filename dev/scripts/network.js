@@ -322,7 +322,7 @@ class Network extends Eventer {
 	 * 获取当前时间
 	 */
 	getServerTime() {
-		return this.__request('/api/time1')
+		return this.__request('/api/time')
 	}
 
 	/**
