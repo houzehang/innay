@@ -68,7 +68,7 @@ class DomainMgr {
     
 	availibleDomain(kind, retry){
 		logger.log('search availibleDomain kind', kind, retry)
-		if (kind == 'query' && localStorage.getItem('debug_ip')) {
+		if (kind == 'query' && localStorage.getItem('debug_ip') && !retry) {
 			return localStorage.getItem('debug_ip')
 		}
 		try {

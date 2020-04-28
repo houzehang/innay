@@ -6,14 +6,33 @@ import DomainMgr from './../../../core/DomainMgr'
 class NetUtil extends Util{
     constructor(){
         super()
+        this.$status_white_list = [
+            200, 301,302,400,401,403,404,419,422,500
+        ]
     }
 
     get baseUrl(){
-        return DomainMgr.availibleDomain('query')
+        if (!this.$base_url) {
+            this.$base_url = DomainMgr.availibleDomain('query')
+        }
+        return this.$base_url
 	}
 
     post(url, data={}){
         $.post(this.baseUrl +url, data)
+    }
+
+    __status_in_white_list(status){
+        return ~this.$status_white_list.indexOf(status)
+    }
+
+    __use_new_base_domain(){
+        let domain = DomainMgr.availibleDomain('query', true)
+        if (!domain) {
+            return false
+        }
+        this.$base_url = domain
+        return true
     }
 
     quest(url, data = {}){
@@ -21,10 +40,18 @@ class NetUtil extends Util{
             $.ajax(this.baseUrl + url, {
                 ...data,
                 success: (...args)=>{
-                    console.log('MINGXI_DEBUG_LOG>>>>>>>>>request success',url, data);
                     data.success(resolve, reject, ...args)
                 },
                 error: (...args)=>{
+                    console.log('request error',url,...args);
+                    let errorStatus = ([...args][0] || {}).status
+                    if (!this.__status_in_white_list(errorStatus)) {
+                        if (this.__use_new_base_domain()) {
+                            return this.quest(url, data)
+                        } else {
+                            alert('no more availible domains for query',url)
+                        }
+                    }
                     data.error && data.error(resolve, reject, ...args)
                 }
             })
