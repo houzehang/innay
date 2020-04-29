@@ -14,7 +14,7 @@ class MyCourse extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			comming_page_selected: true
+			comming_page_selected: !props.checkDoneRooms
 		}
 		this.__reset();
 	}

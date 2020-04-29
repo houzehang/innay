@@ -322,8 +322,11 @@ class Main extends React.Component {
 			return [
 				<div key="0" className="time">接下来没有课程啦～</div>,
 				<div key="1" className="no-lesson">
-					去“明兮大语文”小程序<br/>
-					和其他小朋友一起完成作业吧~
+					点击<span onClick={()=>{
+						console.log('MINGXI_DEBUG_LOG>>>>>>>>>','');
+						this.$jump_to_homework = true
+						this.props.onEnterMyCourses();
+					}}> 这里 </span>和其他<br/>小朋友一起完成作业吧～
 				</div>
 			] 
 		}
@@ -735,7 +738,9 @@ class Main extends React.Component {
 				this.onStartPreview(room)
 			}} onExit={()=>{
 				this.__get_lesson_comming()
-			}}/>
+			}} 
+				checkDoneRooms={!!this.$jump_to_homework}
+			/>
         } else if (this.props.changePwd){
 			content = <ViewChangePwd 
 			fromViewUser={this.props.fromViewUser}
@@ -763,6 +768,7 @@ class Main extends React.Component {
 			}} onViewHelper={()=>{
 				!__forbidden() && this.__on_helper()
 			}} onEnterMyCourses={()=>{
+				this.$jump_to_homework = false
 				!__forbidden() && this.props.onEnterMyCourses();
 			}} onViewCamp={()=>{
 				!__forbidden() && this.__view_camp()
