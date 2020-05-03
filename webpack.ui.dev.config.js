@@ -15,7 +15,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'public'),
-    publicPath: 'http://localhost:3030/',
+    publicPath: 'http://localhost:5050/',
     filename: '[name].js',
     libraryTarget: 'commonjs2'
   },
@@ -79,7 +79,7 @@ module.exports = {
   },
   devServer: {
     contentBase: path.join(__dirname, 'public'),
-    port: 3030,
+    port: 5050,
     compress: true,
     noInfo: true,
     stats: 'errors-only',
