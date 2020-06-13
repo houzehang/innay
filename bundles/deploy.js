@@ -94,12 +94,12 @@ async function deploy(lesson) {
 
 }
 function updateGit(complete) {
-	console.log('git pulling...')
-	if (shell.exec('git pull').code == 0) {
+	// console.log('git pulling...')
+	// if (shell.exec('git pull').code == 0) {
 		complete()
-	} else {
-		console.error("update git failed")
-	}
+	// } else {
+	// 	console.error("update git failed")
+	// }
 }
 function commitGit(complete) {
 	if (shell.exec('git add -A').code == 0 && shell.exec(`git commit -m"auto deploy for ${lesson}"`).code == 0) {
