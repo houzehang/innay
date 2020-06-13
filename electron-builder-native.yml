@@ -1,6 +1,6 @@
-appId: com.youshi.muwen
-copyright: youshi inc.
-productName: 明兮大语文
+appId: com.innay.studio
+copyright: innay inc.
+productName: 压多宝
 
 directories:
   output: build/native
@@ -21,10 +21,6 @@ mac:
   asarUnpack: "**/music.mp3"
   category: public.app-category.tools
   icon: icns/mac-icon.icns
-  entitlements: entitlements/entitlements.mac.plist
-  extendInfo: 
-    NSCameraUsageDescription: "明兮需要您的摄像头权限，这样老师才能看到小朋友哦~"
-    NSMicrophoneUsageDescription: "明兮需要您的麦克风权限，这样老师才能听到小朋友哦~"
 
 # nsis:
 #   oneClick: false
@@ -51,4 +47,4 @@ win:
 
 publish:
   - provider: generic
-    url: http://file.mw019.com/software/native
+    url: https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao

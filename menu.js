@@ -43,7 +43,7 @@ export default class MenuBuilder {
 
   buildDarwinTemplate() {
     const subMenuAbout = {
-      label: '明兮大语文',
+      label: '压多宝',
       submenu: [
         {
           label: "版本信息",

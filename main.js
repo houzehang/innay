@@ -9,8 +9,6 @@ import WindowFactory                        from './core/WindowFactory'
 import { PROXY, LOG_PATH }                  from './core/Configure'
 import { trigger }                          from './core/Eventer'
 import logger                               from 'electron-log'
-import { onPossiblyUnhandledRejection } from 'bluebird';
-
 if (process.env.NODE_ENV == "development") {
     autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml');
 }

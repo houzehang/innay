@@ -41,7 +41,7 @@ ipcRenderer.on('configure', (_, data)=>{
 	if (data.data && data.data.usingBackupUrl) {
 		context.usingBackupUrl = true
 	}
-	window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
+	// window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
 	_next()
 })
 
