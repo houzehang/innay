@@ -60,13 +60,13 @@ export default class WindowFactory {
 		const eventer 		= new EventEmitter
 		let {width, height} = Const.MAIN_WINDOW_SIZE,
 			screenSize 		= this.$screen_size,
-			ratio 			= Math.min(screenSize.width/width, screenSize.height/height)
+			ratio 			= 1//Math.min(screenSize.width/width, screenSize.height/height)
 	
 		let _window = new BrowserWindow({
-			title: "明兮学堂",
+			title: "压多宝",
 			width: width * ratio >> 0, 
 			height: height * ratio >> 0,
-			resizable: TC_DEBUG,
+			resizable: false,
 			center: true,
 			autoHideMenuBar: true,
 			webPreferences: {
@@ -93,7 +93,7 @@ export default class WindowFactory {
 				extensions.map(name => installer.default(installer[name], forceDownload))
 			};
 			installExtensions()
-			_window.webContents.openDevTools();
+			// _window.webContents.openDevTools();
 		}
 
 		let domainMgr = DomainMgr

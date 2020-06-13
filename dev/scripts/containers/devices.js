@@ -425,7 +425,7 @@ class Devices extends React.Component {
 		}
 		if (!failed) {
 			this.props.alert({
-				content: "设备检测通过，欢迎您进入明兮学堂。",
+				content: "设备检测通过，欢迎您进入压多宝。",
 				sure: ()=>{
 					net.log({"DEVICE-TEST": "user device test success."})
 					context.log('device-user device test success.')

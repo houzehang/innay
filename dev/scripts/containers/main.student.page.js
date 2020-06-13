@@ -84,7 +84,7 @@ class Main extends React.Component {
 					
 					if(res.old_user || checked) return;
 					this.props.alert({
-						content: "欢迎进入明兮学堂，为了您更好的体验，请先来检测下设备吧",
+						content: "欢迎进入压多宝，为了您更好的体验，请先来检测下设备吧",
 						sure: ()=>{
 							this.props.onEnterTester("main")
 						},
