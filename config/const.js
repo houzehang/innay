@@ -93,42 +93,25 @@ module.exports = {
 	 * software: 	[electron pacakge ***.exe & ***.dmg]
 	 */
 	DOMAIN_LIST_DEFAULT: {
-		bundles:[
-			{url: "https://bundlesyun.mx0a.com"},
-			{url: "http://bundlesossyun.mw019.com"}
+		"frame": [
+		  "https://bundlesyuntest.mx0a.com",
+		  "https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com"
 		],
-		frame: [
-			{url: "https://bundlesyun.mx0a.com"},
-			{url: "http://bundlesossyun.mw019.com"}
-		],
-		query:[
-			{url: "https://www.mingxiyuwen.com"}
-		],
-		lessons:[
-			{url: "https://lessonsyun.mx0a.com"},
-			{url: "http://lessonsossyun.mw019.com"}
-		],
-		software: [
-			{url: "http://file.mw019.com/software"
-		}]
-	},
+		"bundles": [
+		  "https://bundlesyuntest.mx0a.com",
+		  "https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com"
+		]
+	  },
 	DOMAIN_LIST_DEFAULT_TEST: {
-		bundles:[
-			{url: "https://bundlesyuntest.mx0a.com"}
+		"frame": [
+		  "https://bundlesyuntest.mx0a.com",
+		  "https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com"
 		],
-		frame: [
-			{url: "https://bundlesyuntest.mx0a.com"}
-		],
-		query:[
-			{url: "http://kecheng1.youshiyuwen.cn"}
-		],
-		lessons:[
-			{url: "https://lessonsyuntest.mx0a.com"}
-		],
-		software: [
-			{url: "http://file.mw019.com/software"
-		}]
-	},
+		"bundles": [
+		  "https://bundlesyuntest.mx0a.com",
+		  "https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com"
+		]
+	  },
 	EBTN_STYLE_CONFIG :{
 		kNormal: 	 ['ok', 'cancel'],
 		kDeviceTest: ['check-again','check-jump'],
