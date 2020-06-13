@@ -83,7 +83,7 @@ module.exports = {
 		'Built-in iSight',
 		'6room'
 	],
-	DOMAIN_URL: 'https://mingxicn.oss-cn-beijing.aliyuncs.com/master.json',
+	DOMAIN_URL: 'https://mingxicn-test.oss-cn-beijing.aliyuncs.com/domain-yaduobao.json',
 	DOMAIN_URL_TEST: 'http://kechengassets.mx0a.com/steven.json',
 	/**
 	 * bundles: 	[app.json & app.zip]

@@ -53,7 +53,7 @@ class DomainMgr {
 		bridge.call({
 			method: "getDomains",
 			args: {
-                url: (TEST || DEBUG) ? Const.DOMAIN_URL_TEST : Const.DOMAIN_URL
+                url: Const.DOMAIN_URL
             }
 		}).then((serverInfo)=>{
 			clearTimeout(this.$timer_pulling_domain)

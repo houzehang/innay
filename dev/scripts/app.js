@@ -42,7 +42,7 @@ ipcRenderer.on('configure', (_, data)=>{
 		context.usingBackupUrl = true
 	}
 	// window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
-	// _next()
+	_next()
 })
 
 ipcRenderer.on('systeminfo', (_, data)=>{
