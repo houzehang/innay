@@ -77,7 +77,6 @@
     "file-loader": "^1.1.11",
     "gifsicle": "^5.0.0",
     "globule": "^1.1.0",
-    "got": "^8.3.2",
     "html-loader": "^0.5.5",
     "html-webpack-harddisk-plugin": "^0.2.0",
     "html-webpack-include-assets-plugin": "^1.0.4",
@@ -102,12 +101,12 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "script-ext-html-webpack-plugin": "^2.1.3",
-    "semver": "^6.3.0",
     "shelljs": "^0.8.4",
     "style-loader": "^0.21.0",
     "terser-webpack-plugin": "^1.2.3",
     "url-exists": "^1.0.3",
     "webpack": "^4.29.0",
+    "walk": "^2.3.14",
     "webpack-cli": "^3.3.0"
   },
   "author": "youshi inc.",
@@ -125,7 +124,8 @@
     "mkdirp": "^0.5.1",
     "pandora-nodejs-sdk": "^0.0.1",
     "systeminformation": "^4.0.11",
-    "walk": "^2.3.14",
-    "webpack-dev-server": "^3.2.1"
+    "webpack-dev-server": "^3.2.1",
+    "got": "^8.3.2",
+    "semver": "^6.0.0"
   }
 }
