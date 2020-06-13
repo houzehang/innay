@@ -86,7 +86,7 @@ module.exports = {
 	DOMAIN_URL: 'https://mingxicn-test.oss-cn-beijing.aliyuncs.com/domain-yaduobao.json',
 	DOMAIN_URL_TEST: 'http://kechengassets.mx0a.com/steven.json',
 	/**
-	 * bundles: 	[app.json & app.zip]
+	 * bundles: 	[app-yaduobao.json & app-yaduobao.zip]
 	 * frame: 		[liveroom.json & liveroom.zip / homework.json & homework.zip]
 	 * query: 		[http request]
 	 * lessons      [like zoo.json & zoo.zip / zoo-preview.json & zoo-preview.zip]

@@ -112,7 +112,7 @@ class Renderer {
 		bridge.call({
 			method: "isUpdateAvailable",
 			args: {
-				url : `${url}/app.json`,
+				url : `${url}/app-yaduobao.json`,
 				pack: "classroom-ui"
 			}
 		}).then(result=>{
