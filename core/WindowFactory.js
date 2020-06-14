@@ -64,6 +64,7 @@ export default class WindowFactory {
 	
 		let _window = new BrowserWindow({
 			title: "压多宝",
+			frame: false,
 			width: width * ratio >> 0, 
 			height: height * ratio >> 0,
 			resizable: false,

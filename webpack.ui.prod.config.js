@@ -50,6 +50,13 @@ module.exports = {
       {
         test: /\.(gif|png|jpe?g|svg|mp3)$/i,
         use: [ 'file-loader' ]
+      },
+      {
+
+        test: /\.(ttf|eot|woff|woff2|svg)$/,
+        
+        use: ["file-loader"] //1.把你的资源移动到输出目录2.返回最终引入资源的url
+        
       }
     ],
   },

@@ -7,6 +7,7 @@ TOTAL_STEP=4
 CONFIG_FILE=./electron-builder-native.yml
 
 echo "step(1/${TOTAL_STEP}) compiling files"
+echo "module.exports = {DEBUG : false,TC_DEBUG : false,TEST : false,TEACHER: false}" > env.js
 npm run build; 
 mkdir output
 echo "step(2/${TOTAL_STEP}) copy files"
@@ -26,4 +27,5 @@ if [ "$1" = "-win" -o "$1" = "-all" ];then
 fi
 
 echo "step(4/${TOTAL_STEP}) cleaning files"
+echo 'module.exports = {DEBUG : true,TC_DEBUG : true,TEST : false,TEACHER : false}' > env.js;
 rm -rf ./output

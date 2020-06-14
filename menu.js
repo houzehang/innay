@@ -123,7 +123,7 @@ export default class MenuBuilder {
         {
           label: '关于明兮',
           click() {
-            shell.openExternal('https://www.mingxi.cn');
+            shell.openExternal('https://www.gookoo.cn');
           }
         }
       ]

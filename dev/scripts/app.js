@@ -4,6 +4,7 @@
 import '../less/anim.less'
 import '../less/common.less'
 import '../less/main.less'
+import '../less/photon.less'
 
 import React from 'react';
 import { render } from 'react-dom';
