@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import GlobalMsg from '../components/globalMsg'
-import "../../less/mainpage.less"
+import "../../less/lobby.less"
 import * as types from '../constants/ActionTypes'
 import Toast from './toast'
 import { 
@@ -11,6 +11,7 @@ import {
 	onShowGlobalMsg,
 	onShowTost
 } from '../actions'
+import {remote} from 'electron'
 
 class Main extends React.Component {
 	constructor(props) {
@@ -31,8 +32,21 @@ class Main extends React.Component {
         let content = 
 		<div className ="window">
 			<header className ="toolbar toolbar-header">
-			<h1 className ="title">Photon</h1>
+			<h1 className ="title">压多宝</h1>
 	
+			<button className ="btn btn-default close" onClick={()=>{
+				remote.app.quit()
+			}}>
+				<span className ="icon icon-cancel-squared close"></span>
+			</button>
+
+			<button className ="btn btn-default minus" onClick={()=>{
+				let win = remote.getCurrentWindow()
+				win.minimize();
+			}}>
+				<span className ="icon icon-minus-squared minus"></span>
+			</button>
+			
 			<div className ="toolbar-actions">
 	
 				<div className ="btn-group">
@@ -58,9 +72,6 @@ class Main extends React.Component {
 				Filters
 				</button>
 	
-				<button className ="btn btn-default btn-dropdown pull-right js-popover-trigger">
-				<span className ="icon icon-megaphone"></span>
-				</button>
 			</div>
 			</header>
 	
