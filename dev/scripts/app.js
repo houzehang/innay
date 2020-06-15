@@ -42,6 +42,7 @@ ipcRenderer.on('configure', (_, data)=>{
 	if (data.data && data.data.usingBackupUrl) {
 		context.usingBackupUrl = true
 	}
+	context.distPath = basedir
 	// window.agora = $require(`${basedir}/libs/AgoraSDK/${dir}/agora_node_ext.node`)
 	_next()
 })

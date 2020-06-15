@@ -17,6 +17,8 @@ cp -r dist output
 
 echo "step(3/${TOTAL_STEP}) package bundles"
 
+cp libs/ffmpeg/ffmpeg output/dist/libs/ffmpge
+
 if [ "$1" = "-mac" -o "$1" = "-all" ];then
 	echo "packaging for mac platform"
 	./node_modules/.bin/electron-builder --config $CONFIG_FILE --mac -p never

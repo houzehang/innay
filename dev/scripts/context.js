@@ -124,6 +124,14 @@ class Context {
 		this.$domains = domains 
 	}
 
+	set distPath(distPath){
+		this.$dist_path = distPath
+	}
+
+	get distPath(){
+		return this.$dist_path;
+	}
+
 	addDownloaded(url, file) {
 		if (!this.$local_files) {
 			this.$local_files = {}
