@@ -1,7 +1,9 @@
 @import url(base.less);
 @import url(~normalize.css/normalize.css);
 @import url(./common.less);
-
+html, body{
+    user-select: none;
+}
 .window{
     .title{
         margin-top: 5px;
@@ -34,5 +36,40 @@
                 color: #b3b3b3;
             }
         }
+    }
+    .home-major{
+        padding-bottom: 50px;
+    }
+    .fixed-bottom{
+        position: fixed;
+        width: 100%;
+        height: 50px;
+        bottom: 0;
+    }
+    .progress{
+        position: relative;
+        .progress-bar{
+            position: absolute;
+            top: 7px;
+            left: 10px;
+            width: 140px;
+            height: 10px;
+            background-color: #ccc;
+            border-radius: 4px;
+            &.back{
+                background-color: #fff;
+                width: 240px;
+                border: 1px solid #ccc;
+            }
+            &.done{
+                background-color: #96ce96;
+            }
+        }
+        .progress-num{    
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            line-height: 0px;
+    }
     }
 }

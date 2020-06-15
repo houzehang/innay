@@ -18,7 +18,9 @@ class Entry extends React.Component {
 	render() {
 		const { dialog } = this.props
 		return <Router>
-			<div className="full-h" >
+			<div className="full-h" onContextMenu={(event)=>{
+				return false;
+			}}>
 				<div className='slave' onDoubleClick={()=>{
 					var window = remote.getCurrentWindow();
 					// window.webContents.openDevTools();

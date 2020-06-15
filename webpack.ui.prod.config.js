@@ -101,7 +101,7 @@ module.exports = {
       filename: "[name].[hash].css"
     }),
     new HtmlWebpackPlugin({
-      title: "压多宝",
+      title: "程序宝",
       template: path.resolve(__dirname, "dev", "index.html"),
       filename: "index.html"
     })

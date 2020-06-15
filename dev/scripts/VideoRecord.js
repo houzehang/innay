@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Eventer from './eventer'
 import {desktopCapturer} from 'electron';
-const APP_NAME = '压多宝';
+const APP_NAME = '程序宝';
 
 class VideoRecord extends Eventer {
     constructor() {

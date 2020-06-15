@@ -16,6 +16,15 @@ import {remote} from 'electron'
 class Main extends React.Component {
 	constructor(props) {
 		super(props)
+		this.$home_major_cfg = {
+			tiny: 1,
+			localserver: 2
+		}
+
+		this.state = {
+			selectedPage: 0,
+			homeMajor: this.$home_major_cfg.tiny
+		}
 	}
 
 	componentDidMount() {  
@@ -24,254 +33,842 @@ class Main extends React.Component {
 	componentWillUnmount() {
 	}
 
+	__home_major(){
+		let result = '';
+		switch (this.state.homeMajor) {
+			case this.$home_major_cfg.tiny:
+				result = this.__home_major_tinypng()
+				break;
+			case this.$home_major_cfg.localserver:
+				result = this.__home_major_localserver()
+				break;
+			default:
+				result = this.__home_major_tinypng()
+				break;
+		}
+		return result
+	}
+
+	__home_major_tinypng(){
+		return <div className ="pane">
+			<table className ="table-striped home-major">
+				<thead>
+					<tr>
+						<th width="35%">文件</th>
+						<th width="10%">压缩前</th>
+						<th width="35%">当前进度</th>
+						<th width="10%">压缩后</th>
+						<th>减少</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar"></div>
+							<span className="progress-num">100%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar"></div>
+							<span className="progress-num">100%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar"></div>
+							<span className="progress-num">100%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar"></div>
+							<span className="progress-num">100%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+					<tr>
+						<td width="35%">bars.png</td>
+						<td width="10%">942Kb</td>
+						<td width="35%" className="progress">
+							<div className="progress-bar back"></div>
+							<div className="progress-bar done"></div>
+							<span className="progress-num">0%</span>
+						</td>
+						<td width="10%">68Kb</td>
+						<td>-86%</td>
+					</tr>
+				</tbody>
+			</table>
+			<footer className="toolbar toolbar-footer fixed-bottom">
+				<div className="toolbar-actions">
+					<button className="btn btn-default">
+					Cancel
+					</button>
+
+					<button className="btn btn-primary">
+					Save
+					</button>
+				</div>
+			</footer>
+		</div>
+	}
+
+	__home_major_localserver(){
+		return '敬请期待'
+	}
+
 	render() {
         let globalMsg;
 		if (this.props.globalMsg) {
 			globalMsg = <GlobalMsg></GlobalMsg>
-        }
+		}
+		let selectedPage = this.state.selectedPage
         let content = 
 		<div className ="window">
+			{/* 上部分 */}
 			<header className ="toolbar toolbar-header">
-			<h1 className ="title">压多宝</h1>
-	
-			<button className ="btn btn-default close" onClick={()=>{
-				remote.app.quit()
-			}}>
-				<span className ="icon icon-cancel-squared close"></span>
-			</button>
-
-			<button className ="btn btn-default minus" onClick={()=>{
-				let win = remote.getCurrentWindow()
-				win.minimize();
-			}}>
-				<span className ="icon icon-minus-squared minus"></span>
-			</button>
-			
-			<div className ="toolbar-actions">
-	
-				<div className ="btn-group">
-				<button className ="btn btn-default">
-					<span className ="icon icon-home"></span>
+				<h1 className ="title">程序宝</h1>
+				{/* 退出 */}
+				<button className ="btn btn-default close" onClick={()=>{
+					remote.app.quit()
+				}}>
+					<span className ="icon icon-cancel-squared close"></span>
 				</button>
-				<button className ="btn btn-default">
-					<span className ="icon icon-folder"></span>
+				{/* 最小化 */}
+				<button className ="btn btn-default minus" onClick={()=>{
+					let win = remote.getCurrentWindow()
+					win.minimize();
+				}}>
+					<span className ="icon icon-minus-squared minus"></span>
 				</button>
-				<button className ="btn btn-default active">
-					<span className ="icon icon-cloud"></span>
-				</button>
-				<button className ="btn btn-default">
-					<span className ="icon icon-popup"></span>
-				</button>
-				<button className ="btn btn-default">
-					<span className ="icon icon-shuffle"></span>
-				</button>
+				{/* 菜单栏 */}
+				<div className ="toolbar-actions">
+		
+					<div className ="btn-group">
+					<button className = {`btn btn-default ${selectedPage == 0 ? "active": ""}`} onClick={()=>{
+						this.setState({
+							selectedPage: 0
+						})
+					}}>
+						<span className ="icon icon-home"></span>
+					</button>
+					<button className = {`btn btn-default ${selectedPage == 1 ? "active": ""}`} onClick={()=>{
+						this.setState({
+							selectedPage: 1
+						})
+					}}>
+						<span className ="icon icon-key"></span>
+					</button>
+					<button className = {`btn btn-default ${selectedPage == 2 ? "active": ""}`} onClick={()=>{
+						this.setState({
+							selectedPage: 2
+						})
+					}}>
+						<span className ="icon icon-share"></span>
+					</button>
+					</div>
+					<button className ="btn btn-default">
+					<span className ="icon icon-home icon-text"></span>
+					Filters
+					</button>
+		
 				</div>
-	
-				<button className ="btn btn-default">
-				<span className ="icon icon-home icon-text"></span>
-				Filters
-				</button>
-	
-			</div>
 			</header>
-	
+			{/* 下部分 */}
 			<div className ="window-content">
-			<div className ="pane-group">
-				<div className ="pane pane-sm sidebar">
-				<nav className ="nav-group">
-					<h5 className ="nav-group-title">Favorites</h5>
-					<span className ="nav-group-item">
-					<span className ="icon icon-home"></span>
-					connors
-					</span>
-					<span className ="nav-group-item active">
-					<span className ="icon icon-light-up"></span>
-					Photon
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-download"></span>
-					Downloads
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-folder"></span>
-					Documents
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-window"></span>
-					Applications
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-signal"></span>
-					AirDrop
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-monitor"></span>
-					Desktop
-					</span>
-				</nav>
-	
-				<nav className ="nav-group">
-					<h5 className ="nav-group-title">Tags</h5>
-					<span className ="nav-group-item">
-						<span className ="icon icon-record"></span>
-						Red
-					</span>
-					<span className ="nav-group-item" href="#">
-						<span className ="icon icon-record"></span>
-					Orange
-					</span>
-					<span className ="nav-group-item" href="#">
-					<span className ="icon icon-record"></span>
-					Green
-					</span>
-					<span className ="nav-group-item" href="#">
-					<span className ="icon icon-record"></span>
-					Blue
-					</span>
-				</nav>
-				<nav className ="nav-group">
-					<h5 className ="nav-group-title">Devices</h5>
-					<span className ="nav-group-item">
-					<span className ="icon icon-drive"></span>
-					Backup disk
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-drive"></span>
-					Backup disk
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-drive"></span>
-					Backup disk
-					</span>
-					<span className ="nav-group-item">
-					<span className ="icon icon-drive"></span>
-					Backup disk
-					</span>
-				</nav>
+				<div className ="pane-group">
+					{/* 左侧导航 */}
+					<div className ="pane pane-sm sidebar">
+						<nav className ="nav-group">
+							<h5 className ="nav-group-title">开发必备</h5>
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.tiny ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.tiny
+								})
+							}}>
+								<span className ="icon icon-picture"></span>无损压图
+							</span>
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.localserver
+								})
+							}}>
+								<span className ="icon icon-rss"></span>本地服务
+							</span>
+						</nav>
+					</div>
+					{/* 右侧内容 */}
+					{this.__home_major()}
 				</div>
-				<div className ="pane">
-				<table className ="table-striped">
-					<thead>
-					<tr>
-						<th>Name</th>
-						<th>Kind</th>
-						<th>Date Modified</th>
-						<th>Author</th>
-					</tr>
-					</thead>
-					<tbody>
-					<tr>
-						<td>bars.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>base.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>button-groups.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>buttons.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>docs.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>forms.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>grid.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>icons.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>images.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>lists.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>mixins.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>navs.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>normalize.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>photon.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>tables.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>tabs.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>utilities.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					<tr>
-						<td>variables.scss</td>
-						<td>Document</td>
-						<td>Oct 13, 2015</td>
-						<td>connors</td>
-					</tr>
-					</tbody>
-				</table>
-				</div>
-			</div>
 			</div>
 		</div>
 		return (<div className="full-h" onDragStart={(e)=>{

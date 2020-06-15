@@ -63,7 +63,7 @@ export default class WindowFactory {
 			ratio 			= 1//Math.min(screenSize.width/width, screenSize.height/height)
 	
 		let _window = new BrowserWindow({
-			title: "压多宝",
+			title: "程序宝",
 			frame: false,
 			width: width * ratio >> 0, 
 			height: height * ratio >> 0,

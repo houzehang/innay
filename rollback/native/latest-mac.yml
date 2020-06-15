@@ -1,10 +1,10 @@
 version: 1.2.1
 files:
-  - url: 压多宝-1.2.1-mac.zip
+  - url: 程序宝-1.2.1-mac.zip
     sha512: Zzm1z+GmGJrpbi47vDFI+5zrwKANukeJMsIWzacuIP+rLH/TuuBVXwDPRav8GWWevrVb7djZuo9WYTQSPEONMg==
-  - url: 压多宝-1.2.1.dmg
+  - url: 程序宝-1.2.1.dmg
     sha512: 6bV0uRzTTEDWjrqbfykqrTL6bLKqLOnCTmQsc7fnX5rFceN2XV/mIU7+OTaPaLdaVftnb4XEAZ5i87fDLdDdIA==
     size: 68388735
-path: 压多宝-1.2.1-mac.zip
+path: 程序宝-1.2.1-mac.zip
 sha512: Zzm1z+GmGJrpbi47vDFI+5zrwKANukeJMsIWzacuIP+rLH/TuuBVXwDPRav8GWWevrVb7djZuo9WYTQSPEONMg==
 releaseDate: '2019-11-09T12:16:33.945Z'

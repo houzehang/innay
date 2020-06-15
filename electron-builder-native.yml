@@ -1,6 +1,6 @@
 appId: com.innay.studio
 copyright: innay inc.
-productName: 压多宝
+productName: 程序宝
 
 directories:
   output: build/native
