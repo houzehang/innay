@@ -18,7 +18,9 @@ dmg:
 
 mac:
   asar: true
-  asarUnpack: "**/music.mp3"
+  asarUnpack: 
+    - "**/music.mp3"
+    - "**/mac/pngquant"
   category: public.app-category.tools
   icon: icns/mac-icon.icns
 

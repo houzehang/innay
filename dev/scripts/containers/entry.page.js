@@ -23,7 +23,7 @@ class Entry extends React.Component {
 			}}>
 				<div className='slave' onDoubleClick={()=>{
 					var window = remote.getCurrentWindow();
-					// window.webContents.openDevTools();
+					window.webContents.openDevTools();
 				}}></div>
 				<div className='slave-l' onDoubleClick={()=>{
 

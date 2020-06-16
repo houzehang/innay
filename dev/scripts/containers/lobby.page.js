@@ -14,6 +14,7 @@ import {
 } from '../actions'
 import os from "os"
 import fs from "fs"
+import path from "path"
 import child_process from 'child_process'
 import {remote, ipcRenderer, dialog} from 'electron'
 
@@ -27,6 +28,7 @@ class Main extends React.Component {
 
 		this.state = {
 			selectedPage: 0,
+			working: false,
 			homeMajor: this.$home_major_cfg.tiny,
 			tinyFiles: [],
 			tinyDone: 0,
@@ -161,7 +163,7 @@ class Main extends React.Component {
 	}
 
 	__home_major_tinypng(){
-		let forbiden = this.state.tinyDone == this.state.tinyFiles.length || this.$working
+		let forbiden = this.state.tinyDone == this.state.tinyFiles.length || this.state.working || (this.state.outMode == 2 && !this.state.outPutPath)
 		return <div className ="pane">
 			<table className ="table-striped home-major">
 				<thead>
@@ -206,7 +208,7 @@ class Main extends React.Component {
 			{this.state.tinyFiles.length ? "" : <div className="empty">未导入任何文件</div>}
 			<footer className="toolbar toolbar-footer fixed-bottom">
 				<div className="toolbar-actions">
-					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+					<button className={`btn btn-default ${this.state.working ? 'disabled' : '' }`} disabled={this.state.working} onClick={()=>{
 						this.__import_files()
 					}}>
 					批量导入
@@ -220,7 +222,7 @@ class Main extends React.Component {
 				</div>
 				<div className="radio" onClick={(e)=>{
 					if (e.target.tagName === "INPUT") return
-					if (this.$working) return;
+					if (this.state.working) return;
 					this.setState({
 						outMode: 1
 					})
@@ -230,21 +232,21 @@ class Main extends React.Component {
 					覆盖原图
 					</label>
 				</div>
-				<div className="radio" disabled={this.$working} onClick={(e)=>{
+				<div className="radio" disabled={this.state.working} onClick={(e)=>{
 					if (e.target.tagName === "INPUT") return
-					if (this.$working) return;
+					if (this.state.working) return;
 					this.setState({
 						outMode: 2
 					})
 				}}>
 					<label>
-					<input type="radio" name="radios"  disabled={this.$working} defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
+					<input type="radio" name="radios"  disabled={this.state.working} defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
 					自定义输出路径
 					</label>
 				</div>
 				<input className={`form-control ${this.state.outMode == 2 ? "": "hidden"}`} type="text" placeholder="未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
 				<div className={`toolbar-actions ${this.state.outMode == 2 ? "": "hidden"}`}>
-					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+					<button className={`btn btn-default ${this.state.working ? 'disabled' : '' }`} disabled={this.state.working} onClick={()=>{
 						this.__select_output_path()
 					}}>
 					选择
@@ -262,12 +264,12 @@ class Main extends React.Component {
 					}}>
 					开始
 					</button>
-					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+					<button className={`btn btn-default ${this.state.working ? 'disabled' : '' }`} disabled={this.state.working} onClick={()=>{
 						this.__reset_tiny(true)
 					}}>
 					重置
 					</button>
-					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+					<button className={`btn btn-default ${this.state.working ? 'disabled' : '' }`} disabled={this.state.working} onClick={()=>{
 						this.__reset_tiny()
 					}}>
 					清空
@@ -282,11 +284,19 @@ class Main extends React.Component {
 	}
 
 	__start(){
-		this.$working 		= true
+		this.setState({
+			working: true
+		})
 		let exec 			= child_process.exec;
-		let pngquant		= `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
-
-		let __execute	 	= (rawfile, onSuccess, onError)=>{
+		let execSync 		= child_process.execSync;
+		let pngquant
+		if (this.$darwin) {
+			pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'mac', 'pngquant')
+			execSync(`chmod 777 ${pngquant}`)
+		} else {
+			pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
+		}
+		let __execute = (rawfile, onSuccess, onError)=>{
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
 			let command 		= `${pngquant} ${rawfile} --output ${finalFile} --force --verbose`
@@ -324,7 +334,11 @@ class Main extends React.Component {
 								file.done = true;
 								file.finalSize = Math.ceil(stats.size / 1024)
 								let tinyDone = this.state.tinyDone + 1;
-								if (tinyDone == this.state.tinyFiles.length) this.$working = false;
+								if (tinyDone == this.state.tinyFiles.length) {
+									this.setState({
+										working: false
+									})
+								};
 								this.setState({
 									tinyDone,
 									tinyFiles: [...files]
@@ -341,7 +355,11 @@ class Main extends React.Component {
 						file.done = true;
 						file.fail = reason;
 						let tinyDone = this.state.tinyDone + 1;
-						if (tinyDone == this.state.tinyFiles.length) this.$working = false;
+						if (tinyDone == this.state.tinyFiles.length){
+							this.setState({
+								working : false
+							})
+						};
 						this.setState({
 							tinyDone,
 							tinyFiles: [...files]

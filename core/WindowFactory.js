@@ -94,8 +94,8 @@ export default class WindowFactory {
 				extensions.map(name => installer.default(installer[name], forceDownload))
 			};
 			installExtensions()
-			// _window.webContents.openDevTools();
 		}
+		_window.webContents.openDevTools();
 
 		let domainMgr = DomainMgr
 		_window.customData = {domainMgr};
