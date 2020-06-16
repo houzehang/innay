@@ -413,7 +413,7 @@ class Main extends React.Component {
         let content = 
 		<div className ="window">
 			{/* 上部分 */}
-			<header className ="toolbar toolbar-header">
+			<header className ="toolbar toolbar-header normal">
 				<h1 className ="title">程序宝</h1>
 				{/* 退出 */}
 				<button className ="btn btn-default close" onClick={()=>{
