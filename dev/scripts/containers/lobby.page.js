@@ -110,21 +110,38 @@ class Main extends React.Component {
 				if (files && files.length) {
 					this.__reset_tiny()
 				}
-				files && files.length && files.map((filePath)=>{
-					fs.stat(filePath,(error,stats)=>{
-						if(error){
-							console.log("file size calc error",filePath);
-						}else{
-							tinyFiles.push({
-								path : filePath,
-								size : Math.ceil(stats.size / 1024)
+				if (files && files.length) {
+					let allFiles = [...files];
+					let __next_one = ()=>{
+						let filePath = allFiles.shift()
+						if (filePath) {
+							fs.stat(filePath,(error,stats)=>{
+								if(error){
+									console.log("file size calc error",filePath);
+								}else{
+									tinyFiles.push({
+										path : filePath,
+										size : Math.ceil(stats.size / 1024)
+									})
+									this.setState({
+										tinyFiles
+									})
+								}
+								__next_one()
 							})
+						} else {
 							this.setState({
-								tinyFiles
+								working : false
 							})
 						}
+					}
+					this.setState({
+						working : true
 					})
-				})
+					__next_one()
+					__next_one()
+					__next_one()
+				}
 			})
 	}
 
@@ -228,8 +245,9 @@ class Main extends React.Component {
 					})
 				}}>
 					<label>
-					<input type="radio" name="radios" defaultChecked={`${this.state.outMode == 1 ? "checked" : ""}`}/>
-					覆盖原图
+						<span className={`icon ${this.state.outMode == 1 ? "icon-check" : ""} radio-icon`}></span>
+						<input className="radio-input" type="radio" name="radios" defaultChecked={`${this.state.outMode == 1 ? "checked" : ""}`}/>
+						覆盖原图
 					</label>
 				</div>
 				<div className="radio" disabled={this.state.working} onClick={(e)=>{
@@ -240,8 +258,9 @@ class Main extends React.Component {
 					})
 				}}>
 					<label>
-					<input type="radio" name="radios"  disabled={this.state.working} defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
-					自定义输出路径
+						<span className={`icon ${this.state.outMode == 2 ? "icon-check" : ""} radio-icon`}></span>
+						<input className="radio-input" type="radio" name="radios"  disabled={this.state.working} defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
+						自定义输出路径
 					</label>
 				</div>
 				<input className={`form-control ${this.state.outMode == 2 ? "": "hidden"}`} type="text" placeholder="未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
@@ -291,12 +310,17 @@ class Main extends React.Component {
 		let execSync 		= child_process.execSync;
 		let pngquant
 		if (this.$darwin) {
-			pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'mac', 'pngquant')
-			execSync(`chmod 777 ${pngquant}`)
+			if (process.env.NODE_ENV != "development") {p
+				pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'mac', 'pngquant')
+				execSync(`chmod 777 ${pngquant}`)
+			} else {
+				pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
+			}
 		} else {
 			pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
 		}
 		let __execute = (rawfile, onSuccess, onError)=>{
+			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
 			let command 		= `${pngquant} ${rawfile} --output ${finalFile} --force --verbose`
@@ -321,53 +345,63 @@ class Main extends React.Component {
 			})
 		}
 		this.state.tinyFiles.map((fileItem)=>{
-			// this.state.tinyFiles
 			let filePath = fileItem.path
-			__execute(filePath, (finalFile)=>{
-				let files = this.state.tinyFiles;
-				files.map((file)=>{
-					if (filePath == file.path) {
-						fs.stat(finalFile,(error,stats)=>{
-							if(error){
-								console.log("file size calc error",finalFile);
-							}else{
-								file.done = true;
-								file.finalSize = Math.ceil(stats.size / 1024)
-								let tinyDone = this.state.tinyDone + 1;
-								if (tinyDone == this.state.tinyFiles.length) {
-									this.setState({
-										working: false
-									})
-								};
-								this.setState({
-									tinyDone,
-									tinyFiles: [...files]
-								})
-							}
-						})
-					}
-				})
-			}, (reason)=>{
-				// fail
-				let files = this.state.tinyFiles;
-				files.map((file)=>{
-					if (filePath == file.path) {
-						file.done = true;
-						file.fail = reason;
-						let tinyDone = this.state.tinyDone + 1;
-						if (tinyDone == this.state.tinyFiles.length){
-							this.setState({
-								working : false
-							})
-						};
-						this.setState({
-							tinyDone,
-							tinyFiles: [...files]
-						})
-					}
-				})
-			})
 		})
+		let allFiles 	= [...this.state.tinyFiles];
+		let __next_one 	= ()=>{
+			let fileItem = allFiles.shift() || {}
+			let filePath = fileItem.path
+			if (filePath) {
+				__execute(filePath, (finalFile)=>{
+					let files = this.state.tinyFiles;
+					files.map((file)=>{
+						if (filePath == file.path) {
+							fs.stat(finalFile,(error,stats)=>{
+								if(error){
+									console.log("file size calc error",finalFile);
+								}else{
+									file.done = true;
+									file.finalSize = Math.ceil(stats.size / 1024)
+									let tinyDone = this.state.tinyDone + 1;
+									if (tinyDone == this.state.tinyFiles.length) {
+										this.setState({
+											working: false
+										})
+									};
+									this.setState({
+										tinyDone,
+										tinyFiles: [...files]
+									})
+
+									__next_one()
+								}
+							})
+						}
+					})
+				}, (reason)=>{
+					// fail
+					let files = this.state.tinyFiles;
+					files.map((file)=>{
+						if (filePath == file.path) {
+							file.done = true;
+							file.fail = reason;
+							let tinyDone = this.state.tinyDone + 1;
+							if (tinyDone == this.state.tinyFiles.length){
+								this.setState({
+									working : false
+								})
+							};
+							this.setState({
+								tinyDone,
+								tinyFiles: [...files]
+							})
+							__next_one()
+						}
+					})
+				})
+			}
+		}
+		__next_one()
 	}
 
 	render() {
