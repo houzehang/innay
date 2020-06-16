@@ -310,7 +310,7 @@ class Main extends React.Component {
 		let execSync 		= child_process.execSync;
 		let pngquant
 		if (this.$darwin) {
-			if (process.env.NODE_ENV != "development") {p
+			if (process.env.NODE_ENV != "development") {
 				pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'mac', 'pngquant')
 				execSync(`chmod 777 ${pngquant}`)
 			} else {
