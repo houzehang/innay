@@ -10,7 +10,13 @@ html, body{
         font-size: 13px;
         color: #333;
     }
+    .hidden{
+        visibility: hidden;
+    }
     .btn{
+        &.disabled{
+            opacity: 0.4;
+        }
         &.close{
             background: none;
             position: absolute;
@@ -59,12 +65,13 @@ html, body{
     }
     .empty{
         position: absolute;
+        font-size: 14px;
         color: #888;
         left: 50%;
         top: 50%;
-        width: 100px;
+        width: 110px;
         height: 30px;
-        margin-left: -50px;
+        margin-left: -55px;
         margin-top: -20px;
     }
     .fixed-bottom{
@@ -91,15 +98,12 @@ html, body{
             margin-left: 8px;
             margin-bottom: 2px;
             background: #fafafa;
-            &.gray{
-                background:#ececec
-            }
         }
         .status{
             width: 100px;
             height: 20px;
             font-size: 13px;
-            margin-left: 30px;
+            margin-left: 20px;
         }
     }
     .progress{
@@ -119,6 +123,16 @@ html, body{
             }
             &.done{
                 background-color: #96ce96;
+            }
+            &.fail{
+                background-color: #fb6f6f;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                span{
+                    color: #fff;
+                    font-size: 10px;
+                }
             }
         }
         .progress-num{    

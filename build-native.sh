@@ -17,14 +17,17 @@ cp -r dist output
 
 echo "step(3/${TOTAL_STEP}) package bundles"
 
-cp libs/ffmpeg/ffmpeg output/dist/libs/ffmpge
 
 if [ "$1" = "-mac" -o "$1" = "-all" ];then
 	echo "packaging for mac platform"
+	cp -r libs/pngquant/mac output/dist/libs/pngquant
+	rm -rf output/dist/libs/pngquant/win
 	./node_modules/.bin/electron-builder --config $CONFIG_FILE --mac -p never
 fi
 if [ "$1" = "-win" -o "$1" = "-all" ];then
 	echo "packaging for windows platform"
+	cp -r libs/pngquant/win output/dist/libs/pngquant
+	rm -rf output/dist/libs/pngquant/mac
 	./node_modules/.bin/electron-builder --config $CONFIG_FILE --win -p never
 fi
 

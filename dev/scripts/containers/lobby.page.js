@@ -4,6 +4,7 @@ import GlobalMsg from '../components/globalMsg'
 import "../../less/lobby.less"
 import * as types from '../constants/ActionTypes'
 import Toast from './toast'
+import context from './../context'
 import { 
 	confirm, alert, hide,
 	showLoading,
@@ -11,6 +12,9 @@ import {
 	onShowGlobalMsg,
 	onShowTost
 } from '../actions'
+import os from "os"
+import fs from "fs"
+import child_process from 'child_process'
 import {remote, ipcRenderer, dialog} from 'electron'
 
 class Main extends React.Component {
@@ -29,6 +33,7 @@ class Main extends React.Component {
 			outPutPath: '',
 			outMode: 1
 		}
+		this.$darwin = new RegExp('darwin', 'i').test(os.type())
 	}
 
 	componentDidMount() {  
@@ -57,13 +62,19 @@ class Main extends React.Component {
 		remote.dialog.showOpenDialog(remote.getCurrentWindow(),{
 		    properties: ['openDirectory','createDirectory']
 		}, (files) => {
-			if (files && files.length) {
+			if (files && files.length && files[0]) {
 				this.setState({
 					outPutPath: files[0]
 				}) 
 				callback && callback()
 			}
 		})
+	}
+
+	__open_output_path(){
+		if (this.state.outPutPath) {
+			remote.shell.openItem(this.state.outPutPath)
+		}
 	}
 
 	__import_files_from_folder(){
@@ -94,15 +105,17 @@ class Main extends React.Component {
 			]
 		}, (files) => {
 				let tinyFiles = []
+				if (files && files.length) {
+					this.__reset_tiny()
+				}
 				files && files.length && files.map((filePath)=>{
-					let fs = $require("fs");
 					fs.stat(filePath,(error,stats)=>{
 						if(error){
 							console.log("file size calc error",filePath);
 						}else{
 							tinyFiles.push({
 								path : filePath,
-								size : (stats.size / 1024) | 0
+								size : Math.ceil(stats.size / 1024)
 							})
 							this.setState({
 								tinyFiles
@@ -113,7 +126,42 @@ class Main extends React.Component {
 			})
 	}
 
+	__trans_size(size){
+		if (size == null || size == undefined) {
+			return '-'
+		}
+		console.log('MINGXI_DEBUG_LOG>>>>>>>>>size',size,size > 1024 ,size > 1024 ? "M" : "KB");
+		return `${size > 1024 ? (size / 1024).toFixed(2) : size}${size > 1024 ? "M" : "KB"}`
+	}
+
+	__calc_reduce(preSize, finalSize){
+		if (preSize == null || preSize == undefined || !finalSize) {
+			return '-'
+		}
+		return (-((1-(finalSize / preSize)) * 100) | 0) + '%'
+	}
+
+	__reset_tiny(onlyStatus){
+		if (onlyStatus) {
+			this.setState({
+				tinyDone: 0,
+				tinyFiles: this.state.tinyFiles.map((fileItem)=>{
+					fileItem.done 	   = false;
+					fileItem.finalSize = null;
+					fileItem.fail 	   = null;
+					return fileItem;
+				})
+			})
+		} else {
+			this.setState({
+				tinyDone: 0,
+				tinyFiles: []
+			})
+		}
+	}
+
 	__home_major_tinypng(){
+		let forbiden = this.state.tinyDone == this.state.tinyFiles.length || this.$working
 		return <div className ="pane">
 			<table className ="table-striped home-major">
 				<thead>
@@ -128,7 +176,8 @@ class Main extends React.Component {
 				
 				<tbody>
 					{this.state.tinyFiles.length ? this.state.tinyFiles.map((fileItem = {}, index)=>{
-						let done = 0
+						let done = !!fileItem.done
+						let fail = fileItem.fail
 						let content = 
 							<tr key={index}>
 								<td width="50%" className="file-item">
@@ -139,14 +188,16 @@ class Main extends React.Component {
 									}}>	
 									</span>
 								</td>
-								<td width="10%">{`${fileItem.size > 1024 ? (fileItem.size / 1024).toFixed(2) : fileItem.size}${fileItem.size > 1024 ? "M" : "KB"}`}</td>
+								<td width="10%">{this.__trans_size(fileItem.size)}</td>
 								<td width="20%" className="progress">
 									<div className="progress-bar back"></div>
-									<div className={`progress-bar ${done ? 'done' : ''}`}></div>
+									<div className={`progress-bar ${done ? 'done' : ''} ${fail ? 'fail' : ''}`}>
+										{fail ? <span>{fail}</span> : ''}
+									</div>
 									<span className="progress-num">{done ? 100 : 0}%</span>
 								</td>
-								<td width="10%">-</td>
-								<td>-</td>
+								<td width="10%">{this.__trans_size(fileItem.finalSize)}</td>
+								<td>{this.__calc_reduce(fileItem.size, fileItem.finalSize)}</td>
 							</tr>
 						return content;
 					}) : <tr></tr>}
@@ -155,20 +206,21 @@ class Main extends React.Component {
 			{this.state.tinyFiles.length ? "" : <div className="empty">未导入任何文件</div>}
 			<footer className="toolbar toolbar-footer fixed-bottom">
 				<div className="toolbar-actions">
-					<button className="btn btn-default" onClick={()=>{
+					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
 						this.__import_files()
 					}}>
-					导入文件
+					批量导入
 					</button>
 
-					<button className="btn btn-default" onClick={()=>{
+					{/* <button className="btn btn-default" onClick={()=>{
 						this.__import_files_from_folder()
 					}}>
 					导入文件夹
-					</button>
+					</button> */}
 				</div>
 				<div className="radio" onClick={(e)=>{
 					if (e.target.tagName === "INPUT") return
+					if (this.$working) return;
 					this.setState({
 						outMode: 1
 					})
@@ -178,43 +230,45 @@ class Main extends React.Component {
 					覆盖原图
 					</label>
 				</div>
-				<div className="radio" onClick={(e)=>{
+				<div className="radio" disabled={this.$working} onClick={(e)=>{
 					if (e.target.tagName === "INPUT") return
-					if (!this.state.outPutPath) {
-						this.__select_output_path(()=>{
-							this.setState({
-								outMode: 2
-							})
-						})
-					} else {
-						this.setState({
-							outMode: 2
-						})
-
-					}
+					if (this.$working) return;
+					this.setState({
+						outMode: 2
+					})
 				}}>
 					<label>
-					<input type="radio" name="radios" defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
+					<input type="radio" name="radios"  disabled={this.$working} defaultChecked={`${this.state.outMode == 2 ? "checked" : ""}`}/>
 					自定义输出路径
 					</label>
 				</div>
-				<input className={`form-control ${this.state.outMode == 2 ? "": "gray"}`} type="text" placeholder="未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
-				<div className="toolbar-actions">
-					<button className="btn btn-default" onClick={()=>{
+				<input className={`form-control ${this.state.outMode == 2 ? "": "hidden"}`} type="text" placeholder="未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
+				<div className={`toolbar-actions ${this.state.outMode == 2 ? "": "hidden"}`}>
+					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
 						this.__select_output_path()
 					}}>
 					选择
 					</button>
+					<button className={`btn btn-default ${!this.state.outPutPath ? 'disabled' : '' }`} disabled={!this.state.outPutPath} onClick={()=>{
+						this.__open_output_path()
+					}}>
+					打开
+					</button>
 				</div>
 				<div className="status"><span>{`已完成：${this.state.tinyDone}/${this.state.tinyFiles.length}`}</span></div>
 				<div className="toolbar-actions">
-					<button className="btn btn-primary">
+					<button className={`btn btn-primary ${forbiden ? 'disabled' : '' }`} disabled={forbiden} onClick={()=>{
+						this.__start()
+					}}>
 					开始
 					</button>
-					<button className="btn btn-default" onClick={()=>{
-						this.setState({
-							tinyFiles: []
-						})
+					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+						this.__reset_tiny(true)
+					}}>
+					重置
+					</button>
+					<button className={`btn btn-default ${this.$working ? 'disabled' : '' }`} disabled={this.$working} onClick={()=>{
+						this.__reset_tiny()
 					}}>
 					清空
 					</button>
@@ -225,6 +279,77 @@ class Main extends React.Component {
 
 	__home_major_localserver(){
 		return '敬请期待'
+	}
+
+	__start(){
+		this.$working 		= true
+		let exec 			= child_process.exec;
+		let pngquant		= `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
+
+		let __execute	 	= (rawfile, onSuccess, onError)=>{
+			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
+			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
+			let command 		= `${pngquant} ${rawfile} --output ${finalFile} --force --verbose`
+			exec(command, (error, stdout, stderr)=>{
+				if(error) {
+					console.log('error: ' + error);
+					let reason;
+					if (/cannot decode/.test(error)) {
+						reason = '无法解析'
+					} else if (/cannot open/.test(error)) {
+						reason = '找不到文件'
+					} else {
+						reason = '未知错误'
+					}
+					console.log('failed reason:',reason)
+					onError && onError(reason)
+					return;
+				}
+				onSuccess && onSuccess(finalFile)
+				console.log('stdout: ' + stdout);
+				console.log('stderr: ' + stderr);
+			})
+		}
+		this.state.tinyFiles.map((fileItem)=>{
+			// this.state.tinyFiles
+			let filePath = fileItem.path
+			__execute(filePath, (finalFile)=>{
+				let files = this.state.tinyFiles;
+				files.map((file)=>{
+					if (filePath == file.path) {
+						fs.stat(finalFile,(error,stats)=>{
+							if(error){
+								console.log("file size calc error",finalFile);
+							}else{
+								file.done = true;
+								file.finalSize = Math.ceil(stats.size / 1024)
+								let tinyDone = this.state.tinyDone + 1;
+								if (tinyDone == this.state.tinyFiles.length) this.$working = false;
+								this.setState({
+									tinyDone,
+									tinyFiles: [...files]
+								})
+							}
+						})
+					}
+				})
+			}, (reason)=>{
+				// fail
+				let files = this.state.tinyFiles;
+				files.map((file)=>{
+					if (filePath == file.path) {
+						file.done = true;
+						file.fail = reason;
+						let tinyDone = this.state.tinyDone + 1;
+						if (tinyDone == this.state.tinyFiles.length) this.$working = false;
+						this.setState({
+							tinyDone,
+							tinyFiles: [...files]
+						})
+					}
+				})
+			})
+		})
 	}
 
 	render() {
