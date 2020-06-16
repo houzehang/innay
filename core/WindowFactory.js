@@ -95,7 +95,7 @@ export default class WindowFactory {
 			};
 			installExtensions()
 		}
-		_window.webContents.openDevTools();
+		// _window.webContents.openDevTools();
 
 		let domainMgr = DomainMgr
 		_window.customData = {domainMgr};

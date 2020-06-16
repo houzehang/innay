@@ -432,32 +432,32 @@ class Main extends React.Component {
 				<div className ="toolbar-actions">
 		
 					<div className ="btn-group">
-					<button className = {`btn btn-default ${selectedPage == 0 ? "active": ""}`} onClick={()=>{
-						this.setState({
-							selectedPage: 0
-						})
-					}}>
-						<span className ="icon icon-home"></span>
-					</button>
-					<button className = {`btn btn-default ${selectedPage == 1 ? "active": ""}`} onClick={()=>{
-						this.setState({
-							selectedPage: 1
-						})
-					}}>
-						<span className ="icon icon-key"></span>
-					</button>
-					<button className = {`btn btn-default ${selectedPage == 2 ? "active": ""}`} onClick={()=>{
-						this.setState({
-							selectedPage: 2
-						})
-					}}>
-						<span className ="icon icon-share"></span>
-					</button>
+						{/* <button className = {`btn btn-default ${selectedPage == 0 ? "active": ""}`} onClick={()=>{
+							this.setState({
+								selectedPage: 0
+							})
+						}}>
+							<span className ="icon icon-home"></span>
+						</button>
+						<button className = {`btn btn-default ${selectedPage == 1 ? "active": ""}`} onClick={()=>{
+							this.setState({
+								selectedPage: 1
+							})
+						}}>
+							<span className ="icon icon-key"></span>
+						</button>
+						<button className = {`btn btn-default ${selectedPage == 2 ? "active": ""}`} onClick={()=>{
+							this.setState({
+								selectedPage: 2
+							})
+						}}>
+							<span className ="icon icon-share"></span>
+						</button> */}
 					</div>
-					<button className ="btn btn-default">
-					<span className ="icon icon-home icon-text"></span>
-					Filters
-					</button>
+					{/* <button className ="btn btn-default">
+						<span className ="icon icon-home icon-text"></span>
+						Filters
+					</button> */}
 		
 				</div>
 			</header>
@@ -475,13 +475,13 @@ class Main extends React.Component {
 							}}>
 								<span className ="icon icon-picture"></span>无损压图
 							</span>
-							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
+							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.localserver
 								})
 							}}>
 								<span className ="icon icon-rss"></span>本地服务
-							</span>
+							</span> */}
 						</nav>
 					</div>
 					{/* 右侧内容 */}
