@@ -314,6 +314,74 @@ class Context {
 		})
 		return video_devices
 	}
+
+	set sentryBrowser(sentry){
+		this.$sentry_browser = sentry
+	}
+
+	get sentryBrowser(){
+		return this.$sentry_browser
+	}
+
+	mark(code, info, extra={}, titleExtra=''){
+		if (info) {
+			this.$sentry_browser.captureEventWithCode(code, info, extra, titleExtra)
+		} else {
+			this.$sentry_browser.captureMessageWithCode(code, titleExtra)
+		}
+	}
+
+	markClick(event){
+		try {
+			let __getClickData = (targetObj)=>{
+				for (const key in targetObj) {
+					if (/reactEventHandlers/.test(key)) {
+						return targetObj[key]
+					}
+				}
+				return {}
+			}
+	
+	
+			let __getElementDesc = (element)=>{
+				if (element.id !== ""){
+					return '@id='+element.id;
+				}
+				if (element.getAttribute("class") !== null){ 
+					return '@class='+element.getAttribute("class");
+				}
+			}
+	
+	
+			let __getTargetTruly = (target)=>{
+				if (!target) return null;
+				let targetObj 	= {...target};
+				let clickData 	= __getClickData(targetObj)
+				let onClick 	= clickData.onClick;
+				if (onClick) {
+					return [target,onClick.toString()]
+				}
+				return __getTargetTruly(target.parentNode)
+			}
+	
+			let targetReal = __getTargetTruly(event.target)
+			if (targetReal) {
+				let elementDesc = __getElementDesc(targetReal[0])
+				let eventDetail = targetReal[1]
+				if (elementDesc && !/full-h/.test(elementDesc)) {
+					this.mark(20006, {
+						eventDetail
+					}, {}, elementDesc)
+				}
+			}
+		} catch (error) {
+			console.error('mark click error',error.message)
+		}
+	}
+
+	showReport(){
+		this.$sentry_browser.showReport()
+	}
 }
 
 export default new Context

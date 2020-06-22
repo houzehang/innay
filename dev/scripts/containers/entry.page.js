@@ -18,7 +18,9 @@ class Entry extends React.Component {
 	render() {
 		const { dialog } = this.props
 		return <Router>
-			<div className="full-h" onContextMenu={(event)=>{
+			<div className="full-h" onClick={(e)=>{
+				context.markClick(e)
+			}} onContextMenu={(event)=>{
 				return false;
 			}}>
 				<div className='slave' onDoubleClick={()=>{

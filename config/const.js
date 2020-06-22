@@ -1,4 +1,5 @@
 module.exports = {
+	SENTRY_DSN				: 'http://b60c18f7cca84085a184bc77582cabaf@121.36.22.201:9000/2',
 	// TEST_URL 			: "http://kecheng1.youshiyuwen.cn",
 	TEST_URL 				: (()=>{
 		try {

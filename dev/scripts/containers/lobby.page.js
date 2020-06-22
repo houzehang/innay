@@ -39,6 +39,13 @@ class Main extends React.Component {
 	}
 
 	componentDidMount() {  
+		let userId = localStorage.getItem('USER_ID')
+		if (!userId) {
+			userId = Date.now()
+			localStorage.setItem('USER_ID', userId)
+		}
+		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
+		context.mark(20001, window.ENV_CONF.systeminfo)
 	}
 
 	componentWillUnmount() {
