@@ -34,6 +34,11 @@ html, body{
             box-shadow: none;
         }
     }
+    .pane-group{
+        .pane{
+            border-left: none;
+        }
+    }
     .icon{
         &.close, &.minus{
             font-size: 20px;
@@ -156,6 +161,16 @@ html, body{
             right: 6px;
             top: 50%;
             line-height: 0px;
+        }
     }
+    .auth-container{    
+        display: flex;
+        width: 850px;
+        justify-content: center;
+        align-items: center;
+        .auth-card{
+            .view-base('wechat.png');
+            border-radius: 20px;
+        }
     }
 }

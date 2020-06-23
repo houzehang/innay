@@ -23,7 +23,8 @@ class Main extends React.Component {
 		super(props)
 		this.$home_major_cfg = {
 			tiny: 1,
-			localserver: 2
+			localserver: 2,
+			connectAuth: 3
 		}
 
 		this.state = {
@@ -59,6 +60,9 @@ class Main extends React.Component {
 				break;
 			case this.$home_major_cfg.localserver:
 				result = this.__home_major_localserver()
+				break;
+			case this.$home_major_cfg.connectAuth:
+				result = this.__home_major_connect_auth()
 				break;
 			default:
 				result = this.__home_major_tinypng()
@@ -309,6 +313,12 @@ class Main extends React.Component {
 		return '敬请期待'
 	}
 
+	__home_major_connect_auth(){
+		return <div className='auth-container'>
+			<div className='auth-card'></div>
+		</div>
+	}
+
 	__start(){
 		this.setState({
 			working: true
@@ -481,6 +491,23 @@ class Main extends React.Component {
 								})
 							}}>
 								<span className ="icon icon-picture"></span>无损压图
+							</span>
+							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.localserver
+								})
+							}}>
+								<span className ="icon icon-rss"></span>本地服务
+							</span> */}
+						</nav>
+						<nav className ="nav-group">
+							<h5 className ="nav-group-title">问题帮助</h5>
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.connectAuth ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.connectAuth
+								})
+							}}>
+								<span className ="icon icon-vcard"></span>联系作者
 							</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
