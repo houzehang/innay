@@ -334,7 +334,7 @@ class Main extends React.Component {
 				pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
 			}
 		} else {
-			pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
+			pngquant = `${context.distPath}\\libs\\pngquant\\win\\pngquant.exe`
 		}
 		let __execute = (rawfile, onSuccess, onError)=>{
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);

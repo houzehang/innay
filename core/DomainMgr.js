@@ -1,6 +1,6 @@
 
 import {remote}    from 'electron';
-import DB          from './DB'
+// import DB          from './DB'
 import bridge 	   from './MessageBridge'
 import Const 	   from '../config/const'
 import logger      from 'electron-log'
@@ -8,8 +8,9 @@ import {TEST, DEBUG } from '../env';
 
 class DomainMgr {
     constructor(){
-		DB.update()
-		this.$domains = JSON.parse(DB.get('DOMAINS') || '{}')
+		// DB.update()
+		console.log('MINGXI_DEBUG_LOG>>>>>>>>>remove db','');
+		this.$domains = {}//JSON.parse(DB.get('DOMAINS') || '{}')
 		this.$types = {}
 	}
 	
@@ -63,7 +64,7 @@ class DomainMgr {
 	}
 
 	__snyc_domains(){
-		DB.store('DOMAINS', JSON.stringify(this.$domains))
+		// DB.store('DOMAINS', JSON.stringify(this.$domains))
     }
     
 	clearDoaminMarks(kind){
