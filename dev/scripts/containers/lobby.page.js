@@ -340,7 +340,7 @@ class Main extends React.Component {
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
-			let command 		= `${pngquant} ${rawfile} --output ${finalFile} --force --verbose`
+			let command 		= `${pngquant} '${rawfile}' --output '${finalFile}' --force --verbose`
 			exec(command, (error, stdout, stderr)=>{
 				if(error) {
 					console.log('error: ' + error);
