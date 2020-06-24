@@ -333,6 +333,9 @@ class Main extends React.Component {
 			<span><div className='title'>QQ：</div>2210036910</span>
 			<span><div className='title'>微信号：</div>cocos2d-x</span>
 			<div className='self-code'></div>
+			<span className='click-item' onClick={()=>{
+				context.showReport()
+			}}><u>优化建议 / 功能推荐 / 需求描述</u></span>
 		</div>
 	}
 

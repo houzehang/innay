@@ -82,18 +82,25 @@ class Sentry {
 
     showReport(){
         this.$client.showReportDialog({
-            title           : "功能建议",
-            subtitle        : "为了更快解决您的问题，请在发生问题时或再次遇到问题时，立即反馈问题哦～",
-            name            : this.$nickname || '',
+            title           : "优化建议 / 功能推荐 / 需求描述",
+            subtitle        : "征求一下大家的想法～",
+            name            : '',
             subtitle2       : "",
-            labelEmail      : "电子邮件（用于接收问题处理进度通知）",
-            labelComments   : "问题与操作步骤描述",
+            labelName       : "怎么称呼？",
+            labelEmail      : "你的电子邮箱",
+            labelComments   : "你想说。。",
             errorFormEntry  : "请填写完整后重试",
             labelSubmit     : "提交",
             onLoad          : ()=>{
                 try {
+                    document.getElementById('id_name').setAttribute('placeholder', '')
                     document.getElementById('id_email').setAttribute('placeholder', '')
                     document.getElementById('id_comments').setAttribute('placeholder', '')
+                    document.getElementById('id_name').style.height = '36px'
+                    document.getElementById('id_email').style.height = '36px'
+                    document.getElementById('id_comments').style.height = '44px'
+                    document.getElementById('powered-by').style.display = 'none'
+                    
                 } catch (error) {}
             }
         })
