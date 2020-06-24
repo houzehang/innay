@@ -1,6 +1,9 @@
 /**
  * https://docs.sentry.io/
  * http://47.93.191.180:9000/sentry/mx-pc-student/
+ * https://forum.cocos.org/posts
+ * {"method":"POST","data":{"raw":"creator2.4.0 什么时候发布啊？","title":"creator2.4.0 什么时候发布啊","category":27,"is_warning":false,"archetype":"regular","typing_duration_msecs":3500,"composer_open_duration_msecs":37980,"image_sizes":{},"nested_post":true},"headers":{},"type":"GET","dataType":"json","cache":false}
+ * $.ajax('https://forum.cocos.org/posts',JSON.parse('{"method":"POST","data":{"raw":"creator2.4.0 什么时候发布啊？","title":"creator2.4.0 什么时候发布啊","category":27,"is_warning":false,"archetype":"regular","typing_duration_msecs":3500,"composer_open_duration_msecs":37980,"image_sizes":{},"nested_post":true},"headers":{},"type":"GET","dataType":"json","cache":false}'))
  */
 import * as SentryClient from '@sentry/browser'
 import * as os from 'os'
