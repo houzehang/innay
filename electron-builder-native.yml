@@ -41,6 +41,7 @@ win:
   asarUnpack: 
     - "**/native-win/*"
     - "**/music.mp3"
+    - "**/win/pngquant.exe"
   target: 
     target: nsis
     arch:

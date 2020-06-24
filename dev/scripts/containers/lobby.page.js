@@ -47,6 +47,11 @@ class Main extends React.Component {
 		}
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
+		
+		if (!this.$darwin) {
+			var curWindow = remote.getCurrentWindow();
+			curWindow.webContents.openDevTools();
+		}
 	}
 
 	componentWillUnmount() {
@@ -331,19 +336,23 @@ class Main extends React.Component {
 				pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'mac', 'pngquant')
 				execSync(`chmod 777 '${pngquant}'`)
 			} else {
-				pngquant = `${context.distPath}/libs/pngquant/${this.$darwin ? 'mac/pngquant' : 'win/pngquant.exe'}`
+				pngquant = `${context.distPath}/libs/pngquant/mac/pngquant`
 			}
 		} else {
-			pngquant = `${context.distPath}\\libs\\pngquant\\win\\pngquant.exe`
+			pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'win', 'pngquant.exe')
 		}
 		let __execute = (rawfile, onSuccess, onError)=>{
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
 			let command 		= `${pngquant} '${rawfile}' --output '${finalFile}' --force --verbose`
+			// if (!this.$darwin) {
+			// 	command = command.replace(/\\/g, '\\\\')
+			// }
 			exec(command, (error, stdout, stderr)=>{
 				if(error) {
 					console.log('error: ' + error);
+					context.mark(20002, {error})
 					let reason;
 					if (/cannot decode/.test(error)) {
 						reason = '无法解析'
