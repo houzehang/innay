@@ -86,7 +86,7 @@ class Sentry {
     showReport(){
         this.$client.showReportDialog({
             title           : "优化建议 / 功能推荐 / 需求描述",
-            subtitle        : "征求一下大家的想法～",
+            subtitle        : "",
             name            : '',
             subtitle2       : "",
             labelName       : "怎么称呼？",
