@@ -19,7 +19,6 @@ dmg:
 mac:
   asar: true
   asarUnpack: 
-    - "**/music.mp3"
     - "**/mac/pngquant"
   category: public.app-category.tools
   icon: icns/mac-icon.icns
@@ -39,8 +38,6 @@ nsis:
 win:
   asar: true
   asarUnpack: 
-    - "**/native-win/*"
-    - "**/music.mp3"
     - "**/win/pngquant.exe"
   target: 
     target: nsis

@@ -1,6 +1,5 @@
 import storage from './Storage'
 import {ipcRenderer,remote} from "electron"
-import DB from '../../core/DB'
 import path from "path"
 import fs from "fs"
 const LogDog 		 = remote.require('pandora-nodejs-sdk')
@@ -156,7 +155,6 @@ class Context {
 		let oldDevice = localStorage.getItem("IS_OLD_DEVICE")
 		if (oldDevice) {
 			console.log("copy low version old device")
-			DB.store("IS_OLD_DEVICE",1)
 			// localStorage.removeItem("IS_OLD_DEVICE")
 		}
 	}

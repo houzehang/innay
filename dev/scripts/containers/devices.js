@@ -5,7 +5,6 @@ import Slider from 'react-rangeslider'
 import 'react-rangeslider/lib/index.css'
 import path				from "path"
 import Const 			from "../../const"
-import Storage  		from "../../../core/DB"
 import AgoraRtcEngine 	from '../../agora/AgoraSdk'
 import net 				from "../network"
 import context		    from "../context"
@@ -16,7 +15,6 @@ import {
 class Devices extends React.Component {
 	constructor(props) {
 		super(props)
-		Storage.update()
 		
 		this.$client = new AgoraRtcEngine()
 		this.$client.initialize(context.agoraAppId);
@@ -95,6 +93,7 @@ class Devices extends React.Component {
 	}
 
 	__resume_devices() {
+		return
 		let currentVideoDevice 		= Storage.get("VIDEO_DEVICE"),
 			currentAudioDevice 		= Storage.get("AUDIO_DEVICE"),
 			currentSpeakerDevice  	= Storage.get("PLAYBACK_DEVICE")

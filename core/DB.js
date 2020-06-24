@@ -13,8 +13,8 @@ class DB {
 		} else {
 			app = electron.app
 		}
-		const adapter = new FileSync(`${app.getPath('userData')}/db.json`);
-		this.$db = lowdb(adapter);
+		// const adapter = new FileSync(`${app.getPath('userData')}/db.json`);
+		// this.$db = lowdb(adapter);
 	}
 	get(key) {
 		let value = this.$db.get(STORE_KEY).cloneDeep().value()
