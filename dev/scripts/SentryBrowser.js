@@ -82,14 +82,20 @@ class Sentry {
 
     showReport(){
         this.$client.showReportDialog({
-            title           : "问题反馈",
+            title           : "功能建议",
             subtitle        : "为了更快解决您的问题，请在发生问题时或再次遇到问题时，立即反馈问题哦～",
             name            : this.$nickname || '',
             subtitle2       : "",
             labelEmail      : "电子邮件（用于接收问题处理进度通知）",
             labelComments   : "问题与操作步骤描述",
             errorFormEntry  : "请填写完整后重试",
-            labelSubmit     : "提交"
+            labelSubmit     : "提交",
+            onLoad          : ()=>{
+                try {
+                    document.getElementById('id_email').setAttribute('placeholder', '')
+                    document.getElementById('id_comments').setAttribute('placeholder', '')
+                } catch (error) {}
+            }
         })
     }
 

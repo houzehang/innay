@@ -4,6 +4,9 @@
 html, body{
     user-select: none;
 }
+textarea-placeholder{
+    color: #000;
+}
 .window{
     .title{
         margin-top: 5px;
@@ -166,8 +169,30 @@ html, body{
     .auth-container{    
         display: flex;
         width: 850px;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 10px;
+        color: #666;
+        span{
+            .title{
+                width: 70px;
+                color: #666;
+                font-size: 14px;
+                font-weight: bold;
+                display: inline-block;
+                text-align: right;
+            }
+        }
+        .self-code{
+            .view-base('self-code.jpeg');
+            width: 70px;
+            height: 70px;
+            margin-left: 70px;
+            margin-top: 6px;
+        }
         .auth-card{
             .view-base('wechat.png');
             border-radius: 20px;

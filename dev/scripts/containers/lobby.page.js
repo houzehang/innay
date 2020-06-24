@@ -22,15 +22,16 @@ class Main extends React.Component {
 	constructor(props) {
 		super(props)
 		this.$home_major_cfg = {
-			tiny: 1,
-			localserver: 2,
-			connectAuth: 3
+			page_pngquant: 1,
+			page_tinypng: 2,
+			localserver: 3,
+			connectAuth: 4
 		}
 
 		this.state = {
 			selectedPage: 0,
 			working: false,
-			homeMajor: this.$home_major_cfg.tiny,
+			homeMajor: this.$home_major_cfg.page_pngquant,
 			tinyFiles: [],
 			tinyDone: 0,
 			outPutPath: '',
@@ -60,7 +61,10 @@ class Main extends React.Component {
 	__home_major(){
 		let result = '';
 		switch (this.state.homeMajor) {
-			case this.$home_major_cfg.tiny:
+			case this.$home_major_cfg.page_pngquant:
+				result = this.__home_major_pngquant()
+				break;
+			case this.$home_major_cfg.page_tinypng:
 				result = this.__home_major_tinypng()
 				break;
 			case this.$home_major_cfg.localserver:
@@ -70,7 +74,7 @@ class Main extends React.Component {
 				result = this.__home_major_connect_auth()
 				break;
 			default:
-				result = this.__home_major_tinypng()
+				result = this.__home_major_pngquant()
 				break;
 		}
 		return result
@@ -196,6 +200,10 @@ class Main extends React.Component {
 	}
 
 	__home_major_tinypng(){
+		return '开发中'
+	}
+
+	__home_major_pngquant(){
 		let forbiden = this.state.tinyDone == this.state.tinyFiles.length || this.state.working || (this.state.outMode == 2 && !this.state.outPutPath)
 		return <div className ="pane">
 			<table className ="table-striped home-major">
@@ -320,7 +328,11 @@ class Main extends React.Component {
 
 	__home_major_connect_auth(){
 		return <div className='auth-container'>
-			<div className='auth-card'></div>
+			{/* <div className='auth-card'></div> */}
+			<span><div className='title'>邮箱：</div>houzehang1024@gmail.com</span>
+			<span><div className='title'>QQ：</div>2210036910</span>
+			<span><div className='title'>微信号：</div>cocos2d-x</span>
+			<div className='self-code'></div>
 		</div>
 	}
 
@@ -345,12 +357,13 @@ class Main extends React.Component {
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
-			let command 		= `${pngquant} '${rawfile}' --output '${finalFile}' --force --verbose`
+			let command 		= `${pngquant} '${rawfile}' --output '${finalFile}' --force --verbose --skip-if-larger`
+			// --skip-if-larger
 			// if (!this.$darwin) {
 			// 	command = command.replace(/\\/g, '\\\\')
 			// }
 			exec(command, (error, stdout, stderr)=>{
-				if(error) {
+				if(error && !/skipped/i.test(error)) {
 					console.log('error: ' + error);
 					context.mark(20002, {error})
 					let reason;
@@ -494,13 +507,21 @@ class Main extends React.Component {
 					<div className ="pane pane-sm sidebar">
 						<nav className ="nav-group">
 							<h5 className ="nav-group-title">开发必备</h5>
-							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.tiny ? 'active' : ''}`} onClick={()=>{
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_pngquant ? 'active' : ''}`} onClick={()=>{
 								this.setState({
-									homeMajor: this.$home_major_cfg.tiny
+									homeMajor: this.$home_major_cfg.page_pngquant
 								})
 							}}>
 								<span className ="icon icon-picture"></span>无损压图
 							</span>
+							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_tinypng ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.page_tinypng
+								})
+								context.showReport()
+							}}>
+								<span className ="icon icon-picture"></span>压图-tinypng
+							</span> */}
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.localserver
