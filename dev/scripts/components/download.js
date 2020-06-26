@@ -134,7 +134,7 @@ class Download extends React.Component {
 			this.setState({ notice: "有版本更新，等待下载...", percent: 0 })
 			break
 			case "UPDATE.LASTEST":
-			this.setState({ notice: "已是最新版本，无需更新。", percent: 1 })
+			this.setState({ notice: "已是最新版本，无需更新", percent: 1 })
 			break
 			case "UPDATE.COURSE_BUNDLE":
 			this.setState({ title: "准备下载课程包" })

@@ -1,6 +1,18 @@
 @import url(base.less);
 @import url(~normalize.css/normalize.css);
 @import url(./common.less);
+
+@keyframes bink {
+	0%{
+		opacity: 1;
+	}
+	50%{
+		opacity: 0.2;
+	}
+	100%{
+		opacity: 1;
+	}
+}
 html, body{
     user-select: none;
 }
@@ -20,6 +32,18 @@ header{
         margin-top: 5px;
         font-size: 13px;
         color: #333;
+        text-align: left;
+        padding-left: 34px;
+        line-height: 23px;
+    }
+    .title-icon{
+        .view-base('loading-logo.png');
+        position: absolute;
+        width: 20px;
+        top: 5px;
+        left: 8px;
+        height: 20px;
+        animation: bink 2s infinite;
     }
     .hidden{
         visibility: hidden;
@@ -189,7 +213,7 @@ header{
         color: #666;
         span{
             .title{
-                width: 70px;
+                width: 90px;
                 color: #666;
                 font-size: 14px;
                 font-weight: bold;
@@ -212,7 +236,7 @@ header{
             .view-base('self-code.jpeg');
             width: 70px;
             height: 70px;
-            margin-left: 70px;
+            margin-left: 90px;
             margin-top: 6px;
         }
         .auth-card{

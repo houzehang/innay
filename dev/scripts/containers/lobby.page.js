@@ -49,7 +49,7 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		
-		if (!this.$darwin) {
+		if (1 || !this.$darwin) {
 			var curWindow = remote.getCurrentWindow();
 			curWindow.webContents.openDevTools();
 		}
@@ -470,6 +470,7 @@ class Main extends React.Component {
 		<div className ="window">
 			{/* 上部分 */}
 			<header className ="toolbar toolbar-header normal">
+				<div className='title-icon'></div>
 				<h1 className ="title">程序宝</h1>
 				{/* 退出 */}
 				<button className ="btn btn-default close" onClick={()=>{
@@ -529,7 +530,7 @@ class Main extends React.Component {
 									homeMajor: this.$home_major_cfg.page_pngquant
 								})
 							}}>
-								<span className ="icon icon-picture"></span>无损压图
+								<span className ="icon icon-picture"></span>图片压缩
 							</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_tinypng ? 'active' : ''}`} onClick={()=>{
 								this.setState({

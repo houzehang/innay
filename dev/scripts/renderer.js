@@ -37,7 +37,7 @@ class Renderer {
 		if (status == Const.UPDATE.LASTEST) {
 			message = "已是最新版本。"
 		} else if (status == Const.UPDATE.AVAILABLE) {
-			message = "发现新版本。"
+			message = "发现新版本"
 		} else if (status == Const.UPDATE.CHECKING) {
 			message = "正在检查新版本..."
 		} else if (status == Const.UPDATE.ERROR) {
