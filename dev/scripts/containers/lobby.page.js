@@ -360,7 +360,8 @@ class Main extends React.Component {
 		let __execute = (rawfile, onSuccess, onError)=>{
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
-			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
+			let newFolderFile	= this.$darwin ? `${this.state.outPutPath}/${fileName}` : `${this.state.outPutPath}\\${fileName}`
+			let finalFile 		= this.state.outMode == 1 ? rawfile : newFolderFile
 			let command 		= `${pngquant} "${rawfile}" --output "${finalFile}" --force --verbose --skip-if-larger`
 			// --skip-if-larger
 			if (!this.$darwin) {
