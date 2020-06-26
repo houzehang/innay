@@ -406,17 +406,19 @@ class Main extends React.Component {
 							try {
 								if (!fs.existsSync(finalFile)) {
 									let execSync = child_process.execSync;
-									execSync(`cp ${filePath} ${finalFile}`)
+									execSync(`${this.$darwin ? 'cp' : 'copy'} "${filePath}" "${finalFile}"`)
 								}
-							} catch (error) {}
+							} catch (error) {
+								console.error("file copy error",finalFile);
+							}
 							fs.stat(finalFile,(error,stats)=>{
 								if(error){
-									console.log("file size calc error",finalFile);
-									file.fail = '未知错误';
+									console.error("file size calc error",finalFile);
+									file.fail = '非法输出路径';
 								}else{
 									file.finalSize = Math.ceil(stats.size / 1024)
 								}
-								
+
 								file.done = true;
 								let tinyDone = this.state.tinyDone + 1;
 								if (tinyDone == this.state.tinyFiles.length) {
