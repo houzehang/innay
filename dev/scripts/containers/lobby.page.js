@@ -49,10 +49,10 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		
-		if (1 || !this.$darwin) {
-			var curWindow = remote.getCurrentWindow();
-			curWindow.webContents.openDevTools();
-		}
+		// if (1 || !this.$darwin) {
+		// 	var curWindow = remote.getCurrentWindow();
+		// 	curWindow.webContents.openDevTools();
+		// }
 	}
 
 	componentWillUnmount() {

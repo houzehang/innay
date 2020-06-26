@@ -64,7 +64,6 @@ ipcRenderer.on('systeminfo', (_, data)=>{
 })
 
 function _next(){
-	return;
 	SentryBrowser.init()
 	const middleware = [ thunk ];
 	const store = createStore(
