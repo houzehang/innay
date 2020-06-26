@@ -122,7 +122,7 @@ class Main extends React.Component {
 			filters: [
 				{ 
 					name: 'Images', 
-					extensions: ['jpg', 'png','jpeg', 'PNG', 'JPG'] 
+					extensions: ['png', 'PNG'] 
 				},
 			]
 		}, (files) => {
@@ -378,7 +378,7 @@ class Main extends React.Component {
 					if (/cannot decode/.test(error)) {
 						reason = '非合法png'
 					} else if (/cannot open/.test(error)) {
-						reason = '找不到文件'
+						reason = '非法路径'
 					} else {
 						reason = '未知错误'
 					}
