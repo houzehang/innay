@@ -49,10 +49,10 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		
-		// if (!this.$darwin) {
-		// 	var curWindow = remote.getCurrentWindow();
-		// 	curWindow.webContents.openDevTools();
-		// }
+		if (!this.$darwin) {
+			var curWindow = remote.getCurrentWindow();
+			curWindow.webContents.openDevTools();
+		}
 	}
 
 	componentWillUnmount() {
@@ -403,25 +403,32 @@ class Main extends React.Component {
 					let files = this.state.tinyFiles;
 					files.map((file)=>{
 						if (filePath == file.path) {
+							try {
+								if (!fs.existsSync(finalFile)) {
+									let execSync = child_process.execSync;
+									execSync(`cp ${filePath} ${finalFile}`)
+								}
+							} catch (error) {}
 							fs.stat(finalFile,(error,stats)=>{
 								if(error){
 									console.log("file size calc error",finalFile);
+									file.fail = '未知错误';
 								}else{
-									file.done = true;
 									file.finalSize = Math.ceil(stats.size / 1024)
-									let tinyDone = this.state.tinyDone + 1;
-									if (tinyDone == this.state.tinyFiles.length) {
-										this.setState({
-											working: false
-										})
-									};
-									this.setState({
-										tinyDone,
-										tinyFiles: [...files]
-									})
-
-									__next_one()
 								}
+								
+								file.done = true;
+								let tinyDone = this.state.tinyDone + 1;
+								if (tinyDone == this.state.tinyFiles.length) {
+									this.setState({
+										working: false
+									})
+								};
+								this.setState({
+									tinyDone,
+									tinyFiles: [...files]
+								})
+								__next_one()
 							})
 						}
 					})
