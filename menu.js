@@ -81,14 +81,15 @@ export default class MenuBuilder {
           click: () => {
             this.mainWindow.webContents.reload();
           }
-        },
-        {
-          label: '切换全屏',
-          accelerator: 'Ctrl+Command+F',
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-          }
         }
+        // ,
+        // {
+        //   label: '切换全屏',
+        //   accelerator: 'Ctrl+Command+F',
+        //   click: () => {
+        //     this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+        //   }
+        // }
         //,
         // {
         //   label: '切换开发者工具',
@@ -102,13 +103,13 @@ export default class MenuBuilder {
     const subMenuViewProd = {
       label: '显示',
       submenu: [
-        {
-          label: '切换全屏',
-          accelerator: 'Ctrl+Command+F',
-          click: () => {
-            this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
-          }
-        }
+        // {
+        //   label: '切换全屏',
+        //   accelerator: 'Ctrl+Command+F',
+        //   click: () => {
+        //     this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
+        //   }
+        // }
         // ,
         // {
         //   label: '切换开发者工具',
@@ -150,16 +151,17 @@ export default class MenuBuilder {
                   click: () => {
                     this.mainWindow.webContents.reload();
                   }
-                },
-                {
-                  label: '切换全屏',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
                 }
+                // ,
+                // {
+                //   label: '切换全屏',
+                //   accelerator: 'F11',
+                //   click: () => {
+                //     this.mainWindow.setFullScreen(
+                //       !this.mainWindow.isFullScreen()
+                //     );
+                //   }
+                // }
                 // ,
                 // {
                 //   label: '切换开发者工具',
@@ -170,15 +172,15 @@ export default class MenuBuilder {
                 // }
               ]
             : [
-                {
-                  label: '切换全屏',
-                  accelerator: 'F11',
-                  click: () => {
-                    this.mainWindow.setFullScreen(
-                      !this.mainWindow.isFullScreen()
-                    );
-                  }
-                }
+                // {
+                //   label: '切换全屏',
+                //   accelerator: 'F11',
+                //   click: () => {
+                //     this.mainWindow.setFullScreen(
+                //       !this.mainWindow.isFullScreen()
+                //     );
+                //   }
+                // }
               ]
       },
       {

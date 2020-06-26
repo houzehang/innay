@@ -49,10 +49,10 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		
-		if (!this.$darwin) {
-			var curWindow = remote.getCurrentWindow();
-			curWindow.webContents.openDevTools();
-		}
+		// if (!this.$darwin) {
+		// 	var curWindow = remote.getCurrentWindow();
+		// 	curWindow.webContents.openDevTools();
+		// }
 	}
 
 	componentWillUnmount() {
@@ -275,6 +275,7 @@ class Main extends React.Component {
 					</label>
 				</div>
 				<div className="radio" disabled={this.state.working} onClick={(e)=>{
+					console.log('MINGXI_DEBUG_LOG>>>>>>>>>e.target.tagName',e.target.tagName);
 					if (e.target.tagName === "INPUT") return
 					if (this.state.working) return;
 					this.setState({
@@ -287,7 +288,7 @@ class Main extends React.Component {
 						自定义输出路径
 					</label>
 				</div>
-				<input className={`form-control ${this.state.outMode == 2 ? "": "hidden"}`} type="text" placeholder="未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
+				<input className={`form-control ${this.state.outMode == 2 ? "": "hidden"}`} type="text" placeholder="暂未选择输出目录" value={this.state.outPutPath} disabled="disabled"/>
 				<div className={`toolbar-actions ${this.state.outMode == 2 ? "": "hidden"}`}>
 					<button className={`btn btn-default ${this.state.working ? 'disabled' : '' }`} disabled={this.state.working} onClick={()=>{
 						this.__select_output_path()
@@ -297,7 +298,7 @@ class Main extends React.Component {
 					<button className={`btn btn-default ${!this.state.outPutPath ? 'disabled' : '' }`} disabled={!this.state.outPutPath} onClick={()=>{
 						this.__open_output_path()
 					}}>
-					打开
+					查看
 					</button>
 				</div>
 				<div className="status"><span>{`已完成：${this.state.tinyDone}/${this.state.tinyFiles.length}`}</span></div>
@@ -360,18 +361,21 @@ class Main extends React.Component {
 			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
 			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let finalFile 		= this.state.outMode == 1 ? rawfile : `${this.state.outPutPath}/${fileName}`
-			let command 		= `${pngquant} '${rawfile}' --output '${finalFile}' --force --verbose --skip-if-larger`
+			let command 		= `${pngquant} "${rawfile}" --output "${finalFile}" --force --verbose --skip-if-larger`
 			// --skip-if-larger
-			// if (!this.$darwin) {
-			// 	command = command.replace(/\\/g, '\\\\')
-			// }
+			if (!this.$darwin) {
+				command = String.raw`${command}`
+			}
+			if (window._test_command) {
+				command = window._test_command
+			}
 			exec(command, (error, stdout, stderr)=>{
 				if(error && !/skipped/i.test(error)) {
 					console.log('error: ' + error);
 					context.mark(20002, {error})
 					let reason;
 					if (/cannot decode/.test(error)) {
-						reason = '无法解析'
+						reason = '非合法png'
 					} else if (/cannot open/.test(error)) {
 						reason = '找不到文件'
 					} else {
