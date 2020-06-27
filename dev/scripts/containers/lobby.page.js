@@ -333,10 +333,13 @@ class Main extends React.Component {
 			<span><div className='title'>邮箱：</div>houzehang1024@gmail.com</span>
 			<span><div className='title'>QQ：</div>2210036910</span>
 			<span><div className='title'>微信号：</div>cocos2d-x</span>
-			<div className='self-code'></div>
+			<span><div className='title'>Cocos技术交流群微信群：</div></span>
+			<div className='self-code'>
+				<img src="https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao/cocos-wechat.jpeg" alt=""/>
+			</div>
 			<span className='click-item' onClick={()=>{
 				context.showReport()
-			}}><u>优化建议 / 功能推荐 / 需求描述</u></span>
+			}}><u>问题反馈</u></span>
 		</div>
 	}
 
