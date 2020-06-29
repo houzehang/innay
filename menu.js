@@ -124,7 +124,7 @@ export default class MenuBuilder {
       label: '帮助',
       submenu: [
         {
-          label: '关于明兮',
+          label: '关于程序宝',
           click() {
             shell.openExternal('https://www.gookoo.cn');
           }
