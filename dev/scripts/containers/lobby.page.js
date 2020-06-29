@@ -37,7 +37,8 @@ class Main extends React.Component {
 			outPutPath: '',
 			outMode: 1
 		}
-		this.$darwin = new RegExp('darwin', 'i').test(os.type())
+		this.$compress_total = 0
+		this.$darwin 		 = new RegExp('darwin', 'i').test(os.type())
 
 		this.$temp_compress_folder = path.join(remote.app.getPath("userData"), "PngquantTransport")
 		fs.ensureDirSync(this.$temp_compress_folder)
@@ -51,7 +52,8 @@ class Main extends React.Component {
 		}
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
-		
+		this.$compress_total = (localStorage.getItem('COMPRESS_TOTAL') || '0') - 0
+
 		// if ( !this.$darwin) {
 		// 	var curWindow = remote.getCurrentWindow();
 		// 	curWindow.webContents.openDevTools();
@@ -374,6 +376,14 @@ class Main extends React.Component {
 		} catch (error) {}
 	}
 
+	__compress_over(){
+		this.setState({
+			working : false
+		})
+		localStorage.setItem('COMPRESS_TOTAL', this.$compress_total)
+		context.mark(20004, {}, {}, ":"+this.$compress_total)
+	}
+
 	__start(){
 		this.setState({
 			working: true
@@ -402,6 +412,7 @@ class Main extends React.Component {
 			let _beforeSuccessTemp
 			let _onSuccess 		= (_finalFile, skipped)=>{
 				!skipped && _beforeSuccessTemp && _beforeSuccessTemp(_finalFile);
+				!skipped && (this.$compress_total++);
 				onSuccess && onSuccess(_finalFile);
 			}
 			if (!this.$darwin) {
@@ -481,9 +492,7 @@ class Main extends React.Component {
 								file.done = true;
 								let tinyDone = this.state.tinyDone + 1;
 								if (tinyDone == this.state.tinyFiles.length) {
-									this.setState({
-										working: false
-									})
+									this.__compress_over()
 								};
 								this.setState({
 									tinyDone,
@@ -502,9 +511,7 @@ class Main extends React.Component {
 							file.fail = reason;
 							let tinyDone = this.state.tinyDone + 1;
 							if (tinyDone == this.state.tinyFiles.length){
-								this.setState({
-									working : false
-								})
+								this.__compress_over()
 							};
 							this.setState({
 								tinyDone,
