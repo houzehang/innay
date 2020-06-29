@@ -13,7 +13,7 @@ import {
 	onShowTost
 } from '../actions'
 import os from "os"
-import fs from "fs"
+import fs from 'fs-extra'
 import path from "path"
 import child_process from 'child_process'
 import {remote, ipcRenderer, dialog} from 'electron'
@@ -38,6 +38,9 @@ class Main extends React.Component {
 			outMode: 1
 		}
 		this.$darwin = new RegExp('darwin', 'i').test(os.type())
+
+		this.$temp_compress_folder = path.join(remote.app.getPath("userData"), "PngquantTransport")
+		fs.ensureDirSync(this.$temp_compress_folder)
 	}
 
 	componentDidMount() {  
@@ -49,7 +52,7 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		
-		// if (1 || !this.$darwin) {
+		// if ( !this.$darwin) {
 		// 	var curWindow = remote.getCurrentWindow();
 		// 	curWindow.webContents.openDevTools();
 		// }
@@ -343,6 +346,34 @@ class Main extends React.Component {
 		</div>
 	}
 
+	__contain_chinese(str = ''){
+		let reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+		return reg.test(str)
+	}
+
+	__rmdir(dir) {
+		try {
+			let arr = [dir]
+			let current = null
+			let index = 0
+			while(current = arr[index++]) {
+				let stat = fs.statSync(current)
+				if (stat.isDirectory()) {
+					let files = fs.readdirSync(current)
+					arr = [...arr, ...files.map(file => path.join(current, file))]
+				}
+			}
+			for (var i = arr.length - 1; i >= 0; i--) {
+				let stat = fs.statSync(arr[i])
+				if (stat.isDirectory()) {
+					fs.rmdirSync(arr[i])
+				} else {
+					fs.unlinkSync(arr[i])
+				}
+			}
+		} catch (error) {}
+	}
+
 	__start(){
 		this.setState({
 			working: true
@@ -360,21 +391,46 @@ class Main extends React.Component {
 		} else {
 			pngquant = path.join(window.ENV_CONF.__dirname, 'app.asar.unpacked','dist','libs','pngquant', 'win', 'pngquant.exe')
 		}
-		let __execute = (rawfile, onSuccess, onError)=>{
-			console.log('MINGXI_DEBUG_LOG>>>>>>>>>rawfile',rawfile);
-			let fileName		= rawfile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
+		let __execute = (rawFile, onSuccess, onError)=>{
+			
+			let fileName		= rawFile.replace(/[^\\\/]*[\\\/]+/g,'').replace(/ /g, '\ ')
 			let newFolderFile	= this.$darwin ? `${this.state.outPutPath}/${fileName}` : `${this.state.outPutPath}\\${fileName}`
-			let finalFile 		= this.state.outMode == 1 ? rawfile : newFolderFile
-			let command 		= `${pngquant} "${rawfile}" --output "${finalFile}" --force --verbose --skip-if-larger`
-			// --skip-if-larger
+			let finalFile 		= this.state.outMode == 1 ? rawFile : newFolderFile
+			
+			let _rawFileTemp
+			let _finalFileTemp
+			let _beforeSuccessTemp
+			let _onSuccess 		= (_finalFile, skipped)=>{
+				!skipped && _beforeSuccessTemp && _beforeSuccessTemp(_finalFile);
+				onSuccess && onSuccess(_finalFile);
+			}
 			if (!this.$darwin) {
-				command = String.raw`${command}`
+				if (this.__contain_chinese(rawFile)) {
+					try {
+						this.__rmdir(this.$temp_compress_folder)
+						fs.ensureDirSync(this.$temp_compress_folder)
+	
+						let signature 	= Date.now() + "_" + Math.floor( Math.random() * 100000) + '.png';
+						_rawFileTemp   	= path.join(this.$temp_compress_folder, '_raw_' + signature)
+						_finalFileTemp 	= path.join(this.$temp_compress_folder, '_final_' + signature)
+						fs.copyFileSync(rawFile, _rawFileTemp)
+						_beforeSuccessTemp = ()=>{
+							try {
+								fs.copyFileSync(_finalFileTemp, finalFile)
+							} catch (error) {}
+						}
+					} catch (error) {
+						_rawFileTemp = _finalFileTemp = _beforeSuccessTemp = null
+					}
+				}
+
 			}
-			if (window._test_command) {
-				command = window._test_command
-			}
+			let command = `${pngquant} "${_rawFileTemp || rawFile}" --output "${_finalFileTemp || finalFile}" --force --verbose --skip-if-larger`
+			command = window._test_command || command
+			console.log('MINGXI_DEBUG_LOG>>>>>>>>>command is:',command);
 			exec(command, (error, stdout, stderr)=>{
-				if(error && !/skipped/i.test(error)) {
+				let skipped = /skipped/i.test(error || '');
+				if(error && !skipped) {
 					console.log('error: ' + error);
 					context.mark(20002, {error})
 					let reason;
@@ -389,9 +445,9 @@ class Main extends React.Component {
 					onError && onError(reason)
 					return;
 				}
-				onSuccess && onSuccess(finalFile)
 				console.log('stdout: ' + stdout);
 				console.log('stderr: ' + stderr);
+				_onSuccess(finalFile, skipped)
 			})
 		}
 		this.state.tinyFiles.map((fileItem)=>{
