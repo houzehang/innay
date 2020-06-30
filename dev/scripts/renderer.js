@@ -24,7 +24,7 @@ class Renderer {
 			progress : null
 		}
 		// default domains from location
-		DomainMgr.domains = (TEST || DEBUG) ? Const.DOMAIN_LIST_DEFAULT_TEST : Const.DOMAIN_LIST_DEFAULT
+		DomainMgr.domains = Const.DOMAIN_LIST_DEFAULT
 		this.__setState(this.state)
 		// update domains json config from oss
 		DomainMgr.pull(()=>{

@@ -3,7 +3,6 @@ import {remote}    from 'electron';
 import bridge 	   from './MessageBridge'
 import Const 	   from '../config/const'
 import logger      from 'electron-log'
-import {TEST, DEBUG } from '../env';
 
 class DomainMgr {
     constructor(){
