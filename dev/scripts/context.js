@@ -1,5 +1,5 @@
 import storage from './Storage'
-import {ipcRenderer,remote} from "electron"
+import {ipcRenderer,remote,shell} from "electron"
 import path from "path"
 import fs from "fs"
 const LogDog 		 = remote.require('pandora-nodejs-sdk')
@@ -379,6 +379,10 @@ class Context {
 
 	showReport(){
 		this.$sentry_browser.showReport()
+	}
+
+	linkTo(url='http://gookoo.cn'){
+		shell.openExternal(url)
 	}
 }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import GlobalMsg from '../components/globalMsg'
+import MatterPage from '../components/matter'
 import "../../less/lobby.less"
 import * as types from '../constants/ActionTypes'
 import Toast from './toast'
@@ -25,7 +26,8 @@ class Main extends React.Component {
 			page_pngquant: 1,
 			page_tinypng: 2,
 			localserver: 3,
-			connectAuth: 4
+			connectAuth: 4,
+			matter: 5
 		}
 
 		this.state = {
@@ -68,6 +70,9 @@ class Main extends React.Component {
 		switch (this.state.homeMajor) {
 			case this.$home_major_cfg.page_pngquant:
 				result = this.__home_major_pngquant()
+				break;
+			case this.$home_major_cfg.matter:
+				result = this.__home_major_matter()
 				break;
 			case this.$home_major_cfg.page_tinypng:
 				result = this.__home_major_tinypng()
@@ -206,6 +211,10 @@ class Main extends React.Component {
 
 	__home_major_tinypng(){
 		return '开发中'
+	}
+
+	__home_major_matter(){
+		return <MatterPage/>;
 	}
 
 	__home_major_pngquant(){
@@ -596,8 +605,14 @@ class Main extends React.Component {
 									homeMajor: this.$home_major_cfg.page_pngquant
 								})
 							}}>
-								<span className ="icon icon-picture"></span>图片压缩
-							</span>
+							<span className ="icon icon-picture"></span>图片压缩</span>
+
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.matter ? 'active' : ''}`} onClick={()=>{
+								this.setState({
+									homeMajor: this.$home_major_cfg.matter
+								})
+							}}>
+							<span className ="icon icon-droplet"></span>免费素材</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_tinypng ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.page_tinypng
