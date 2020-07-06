@@ -4,7 +4,7 @@ import GlobalMsg from '../components/globalMsg'
 import MatterPage from '../components/matter'
 import "../../less/lobby.less"
 import * as types from '../constants/ActionTypes'
-import Toast from './toast'
+import Toast from './../components/toast.export'
 import context from './../context'
 import { 
 	confirm, alert, hide,
@@ -654,7 +654,7 @@ class Main extends React.Component {
 		</div>
 		return (<div className="full-h" onDragStart={(e)=>{
 			e.preventDefault()
-		}}>{content}{globalMsg}{this.props.showToastState.showing?<Toast data={this.props.showToastState} /> : ''}</div>)
+		}}>{content}{globalMsg}</div>)
 	}
 }
 

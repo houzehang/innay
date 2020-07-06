@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import context from "../context"
 import electron from "electron"
+import Toast from './../components/toast.export'
 const clipboard = electron.clipboard
 
 class MatterPage extends React.Component {
@@ -16,6 +17,11 @@ class MatterPage extends React.Component {
 			clearTimeout(this.$timer)
 			context.linkTo(url)
 		}, 100);
+	}
+
+	__writeTextToClipboard(text){
+		Toast.success("复制成功",1000)
+		clipboard.writeText(text)
 	}
 
 	render() {
@@ -40,7 +46,7 @@ class MatterPage extends React.Component {
 					</div>
 					<div>账号：2415343397
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('2415343397')
+							this.__writeTextToClipboard('2415343397')
 						}}>复制</span>
 					</div>
 					<div>动态密码：{this.state.view_open_qiantu ? 'chengxubao598' : '************'} 
@@ -51,7 +57,7 @@ class MatterPage extends React.Component {
 							})
 						}}></span>
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('chengxubao598')
+							this.__writeTextToClipboard('chengxubao598')
 						}}>复制</span>
 					</div>
 				</div>
@@ -70,7 +76,7 @@ class MatterPage extends React.Component {
 					</div>
 					<div>账号：2415343397
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('2415343397')
+							this.__writeTextToClipboard('2415343397')
 						}}>复制</span>
 					</div>
 					<div>动态密码：{this.state.view_open_6m5m ? 'chengxubao598' : '************'} 
@@ -81,7 +87,7 @@ class MatterPage extends React.Component {
 							})
 						}}></span>
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('chengxubao598')
+							this.__writeTextToClipboard('chengxubao598')
 						}}>复制</span>
 					</div>
 				</div>
@@ -100,7 +106,7 @@ class MatterPage extends React.Component {
 					</div>
 					<div>账号：暂不可用
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('暂不可用')
+							this.__writeTextToClipboard('暂不可用')
 						}}>复制</span>
 					</div>
 					<div>动态密码：{this.state.view_open_aigei ? '暂不可用' : '************'} 
@@ -111,7 +117,7 @@ class MatterPage extends React.Component {
 							})
 						}}></span>
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('暂不可用')
+							this.__writeTextToClipboard('暂不可用')
 						}}>复制</span>
 					</div>
 				</div>
