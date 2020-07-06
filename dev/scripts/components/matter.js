@@ -9,6 +9,15 @@ class MatterPage extends React.Component {
 		super(props)
 		this.state = { hover: false }
 	}
+
+	__goto(url){
+		this.$timer && clearTimeout(this.$timer)
+		this.$timer = setTimeout(() => {
+			clearTimeout(this.$timer)
+			context.linkTo(url)
+		}, 100);
+	}
+
 	render() {
 		return <div className='matter-container' onMouseOver={()=>{
                     
@@ -18,10 +27,12 @@ class MatterPage extends React.Component {
             <div className="matter-content">
 				{/* 千图网 */}
 				<div className="matter-item">
-					<div className="logo qiantu"></div>
+					<div className="logo qiantu" onClick={()=>{
+							this.__goto('https://www.58pic.com/')
+						}}></div>
 					<div className="matter-item-title">
-						<span className="icon icon-rocket" onClick={()=>{
-							context.linkTo('https://www.58pic.com/')
+						<span className="icon icon-link" onClick={()=>{
+							this.__goto('https://www.58pic.com/')
 						}}></span>
 					</div>
 					<div>登陆方式：
@@ -32,7 +43,7 @@ class MatterPage extends React.Component {
 							clipboard.writeText('2415343397')
 						}}>复制</span>
 					</div>
-					<div>密码：{this.state.view_open_qiantu ? 'chengxubao598' : '************'} 
+					<div>动态密码：{this.state.view_open_qiantu ? 'chengxubao598' : '************'} 
 						<span className="copy view icon icon-eye" onClick={()=>{
 							let view_open_qiantu = this.state.view_open_qiantu
 							this.setState({
@@ -46,10 +57,12 @@ class MatterPage extends React.Component {
 				</div>
 				{/* 6m5m */}
 				<div className="matter-item">
-					<div className="logo _6m5m"></div>
+					<div className="logo _6m5m" onClick={()=>{
+							this.__goto('http://www.6m5m.com/')
+						}}></div>
 					<div className="matter-item-title">
-						<span className="icon icon-rocket" onClick={()=>{
-							context.linkTo('http://www.6m5m.com/')
+						<span className="icon icon-link" onClick={()=>{
+							this.__goto('http://www.6m5m.com/')
 						}}></span>
 					</div>
 					<div>登陆方式：
@@ -60,7 +73,7 @@ class MatterPage extends React.Component {
 							clipboard.writeText('2415343397')
 						}}>复制</span>
 					</div>
-					<div>密码：{this.state.view_open_6m5m ? 'chengxubao598' : '************'} 
+					<div>动态密码：{this.state.view_open_6m5m ? 'chengxubao598' : '************'} 
 						<span className="copy view icon icon-eye" onClick={()=>{
 							let view_open_6m5m = this.state.view_open_6m5m
 							this.setState({
@@ -74,21 +87,23 @@ class MatterPage extends React.Component {
 				</div>
 				{/* 爱给网 */}
 				<div className="matter-item">
-					<div className="logo aigei"></div>
+					<div className="logo aigei" onClick={()=>{
+							this.__goto('http://www.aigei.com/')
+						}}></div>
 					<div className="matter-item-title">
-						<span className="icon icon-rocket" onClick={()=>{
-							context.linkTo('http://www.aigei.com/')
+						<span className="icon icon-link" onClick={()=>{
+							this.__goto('http://www.aigei.com/')
 						}}></span>
 					</div>
-					<div>登陆方式：暂无
+					<div>登陆方式：暂不可用
 						{/* <div className="login-style">-</div> */}
 					</div>
-					<div>账号：暂无
+					<div>账号：暂不可用
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('2415343397')
+							clipboard.writeText('暂不可用')
 						}}>复制</span>
 					</div>
-					<div>密码：{this.state.view_open_aigei ? '暂无' : '************'} 
+					<div>动态密码：{this.state.view_open_aigei ? '暂不可用' : '************'} 
 						<span className="copy view icon icon-eye" onClick={()=>{
 							let view_open_aigei = this.state.view_open_aigei
 							this.setState({
@@ -96,7 +111,7 @@ class MatterPage extends React.Component {
 							})
 						}}></span>
 						<span className='copy' onClick={()=>{
-							clipboard.writeText('暂无')
+							clipboard.writeText('暂不可用')
 						}}>复制</span>
 					</div>
 				</div>
