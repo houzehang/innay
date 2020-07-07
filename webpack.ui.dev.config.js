@@ -65,6 +65,9 @@ module.exports = {
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'dev')],
     extensions: ['.js', '.jsx', '.less', '.css'],
+    alias: {
+      'react-native$': 'react-native-web'
+    }
   },
   plugins: [
     new webpack.EnvironmentPlugin({

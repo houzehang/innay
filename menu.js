@@ -90,14 +90,14 @@ export default class MenuBuilder {
         //     this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
         //   }
         // }
-        //,
-        // {
-        //   label: '切换开发者工具',
-        //   accelerator: 'Alt+Command+I',
-        //   click: () => {
-        //     this.mainWindow.toggleDevTools();
-        //   }
-        // }
+        ,
+        {
+          label: '切换开发者工具',
+          accelerator: 'Alt+Command+I',
+          click: () => {
+            this.mainWindow.toggleDevTools();
+          }
+        }
       ]
     };
     const subMenuViewProd = {
@@ -110,14 +110,14 @@ export default class MenuBuilder {
         //     this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
         //   }
         // }
-        // ,
-        // {
-        //   label: '切换开发者工具',
-        //   accelerator: 'Alt+Command+I',
-        //   click: () => {
-        //     this.mainWindow.toggleDevTools();
-        //   }
-        // }
+        ,
+        {
+          label: '切换开发者工具',
+          accelerator: 'Alt+Command+I',
+          click: () => {
+            this.mainWindow.toggleDevTools();
+          }
+        }
       ]
     };
     const subMenuHelp = {
@@ -162,14 +162,14 @@ export default class MenuBuilder {
                 //     );
                 //   }
                 // }
-                // ,
-                // {
-                //   label: '切换开发者工具',
-                //   accelerator: 'Alt+Ctrl+I',
-                //   click: () => {
-                //     this.mainWindow.toggleDevTools();
-                //   }
-                // }
+                ,
+                {
+                  label: '切换开发者工具',
+                  accelerator: 'Alt+Ctrl+I',
+                  click: () => {
+                    this.mainWindow.toggleDevTools();
+                  }
+                }
               ]
             : [
                 // {
