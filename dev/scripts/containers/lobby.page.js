@@ -342,18 +342,19 @@ class Main extends React.Component {
 	}
 
 	__home_major_connect_auth(){
+		let src = `https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao/cocos-wechat.jpeg?t={Date.now()}`
 		return <div className='auth-container'>
 			{/* <div className='auth-card'></div> */}
-			<span><div className='title'>邮箱：</div>houzehang1024@gmail.com</span>
-			<span><div className='title'>QQ：</div>2210036910</span>
-			<span><div className='title'>微信号：</div>cocos2d-x</span>
-			<span><div className='title'>Cocos技术交流群微信群：</div></span>
+			{/* <span><div className='title'>邮箱：</div>houzehang1024@gmail.com</span> */}
+			{/* <span><div className='title'>QQ：</div>2210036910</span> */}
+			{/* <span><div className='title'>微信号：</div>cocos2d-x</span> */}
+			{/* <span><div className='title'>Cocos技术交流群微信群：</div></span> */}
 			<div className='self-code'>
-				<img src="https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao/cocos-wechat.jpeg" alt=""/>
+				<img src={src} alt=""/>
 			</div>
-			<span className='click-item' onClick={()=>{
+			{/* <span className='click-item' onClick={()=>{
 				context.showReport()
-			}}><u>问题反馈</u></span>
+			}}><u>问题反馈</u></span> */}
 		</div>
 	}
 
@@ -630,13 +631,13 @@ class Main extends React.Component {
 							</span> */}
 						</nav>
 						<nav className ="nav-group">
-							<h5 className ="nav-group-title">问题帮助</h5>
+							<h5 className ="nav-group-title">社区</h5>
 							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.connectAuth ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.connectAuth
 								})
 							}}>
-								<span className ="icon icon-vcard"></span>联系作者
+								<span className ="icon icon-vcard"></span>Cocos研习社
 							</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
