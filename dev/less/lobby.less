@@ -77,10 +77,18 @@ header{
             border-left: none;
             .nav-group{
                 .nav-group-item{
+                    position: relative;
                     line-height: 30px;
                     .icon{
                         margin-top: 0;
                         font-size: 16px;
+                    }
+                    .new{
+                        .view-base('new.png');
+                        position: absolute;
+                        transform: scale(0.6);
+                        right: 10px;
+                        top: 6px;
                     }
                     &.active{
                         background-color: #eaeaea;

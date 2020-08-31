@@ -18,6 +18,8 @@ import fs from 'fs-extra'
 import path from "path"
 import child_process from 'child_process'
 import {remote, ipcRenderer, dialog} from 'electron'
+// import express from 'express'
+// const app = express()
 
 class Main extends React.Component {
 	constructor(props) {
@@ -44,6 +46,15 @@ class Main extends React.Component {
 
 		this.$temp_compress_folder = path.join(remote.app.getPath("userData"), "PngquantTransport")
 		fs.ensureDirSync(this.$temp_compress_folder)
+		// setTimeout(() => {
+		// 	let express = $require('express')
+		// 	let app = express()
+		// 	app.get('/', function (req, res) {
+		// 		res.send('Hello World')
+		// 	})
+		// 	app.listen(3008)
+		// 	app.listen(3008)
+		// }, 8000);
 	}
 
 	componentDidMount() {  
@@ -638,6 +649,7 @@ class Main extends React.Component {
 								})
 							}}>
 								<span className ="icon icon-vcard"></span>Cocos研习社
+								<div className='new'></div>
 							</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
