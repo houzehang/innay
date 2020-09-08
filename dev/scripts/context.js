@@ -321,6 +321,14 @@ class Context {
 		return this.$sentry_browser
 	}
 
+	set ffmpeg(ffmpegPath){
+		this.$ffmpeg_path = ffmpegPath
+	}
+
+	get ffmpeg(){
+		return this.$ffmpeg_path
+	}
+
 	mark(code, info, extra={}, titleExtra=''){
 		if (info) {
 			this.$sentry_browser.captureEventWithCode(code, info, extra, titleExtra)

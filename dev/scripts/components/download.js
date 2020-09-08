@@ -96,8 +96,16 @@ class Download extends React.Component {
 		this.__start()
 	}
 
+	__start_download(){
+		this.__update_ffmpeg().then((data)=>{
+			this.props.complete(data)
+		}).catch(error=>{
+			this.__setStatus("UPDATE.ERROR", error);
+		})
+	}
+
 	componentDidMount() {
-		this.__start()
+		this.__start_download()
 	}
 
 	componentWillUnmount() {
@@ -119,7 +127,7 @@ class Download extends React.Component {
 		this.setState({ error: null })
 		switch (status) {
 			case "UPDATE.BASEFRAME":
-			this.setState({ title: "准备下载基础库" })
+			this.setState({ title: "准备下载依赖库" })
 			break
 			case "UPDATE.DOWNLOADING":
 			this.setState({ notice: "正在下载，请稍候...", percent: Math.min(1, message.percent) })
@@ -214,20 +222,21 @@ class Download extends React.Component {
 		})
 	}
 
-	__update_homework_frame(baseFrameUrl) {
+	__update_ffmpeg() {
+		let baseFrameUrl = 'http://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com'
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${baseFrameUrl}/homework.json`,
-					pack: "homeworkroom"
+					url : `${baseFrameUrl}/ffmpeg-mac.json`,
+					pack: "ffmpeg-mac"
 				}
 			}).then(result=>{
 				this.__setStatus("UPDATE.BASEFRAME");
 				if (result.available) {
 					this.__setStatus("UPDATE.DOWNLOADING_UI");
 					this.__do_update_bundle({
-						pack	: "homeworkroom", 
+						pack	: "ffmpeg-mac", 
 						result	: result.server,
 						base_url: baseFrameUrl
 					}).then(data=>{
@@ -237,6 +246,7 @@ class Download extends React.Component {
 					})
 				} else {
 					this.__setStatus("UPDATE.LASTEST");
+					console.log('MINGXI_DEBUG_LOG>>>>>>>>>LASTEST','');
 					resolve(result.server)
 				}
 			}).catch(err=>{
@@ -413,7 +423,6 @@ Download.propTypes = {
 	data: PropTypes.object.isRequired,
 	complete: PropTypes.func.isRequired,
 	error: PropTypes.func.isRequired,
-	user: PropTypes.object.isRequired
 }
 
 export default Download

@@ -1,7 +1,10 @@
+// http://photonkit.com/getting-started/
 import React from 'react';
 import { connect } from 'react-redux'
 import GlobalMsg from '../components/globalMsg'
 import MatterPage from '../components/matter'
+import VideoToGif from '../components/videoToGif'
+import Download from '../components/download'
 import "../../less/lobby.less"
 import * as types from '../constants/ActionTypes'
 import Toast from './../components/toast.export'
@@ -29,7 +32,8 @@ class Main extends React.Component {
 			page_tinypng: 2,
 			localserver: 3,
 			connectAuth: 4,
-			matter: 5
+			matter: 5,
+			page_gif: 6,
 		}
 
 		this.state = {
@@ -66,7 +70,7 @@ class Main extends React.Component {
 		context.sentryBrowser.bindUser(userId, '-', '-', window.ENV_CONF.version, '-')
 		context.mark(20001, window.ENV_CONF.systeminfo)
 		this.$compress_total = (localStorage.getItem('COMPRESS_TOTAL') || '0') - 0
-
+		this.__ffmpeg_exist_or_not()
 		// if ( !this.$darwin) {
 		// 	var curWindow = remote.getCurrentWindow();
 		// 	curWindow.webContents.openDevTools();
@@ -84,6 +88,9 @@ class Main extends React.Component {
 				break;
 			case this.$home_major_cfg.matter:
 				result = this.__home_major_matter()
+				break;
+			case this.$home_major_cfg.page_gif:
+				result = this.__home_major_gif()
 				break;
 			case this.$home_major_cfg.page_tinypng:
 				result = this.__home_major_tinypng()
@@ -226,6 +233,52 @@ class Main extends React.Component {
 
 	__home_major_matter(){
 		return <MatterPage/>;
+	}
+
+	__ffmpeg_exist_or_not(){
+		let filePath = path.join(remote.app.getPath("userData"), 'appassets/ffmpeg-mac/ffmpeg')
+		if (fs.existsSync(filePath)) {
+			localStorage.setItem('ffmpeg_ready', '1')
+			context.ffmpeg = filePath
+			return true
+		} else {
+			localStorage.removeItem('ffmpeg_ready')
+			return false
+		}
+	}
+
+	__home_major_gif(){
+		return <VideoToGif onDownloadFfmpeg = {(checkAgain)=>{
+			let __start_download = ()=>{
+				this.props.hide()
+				this.props.alert({
+					title: "依赖库更新检测",
+					content: <Download data={{}} preview={true} complete={(data)=>{
+						setTimeout(() => {
+							this.props.hide()
+							this.__ffmpeg_exist_or_not()
+						}, 1000);
+					}} error={(error)=>{
+					}} user={this.props.account}/>,
+					nobutton: true,
+					noanim	: true,
+					close_hidden: true
+				})
+			}
+			if (!localStorage.getItem('ffmpeg_ready')) {
+				if (checkAgain) {
+					__start_download()
+				} else {
+					this.props.alert({
+						content: "首次使用此功能须安装FFMPEG依赖组件",
+						sure: ()=>{
+							__start_download()
+						},
+						close_hidden: true
+					});
+				}
+			}
+		}}/>
 	}
 
 	__home_major_pngquant(){
@@ -625,14 +678,12 @@ class Main extends React.Component {
 								})
 							}}>
 							<span className ="icon icon-droplet"></span>免费素材</span>
-							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_tinypng ? 'active' : ''}`} onClick={()=>{
+							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.page_gif ? 'active' : ''}`} onClick={()=>{
 								this.setState({
-									homeMajor: this.$home_major_cfg.page_tinypng
+									homeMajor: this.$home_major_cfg.page_gif
 								})
-								context.showReport()
 							}}>
-								<span className ="icon icon-picture"></span>压图-tinypng
-							</span> */}
+							<span className ="icon icon-video"></span>视频转GIF</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.localserver
