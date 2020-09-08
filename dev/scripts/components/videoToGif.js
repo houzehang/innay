@@ -117,21 +117,27 @@ class VideoToGif extends React.Component {
         let ffmpeg          = context.ffmpeg.replace(/ /g,'\\ ');
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>ffmpeg',ffmpeg);
             
-        let fileName		= `video_preview_${Date.now()}.gif`
+        let fileName		= `video_preview.gif`
         let newFolderFile	= this.$darwin ? `${this.$temp_gif_folder}/${fileName}` : `${this.$temp_gif_folder}\\${fileName}`
         let finalFile 		= newFolderFile.replace(/ /g,'\\ ')
         let command = `${ffmpeg} -t 10 -ss 00:00:30 -i ${this.state.mp4.replace('file://','')} -s ${this.state.mp4W+"x"+this.state.mp4H} -y ${finalFile}`
         command = window._test_command || command
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>command is:',command);
+        this.props.showLoading('生成中...')
         exec(command, (error, stdout, stderr)=>{
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] error',error);
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] stdout',stdout);
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] stderr',stderr);
             if (!error) {
                 this.setState({
-                    gif: newFolderFile
+                    gif: null
+                }, ()=>{
+                    this.setState({
+                        gif: newFolderFile+"?t="+Date.now()
+                    })
                 })
             }
+            this.props.hideLoading()
         })
     }
 
@@ -151,37 +157,12 @@ class VideoToGif extends React.Component {
                 this.setState({
                     videoShow: false
                 }, ()=>{
+			        this.props.showLoading("载入中...")
                     this.setState({
                         videoShow: true,
                         mp4: "file://"+file
                     })
                 })
-                // this.setState({
-                //     mp4: "file://"+file
-                // })
-                return;
-                let video = $("<video/>")
-                // video.attr("src", "file://"+file)
-                video.on("canplay", ()=>{
-                    video.off()
-                    video.on("timeupdate", ()=>{
-                        console.log('MINGXI_DEBUG_LOG>>>>>>>>>currentTime',video[0].currentTime);
-                    })
-                    video.on("play", ()=>{
-                    })
-                    video.on("pause", ()=>{
-                    })
-                })
-                video.on("durationchange", ()=>{
-                    console.log('MINGXI_DEBUG_LOG>>>>>>>>>durationchange',video[0].duration);
-                })
-                video.on("error", ()=>{
-                    console.log("on load video error",video)
-                })
-
-		        video[0].setAttribute('crossorigin', 'anonymous');
-                video[0].playbackRate = 1
-                video[0].play()
             }
         })
     }
@@ -197,7 +178,7 @@ class VideoToGif extends React.Component {
                         videoDuration: event.currentTarget.duration
                     })
                 }} onLoadedMetadata={(event)=>{
-                    window.__vi = event.currentTarget
+                    this.props.hideLoading()
                     this.setState({
                         mp4W: event.currentTarget.videoWidth,
                         mp4H: event.currentTarget.videoHeight
@@ -207,14 +188,18 @@ class VideoToGif extends React.Component {
                 </video> : ''}
                 
                 <div className='gif-preview'>
-                    <img className='img' src={"file://"+this.state.gif} alt=""/>
+                    {this.state.gif ? <img className='img' src={"file://"+this.state.gif} alt=""/> : <div className="tips">
+                        <span>第一步 : 导入视频</span>
+                        <span>第二步 : 设置开始和截止时间</span>
+                        <span>第三步 : 生成GIF</span>
+                    </div>}
                 </div>
                 
             </div>
             <div id="slideToolCtrol" className="slideToolCtrol">
                 <div id="slideToolBorder" className="slideToolBorder">
                     <div id="slideTitle" className="slideTitle">
-                        <span id="titleSpan" className="titleSpan">设定开始时间和结束时间</span>
+                        <span id="titleSpan" className="titleSpan">设置开始和截止时间</span>
                     </div>
                     <div id="slideTool" className="slideTool">
                         <div id="slideLeft" className="slideLeft">
@@ -242,7 +227,7 @@ class VideoToGif extends React.Component {
 					<button className={`btn btn-primary`} onClick={()=>{
 						this.__preview()
 					}}>
-					预览
+					生成GIF
 					</button>
 
                     <button className={`btn btn-default check`} onClick={()=>{

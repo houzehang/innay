@@ -248,7 +248,11 @@ class Main extends React.Component {
 	}
 
 	__home_major_gif(){
-		return <VideoToGif onDownloadFfmpeg = {(checkAgain)=>{
+		return <VideoToGif showLoading={(info)=>{
+			this.props.showLoading(info)
+		}} hideLoading={()=>{
+			this.props.hideLoading()
+		}} onDownloadFfmpeg = {(checkAgain)=>{
 			let __start_download = ()=>{
 				this.props.hide()
 				this.props.alert({
@@ -683,7 +687,7 @@ class Main extends React.Component {
 									homeMajor: this.$home_major_cfg.page_gif
 								})
 							}}>
-							<span className ="icon icon-video"></span>视频转GIF</span>
+							<span className ="icon icon-video"></span>视频转GIF<div className='new'></div></span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.localserver
