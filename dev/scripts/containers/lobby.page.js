@@ -274,7 +274,7 @@ class Main extends React.Component {
 					__start_download()
 				} else {
 					this.props.alert({
-						content: "首次使用此功能须安装FFMPEG依赖组件",
+						content: "首次使用此功能须安装相关依赖组件",
 						sure: ()=>{
 							__start_download()
 						},
