@@ -257,7 +257,7 @@ class Main extends React.Component {
 						setTimeout(() => {
 							this.props.hide()
 							this.__ffmpeg_exist_or_not()
-						}, 1000);
+						}, 1500);
 					}} error={(error)=>{
 					}} user={this.props.account}/>,
 					nobutton: true,
