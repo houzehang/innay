@@ -290,6 +290,7 @@ class VideoToGif extends React.Component {
                         <span>第一步 : 导入视频</span>
                         <span>第二步 : 设置开始和截止时间</span>
                         <span>第三步 : 生成GIF</span>
+                        <span>第四步 : 保存GIF</span>
                     </div>}
                 </div>
                 
@@ -307,7 +308,7 @@ class VideoToGif extends React.Component {
                         </div>
                         <div id="slideRight" className="slideRight">
                             <span id="slider2" className="slider2">
-                                <span id="value2" className="value2" value="100">00:00</span>
+                                <span id="value2" className="value2" value="2">00:00</span>
                             </span>
                         </div>
                     </div>
