@@ -16,14 +16,16 @@ class VideoToGif extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = { 
-            videoPositionFrom: 0,
             videoShow: true,
             mp4: '',
             mp4W: 480,
             mp4H: 480,
             gif: '',
-            videoDuration: 0
+            gifRaw: '',
+            videoDuration: 0,
         }
+        this.$play_reason = {}
+        this.$video_elem = null
         this.$darwin = new RegExp('darwin', 'i').test(os.type())
         this.$temp_gif_folder = path.join(remote.app.getPath("userData"), "gif_out")
         fs.ensureDirSync(this.$temp_gif_folder)
@@ -33,9 +35,26 @@ class VideoToGif extends React.Component {
         this.__settle_slider()
     }
 
+    componentWillUnmount(){
+        this.$video_elem = null
+        this.$play_reason = {}
+    }
+
     __check_ffmpeg(){
         localStorage.removeItem('ffmpeg_ready')
         this.props.onDownloadFfmpeg(true)
+    }
+
+    __change_num_to_timestr(s){
+        s = Math.floor(s)
+        let h;
+        h  =   Math.floor(s/60);
+        s  =   s%60;
+        h    +=    '';
+        s    +=    '';
+        h  =   (h.length==1)?'0'+h:h;
+        s  =   (s.length==1)?'0'+s:s;
+        return h+':'+s;
     }
 
     __settle_slider(){
@@ -47,6 +66,7 @@ class VideoToGif extends React.Component {
         var P1 =document.getElementById("p1");
         //滑块1的鼠标按下事件
         slider1.onmousedown=(e)=>{
+            slider1.pressed = true
             var evt =e||event;
             var x =evt.offsetX;
             var y =evt.offsetY;
@@ -70,16 +90,20 @@ class VideoToGif extends React.Component {
                 //根据滑块的偏移量计算数值
                 var value = 100 * slider1.offsetLeft/550;
                 slideLeft.style.width=slider1.offsetLeft+"px";
-                
-                $("#value1").text(value * this.state.videoDuration / 100);
+                $("#value1").text(this.__change_num_to_timestr(value * this.state.videoDuration / 100));
                 $("#value1").attr("value",value);
             }
             //当鼠标按键抬起时解绑鼠标移动事件
             document.onmouseup=()=>{
                 document.onmousemove=null;
+                if (slider1.pressed) {
+                    slider1.pressed = false
+                    this.__preview_video()
+                }
             }
         }
         slider2.onmousedown=(e)=>{
+            slider2.pressed = true
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>slider2','');
             var evt =e||event;
             var x =evt.offsetX;
@@ -102,20 +126,57 @@ class VideoToGif extends React.Component {
                 console.log('MINGXI_DEBUG_LOG>>>>>>>>>value',value);
                 slideRight.style.width=slider2.offsetLeft+"px";
                 
-                $("#value2").text(value * this.state.videoDuration / 100);
+                $("#value2").text(this.__change_num_to_timestr(value * this.state.videoDuration / 100));
                 $("#value2").attr("value",value);
             }
             document.onmouseup=()=>{
                 document.onmousemove=null;
+                if (slider2.pressed) {
+                    slider2.pressed = false
+                    this.__preview_video()
+                }
             }
         }
     }
+
+    __preview_video(){
+        if (this.$video_elem) {
+            let from = $("#value1")[0].getAttribute('value') * this.state.videoDuration / 100;
+            let to   = $("#value2")[0].getAttribute('value') * this.state.videoDuration / 100;
+            console.log('MINGXI_DEBUG_LOG>>>>>>>>>from, to',from, to);
+            this.$video_elem.currentTime = from
+            this.$video_elem.from        = from
+            this.$video_elem.to          = to
+            this.$video_elem.play()
+        }
+    }
     
-    __preview(){
+    __save_gif(){
+        if (this.state.gifRaw) {
+            remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+                title: "请选择要保存的文件名",
+                buttonLabel: "保存",
+                filters: [
+                    { name: 'image', extensions: ['gif'] },
+                  ]
+            },(result) => {
+                console.log('MINGXI_DEBUG_LOG>>>>>>>>>result.filePath',result);
+                try {
+                    fs.copyFileSync(this.state.gifRaw, result)
+                    remote.shell.showItemInFolder(result)
+                } catch (error) {}
+            })
+        }
+    }
+
+    __preview_gif(){
         let exec 			= child_process.exec;
         let execSync 		= child_process.execSync;
         let ffmpeg          = context.ffmpeg.replace(/ /g,'\\ ');
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>ffmpeg',ffmpeg);
+        if (this.$darwin) {
+            execSync(`chmod 777 '${context.ffmpeg}'`)
+        }
             
         let fileName		= `video_preview.gif`
         let newFolderFile	= this.$darwin ? `${this.$temp_gif_folder}/${fileName}` : `${this.$temp_gif_folder}\\${fileName}`
@@ -130,10 +191,12 @@ class VideoToGif extends React.Component {
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] stderr',stderr);
             if (!error) {
                 this.setState({
-                    gif: null
+                    gif: null,
+                    gifRaw: null,
                 }, ()=>{
                     this.setState({
-                        gif: newFolderFile+"?t="+Date.now()
+                        gif: newFolderFile+"?t="+Date.now(),
+                        gifRaw: newFolderFile
                     })
                 })
             }
@@ -154,8 +217,13 @@ class VideoToGif extends React.Component {
         }, (files = []) => {
             let file = files[0]
             if (file) {
+                this.$video_elem = null
+                this.$play_reason = {}
                 this.setState({
-                    videoShow: false
+                    videoShow: false,
+                    videoDuration: 0,
+                    gif: '',
+                    gifRaw: ''
                 }, ()=>{
 			        this.props.showLoading("载入中...")
                     this.setState({
@@ -167,6 +235,14 @@ class VideoToGif extends React.Component {
         })
     }
 
+    __try_to_play(reason){
+        this.$play_reason[reason] = true
+        if (this.$play_reason['canplay'] && this.$play_reason['duration']) {
+            this.$video_elem = $('#video_preview')[0];
+            this.props.hideLoading()
+        }
+    }
+
 	render() {
 		return <div className='gif-container'>
             <div className='preview'>
@@ -176,13 +252,35 @@ class VideoToGif extends React.Component {
                     console.log('MINGXI_DEBUG_LOG>>>>>>>>>event.currentTarget',event.currentTarget);
                     this.setState({
                         videoDuration: event.currentTarget.duration
+                    }, ()=>{
+                        try {
+                            $("#value1").text(this.__change_num_to_timestr($("#value1")[0].getAttribute('value') * this.state.videoDuration / 100));
+                            $("#value2").text(this.__change_num_to_timestr($("#value2")[0].getAttribute('value') * this.state.videoDuration / 100));
+                        } catch (error) {
+                            console.log('MINGXI_DEBUG_LOG>>>>>>>>>error',error);
+                        }
+
+                        console.log('MINGXI_DEBUG_LOG>>>>>>>>>duration change','');
+                        this.__try_to_play('duration')
                     })
                 }} onLoadedMetadata={(event)=>{
-                    this.props.hideLoading()
                     this.setState({
                         mp4W: event.currentTarget.videoWidth,
                         mp4H: event.currentTarget.videoHeight
                     })
+                }} onCanPlay={()=>{
+                    console.log('MINGXI_DEBUG_LOG>>>>>>>>>can play','');
+                    this.__try_to_play('canplay')
+                }} onTimeUpdate={(event)=>{
+                    console.log('MINGXI_DEBUG_LOG>>>>>>>>>event progress',event.currentTarget.currentTime, event.currentTarget.from,  event.currentTarget.to, this.$video_elem ? this.$video_elem.to : 'none');
+                    let from = $("#value1")[0].getAttribute('value') * this.state.videoDuration / 100;
+                    let to   = $("#value2")[0].getAttribute('value') * this.state.videoDuration / 100;
+                    if ( this.$video_elem){
+                        if (event.currentTarget.currentTime > to) {
+                            this.$video_elem.pause()
+                        }
+                    }
+                    
                 }}>
                     {this.state.mp4 ? <source src={this.state.mp4} type="video/mp4"></source> : ''}
                 </video> : ''}
@@ -204,12 +302,12 @@ class VideoToGif extends React.Component {
                     <div id="slideTool" className="slideTool">
                         <div id="slideLeft" className="slideLeft">
                             <span id="slider1" className="slider1">
-                                <span id="value1" className="value1" value="0">0</span>
+                                <span id="value1" className="value1" value="0">00:00</span>
                             </span>
                         </div>
                         <div id="slideRight" className="slideRight">
                             <span id="slider2" className="slider2">
-                                <span id="value2" className="value2" value="100">100</span>
+                                <span id="value2" className="value2" value="100">00:00</span>
                             </span>
                         </div>
                     </div>
@@ -224,10 +322,22 @@ class VideoToGif extends React.Component {
 					导入视频
 					</button>
 
-					<button className={`btn btn-primary`} onClick={()=>{
-						this.__preview()
+                    <button className={`btn btn-primary preview-video`} onClick={()=>{
+						this.__preview_video()
+					}}>
+					播放预览
+					</button>
+
+					<button className={`btn btn-warning preview-gif`} onClick={()=>{
+						this.__preview_gif()
 					}}>
 					生成GIF
+					</button>
+
+					<button className={`btn btn-positive save-gif`} onClick={()=>{
+						this.__save_gif()
+					}}>
+					保存GIF
 					</button>
 
                     <button className={`btn btn-default check`} onClick={()=>{
