@@ -173,10 +173,13 @@ class VideoToGif extends React.Component {
     __preview_gif(){
         let exec 			= child_process.exec;
         let execSync 		= child_process.execSync;
-        let ffmpeg          = context.ffmpeg.replace(/ /g,'\\ ');
-        console.log('MINGXI_DEBUG_LOG>>>>>>>>>ffmpeg',ffmpeg);
+        // console.log('MINGXI_DEBUG_LOG>>>>>>>>>ffmpeg',ffmpeg);
+        let ffmpeg
         if (this.$darwin) {
+            ffmpeg = context.ffmpeg.replace(/ /g,'\\ ');
             execSync(`chmod 777 '${context.ffmpeg}'`)
+        } else {
+            ffmpeg = context.ffmpeg
         }
             
         let fileName		= `video_preview.gif`
@@ -187,6 +190,11 @@ class VideoToGif extends React.Component {
         let to          = $("#value2")[0].getAttribute('value') * this.state.videoDuration / 100;
         let duration    = Math.max(1,parseInt(to - from)) 
         let command     = `${ffmpeg} -t ${duration} -ss ${this.__change_num_to_timestr(from)} -i ${this.state.mp4.replace('file://','')} -s ${this.state.mp4W+"x"+this.state.mp4H} -y ${finalFile}`
+
+        if (!this.$darwin) {
+            command = `${ffmpeg} -t ${duration} -ss ${this.__change_num_to_timestr(from)} -i ${this.state.mp4.replace('file://','')} -s ${this.state.mp4W+"x"+this.state.mp4H} -y -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 ${finalFile}`   
+            //-i \\Mac\Home\Desktop\_out.mp4 -vf "fps=10,scale=320:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0  \\Mac\Home\Desktop\output.gif
+        }
         command = window._test_command || command
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>command is:',command);
         this.props.showLoading('生成中...')

@@ -6,6 +6,7 @@ import {remote} from 'electron';
 const logger = remote.require('electron-log')
 import bridge from '../../../core/MessageBridge'
 import DomainMgr from '../../../core/DomainMgr'
+import os from "os"
 class Download extends React.Component {
 	constructor(props) {
 		super(props)
@@ -18,6 +19,7 @@ class Download extends React.Component {
 		}
 		this.$domain_course = DomainMgr.availibleDomain('lessons');
 		console.log('MINGXI_DEBUG_LOG>>>>>>>>>init download','');
+		this.$darwin = new RegExp('darwin', 'i').test(os.type())
 	}
 
 	__start(retry) {
@@ -224,19 +226,20 @@ class Download extends React.Component {
 
 	__update_ffmpeg() {
 		let baseFrameUrl = 'http://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com'
+		let fileName = this.$darwin ? 'ffmpeg-mac' : 'ffmpeg-win'
 		return new Promise((resolve, reject)=>{
 			bridge.call({
 				method: "isUpdateAvailable",
 				args: {
-					url : `${baseFrameUrl}/ffmpeg-mac.json`,
-					pack: "ffmpeg-mac"
+					url : `${baseFrameUrl}/${fileName}.json`,
+					pack: fileName
 				}
 			}).then(result=>{
 				this.__setStatus("UPDATE.BASEFRAME");
 				if (result.available) {
 					this.__setStatus("UPDATE.DOWNLOADING_UI");
 					this.__do_update_bundle({
-						pack	: "ffmpeg-mac", 
+						pack	: fileName, 
 						result	: result.server,
 						base_url: baseFrameUrl
 					}).then(data=>{

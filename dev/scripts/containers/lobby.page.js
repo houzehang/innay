@@ -236,7 +236,9 @@ class Main extends React.Component {
 	}
 
 	__ffmpeg_exist_or_not(){
-		let filePath = path.join(remote.app.getPath("userData"), 'appassets/ffmpeg-mac/ffmpeg')
+		let folder 	 = this.$darwin ? 'ffmpeg-mac' : 'ffmpeg-win'
+		let fileName = this.$darwin ? 'ffmpeg' : 'ffmpeg.exe'
+		let filePath = path.join(remote.app.getPath("userData"), 'appassets', folder, fileName)
 		if (fs.existsSync(filePath)) {
 			localStorage.setItem('ffmpeg_ready', '1')
 			context.ffmpeg = filePath
@@ -697,7 +699,16 @@ class Main extends React.Component {
 							</span> */}
 						</nav>
 						<nav className ="nav-group">
-							<h5 className ="nav-group-title">社区</h5>
+							<h5 className ="nav-group-title" onDoubleClick={()=>{
+								if (!this.$test_dev_num) {
+									this.$test_dev_num = 1
+								}
+								this.$test_dev_num++
+								if (this.$darwin && this.$test_dev_num >= 5) {
+									var curWindow = remote.getCurrentWindow();
+									curWindow.webContents.openDevTools();
+								}
+							}}>社区</h5>
 							<span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.connectAuth ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.connectAuth
