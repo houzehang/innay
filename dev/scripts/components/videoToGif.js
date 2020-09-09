@@ -5,8 +5,7 @@ import context from "../context"
 import electron from "electron"
 import Toast from './../components/toast.export'
 const clipboard = electron.clipboard
-const $ = $require('jquery')
-
+import $ from "jquery"
 import os from "os"
 import fs from 'fs-extra'
 import path from "path"

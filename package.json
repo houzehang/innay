@@ -1,6 +1,6 @@
 {
   "name": "yaduobao",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "程序宝客户端",
   "main": "main.js",
   "scripts": {
@@ -18,7 +18,8 @@
     "package-mac-student": "bash build.sh -mac -student",
     "package-all-teacher": "bash build.sh -all -teacher",
     "package-all-student": "bash build.sh -all -student",
-    "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js"
+    "create-installer-win": "DEBUG=electron-windows-installer:main node installers/windows/createinstaller.js",
+    "jquery": "^3.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
@@ -83,7 +84,6 @@
     "image-webpack-loader": "^4.2.0",
     "install": "^0.8.8",
     "is-electron-renderer": "^2.0.1",
-    "jquery": "^3.3.1",
     "less": "3.9.0",
     "less-loader": "^4.1.0",
     "lodash-es": "^4.17.10",
@@ -118,14 +118,15 @@
     "electron-log": "^2.2.16",
     "electron-updater": "4.2.5",
     "fs-extra": "^7.0.1",
+    "got": "^8.3.2",
+    "jquery": "^3.5.1",
     "lowdb": "^1.0.0",
     "md5-file": "^4.0.0",
     "mime-types": "^2.1.22",
     "mkdirp": "^0.5.1",
     "pandora-nodejs-sdk": "^0.0.1",
+    "semver": "^6.0.0",
     "systeminformation": "^4.0.11",
-    "webpack-dev-server": "^3.2.1",
-    "got": "^8.3.2",
-    "semver": "^6.0.0"
+    "webpack-dev-server": "^3.2.1"
   }
 }
