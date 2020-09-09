@@ -45,16 +45,17 @@ class VideoToGif extends React.Component {
         this.props.onDownloadFfmpeg(true)
     }
 
-    __change_num_to_timestr(s){
-        s = Math.floor(s)
-        let h;
-        h  =   Math.floor(s/60);
-        s  =   s%60;
-        h    +=    '';
-        s    +=    '';
-        h  =   (h.length==1)?'0'+h:h;
-        s  =   (s.length==1)?'0'+s:s;
-        return h+':'+s;
+    __change_num_to_timestr(value){
+        let result  = parseInt(value)
+        let h       = Math.floor(result / 3600) < 10 ? '0' + Math.floor(result / 3600) : Math.floor(result / 3600);
+        let m       = Math.floor((result / 60 % 60)) < 10 ? '0' + Math.floor((result / 60 % 60)) : Math.floor((result / 60 % 60));
+        let s       = Math.floor((result % 60)) < 10 ? '0' + Math.floor((result % 60)) : Math.floor((result % 60));
+        
+        let res = '';
+        res += `${h}:`;
+        res += `${m}:`;
+        res += `${s}`;
+        return res;
     }
 
     __settle_slider(){
@@ -181,7 +182,11 @@ class VideoToGif extends React.Component {
         let fileName		= `video_preview.gif`
         let newFolderFile	= this.$darwin ? `${this.$temp_gif_folder}/${fileName}` : `${this.$temp_gif_folder}\\${fileName}`
         let finalFile 		= newFolderFile.replace(/ /g,'\\ ')
-        let command = `${ffmpeg} -t 10 -ss 00:00:30 -i ${this.state.mp4.replace('file://','')} -s ${this.state.mp4W+"x"+this.state.mp4H} -y ${finalFile}`
+
+        let from        = $("#value1")[0].getAttribute('value') * this.state.videoDuration / 100;
+        let to          = $("#value2")[0].getAttribute('value') * this.state.videoDuration / 100;
+        let duration    = Math.max(1,parseInt(to - from)) 
+        let command     = `${ffmpeg} -t ${duration} -ss ${this.__change_num_to_timestr(from)} -i ${this.state.mp4.replace('file://','')} -s ${this.state.mp4W+"x"+this.state.mp4H} -y ${finalFile}`
         command = window._test_command || command
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>command is:',command);
         this.props.showLoading('生成中...')
@@ -303,12 +308,12 @@ class VideoToGif extends React.Component {
                     <div id="slideTool" className="slideTool">
                         <div id="slideLeft" className="slideLeft">
                             <span id="slider1" className="slider1">
-                                <span id="value1" className="value1" value="0">00:00</span>
+                                <span id="value1" className="value1" value="0">00:00:00</span>
                             </span>
                         </div>
                         <div id="slideRight" className="slideRight">
                             <span id="slider2" className="slider2">
-                                <span id="value2" className="value2" value="2">00:00</span>
+                                <span id="value2" className="value2" value="2">00:00:00</span>
                             </span>
                         </div>
                     </div>
