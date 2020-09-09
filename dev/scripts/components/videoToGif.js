@@ -196,7 +196,7 @@ class VideoToGif extends React.Component {
         }
         command = window._test_command || command
         console.log('MINGXI_DEBUG_LOG>>>>>>>>>command is:',command);
-        this.props.showLoading('生成中...')
+        this.props.showLoading(`生成中...(预计耗时${((to - from) / 2) | 0 }s)`)
         exec(command, (error, stdout, stderr)=>{
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] error',error);
             console.log('MINGXI_DEBUG_LOG>>>>>>>>>[exec] stdout',stdout);
@@ -284,7 +284,7 @@ class VideoToGif extends React.Component {
                     console.log('MINGXI_DEBUG_LOG>>>>>>>>>can play','');
                     this.__try_to_play('canplay')
                 }} onTimeUpdate={(event)=>{
-                    console.log('MINGXI_DEBUG_LOG>>>>>>>>>event progress',event.currentTarget.currentTime, event.currentTarget.from,  event.currentTarget.to, this.$video_elem ? this.$video_elem.to : 'none');
+                    // console.log('MINGXI_DEBUG_LOG>>>>>>>>>event progress',event.currentTarget.currentTime, event.currentTarget.from,  event.currentTarget.to, this.$video_elem ? this.$video_elem.to : 'none');
                     let from = $("#value1")[0].getAttribute('value') * this.state.videoDuration / 100;
                     let to   = $("#value2")[0].getAttribute('value') * this.state.videoDuration / 100;
                     if ( this.$video_elem){
