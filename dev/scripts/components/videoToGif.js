@@ -1,4 +1,5 @@
 // https://www.jianshu.com/p/9af00bfe21b3
+https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
 import React from 'react'
 import PropTypes from 'prop-types'
 import context from "../context"
