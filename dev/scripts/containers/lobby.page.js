@@ -412,7 +412,7 @@ class Main extends React.Component {
 	}
 
 	__home_major_connect_auth(){
-		let src = `https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao/cocos-wechat.jpeg?t={Date.now()}`
+		let src = `https://mingxi-bundles-test.oss-cn-beijing.aliyuncs.com/yaduobao/cocos-wechat.jpeg?t=${Date.now()}`
 		return <div className='auth-container'>
 			{/* <div className='auth-card'></div> */}
 			{/* <span><div className='title'>邮箱：</div>houzehang1024@gmail.com</span> */}
