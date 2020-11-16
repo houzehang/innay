@@ -689,7 +689,7 @@ class Main extends React.Component {
 									homeMajor: this.$home_major_cfg.page_gif
 								})
 							}}>
-							<span className ="icon icon-video"></span>视频转GIF<div className='new'></div></span>
+							<span className ="icon icon-video"></span>视频转GIF</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
 									homeMajor: this.$home_major_cfg.localserver
@@ -715,7 +715,6 @@ class Main extends React.Component {
 								})
 							}}>
 								<span className ="icon icon-vcard"></span>Cocos研习社
-								<div className='new'></div>
 							</span>
 							{/* <span className ={`nav-group-item ${this.state.homeMajor == this.$home_major_cfg.localserver ? 'active' : ''}`} onClick={()=>{
 								this.setState({
