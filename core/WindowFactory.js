@@ -111,10 +111,18 @@ export default class WindowFactory {
 			});
 			offHire && _window.webContents.send('offHire')
 			if (needSystemInfo) {
-				SystemInfo.getStaticData((info)=>{
+				let __callback = (info)=>{
 					_window.webContents.send('systeminfo', {
-					systeminfo: info
+						systeminfo: info
 					});
+				}
+				let timerCallback = setTimeout(() => {
+					clearTimeout(timerCallback)
+					__callback({})
+				}, 3000);
+				SystemInfo.getStaticData((info)=>{
+					clearTimeout(timerCallback)
+					__callback(info)
 				})
 				console.log("send system info")
 			}

@@ -61,6 +61,36 @@ class MatterPage extends React.Component {
 						}}>复制</span>
 					</div>
 				</div>
+				{/* 17素材 */}
+				<div className="matter-item">
+					<div className="logo sucai17" onClick={()=>{
+							this.__goto('https://www.17sucai.com/')
+						}}></div>
+					<div className="matter-item-title">
+						<span className="icon icon-link" onClick={()=>{
+							this.__goto('https://www.17sucai.com/')
+						}}></span>
+					</div>
+					<div>登陆方式：
+						<div className="login-style qq"></div>
+					</div>
+					<div>账号：2415343397
+						<span className='copy' onClick={()=>{
+							this.__writeTextToClipboard('2415343397')
+						}}>复制</span>
+					</div>
+					<div>动态密码：{this.state.view_open_17sucai ? 'chengxubao598' : '************'} 
+						<span className="copy view icon icon-eye" onClick={()=>{
+							let view_open_17sucai = this.state.view_open_17sucai
+							this.setState({
+								view_open_17sucai: !view_open_17sucai
+							})
+						}}></span>
+						<span className='copy' onClick={()=>{
+							this.__writeTextToClipboard('chengxubao598')
+						}}>复制</span>
+					</div>
+				</div>
 				{/* 6m5m */}
 				<div className="matter-item">
 					<div className="logo _6m5m" onClick={()=>{
