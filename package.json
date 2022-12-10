@@ -72,7 +72,7 @@
     "electron-winstaller": "^2.5.2",
     "es-abstract": "1.17.5",
     "eslint": "^4.18.2",
-    "express": "^4.16.3",
+    "express": "^4.17.3",
     "file-loader": "^1.1.11",
     "gifsicle": "^5.0.0",
     "globule": "^1.1.0",
